@@ -1,0 +1,13 @@
+﻿@model team7_ssis.ViewModels.UrlTokenViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<iframe src="@Model.Url/embed/question/@Model.Token#bordered=true&titled=true"
+        frameborder="0"
+        width="800"
+        height="600"
+        allowtransparency></iframe>
+
