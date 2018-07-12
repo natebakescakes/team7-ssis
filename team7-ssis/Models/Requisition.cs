@@ -8,8 +8,8 @@ namespace team7_ssis.Models
     public class Requisition
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RequisitionId { get; set; }
+        [MaxLength(20)]
+        public String RequisitionId { get; set; }
         //[ForeignKey("DepartmentCode")]
         public Department Department { get; set; }
         //[ForeignKey("CollectionPointId")]

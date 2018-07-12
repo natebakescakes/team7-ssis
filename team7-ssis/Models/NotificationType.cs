@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace team7_ssis.Models
 {
-    public class Disbursement
+    public class NotificationType
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DisbursementId { get; set; }
-        public Requisition Requisition { get; set; }
-        [InverseProperty("Disbursement")]
-        public List<DisbursementDetail> DisbursementDetails { get; set; }
-        [MaxLength(200)]
-        public String Remarks { get; set; }
-        public Status Status { get; set; }
+        public int NotificationTypeId { get; set; }
+        [MaxLength(30)]
+        public string Name { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }

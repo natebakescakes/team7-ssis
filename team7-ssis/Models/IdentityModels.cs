@@ -77,6 +77,22 @@ namespace team7_ssis.Models
         public List<CollectionPoint> CollectionPointsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
         public List<CollectionPoint> CollectionPointsUpdated { get; set; }
+        [InverseProperty("Receipient")]
+        public List<Delegation> DelegationsReceived { get; set; }
+        [InverseProperty("CreatedBy")]
+        public List<Delegation> DelegationsCreated { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<Delegation> DelegationsUpdated { get; set; }
+        [InverseProperty("CreatedFor")]
+        public List<Notification> NotificationsCreatedFor { get; set; }
+        [InverseProperty("CreatedBy")]
+        public List<NotificationType> NotificationTypesCreated { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<NotificationType> NotificationTypesUpdated { get; set; }
+        [InverseProperty("CreatedBy")]
+        public List<Status> StatusCreated { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<Status> StatusUpdated { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

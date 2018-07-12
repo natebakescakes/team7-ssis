@@ -10,15 +10,15 @@ namespace team7_ssis.Migrations
             CreateTable(
                 "dbo.CollectionPoints",
                 c => new
-                    {
-                        CollectionPointId = c.Int(nullable: false, identity: true),
-                        Name = c.String(maxLength: 30),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        StatusId = c.Int(),
-                    })
+                {
+                    CollectionPointId = c.Int(nullable: false, identity: true),
+                    Name = c.String(maxLength: 30),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.CollectionPointId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
@@ -26,30 +26,30 @@ namespace team7_ssis.Migrations
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy)
                 .Index(t => t.StatusId);
-            
+
             CreateTable(
                 "dbo.AspNetUsers",
                 c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        UserName = c.String(nullable: false, maxLength: 256),
-                        TitleId = c.Int(),
-                        FirstName = c.String(maxLength: 30),
-                        LastName = c.String(maxLength: 30),
-                        SupervisorId = c.String(maxLength: 128),
-                        DepartmentCode = c.String(maxLength: 4),
-                        Email = c.String(maxLength: 256),
-                        EmailConfirmed = c.Boolean(nullable: false),
-                        PasswordHash = c.String(),
-                        SecurityStamp = c.String(),
-                        PhoneNumber = c.String(),
-                        PhoneNumberConfirmed = c.Boolean(nullable: false),
-                        TwoFactorEnabled = c.Boolean(nullable: false),
-                        LockoutEndDateUtc = c.DateTime(),
-                        LockoutEnabled = c.Boolean(nullable: false),
-                        AccessFailedCount = c.Int(nullable: false),
-                        StatusId = c.Int(),
-                    })
+                {
+                    Id = c.String(nullable: false, maxLength: 128),
+                    UserName = c.String(nullable: false, maxLength: 256),
+                    TitleId = c.Int(),
+                    FirstName = c.String(maxLength: 30),
+                    LastName = c.String(maxLength: 30),
+                    SupervisorId = c.String(maxLength: 128),
+                    DepartmentCode = c.String(maxLength: 4),
+                    Email = c.String(maxLength: 256),
+                    EmailConfirmed = c.Boolean(nullable: false),
+                    PasswordHash = c.String(),
+                    SecurityStamp = c.String(),
+                    PhoneNumber = c.String(),
+                    PhoneNumberConfirmed = c.Boolean(nullable: false),
+                    TwoFactorEnabled = c.Boolean(nullable: false),
+                    LockoutEndDateUtc = c.DateTime(),
+                    LockoutEnabled = c.Boolean(nullable: false),
+                    AccessFailedCount = c.Int(nullable: false),
+                    StatusId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Departments", t => t.DepartmentCode)
                 .ForeignKey("dbo.Status", t => t.StatusId)
@@ -60,7 +60,7 @@ namespace team7_ssis.Migrations
                 .Index(t => t.StatusId)
                 .Index(t => t.SupervisorId)
                 .Index(t => t.TitleId);
-            
+
             CreateTable(
                 "dbo.AspNetUserClaims",
                 c => new
@@ -75,103 +75,27 @@ namespace team7_ssis.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
-                "dbo.DeliveryOrders",
+                "dbo.Delegations",
                 c => new
                     {
-                        DeliveryOrderNo = c.String(nullable: false, maxLength: 9),
-                        PurchaseOrderNo = c.String(maxLength: 6),
-                        SupplierCode = c.String(maxLength: 128),
+                        DelegationId = c.Int(nullable: false, identity: true),
+                        ReceipientId = c.String(maxLength: 128),
+                        StartDate = c.DateTime(nullable: false),
+                        EndDate = c.DateTime(nullable: false),
                         StatusId = c.Int(),
                         CreatedBy = c.String(maxLength: 128),
                         UpdatedBy = c.String(maxLength: 128),
                         CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
+                        UpdatedDateTime = c.DateTime(nullable: true),
                     })
-                .PrimaryKey(t => t.DeliveryOrderNo)
-                .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrderNo)
-                .ForeignKey("dbo.Status", t => t.StatusId)
-                .ForeignKey("dbo.Suppliers", t => t.SupplierCode)
-                .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
-                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
-                .Index(t => t.PurchaseOrderNo)
-                .Index(t => t.StatusId)
-                .Index(t => t.SupplierCode)
-                .Index(t => t.CreatedBy)
-                .Index(t => t.UpdatedBy);
-            
-            CreateTable(
-                "dbo.DeliveryOrderDetails",
-                c => new
-                    {
-                        DeliveryOrderNo = c.String(nullable: false, maxLength: 9),
-                        ItemCode = c.String(nullable: false, maxLength: 4),
-                        Quantity = c.Int(nullable: false),
-                        Remarks = c.String(maxLength: 200),
-                    })
-                .PrimaryKey(t => new { t.DeliveryOrderNo, t.ItemCode })
-                .ForeignKey("dbo.Items", t => t.ItemCode, cascadeDelete: true)
-                .ForeignKey("dbo.DeliveryOrders", t => t.DeliveryOrderNo, cascadeDelete: true)
-                .Index(t => t.DeliveryOrderNo)
-                .Index(t => t.ItemCode);
-            
-            CreateTable(
-                "dbo.Items",
-                c => new
-                    {
-                        ItemCode = c.String(nullable: false, maxLength: 4),
-                        Name = c.String(maxLength: 30),
-                        Description = c.String(maxLength: 200),
-                        Uom = c.String(maxLength: 30),
-                        ItemCategoryId = c.Int(),
-                        Bin = c.String(maxLength: 8),
-                        ReorderLevel = c.Int(nullable: false),
-                        ReorderQuantity = c.Int(nullable: false),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.ItemCode)
-                .ForeignKey("dbo.ItemCategories", t => t.ItemCategoryId)
+                .PrimaryKey(t => t.DelegationId)
                 .ForeignKey("dbo.Status", t => t.StatusId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
-                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
-                .Index(t => t.ItemCategoryId)
-                .Index(t => t.StatusId)
-                .Index(t => t.CreatedBy)
-                .Index(t => t.UpdatedBy);
-            
-            CreateTable(
-                "dbo.Inventory",
-                c => new
-                    {
-                        ItemCode = c.String(nullable: false, maxLength: 4),
-                        Quantity = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.ItemCode)
-                .ForeignKey("dbo.Items", t => t.ItemCode)
-                .Index(t => t.ItemCode);
-            
-            CreateTable(
-                "dbo.ItemCategories",
-                c => new
-                    {
-                        ItemCategoryId = c.Int(nullable: false, identity: true),
-                        Name = c.String(maxLength: 30),
-                        Description = c.String(maxLength: 200),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.ItemCategoryId)
-                .ForeignKey("dbo.Status", t => t.StatusId)
-                .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
+                .ForeignKey("dbo.AspNetUsers", t => t.ReceipientId)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
                 .Index(t => t.StatusId)
                 .Index(t => t.CreatedBy)
+                .Index(t => t.ReceipientId)
                 .Index(t => t.UpdatedBy);
             
             CreateTable(
@@ -184,28 +108,128 @@ namespace team7_ssis.Migrations
                         CreatedBy = c.String(maxLength: 128),
                         UpdatedBy = c.String(maxLength: 128),
                         CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
+                        UpdatedDateTime = c.DateTime(nullable: true),
                     })
                 .PrimaryKey(t => t.StatusId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
-                "dbo.ItemPrices",
+                "dbo.DeliveryOrders",
+                c => new
+                {
+                    DeliveryOrderNo = c.String(nullable: false, maxLength: 9),
+                    PurchaseOrderNo = c.String(maxLength: 6),
+                    SupplierCode = c.String(maxLength: 128),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
+                .PrimaryKey(t => t.DeliveryOrderNo)
+                .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrderNo)
+                .ForeignKey("dbo.Status", t => t.StatusId)
+                .ForeignKey("dbo.Suppliers", t => t.SupplierCode)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
+                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
+                .Index(t => t.PurchaseOrderNo)
+                .Index(t => t.StatusId)
+                .Index(t => t.SupplierCode)
+                .Index(t => t.CreatedBy)
+                .Index(t => t.UpdatedBy);
+
+            CreateTable(
+                "dbo.DeliveryOrderDetails",
+                c => new
+                {
+                    DeliveryOrderNo = c.String(nullable: false, maxLength: 9),
+                    ItemCode = c.String(nullable: false, maxLength: 4),
+                    Quantity = c.Int(nullable: false),
+                    Remarks = c.String(maxLength: 200),
+                })
+                .PrimaryKey(t => new { t.DeliveryOrderNo, t.ItemCode })
+                .ForeignKey("dbo.Items", t => t.ItemCode, cascadeDelete: true)
+                .ForeignKey("dbo.DeliveryOrders", t => t.DeliveryOrderNo, cascadeDelete: true)
+                .Index(t => t.DeliveryOrderNo)
+                .Index(t => t.ItemCode);
+
+            CreateTable(
+                "dbo.Items",
+                c => new
+                {
+                    ItemCode = c.String(nullable: false, maxLength: 4),
+                    Name = c.String(maxLength: 30),
+                    Description = c.String(maxLength: 200),
+                    Uom = c.String(maxLength: 30),
+                    ItemCategoryId = c.Int(),
+                    Bin = c.String(maxLength: 8),
+                    ReorderLevel = c.Int(nullable: false),
+                    ReorderQuantity = c.Int(nullable: false),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
+                .PrimaryKey(t => t.ItemCode)
+                .ForeignKey("dbo.ItemCategories", t => t.ItemCategoryId)
+                .ForeignKey("dbo.Status", t => t.StatusId)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
+                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
+                .Index(t => t.ItemCategoryId)
+                .Index(t => t.StatusId)
+                .Index(t => t.CreatedBy)
+                .Index(t => t.UpdatedBy);
+
+            CreateTable(
+                "dbo.Inventory",
                 c => new
                     {
                         ItemCode = c.String(nullable: false, maxLength: 4),
-                        SupplierCode = c.String(nullable: false, maxLength: 128),
-                        PrioritySequence = c.Int(nullable: false),
-                        Price = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
+                        Quantity = c.Int(nullable: false),
                     })
+                .PrimaryKey(t => t.ItemCode)
+                .ForeignKey("dbo.Items", t => t.ItemCode)
+                .Index(t => t.ItemCode);
+
+            CreateTable(
+                "dbo.ItemCategories",
+                c => new
+                {
+                    ItemCategoryId = c.Int(nullable: false, identity: true),
+                    Name = c.String(maxLength: 30),
+                    Description = c.String(maxLength: 200),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
+                .PrimaryKey(t => t.ItemCategoryId)
+                .ForeignKey("dbo.Status", t => t.StatusId)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
+                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
+                .Index(t => t.StatusId)
+                .Index(t => t.CreatedBy)
+                .Index(t => t.UpdatedBy);
+
+            CreateTable(
+                "dbo.ItemPrices",
+                c => new
+                {
+                    ItemCode = c.String(nullable: false, maxLength: 4),
+                    SupplierCode = c.String(nullable: false, maxLength: 128),
+                    PrioritySequence = c.Int(nullable: false),
+                    Price = c.Decimal(nullable: false, precision: 18, scale: 2),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => new { t.ItemCode, t.SupplierCode })
                 .ForeignKey("dbo.Status", t => t.StatusId)
                 .ForeignKey("dbo.Suppliers", t => t.SupplierCode, cascadeDelete: true)
@@ -217,24 +241,24 @@ namespace team7_ssis.Migrations
                 .Index(t => t.StatusId)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.Suppliers",
                 c => new
-                    {
-                        SupplierCode = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(maxLength: 30),
-                        Address = c.String(maxLength: 200),
-                        ContactName = c.String(maxLength: 30),
-                        PhoneNumber = c.String(maxLength: 30),
-                        FaxNumber = c.String(maxLength: 30),
-                        GstRegistrationNo = c.String(maxLength: 30),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    SupplierCode = c.String(nullable: false, maxLength: 128),
+                    Name = c.String(maxLength: 30),
+                    Address = c.String(maxLength: 200),
+                    ContactName = c.String(maxLength: 30),
+                    PhoneNumber = c.String(maxLength: 30),
+                    FaxNumber = c.String(maxLength: 30),
+                    GstRegistrationNo = c.String(maxLength: 30),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.SupplierCode)
                 .ForeignKey("dbo.Status", t => t.StatusId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
@@ -242,21 +266,21 @@ namespace team7_ssis.Migrations
                 .Index(t => t.StatusId)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.PurchaseOrders",
                 c => new
-                    {
-                        PurchaseOrderNo = c.String(nullable: false, maxLength: 6),
-                        SupplierCode = c.String(maxLength: 128),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        ApprovedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                        ApprovedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    PurchaseOrderNo = c.String(nullable: false, maxLength: 6),
+                    SupplierCode = c.String(maxLength: 128),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    ApprovedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                    ApprovedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.PurchaseOrderNo)
                 .ForeignKey("dbo.Status", t => t.StatusId)
                 .ForeignKey("dbo.Suppliers", t => t.SupplierCode)
@@ -268,37 +292,37 @@ namespace team7_ssis.Migrations
                 .Index(t => t.ApprovedBy)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.PurchaseOrderDetails",
                 c => new
-                    {
-                        PurchaseOrderNo = c.String(nullable: false, maxLength: 6),
-                        ItemCode = c.String(nullable: false, maxLength: 4),
-                        Quantity = c.Int(nullable: false),
-                    })
+                {
+                    PurchaseOrderNo = c.String(nullable: false, maxLength: 6),
+                    ItemCode = c.String(nullable: false, maxLength: 4),
+                    Quantity = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => new { t.PurchaseOrderNo, t.ItemCode })
                 .ForeignKey("dbo.Items", t => t.ItemCode, cascadeDelete: true)
                 .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrderNo, cascadeDelete: true)
                 .Index(t => t.PurchaseOrderNo)
                 .Index(t => t.ItemCode);
-            
+
             CreateTable(
                 "dbo.StockMovements",
                 c => new
-                    {
-                        StockMovementId = c.Int(nullable: false, identity: true),
-                        ItemCode = c.String(maxLength: 4),
-                        DeliveryOrderNo = c.String(maxLength: 9),
-                        DeliveryOrderDetailItemCode = c.String(maxLength: 4),
-                        DisbursementId = c.Int(nullable: false),
-                        DisbursementDetailItemCode = c.String(maxLength: 4),
-                        StockAdjustmentId = c.Int(nullable: false),
-                        StockAdjustmentDetailItemCode = c.String(maxLength: 4),
-                        OriginalQuantity = c.Int(nullable: false),
-                        AfterQuantity = c.Int(nullable: false),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    StockMovementId = c.Int(nullable: false, identity: true),
+                    ItemCode = c.String(maxLength: 4),
+                    DeliveryOrderNo = c.String(maxLength: 9),
+                    DeliveryOrderDetailItemCode = c.String(maxLength: 4),
+                    DisbursementId = c.Int(nullable: false),
+                    DisbursementDetailItemCode = c.String(maxLength: 4),
+                    StockAdjustmentId = c.Int(nullable: false),
+                    StockAdjustmentDetailItemCode = c.String(maxLength: 4),
+                    OriginalQuantity = c.Int(nullable: false),
+                    AfterQuantity = c.Int(nullable: false),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.StockMovementId)
                 .ForeignKey("dbo.DisbursementDetails", t => new { t.DisbursementId, t.DisbursementDetailItemCode })
                 .ForeignKey("dbo.StockAdjustmentDetails", t => new { t.StockAdjustmentId, t.StockAdjustmentDetailItemCode })
@@ -308,34 +332,34 @@ namespace team7_ssis.Migrations
                 .Index(t => new { t.DisbursementId, t.DisbursementDetailItemCode })
                 .Index(t => new { t.StockAdjustmentId, t.StockAdjustmentDetailItemCode })
                 .Index(t => t.ItemCode);
-            
+
             CreateTable(
                 "dbo.DisbursementDetails",
                 c => new
-                    {
-                        DisbursementId = c.Int(nullable: false),
-                        ItemCode = c.String(nullable: false, maxLength: 4),
-                        Bin = c.String(maxLength: 8),
-                        Quantity = c.Int(nullable: false),
-                    })
+                {
+                    DisbursementId = c.Int(nullable: false),
+                    ItemCode = c.String(nullable: false, maxLength: 4),
+                    Bin = c.String(maxLength: 8),
+                    Quantity = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => new { t.DisbursementId, t.ItemCode })
                 .ForeignKey("dbo.Disbursements", t => t.DisbursementId, cascadeDelete: true)
                 .ForeignKey("dbo.Items", t => t.ItemCode, cascadeDelete: true)
                 .Index(t => t.DisbursementId)
                 .Index(t => t.ItemCode);
-            
+
             CreateTable(
                 "dbo.Disbursements",
                 c => new
-                    {
-                        DisbursementId = c.Int(nullable: false, identity: true),
-                        RequisitionId = c.Int(),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    DisbursementId = c.Int(nullable: false, identity: true),
+                    RequisitionId = c.String(nullable: false, maxLength: 20),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.DisbursementId)
                 .ForeignKey("dbo.Requisitions", t => t.RequisitionId)
                 .ForeignKey("dbo.Status", t => t.StatusId)
@@ -345,22 +369,22 @@ namespace team7_ssis.Migrations
                 .Index(t => t.StatusId)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.Requisitions",
                 c => new
-                    {
-                        RequisitionId = c.Int(nullable: false, identity: true),
-                        DepartmentCode = c.String(maxLength: 4),
-                        CollectionPointId = c.Int(),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        ApprovedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                        ApprovedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    RequisitionId = c.String(nullable: false, maxLength: 20),
+                    DepartmentCode = c.String(maxLength: 4),
+                    CollectionPointId = c.Int(),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    ApprovedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                    ApprovedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.RequisitionId)
                 .ForeignKey("dbo.CollectionPoints", t => t.CollectionPointId)
                 .ForeignKey("dbo.Departments", t => t.DepartmentCode)
@@ -374,25 +398,25 @@ namespace team7_ssis.Migrations
                 .Index(t => t.ApprovedBy)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.Departments",
                 c => new
-                    {
-                        DepartmentCode = c.String(nullable: false, maxLength: 4),
-                        Name = c.String(maxLength: 30),
-                        HeadId = c.String(maxLength: 128),
-                        RepresentativeId = c.String(maxLength: 128),
-                        CollectionPointId = c.Int(),
-                        ContactName = c.String(maxLength: 30),
-                        PhoneNumber = c.String(maxLength: 30),
-                        FaxNumber = c.String(maxLength: 30),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    DepartmentCode = c.String(nullable: false, maxLength: 4),
+                    Name = c.String(maxLength: 30),
+                    HeadId = c.String(maxLength: 128),
+                    RepresentativeId = c.String(maxLength: 128),
+                    CollectionPointId = c.Int(),
+                    ContactName = c.String(maxLength: 30),
+                    PhoneNumber = c.String(maxLength: 30),
+                    FaxNumber = c.String(maxLength: 30),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.DepartmentCode)
                 .ForeignKey("dbo.Status", t => t.StatusId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
@@ -406,12 +430,12 @@ namespace team7_ssis.Migrations
                 .Index(t => t.HeadId)
                 .Index(t => t.RepresentativeId)
                 .Index(t => t.CollectionPointId);
-            
+
             CreateTable(
                 "dbo.RequisitionDetails",
                 c => new
                     {
-                        RequisitionId = c.Int(nullable: false),
+                        RequisitionId = c.String(nullable: false, maxLength: 20),
                         ItemCode = c.String(nullable: false, maxLength: 4),
                         Quantity = c.Int(nullable: false),
                     })
@@ -436,23 +460,23 @@ namespace team7_ssis.Migrations
                 .ForeignKey("dbo.StockAdjustments", t => t.StockAdjustmentId, cascadeDelete: true)
                 .Index(t => t.StockAdjustmentId)
                 .Index(t => t.ItemCode);
-            
+
             CreateTable(
                 "dbo.StockAdjustments",
                 c => new
-                    {
-                        StockAdjustmentId = c.Int(nullable: false, identity: true),
-                        Remarks = c.String(maxLength: 200),
-                        StatusId = c.Int(),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        ApprovedBySupervisor = c.String(maxLength: 128),
-                        ApprovedByManager = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                        ApprovedSupervisorDateTime = c.DateTime(nullable: false),
-                        ApprovedManagerDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    StockAdjustmentId = c.Int(nullable: false, identity: true),
+                    Remarks = c.String(maxLength: 200),
+                    StatusId = c.Int(),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    ApprovedBySupervisor = c.String(maxLength: 128),
+                    ApprovedByManager = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                    ApprovedSupervisorDateTime = c.DateTime(nullable: true),
+                    ApprovedManagerDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.StockAdjustmentId)
                 .ForeignKey("dbo.Status", t => t.StatusId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
@@ -464,7 +488,7 @@ namespace team7_ssis.Migrations
                 .Index(t => t.ApprovedByManager)
                 .Index(t => t.ApprovedBySupervisor)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.AspNetUserLogins",
                 c => new
@@ -478,6 +502,42 @@ namespace team7_ssis.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
+                "dbo.Notifications",
+                c => new
+                    {
+                        NotificationId = c.Int(nullable: false, identity: true),
+                        NotificationTypeId = c.Int(),
+                        Contents = c.String(maxLength: 200),
+                        StatusId = c.Int(),
+                        CreatedFor = c.String(maxLength: 128),
+                        CreatedDateTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.NotificationId)
+                .ForeignKey("dbo.NotificationTypes", t => t.NotificationTypeId)
+                .ForeignKey("dbo.Status", t => t.StatusId)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreatedFor)
+                .Index(t => t.NotificationTypeId)
+                .Index(t => t.StatusId)
+                .Index(t => t.CreatedFor);
+            
+            CreateTable(
+                "dbo.NotificationTypes",
+                c => new
+                    {
+                        NotificationTypeId = c.Int(nullable: false, identity: true),
+                        Name = c.String(maxLength: 30),
+                        CreatedBy = c.String(maxLength: 128),
+                        UpdatedBy = c.String(maxLength: 128),
+                        CreatedDateTime = c.DateTime(nullable: false),
+                        UpdatedDateTime = c.DateTime(nullable: true),
+                    })
+                .PrimaryKey(t => t.NotificationTypeId)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
+                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
+                .Index(t => t.CreatedBy)
+                .Index(t => t.UpdatedBy);
+            
+            CreateTable(
                 "dbo.AspNetUserRoles",
                 c => new
                     {
@@ -489,24 +549,24 @@ namespace team7_ssis.Migrations
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
-            
+
             CreateTable(
                 "dbo.Titles",
                 c => new
-                    {
-                        TitleId = c.Int(nullable: false, identity: true),
-                        Name = c.String(maxLength: 5),
-                        CreatedBy = c.String(maxLength: 128),
-                        UpdatedBy = c.String(maxLength: 128),
-                        CreatedDateTime = c.DateTime(nullable: false),
-                        UpdatedDateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    TitleId = c.Int(nullable: false, identity: true),
+                    Name = c.String(maxLength: 5),
+                    CreatedBy = c.String(maxLength: 128),
+                    UpdatedBy = c.String(maxLength: 128),
+                    CreatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                })
                 .PrimaryKey(t => t.TitleId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy)
                 .Index(t => t.CreatedBy)
                 .Index(t => t.UpdatedBy);
-            
+
             CreateTable(
                 "dbo.AspNetRoles",
                 c => new
@@ -534,6 +594,8 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.StockAdjustments", "ApprovedBySupervisor", "dbo.AspNetUsers");
             DropForeignKey("dbo.StockAdjustments", "ApprovedByManager", "dbo.AspNetUsers");
             DropForeignKey("dbo.StockAdjustments", "CreatedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Status", "UpdatedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Status", "CreatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUsers", "StatusId", "dbo.Status");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Requisitions", "UpdatedBy", "dbo.AspNetUsers");
@@ -543,6 +605,11 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.PurchaseOrders", "UpdatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.PurchaseOrders", "CreatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.PurchaseOrders", "ApprovedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.NotificationTypes", "UpdatedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.NotificationTypes", "CreatedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Notifications", "CreatedFor", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Notifications", "StatusId", "dbo.Status");
+            DropForeignKey("dbo.Notifications", "NotificationTypeId", "dbo.NotificationTypes");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Items", "UpdatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.Items", "CreatedBy", "dbo.AspNetUsers");
@@ -590,10 +657,12 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.ItemPrices", "SupplierCode", "dbo.Suppliers");
             DropForeignKey("dbo.ItemPrices", "StatusId", "dbo.Status");
             DropForeignKey("dbo.ItemCategories", "StatusId", "dbo.Status");
-            DropForeignKey("dbo.Status", "UpdatedBy", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Status", "CreatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.Items", "ItemCategoryId", "dbo.ItemCategories");
             DropForeignKey("dbo.Inventory", "ItemCode", "dbo.Items");
+            DropForeignKey("dbo.Delegations", "UpdatedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Delegations", "ReceipientId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Delegations", "CreatedBy", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Delegations", "StatusId", "dbo.Status");
             DropForeignKey("dbo.CollectionPoints", "UpdatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.CollectionPoints", "CreatedBy", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
@@ -602,6 +671,11 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.Titles", new[] { "CreatedBy" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
+            DropIndex("dbo.NotificationTypes", new[] { "UpdatedBy" });
+            DropIndex("dbo.NotificationTypes", new[] { "CreatedBy" });
+            DropIndex("dbo.Notifications", new[] { "CreatedFor" });
+            DropIndex("dbo.Notifications", new[] { "StatusId" });
+            DropIndex("dbo.Notifications", new[] { "NotificationTypeId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.StockAdjustments", new[] { "UpdatedBy" });
             DropIndex("dbo.StockAdjustments", new[] { "ApprovedBySupervisor" });
@@ -625,7 +699,7 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.Requisitions", new[] { "DepartmentCode" });
             DropIndex("dbo.Requisitions", new[] { "CollectionPointId" });
             DropIndex("dbo.Disbursements", new[] { "UpdatedBy" });
-            DropIndex("dbo.Disbursements", new[] { "CreatedBy" });
+            DropIndex("dbo.Disbursements", new[] { "CreatedByd" });
             DropIndex("dbo.Disbursements", new[] { "StatusId" });
             DropIndex("dbo.Disbursements", new[] { "RequisitionId" });
             DropIndex("dbo.DisbursementDetails", new[] { "ItemCode" });
@@ -649,8 +723,6 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.ItemPrices", new[] { "StatusId" });
             DropIndex("dbo.ItemPrices", new[] { "SupplierCode" });
             DropIndex("dbo.ItemPrices", new[] { "ItemCode" });
-            DropIndex("dbo.Status", new[] { "UpdatedBy" });
-            DropIndex("dbo.Status", new[] { "CreatedBy" });
             DropIndex("dbo.ItemCategories", new[] { "UpdatedBy" });
             DropIndex("dbo.ItemCategories", new[] { "CreatedBy" });
             DropIndex("dbo.ItemCategories", new[] { "StatusId" });
@@ -666,6 +738,12 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.DeliveryOrders", new[] { "SupplierCode" });
             DropIndex("dbo.DeliveryOrders", new[] { "StatusId" });
             DropIndex("dbo.DeliveryOrders", new[] { "PurchaseOrderNo" });
+            DropIndex("dbo.Status", new[] { "UpdatedBy" });
+            DropIndex("dbo.Status", new[] { "CreatedBy" });
+            DropIndex("dbo.Delegations", new[] { "UpdatedBy" });
+            DropIndex("dbo.Delegations", new[] { "ReceipientId" });
+            DropIndex("dbo.Delegations", new[] { "CreatedBy" });
+            DropIndex("dbo.Delegations", new[] { "StatusId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", new[] { "TitleId" });
             DropIndex("dbo.AspNetUsers", new[] { "SupervisorId" });
@@ -678,6 +756,8 @@ namespace team7_ssis.Migrations
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Titles");
             DropTable("dbo.AspNetUserRoles");
+            DropTable("dbo.NotificationTypes");
+            DropTable("dbo.Notifications");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.StockAdjustments");
             DropTable("dbo.StockAdjustmentDetails");
@@ -691,12 +771,13 @@ namespace team7_ssis.Migrations
             DropTable("dbo.PurchaseOrders");
             DropTable("dbo.Suppliers");
             DropTable("dbo.ItemPrices");
-            DropTable("dbo.Status");
             DropTable("dbo.ItemCategories");
             DropTable("dbo.Inventory");
             DropTable("dbo.Items");
             DropTable("dbo.DeliveryOrderDetails");
             DropTable("dbo.DeliveryOrders");
+            DropTable("dbo.Status");
+            DropTable("dbo.Delegations");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.CollectionPoints");

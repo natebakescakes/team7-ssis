@@ -7,7 +7,8 @@ namespace team7_ssis.Models
     {
         [Key]
         [Column(Order = 1)]
-        public int RequisitionId { get; set; }
+        [MaxLength(20)]
+        public string RequisitionId { get; set; }
         [Key]
         [MaxLength(4)]
         [Column(Order = 2)]

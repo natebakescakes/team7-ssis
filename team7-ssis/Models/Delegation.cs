@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
 namespace team7_ssis.Models
 {
-    public class Disbursement
+    public class Delegation
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DisbursementId { get; set; }
-        public Requisition Requisition { get; set; }
-        [InverseProperty("Disbursement")]
-        public List<DisbursementDetail> DisbursementDetails { get; set; }
-        [MaxLength(200)]
-        public String Remarks { get; set; }
+        public int DelegationId { get; set; }
+        public ApplicationUser Receipient { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public Status Status { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
