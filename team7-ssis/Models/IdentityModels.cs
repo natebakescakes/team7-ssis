@@ -33,6 +33,8 @@ namespace team7_ssis.Models
         public List<DeliveryOrder> DeliveryOrdersCreated { get; set; }
         [InverseProperty("UpdatedBy")]
         public List<DeliveryOrder> DeliveryOrdersUpdated { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<DeliveryOrderDetail> DeliveryOrderDetailsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
         public List<Item> ItemsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
@@ -65,6 +67,10 @@ namespace team7_ssis.Models
         public List<Disbursement> DisbursementsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
         public List<Disbursement> DisbursementsUpdated { get; set; }
+        [InverseProperty("CollectedBy")]
+        public List<Disbursement> DisbursementsCollected { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<DisbursementDetail> DisbursementDetailsUpdated { get; set; }
         [InverseProperty("Representative")]
         public List<Department> RepresentativeOf { get; set; }
         [InverseProperty("Head")]
@@ -93,6 +99,10 @@ namespace team7_ssis.Models
         public List<Status> StatusCreated { get; set; }
         [InverseProperty("UpdatedBy")]
         public List<Status> StatusUpdated { get; set; }
+        [InverseProperty("CreatedBy")]
+        public List<Retrieval> RetrievalsCreated { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<Retrieval> RetrievalsUpdated { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

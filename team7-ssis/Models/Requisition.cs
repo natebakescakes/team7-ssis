@@ -10,15 +10,15 @@ namespace team7_ssis.Models
         [Key]
         [MaxLength(20)]
         public String RequisitionId { get; set; }
-        //[ForeignKey("DepartmentCode")]
         public Department Department { get; set; }
-        //[ForeignKey("CollectionPointId")]
         public CollectionPoint CollectionPoint { get; set; }
         [InverseProperty("Requisition")]
         public List<RequisitionDetail> RequisitionDetails { get; set; }
-        [InverseProperty("Requisition")]
-        public List<Disbursement> Disbursements { get; set; }
-        //[ForeignKey("StatusId")]
+        public Retrieval Retrieval { get; set; }
+        [MaxLength(200)]
+        public String EmployeeRemarks { get; set; }
+        [MaxLength(200)]
+        public String HeadRemarks { get; set; }
         public Status Status { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }

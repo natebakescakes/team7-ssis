@@ -12,7 +12,7 @@ namespace team7_ssis.Models
         public int StockMovementId { get; set; }
         public Item Item { get; set; }
         [ForeignKey("DeliveryOrderDetail")]
-        [MaxLength(9)]
+        [MaxLength(20)]
         [Column(Order = 1)]
         public String DeliveryOrderNo { get; set; }
         [ForeignKey("DeliveryOrderDetail")]
@@ -21,14 +21,16 @@ namespace team7_ssis.Models
         public String DeliveryOrderDetailItemCode { get; set; }
         [ForeignKey("DisbursementDetail")]
         [Column(Order = 3)]
-        public int DisbursementId { get; set; }
+        [MaxLength(20)]
+        public String DisbursementId { get; set; }
         [ForeignKey("DisbursementDetail")]
         [Column(Order = 4)]
         [MaxLength(4)]
         public String DisbursementDetailItemCode { get; set; }
         [ForeignKey("StockAdjustmentDetail")]
         [Column(Order = 5)]
-        public int StockAdjustmentId { get; set; }
+        [MaxLength(20)]
+        public string StockAdjustmentId { get; set; }
         [ForeignKey("StockAdjustmentDetail")]
         [Column(Order = 6)]
         [MaxLength(4)]

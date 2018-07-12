@@ -8,7 +8,8 @@ namespace team7_ssis.Models
     {
         [Key]
         [Column(Order = 1)]
-        public int StockAdjustmentId { get; set; }
+        [MaxLength(20)]
+        public string StockAdjustmentId { get; set; }
         [Key]
         [MaxLength(4)]
         [Column(Order = 2)]

@@ -8,7 +8,7 @@ namespace team7_ssis.Models
     public class DeliveryOrder
     {
         [Key]
-        [MaxLength(9)]
+        [MaxLength(20)]
         public string DeliveryOrderNo { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }

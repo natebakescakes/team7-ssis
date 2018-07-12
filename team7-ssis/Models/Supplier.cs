@@ -8,6 +8,7 @@ namespace team7_ssis.Models
     public class Supplier
     {
         [Key]
+        [MaxLength(4)]
         public string SupplierCode { get; set; }
         [MaxLength(30)]
         public string Name { get; set; }
@@ -24,8 +25,7 @@ namespace team7_ssis.Models
         [InverseProperty("Supplier")]
         public List<ItemPrice> ItemPrices { get; set; }
         [InverseProperty("Supplier")]
-        public List<PurchaseOrder> Orders { get; set; }
-        //[ForeignKey("StatusId")]
+        public List<PurchaseOrder> PurchaseOrders { get; set; }
         public Status Status { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }

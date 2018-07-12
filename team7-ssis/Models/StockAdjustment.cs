@@ -8,8 +8,8 @@ namespace team7_ssis.Models
     public class StockAdjustment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int StockAdjustmentId { get; set; }
+        [MaxLength(20)]
+        public String StockAdjustmentId { get; set; }
         [InverseProperty("StockAdjustment")]
         public List<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         [MaxLength(200)]

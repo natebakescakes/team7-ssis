@@ -6,7 +6,7 @@ namespace team7_ssis.Models
     public class PurchaseOrderDetail
     {   
         [Key]
-        [MaxLength(6)]
+        [MaxLength(20)]
         [Column(Order = 1)]
         public string PurchaseOrderNo { get; set; }
         [Key]

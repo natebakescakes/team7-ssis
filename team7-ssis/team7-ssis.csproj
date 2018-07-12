@@ -231,9 +231,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201807120313278_InitialCreate.cs" />
-    <Compile Include="Migrations\201807120313278_InitialCreate.Designer.cs">
-      <DependentUpon>201807120313278_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201807121400089_InitialCreate.cs" />
+    <Compile Include="Migrations\201807121400089_InitialCreate.Designer.cs">
+      <DependentUpon>201807121400089_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -256,6 +256,7 @@
     <Compile Include="Models\PurchaseOrderDetail.cs" />
     <Compile Include="Models\Requisition.cs" />
     <Compile Include="Models\RequisitionDetail.cs" />
+    <Compile Include="Models\Retrieval.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\StockAdjustment.cs" />
     <Compile Include="Models\StockAdjustmentDetail.cs" />
@@ -360,8 +361,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807120313278_InitialCreate.resx">
-      <DependentUpon>201807120313278_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807121400089_InitialCreate.resx">
+      <DependentUpon>201807121400089_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
