@@ -18,7 +18,7 @@ namespace team7_ssis.Migrations
                     CreatedBy_Id = c.String(maxLength: 128),
                     UpdatedBy_Id = c.String(maxLength: 128),
                     CreatedDateTime = c.DateTime(nullable: false),
-                    UpdatedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
                 })
                 .PrimaryKey(t => t.CollectionPointId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy_Id)
@@ -149,6 +149,8 @@ namespace team7_ssis.Migrations
                     DeliveryOrderNo = c.String(nullable: false, maxLength: 20),
                     PurchaseOrder_PurchaseOrderNo = c.String(maxLength: 20),
                     Supplier_SupplierCode = c.String(maxLength: 4),
+                    DeliveryOrderFileName = c.String(maxLength: 200),
+                    InvoiceFileName = c.String(maxLength: 200),
                     Status_StatusId = c.Int(),
                     CreatedBy_Id = c.String(maxLength: 128),
                     UpdatedBy_Id = c.String(maxLength: 128),
@@ -377,8 +379,8 @@ namespace team7_ssis.Migrations
                     Remarks = c.String(maxLength: 200),
                     Status_StatusId = c.Int(),
                     CreatedDateTime = c.DateTime(nullable: false),
-                    UpdatedDateTime = c.DateTime(nullable: false),
-                    CollectedDateTime = c.DateTime(nullable: false),
+                    UpdatedDateTime = c.DateTime(nullable: true),
+                    CollectedDateTime = c.DateTime(nullable: true),
                     CreatedBy_Id = c.String(maxLength: 128),
                     UpdatedBy_Id = c.String(maxLength: 128),
                     CollectedBy_Id = c.String(maxLength: 128),
