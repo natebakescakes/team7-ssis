@@ -507,12 +507,16 @@ namespace team7_ssis.Migrations
                     OriginalQuantity = c.Int(nullable: false),
                     AfterQuantity = c.Int(nullable: false),
                     Reason = c.String(maxLength: 200),
+                    UpdatedBy_Id = c.String(maxLength: 128),
+                    UpdatedDateTime = c.DateTime(nullable: true),
                 })
                 .PrimaryKey(t => new { t.StockAdjustmentId, t.ItemCode })
                 .ForeignKey("dbo.Items", t => t.ItemCode, cascadeDelete: true)
                 .ForeignKey("dbo.StockAdjustments", t => t.StockAdjustmentId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy_Id)
                 .Index(t => t.StockAdjustmentId)
-                .Index(t => t.ItemCode);
+                .Index(t => t.ItemCode)
+                .Index(t => t.UpdatedBy_Id);
 
             CreateTable(
                 "dbo.StockAdjustments",
@@ -647,6 +651,7 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.StockAdjustments", "ApprovedBySupervisor_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.StockAdjustments", "ApprovedByManager_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.StockAdjustments", "CreatedBy_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.StockAdjustmentDetails", "UpdatedBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Status", "UpdatedBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Status", "CreatedBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUsers", "Status_StatusId", "dbo.Status");
@@ -746,6 +751,7 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.StockAdjustments", new[] { "ApprovedByManager_Id" });
             DropIndex("dbo.StockAdjustments", new[] { "CreatedBy_Id" });
             DropIndex("dbo.StockAdjustments", new[] { "Status_StatusId" });
+            DropIndex("dbo.StockAdjustmentDetails", new[] { "UpdatedBy_Id" });
             DropIndex("dbo.StockAdjustmentDetails", new[] { "ItemCode" });
             DropIndex("dbo.StockAdjustmentDetails", new[] { "StockAdjustmentId" });
             DropIndex("dbo.Retrievals", new[] { "UpdatedBy_Id" });

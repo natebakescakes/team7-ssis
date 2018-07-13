@@ -47,6 +47,8 @@ namespace team7_ssis.Models
         public List<StockAdjustment> StockAdjustmentsSupervisorApproved { get; set; }
         [InverseProperty("ApprovedByManager")]
         public List<StockAdjustment> StockAdjustmentsManagerApproved { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public List<StockAdjustmentDetail> StockAdjustmentDetailsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
         public List<PurchaseOrder> PurchaseOrdersCreated { get; set; }
         [InverseProperty("UpdatedBy")]

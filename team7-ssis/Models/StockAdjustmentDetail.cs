@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,6 +23,8 @@ namespace team7_ssis.Models
         public int AfterQuantity { get; set; }
         [MaxLength(200)]
         public string Reason { get; set; }
+        public ApplicationUser UpdatedBy { get; set; }
+        public DateTime UpdatedDateTime { get; set; }
         [InverseProperty("StockAdjustmentDetail")]
         public List<StockMovement> StockMovements { get; set; }
     }
