@@ -12,6 +12,7 @@ namespace team7_ssis.Models
         public int CollectionPointId { get; set; }
         [MaxLength(30)]
         public string Name { get; set; }
+        public ApplicationUser ClerkInCharge { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }

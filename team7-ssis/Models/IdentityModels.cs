@@ -79,6 +79,8 @@ namespace team7_ssis.Models
         public List<Department> DepartmentsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
         public List<Department> DepartmentsUpdated { get; set; }
+        [InverseProperty("ClerkInCharge")]
+        public List<CollectionPoint> CollectionPointsInCharge { get; set; }
         [InverseProperty("CreatedBy")]
         public List<CollectionPoint> CollectionPointsCreated { get; set; }
         [InverseProperty("UpdatedBy")]

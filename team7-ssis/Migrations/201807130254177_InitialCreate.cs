@@ -12,18 +12,21 @@ namespace team7_ssis.Migrations
                 c => new
                 {
                     CollectionPointId = c.Int(nullable: false, identity: true),
+                    ClerkInCharge_Id = c.String(maxLength: 128),
                     Name = c.String(maxLength: 30),
                     Status_StatusId = c.Int(),
                     CreatedBy_Id = c.String(maxLength: 128),
                     UpdatedBy_Id = c.String(maxLength: 128),
                     CreatedDateTime = c.DateTime(nullable: false),
-                    UpdatedDateTime = c.DateTime(nullable: true),
+                    UpdatedDateTime = c.DateTime(nullable: false),
                 })
                 .PrimaryKey(t => t.CollectionPointId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy_Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.ClerkInCharge_Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy_Id)
                 .ForeignKey("dbo.Status", t => t.Status_StatusId)
                 .Index(t => t.CreatedBy_Id)
+                .Index(t => t.ClerkInCharge_Id)
                 .Index(t => t.UpdatedBy_Id)
                 .Index(t => t.Status_StatusId);
 
@@ -694,17 +697,18 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.DisbursementDetails", "Status_StatusId", "dbo.Status");
             DropForeignKey("dbo.DisbursementDetails", "ItemCode", "dbo.Items");
             DropForeignKey("dbo.Disbursements", "Status_StatusId", "dbo.Status");
+            DropForeignKey("dbo.DisbursementDetails", "DisbursementId", "dbo.Disbursements");
+            DropForeignKey("dbo.Departments", "Status_StatusId", "dbo.Status");
+            DropForeignKey("dbo.Requisitions", "Department_DepartmentCode", "dbo.Departments");
+            DropForeignKey("dbo.Requisitions", "Status_StatusId", "dbo.Status");
             DropForeignKey("dbo.Retrievals", "Status_StatusId", "dbo.Status");
             DropForeignKey("dbo.Requisitions", "Retrieval_RetrievalId", "dbo.Retrievals");
-            DropForeignKey("dbo.Requisitions", "Status_StatusId", "dbo.Status");
+            DropForeignKey("dbo.Disbursements", "Retrieval_RetrievalId", "dbo.Retrievals");
             DropForeignKey("dbo.RequisitionDetails", "RequisitionId", "dbo.Requisitions");
             DropForeignKey("dbo.RequisitionDetails", "ItemCode", "dbo.Items");
-            DropForeignKey("dbo.Requisitions", "Department_DepartmentCode", "dbo.Departments");
-            DropForeignKey("dbo.Departments", "Status_StatusId", "dbo.Status");
-            DropForeignKey("dbo.AspNetUsers", "Department_DepartmentCode", "dbo.Departments");
             DropForeignKey("dbo.Requisitions", "CollectionPoint_CollectionPointId", "dbo.CollectionPoints");
-            DropForeignKey("dbo.Disbursements", "Retrieval_RetrievalId", "dbo.Retrievals");
-            DropForeignKey("dbo.DisbursementDetails", "DisbursementId", "dbo.Disbursements");
+            DropForeignKey("dbo.AspNetUsers", "Department_DepartmentCode", "dbo.Departments");
+            DropForeignKey("dbo.Disbursements", "Department_DepartmentCode", "dbo.Departments");
             DropForeignKey("dbo.Items", "Status_StatusId", "dbo.Status");
             DropForeignKey("dbo.ItemPrices", "ItemCode", "dbo.Items");
             DropForeignKey("dbo.Suppliers", "Status_StatusId", "dbo.Status");
@@ -721,6 +725,7 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.Delegations", "CreatedBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Delegations", "Status_StatusId", "dbo.Status");
             DropForeignKey("dbo.CollectionPoints", "UpdatedBy_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.CollectionPoints", "ClerkInCharge_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.CollectionPoints", "CreatedBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
@@ -741,29 +746,30 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.StockAdjustments", new[] { "Status_StatusId" });
             DropIndex("dbo.StockAdjustmentDetails", new[] { "ItemCode" });
             DropIndex("dbo.StockAdjustmentDetails", new[] { "StockAdjustmentId" });
+            DropIndex("dbo.Retrievals", new[] { "UpdatedBy_Id" });
+            DropIndex("dbo.Retrievals", new[] { "CreatedBy_Id" });
+            DropIndex("dbo.Retrievals", new[] { "Status_StatusId" });
             DropIndex("dbo.RequisitionDetails", new[] { "ItemCode" });
             DropIndex("dbo.RequisitionDetails", new[] { "RequisitionId" });
+            DropIndex("dbo.Requisitions", new[] { "UpdatedBy_Id" });
+            DropIndex("dbo.Requisitions", new[] { "CreatedBy_Id" });
+            DropIndex("dbo.Requisitions", new[] { "ApprovedBy_Id" });
+            DropIndex("dbo.Requisitions", new[] { "Department_DepartmentCode" });
+            DropIndex("dbo.Requisitions", new[] { "Status_StatusId" });
+            DropIndex("dbo.Requisitions", new[] { "Retrieval_RetrievalId" });
+            DropIndex("dbo.Requisitions", new[] { "CollectionPoint_CollectionPointId" });
             DropIndex("dbo.Departments", new[] { "CollectionPoint_CollectionPointId" });
             DropIndex("dbo.Departments", new[] { "Representative_Id" });
             DropIndex("dbo.Departments", new[] { "Head_Id" });
             DropIndex("dbo.Departments", new[] { "UpdatedBy_Id" });
             DropIndex("dbo.Departments", new[] { "CreatedBy_Id" });
             DropIndex("dbo.Departments", new[] { "Status_StatusId" });
-            DropIndex("dbo.Requisitions", new[] { "UpdatedBy_Id" });
-            DropIndex("dbo.Requisitions", new[] { "CreatedBy_Id" });
-            DropIndex("dbo.Requisitions", new[] { "ApprovedBy_Id" });
-            DropIndex("dbo.Requisitions", new[] { "Retrieval_RetrievalId" });
-            DropIndex("dbo.Requisitions", new[] { "Status_StatusId" });
-            DropIndex("dbo.Requisitions", new[] { "Department_DepartmentCode" });
-            DropIndex("dbo.Requisitions", new[] { "CollectionPoint_CollectionPointId" });
-            DropIndex("dbo.Retrievals", new[] { "UpdatedBy_Id" });
-            DropIndex("dbo.Retrievals", new[] { "CreatedBy_Id" });
-            DropIndex("dbo.Retrievals", new[] { "Status_StatusId" });
             DropIndex("dbo.Disbursements", new[] { "UpdatedBy_Id" });
             DropIndex("dbo.Disbursements", new[] { "CreatedBy_Id" });
             DropIndex("dbo.Disbursements", new[] { "CollectedBy_Id" });
             DropIndex("dbo.Disbursements", new[] { "Status_StatusId" });
             DropIndex("dbo.Disbursements", new[] { "Retrieval_RetrievalId" });
+            DropIndex("dbo.Disbursements", new[] { "Department_DepartmentCode" });
             DropIndex("dbo.DisbursementDetails", new[] { "UpdatedBy_Id" });
             DropIndex("dbo.DisbursementDetails", new[] { "Status_StatusId" });
             DropIndex("dbo.DisbursementDetails", new[] { "ItemCode" });
@@ -818,6 +824,7 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.CollectionPoints", new[] { "Status_StatusId" });
             DropIndex("dbo.CollectionPoints", new[] { "UpdatedBy_Id" });
+            DropIndex("dbo.CollectionPoints", new[] { "ClerkInCharge_Id" });
             DropIndex("dbo.CollectionPoints", new[] { "CreatedBy_Id" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Titles");
@@ -827,10 +834,10 @@ namespace team7_ssis.Migrations
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.StockAdjustments");
             DropTable("dbo.StockAdjustmentDetails");
-            DropTable("dbo.RequisitionDetails");
-            DropTable("dbo.Departments");
-            DropTable("dbo.Requisitions");
             DropTable("dbo.Retrievals");
+            DropTable("dbo.RequisitionDetails");
+            DropTable("dbo.Requisitions");
+            DropTable("dbo.Departments");
             DropTable("dbo.Disbursements");
             DropTable("dbo.DisbursementDetails");
             DropTable("dbo.StockMovements");
