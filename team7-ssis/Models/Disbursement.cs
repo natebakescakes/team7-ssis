@@ -10,6 +10,7 @@ namespace team7_ssis.Models
         [Key]
         [MaxLength(20)]
         public String DisbursementId { get; set; }
+        public Department Department { get; set; }
         public Retrieval Retrieval { get; set; }
         [InverseProperty("Disbursement")]
         public List<DisbursementDetail> DisbursementDetails { get; set; }

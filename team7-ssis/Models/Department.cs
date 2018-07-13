@@ -28,5 +28,9 @@ namespace team7_ssis.Models
         public DateTime UpdatedDateTime { get; set; }
         [InverseProperty("Department")]
         public List<ApplicationUser> Employees { get; set; }
+        [InverseProperty("Department")]
+        public List<Requisition> Requisitions { get; set; }
+        [InverseProperty("Department")]
+        public List<Disbursement> Disbursements { get; set; }
     }
 }

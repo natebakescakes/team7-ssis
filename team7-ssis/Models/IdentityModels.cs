@@ -116,6 +116,7 @@ namespace team7_ssis.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<CollectionPoint> CollectionPoint { get; set; }
+        public DbSet<Delegation> Delegation { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrder { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetail { get; set; }
         public DbSet<Department> Department { get; set; }
@@ -125,15 +126,19 @@ namespace team7_ssis.Models
         public DbSet<Item> Item { get; set; }
         public DbSet<ItemCategory> ItemCategory { get; set; }
         public DbSet<ItemPrice> ItemPrice { get; set; }
+        public DbSet<Notification> Notification { get; set; }
+        public DbSet<NotificationType> NotificationType { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<PurchaseOrderDetail> PurchaseOrderDetail { get; set; }
         public DbSet<Requisition> Requisition { get; set; }
         public DbSet<RequisitionDetail> RequisitionDetail { get; set; }
+        public DbSet<Retrieval> Retrieval { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<StockAdjustment> StockAdjustment { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetail { get; set; }
         public DbSet<StockMovement> StockMovement { get; set; }
         public DbSet<Supplier> Supplier { get; set; }
+        public DbSet<Title> Title { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
