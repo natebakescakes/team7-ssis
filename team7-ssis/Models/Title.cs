@@ -7,13 +7,13 @@ namespace team7_ssis.Models
     public class Title
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int TitleId { get; set; }
         [MaxLength(5)]
         public string Name { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
     }
 }

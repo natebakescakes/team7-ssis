@@ -23,7 +23,7 @@ namespace team7_ssis.Models
         public ApplicationUser UpdatedBy { get; set; }
         public ApplicationUser ApprovedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
-        public DateTime ApprovedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
+        public DateTime? ApprovedDateTime { get; set; }
     }
 }

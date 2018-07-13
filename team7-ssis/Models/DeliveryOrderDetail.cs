@@ -22,7 +22,7 @@ namespace team7_ssis.Models
         public Status Status { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
 
-        public DateTime UpdatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("DeliveryOrderDetail")]
         public List<StockMovement> StockMovements { get; set; }
         [ForeignKey("DeliveryOrderNo")]

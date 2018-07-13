@@ -16,7 +16,7 @@ namespace team7_ssis.Models
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("Retrieval")]
         public List<Requisition> Requisitions { get; set; }
         [InverseProperty("Retrieval")]

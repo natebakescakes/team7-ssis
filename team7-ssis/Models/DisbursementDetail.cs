@@ -25,7 +25,7 @@ namespace team7_ssis.Models
         public int ActualQuantity { get; set; }
         public Status Status { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("DisbursementDetail")]
         public List<StockMovement> StockMovements { get; set; }
     }

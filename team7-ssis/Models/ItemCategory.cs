@@ -8,6 +8,7 @@ namespace team7_ssis.Models
     public class ItemCategory
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ItemCategoryId { get; set; }
         [MaxLength(30)]
         public string Name { get; set; }
@@ -20,6 +21,6 @@ namespace team7_ssis.Models
         public ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
     }
 }

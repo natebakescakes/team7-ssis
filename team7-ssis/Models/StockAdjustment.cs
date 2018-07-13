@@ -21,8 +21,8 @@ namespace team7_ssis.Models
         public ApplicationUser ApprovedBySupervisor { get; set; }
         public ApplicationUser ApprovedByManager { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
-        public DateTime ApprovedSupervisorDateTime { get; set; }
-        public DateTime ApprovedManagerDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
+        public DateTime? ApprovedSupervisorDateTime { get; set; }
+        public DateTime? ApprovedManagerDateTime { get; set; }
     }
 }

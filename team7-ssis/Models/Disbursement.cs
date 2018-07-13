@@ -21,7 +21,7 @@ namespace team7_ssis.Models
         public ApplicationUser UpdatedBy { get; set; }
         public ApplicationUser CollectedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
-        public DateTime CollectedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
+        public DateTime? CollectedDateTime { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace team7_ssis.Models
     public class Notification
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int NotificationId { get; set; }
         public NotificationType NotificationType { get; set; }
         [MaxLength(200)]

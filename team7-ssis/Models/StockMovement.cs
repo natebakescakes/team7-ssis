@@ -8,7 +8,7 @@ namespace team7_ssis.Models
     {
         [Key]
         [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StockMovementId { get; set; }
         public Item Item { get; set; }
         [ForeignKey("DeliveryOrderDetail")]

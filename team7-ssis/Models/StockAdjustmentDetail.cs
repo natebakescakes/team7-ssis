@@ -24,7 +24,7 @@ namespace team7_ssis.Models
         [MaxLength(200)]
         public string Reason { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
-        public DateTime UpdatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("StockAdjustmentDetail")]
         public List<StockMovement> StockMovements { get; set; }
     }

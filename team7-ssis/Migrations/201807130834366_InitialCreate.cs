@@ -11,7 +11,7 @@ namespace team7_ssis.Migrations
                 "dbo.CollectionPoints",
                 c => new
                 {
-                    CollectionPointId = c.Int(nullable: false, identity: true),
+                    CollectionPointId = c.Int(nullable: false),
                     ClerkInCharge_Id = c.String(maxLength: 128),
                     Name = c.String(maxLength: 30),
                     Status_StatusId = c.Int(),
@@ -81,7 +81,7 @@ namespace team7_ssis.Migrations
                 "dbo.Delegations",
                 c => new
                 {
-                    DelegationId = c.Int(nullable: false, identity: true),
+                    DelegationId = c.Int(nullable: false),
                     Receipient_Id = c.String(maxLength: 128),
                     StartDate = c.DateTime(nullable: false),
                     EndDate = c.DateTime(nullable: false),
@@ -105,7 +105,7 @@ namespace team7_ssis.Migrations
                 "dbo.Status",
                 c => new
                 {
-                    StatusId = c.Int(nullable: false, identity: true),
+                    StatusId = c.Int(nullable: false),
                     Name = c.String(maxLength: 30),
                     Description = c.String(maxLength: 200),
                     CreatedBy_Id = c.String(maxLength: 128),
@@ -252,7 +252,7 @@ namespace team7_ssis.Migrations
                 "dbo.ItemCategories",
                 c => new
                 {
-                    ItemCategoryId = c.Int(nullable: false, identity: true),
+                    ItemCategoryId = c.Int(nullable: false),
                     Name = c.String(maxLength: 30),
                     Description = c.String(maxLength: 200),
                     Status_StatusId = c.Int(),
@@ -324,7 +324,7 @@ namespace team7_ssis.Migrations
                 "dbo.StockMovements",
                 c => new
                 {
-                    StockMovementId = c.Int(nullable: false, identity: true),
+                    StockMovementId = c.Int(nullable: false),
                     Item_ItemCode = c.String(maxLength: 4),
                     DeliveryOrderNo = c.String(maxLength: 20),
                     DeliveryOrderDetailItemCode = c.String(maxLength: 4),
@@ -562,7 +562,7 @@ namespace team7_ssis.Migrations
                 "dbo.Notifications",
                 c => new
                 {
-                    NotificationId = c.Int(nullable: false, identity: true),
+                    NotificationId = c.Int(nullable: false),
                     NotificationType_NotificationTypeId = c.Int(),
                     Contents = c.String(maxLength: 200),
                     Status_StatusId = c.Int(),
@@ -581,7 +581,7 @@ namespace team7_ssis.Migrations
                 "dbo.NotificationTypes",
                 c => new
                 {
-                    NotificationTypeId = c.Int(nullable: false, identity: true),
+                    NotificationTypeId = c.Int(nullable: false),
                     Name = c.String(maxLength: 30),
                     CreatedBy_Id = c.String(maxLength: 128),
                     UpdatedBy_Id = c.String(maxLength: 128),
@@ -611,7 +611,7 @@ namespace team7_ssis.Migrations
                 "dbo.Titles",
                 c => new
                 {
-                    TitleId = c.Int(nullable: false, identity: true),
+                    TitleId = c.Int(nullable: false),
                     Name = c.String(maxLength: 5),
                     CreatedBy_Id = c.String(maxLength: 128),
                     UpdatedBy_Id = c.String(maxLength: 128),
