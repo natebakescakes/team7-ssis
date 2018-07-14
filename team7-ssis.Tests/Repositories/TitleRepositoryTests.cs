@@ -1,29 +1,29 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
-    public class SupplierRepositoryTests
+    [TestClass]
+    public class TitleRepositoryTests
     {
         ApplicationDbContext context;
-        SupplierRepository supplierRepository;
+        TitleRepository titleRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
-            supplierRepository = new SupplierRepository(context);
+            titleRepository = new TitleRepository(context);
         }
 
         [TestMethod]
         public void CountTestNotNull()
         {
             // Act
-            int result = supplierRepository.Count();
+            int result = titleRepository.Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to count properly");
@@ -33,7 +33,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = supplierRepository.FindAll().Count;
+            int result = titleRepository.FindAll().Count;
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");
@@ -43,39 +43,39 @@ namespace team7_ssis.Tests.Repositories
         public void FindByIdTestNotNull()
         {
             // Act
-            var result = supplierRepository.FindById("CHEP");
+            var result = titleRepository.FindById(1);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Supplier));
+            Assert.IsInstanceOfType(result, typeof(Title));
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
             // Act
-            var result = supplierRepository.ExistsById("CHEP");
+            var result = titleRepository.ExistsById(1);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeContactName()
+        public void SaveTestExistingChangeName()
         {
             // Arrange
-            var supplier = supplierRepository.FindById("CHEP");
-            var original = supplier.ContactName;
-            supplier.ContactName = "TEST";
+            var title = titleRepository.FindById(1);
+            var original = title.Name;
+            title.Name = "Mr..";
 
             // Act
-            var result = supplierRepository.Save(supplier);
+            var result = titleRepository.Save(title);
 
             // Assert
-            Assert.AreEqual("TEST", result.ContactName);
+            Assert.AreEqual("Mr..", result.Name);
 
             // Tear Down
-            supplier.ContactName = original;
-            supplierRepository.Save(supplier);
+            title.Name = original;
+            titleRepository.Save(title);
         }
 
         [TestMethod]
@@ -83,24 +83,24 @@ namespace team7_ssis.Tests.Repositories
         {
             // Save new object into DB
             // Arrange
-            var supplier = new Supplier
+            var title = new Title
             {
-                SupplierCode = "XXXX",
+                TitleId = 999999,
                 CreatedDateTime = DateTime.Now
             };
 
             // Act
-            var saveResult = supplierRepository.Save(supplier);
+            var saveResult = titleRepository.Save(title);
 
             // Assert
-            Assert.IsInstanceOfType(saveResult, typeof(Supplier));
+            Assert.IsInstanceOfType(saveResult, typeof(Title));
 
             // Delete saved object from DB
             // Act
-            supplierRepository.Delete(saveResult);
+            titleRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(supplierRepository.FindById("XXXX"));
+            Assert.IsNull(titleRepository.FindById(999999));
         }
     }
 }

@@ -1,29 +1,29 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
-    public class SupplierRepositoryTests
+    [TestClass]
+    public class RetrievalRepositoryTests
     {
         ApplicationDbContext context;
-        SupplierRepository supplierRepository;
+        RetrievalRepository retrievalRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
-            supplierRepository = new SupplierRepository(context);
+            retrievalRepository = new RetrievalRepository(context);
         }
 
         [TestMethod]
         public void CountTestNotNull()
         {
             // Act
-            int result = supplierRepository.Count();
+            int result = retrievalRepository.Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to count properly");
@@ -33,7 +33,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = supplierRepository.FindAll().Count;
+            int result = retrievalRepository.FindAll().Count;
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");
@@ -43,39 +43,40 @@ namespace team7_ssis.Tests.Repositories
         public void FindByIdTestNotNull()
         {
             // Act
-            var result = supplierRepository.FindById("CHEP");
+            var result = retrievalRepository.FindById("TEST");
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Supplier));
+            Assert.IsInstanceOfType(result, typeof(Retrieval));
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
             // Act
-            var result = supplierRepository.ExistsById("CHEP");
+            var result = retrievalRepository.ExistsById("TEST");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeContactName()
+        public void SaveTestExistingChangeStatus()
         {
             // Arrange
-            var supplier = supplierRepository.FindById("CHEP");
-            var original = supplier.ContactName;
-            supplier.ContactName = "TEST";
+            var status = new StatusRepository(context).FindById(3);
+            var retrieval = retrievalRepository.FindById("TEST");
+            var original = retrieval.Status;
+            retrieval.Status = status;
 
             // Act
-            var result = supplierRepository.Save(supplier);
+            var result = retrievalRepository.Save(retrieval);
 
             // Assert
-            Assert.AreEqual("TEST", result.ContactName);
+            Assert.AreEqual(status, result.Status);
 
             // Tear Down
-            supplier.ContactName = original;
-            supplierRepository.Save(supplier);
+            retrieval.Status = original;
+            retrievalRepository.Save(retrieval);
         }
 
         [TestMethod]
@@ -83,24 +84,24 @@ namespace team7_ssis.Tests.Repositories
         {
             // Save new object into DB
             // Arrange
-            var supplier = new Supplier
+            var retrieval = new Retrieval
             {
-                SupplierCode = "XXXX",
+                RetrievalId = "UNIT TEST",
                 CreatedDateTime = DateTime.Now
             };
 
             // Act
-            var saveResult = supplierRepository.Save(supplier);
+            var saveResult = retrievalRepository.Save(retrieval);
 
             // Assert
-            Assert.IsInstanceOfType(saveResult, typeof(Supplier));
+            Assert.IsInstanceOfType(saveResult, typeof(Retrieval));
 
             // Delete saved object from DB
             // Act
-            supplierRepository.Delete(saveResult);
+            retrievalRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(supplierRepository.FindById("XXXX"));
+            Assert.IsNull(retrievalRepository.FindById("UNIT TEST"));
         }
     }
 }

@@ -5,25 +5,25 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
-    public class SupplierRepositoryTests
+    [TestClass]
+    public class NotificationRepostioryTests
     {
         ApplicationDbContext context;
-        SupplierRepository supplierRepository;
+        NotificationRepository notificationRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
-            supplierRepository = new SupplierRepository(context);
+            notificationRepository = new NotificationRepository(context);
         }
 
         [TestMethod]
         public void CountTestNotNull()
         {
             // Act
-            int result = supplierRepository.Count();
+            int result = notificationRepository.Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to count properly");
@@ -33,7 +33,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = supplierRepository.FindAll().Count;
+            int result = notificationRepository.FindAll().Count;
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");
@@ -43,39 +43,40 @@ namespace team7_ssis.Tests.Repositories
         public void FindByIdTestNotNull()
         {
             // Act
-            var result = supplierRepository.FindById("CHEP");
+            var result = notificationRepository.FindById(1);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Supplier));
+            Assert.IsInstanceOfType(result, typeof(Notification));
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
             // Act
-            var result = supplierRepository.ExistsById("CHEP");
+            var result = notificationRepository.ExistsById(1);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeContactName()
+        public void SaveTestExistingChangeNotificationType()
         {
             // Arrange
-            var supplier = supplierRepository.FindById("CHEP");
-            var original = supplier.ContactName;
-            supplier.ContactName = "TEST";
+            var notificationType = new NotificationTypeRepository(context).FindById(1);
+            var notification = notificationRepository.FindById(1);
+            var original = notification.NotificationType;
+            notification.NotificationType = notificationType;
 
             // Act
-            var result = supplierRepository.Save(supplier);
+            var result = notificationRepository.Save(notification);
 
             // Assert
-            Assert.AreEqual("TEST", result.ContactName);
+            Assert.AreEqual(notificationType, result.NotificationType);
 
             // Tear Down
-            supplier.ContactName = original;
-            supplierRepository.Save(supplier);
+            notification.NotificationType = original;
+            notificationRepository.Save(notification);
         }
 
         [TestMethod]
@@ -83,24 +84,24 @@ namespace team7_ssis.Tests.Repositories
         {
             // Save new object into DB
             // Arrange
-            var supplier = new Supplier
+            var notification = new Notification
             {
-                SupplierCode = "XXXX",
+                NotificationId = 999999,
                 CreatedDateTime = DateTime.Now
             };
 
             // Act
-            var saveResult = supplierRepository.Save(supplier);
+            var saveResult = notificationRepository.Save(notification);
 
             // Assert
-            Assert.IsInstanceOfType(saveResult, typeof(Supplier));
+            Assert.IsInstanceOfType(saveResult, typeof(Notification));
 
             // Delete saved object from DB
             // Act
-            supplierRepository.Delete(saveResult);
+            notificationRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(supplierRepository.FindById("XXXX"));
+            Assert.IsNull(notificationRepository.FindById(999999));
         }
     }
 }

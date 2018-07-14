@@ -5,25 +5,25 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
-    public class SupplierRepositoryTests
+    [TestClass]
+    public class DelegationRepositoryTests
     {
         ApplicationDbContext context;
-        SupplierRepository supplierRepository;
+        DelegationRepository delegationRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
-            supplierRepository = new SupplierRepository(context);
+            delegationRepository = new DelegationRepository(context);
         }
 
         [TestMethod]
         public void CountTestNotNull()
         {
             // Act
-            int result = supplierRepository.Count();
+            int result = delegationRepository.Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to count properly");
@@ -33,7 +33,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = supplierRepository.FindAll().Count;
+            int result = delegationRepository.FindAll().Count;
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");
@@ -43,39 +43,40 @@ namespace team7_ssis.Tests.Repositories
         public void FindByIdTestNotNull()
         {
             // Act
-            var result = supplierRepository.FindById("CHEP");
+            var result = delegationRepository.FindById(1);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Supplier));
+            Assert.IsInstanceOfType(result, typeof(Delegation));
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
             // Act
-            var result = supplierRepository.ExistsById("CHEP");
+            var result = delegationRepository.ExistsById(1);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeContactName()
+        public void SaveTestExistingChangeReceipient()
         {
             // Arrange
-            var supplier = supplierRepository.FindById("CHEP");
-            var original = supplier.ContactName;
-            supplier.ContactName = "TEST";
+            var user = new UserRepository(context).FindByEmail("root@admin.com");
+            var delegation = delegationRepository.FindById(1);
+            var original = delegation.Receipient;
+            delegation.Receipient = user;
 
             // Act
-            var result = supplierRepository.Save(supplier);
+            var result = delegationRepository.Save(delegation);
 
             // Assert
-            Assert.AreEqual("TEST", result.ContactName);
+            Assert.AreEqual(user, result.Receipient);
 
             // Tear Down
-            supplier.ContactName = original;
-            supplierRepository.Save(supplier);
+            delegation.Receipient = original;
+            delegationRepository.Save(delegation);
         }
 
         [TestMethod]
@@ -83,24 +84,26 @@ namespace team7_ssis.Tests.Repositories
         {
             // Save new object into DB
             // Arrange
-            var supplier = new Supplier
+            var delegation = new Delegation
             {
-                SupplierCode = "XXXX",
+                DelegationId = 999999,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
                 CreatedDateTime = DateTime.Now
             };
 
             // Act
-            var saveResult = supplierRepository.Save(supplier);
+            var saveResult = delegationRepository.Save(delegation);
 
             // Assert
-            Assert.IsInstanceOfType(saveResult, typeof(Supplier));
+            Assert.IsInstanceOfType(saveResult, typeof(Delegation));
 
             // Delete saved object from DB
             // Act
-            supplierRepository.Delete(saveResult);
+            delegationRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(supplierRepository.FindById("XXXX"));
+            Assert.IsNull(delegationRepository.FindById(999999));
         }
     }
 }

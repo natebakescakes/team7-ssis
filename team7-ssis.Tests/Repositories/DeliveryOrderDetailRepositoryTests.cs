@@ -1,29 +1,29 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
     [TestClass]
-    public class DeliveryOrderRepositoryTests
+    public class DeliveryOrderDetailRepositoryTests
     {
         ApplicationDbContext context;
-        DeliveryOrderRepository deliveryOrderRepository;
+        DeliveryOrderDetailRepository deliveryOrderDetailRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
-            deliveryOrderRepository = new DeliveryOrderRepository(context);
+            deliveryOrderDetailRepository = new DeliveryOrderDetailRepository(context);
         }
 
         [TestMethod]
         public void CountTestNotNull()
         {
             // Act
-            int result = deliveryOrderRepository.Count();
+            int result = deliveryOrderDetailRepository.Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to count properly");
@@ -33,7 +33,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = deliveryOrderRepository.FindAll().Count;
+            int result = deliveryOrderDetailRepository.FindAll().Count;
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");
@@ -43,17 +43,17 @@ namespace team7_ssis.Tests.Repositories
         public void FindByIdTestNotNull()
         {
             // Act
-            var result = deliveryOrderRepository.FindById("TEST");
+            var result = deliveryOrderDetailRepository.FindById("TEST", "E030");
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(DeliveryOrder));
+            Assert.IsInstanceOfType(result, typeof(DeliveryOrderDetail));
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
             // Act
-            var result = deliveryOrderRepository.ExistsById("TEST");
+            var result = deliveryOrderDetailRepository.ExistsById("TEST", "E030");
 
             // Assert
             Assert.IsTrue(result);
@@ -64,19 +64,19 @@ namespace team7_ssis.Tests.Repositories
         {
             // Arrange
             var status = new StatusRepository(context).FindById(14);
-            var deliveryOrder = deliveryOrderRepository.FindById("TEST");
-            var original = deliveryOrder.Status;
-            deliveryOrder.Status = status;
+            var deliveryOrderDetail = deliveryOrderDetailRepository.FindById("TEST", "E030");
+            var original = deliveryOrderDetail.Status;
+            deliveryOrderDetail.Status = status;
 
             // Act
-            var result = deliveryOrderRepository.Save(deliveryOrder);
+            var result = deliveryOrderDetailRepository.Save(deliveryOrderDetail);
 
             // Assert
             Assert.AreEqual(status, result.Status);
 
             // Tear Down
-            deliveryOrder.Status = original;
-            deliveryOrderRepository.Save(deliveryOrder);
+            deliveryOrderDetail.Status = original;
+            deliveryOrderDetailRepository.Save(deliveryOrderDetail);
         }
 
         [TestMethod]
@@ -84,24 +84,24 @@ namespace team7_ssis.Tests.Repositories
         {
             // Save new object into DB
             // Arrange
-            var deliveryOrder = new DeliveryOrder
+            var deliveryOrderDetail = new DeliveryOrderDetail
             {
-                DeliveryOrderNo = "UNIT TEST",
-                CreatedDateTime = DateTime.Now
+                DeliveryOrderNo = "TEST",
+                ItemCode = "P030"
             };
 
             // Act
-            var saveResult = deliveryOrderRepository.Save(deliveryOrder);
+            var saveResult = deliveryOrderDetailRepository.Save(deliveryOrderDetail);
 
             // Assert
-            Assert.IsInstanceOfType(saveResult, typeof(DeliveryOrder));
+            Assert.IsInstanceOfType(saveResult, typeof(DeliveryOrderDetail));
 
             // Delete saved object from DB
             // Act
-            deliveryOrderRepository.Delete(saveResult);
+            deliveryOrderDetailRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(deliveryOrderRepository.FindById("UNIT TEST"));
+            Assert.IsNull(deliveryOrderDetailRepository.FindById("TEST", "P030"));
         }
     }
 }

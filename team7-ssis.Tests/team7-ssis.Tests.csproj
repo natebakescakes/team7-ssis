@@ -112,12 +112,22 @@
     <Compile Include="Repositories\ItemCategoryRepositoryTests.cs" />
     <Compile Include="Repositories\ItemPriceRepositoryTests.cs" />
     <Compile Include="Repositories\ItemRepositoryTests.cs" />
+    <Compile Include="Repositories\NotificationRepositoryTests.cs" />
     <Compile Include="Repositories\PurchaseOrderRepositoryTests.cs" />
     <Compile Include="Repositories\RequisitionRepositoryTests.cs" />
     <Compile Include="Repositories\StatusRepositoryTests.cs" />
     <Compile Include="Repositories\StockAdjustmentRepositoryTests.cs" />
     <Compile Include="Repositories\StockMovementRepositoryTests.cs" />
     <Compile Include="Repositories\SupplierRepositoryTests.cs" />
+    <Compile Include="Repositories\DelegationRepositoryTests.cs" />
+    <Compile Include="Repositories\RetrievalRepositoryTests.cs" />
+    <Compile Include="Repositories\TitleRepositoryTests.cs" />
+    <Compile Include="Repositories\DeliveryOrderDetailRepositoryTests.cs" />
+    <Compile Include="Repositories\DisbursementDetailRepositoryTests.cs" />
+    <Compile Include="Repositories\NotificationTypeRepositoryTests.cs" />
+    <Compile Include="Repositories\PurchaseOrderDetailRepositoryTests.cs" />
+    <Compile Include="Repositories\RequisitionDetailRepositoryTests.cs" />
+    <Compile Include="Repositories\StockAdjustmentDetailRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
