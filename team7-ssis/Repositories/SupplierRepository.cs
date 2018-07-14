@@ -5,40 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class SupplierRepository
+    public class SupplierRepository : CrudRepository<Supplier, String>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-
-        public Supplier Save(Supplier supplier)
+        public SupplierRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public Supplier FindById(string supplierCode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Supplier> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.Supplier.Count();
-        }
-
-        public void Delete(Supplier Supplier)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(string supplierCode)
-        {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = context.Supplier;
         }
     }
 }

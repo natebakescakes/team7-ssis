@@ -5,39 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class DisbursementRepository
+    public class DisbursementRepository : CrudRepository<Disbursement, String>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-        public Disbursement Save(Disbursement disbursement)
+        public DisbursementRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public Disbursement FindById(int disbursementId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Disbursement> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.Disbursement.Count();
-        }
-
-        public void Delete(Disbursement disbursement)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(int disbursementId)
-        {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = context.Disbursement;
         }
     }
 }

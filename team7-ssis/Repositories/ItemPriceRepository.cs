@@ -5,40 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class ItemPriceRepository
+    public class ItemPriceRepository : CrudMultiKeyRepository<ItemPrice, String, String>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-
-        public ItemPrice Save(ItemPrice itemPrice)
+        public ItemPriceRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public ItemPrice FindByIds(string itemCode, string supplierCode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<ItemPrice> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.ItemPrice.Count();
-        }
-
-        public void Delete(ItemPrice itemPrice)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(string itemCode, string supplierCode)
-        {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = context.ItemPrice;
         }
     }
 }

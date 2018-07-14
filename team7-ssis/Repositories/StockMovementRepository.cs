@@ -5,40 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class StockMovementRepository
+    public class StockMovementRepository : CrudRepository<StockMovement, int>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-
-        public StockMovement Save(StockMovement stockMovement)
+        public StockMovementRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public StockMovement FindById(int StockMovementId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<StockMovement> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.StockMovement.Count();
-        }
-
-        public void Delete(StockMovement StockMovement)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(int stockMovementId)
-        {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = context.StockMovement;
         }
     }
 }

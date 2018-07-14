@@ -1,44 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class UserRepository
+    public class UserRepository : CrudRepository<ApplicationUser, String>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-
-        public ApplicationUser Save(ApplicationUser applicationUser)
+        public UserRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = (DbSet<ApplicationUser>)context.Users;
         }
 
-        public ApplicationUser FindById(int userId)
+        public ApplicationUser FindByEmail(String email)
         {
-            throw new NotImplementedException();
+            return entity.FirstOrDefault(x => x.Email == email);
         }
 
-        public List<ApplicationUser> FindAll()
+        public bool ExistsByEmail(String email)
         {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.Users.Count();
-        }
-
-        public void Delete(ApplicationUser applicationUser)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(int userId)
-        {
-            throw new NotImplementedException();
+            return entity.FirstOrDefault(x => x.Email == email) != null;
         }
     }
 }

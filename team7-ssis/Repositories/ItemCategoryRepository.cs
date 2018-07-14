@@ -5,40 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class ItemCategoryRepository
+    public class ItemCategoryRepository : CrudRepository<ItemCategory, int>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-
-        public ItemCategory Save(ItemCategory deliveryOrder)
+        public ItemCategoryRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public ItemCategory FindById(int itemCategoryId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<ItemCategory> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.ItemCategory.Count();
-        }
-
-        public void Delete(ItemCategory itemCategory)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(int itemCategoryId)
-        {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = context.ItemCategory;
         }
     }
 }

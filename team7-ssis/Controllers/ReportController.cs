@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
-using team7_ssis.Repository;
+using team7_ssis.Repositories;
 using team7_ssis.ViewModels;
 
 namespace team7_ssis.Controllers

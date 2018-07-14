@@ -5,40 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 
-namespace team7_ssis.Repository
+namespace team7_ssis.Repositories
 {
-    public class PurchaseOrderRepository
+    public class PurchaseOrderRepository : CrudRepository<PurchaseOrder, String>
     {
-        ApplicationDbContext context = new ApplicationDbContext();
-
-        public PurchaseOrder Save(PurchaseOrder purchaseOrder)
+        public PurchaseOrderRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public PurchaseOrder FindById(string purchaseOrderNo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<PurchaseOrder> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            return context.PurchaseOrder.Count();
-        }
-
-        public void Delete(PurchaseOrder purchaseOrder)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ExistsById(string purchaseOrderNo)
-        {
-            throw new NotImplementedException();
+            this.context = context;
+            this.entity = context.PurchaseOrder;
         }
     }
 }
