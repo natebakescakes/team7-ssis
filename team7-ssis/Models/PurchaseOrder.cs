@@ -13,15 +13,15 @@ namespace team7_ssis.Models
         [MaxLength(4)]
         public String SupplierCode { get; set; }
         [ForeignKey("SupplierCode")]
-        public Supplier Supplier { get; set; }
+        public virtual Supplier Supplier { get; set; }
         [InverseProperty("PurchaseOrder")]
-        public List<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public virtual List<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         [InverseProperty("PurchaseOrder")]
-        public List<DeliveryOrder> DeliveryOrders { get; set; }
-        public Status Status { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
-        public ApplicationUser ApprovedBy { get; set; }
+        public virtual List<DeliveryOrder> DeliveryOrders { get; set; }
+        public virtual Status Status { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
+        public virtual ApplicationUser ApprovedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
         public DateTime? ApprovedDateTime { get; set; }

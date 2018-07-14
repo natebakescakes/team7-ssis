@@ -10,7 +10,7 @@ namespace team7_ssis.Models
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StockMovementId { get; set; }
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         [ForeignKey("DeliveryOrderDetail")]
         [MaxLength(20)]
         [Column(Order = 1)]
@@ -37,9 +37,9 @@ namespace team7_ssis.Models
         public String StockAdjustmentDetailItemCode { get; set; }
         public int OriginalQuantity { get; set; }
         public int AfterQuantity { get; set; }
-        public DeliveryOrderDetail DeliveryOrderDetail { get; set; }
-        public DisbursementDetail DisbursementDetail { get; set; }
-        public StockAdjustmentDetail StockAdjustmentDetail { get; set; }
+        public virtual DeliveryOrderDetail DeliveryOrderDetail { get; set; }
+        public virtual DisbursementDetail DisbursementDetail { get; set; }
+        public virtual StockAdjustmentDetail StockAdjustmentDetail { get; set; }
         public DateTime CreatedDateTime { get; set; }
     }
 }

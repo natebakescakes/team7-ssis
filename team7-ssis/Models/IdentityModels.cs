@@ -12,101 +12,101 @@ namespace team7_ssis.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public Title Title { get; set; }
+        public virtual Title Title { get; set; }
         [MaxLength(30)]
         public string FirstName { get; set; }
         [MaxLength(30)]
         public string LastName { get; set; }
-        public ApplicationUser Supervisor { get; set; }
-        public Department Department { get; set; }
-        public Status Status { get; set; }
+        public virtual ApplicationUser Supervisor { get; set; }
+        public virtual Department Department { get; set; }
+        public virtual Status Status { get; set; }
 
         [InverseProperty("CreatedBy")]
-        public List<ItemCategory> ItemCategoriesCreated { get; set; }
+        public virtual List<ItemCategory> ItemCategoriesCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<ItemCategory> ItemCategoriesUpdated { get; set; }
+        public virtual List<ItemCategory> ItemCategoriesUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Supplier> SuppliersCreated { get; set; }
+        public virtual List<Supplier> SuppliersCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Supplier> SuppliersUpdated { get; set; }
+        public virtual List<Supplier> SuppliersUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<DeliveryOrder> DeliveryOrdersCreated { get; set; }
+        public virtual List<DeliveryOrder> DeliveryOrdersCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<DeliveryOrder> DeliveryOrdersUpdated { get; set; }
+        public virtual List<DeliveryOrder> DeliveryOrdersUpdated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<DeliveryOrderDetail> DeliveryOrderDetailsUpdated { get; set; }
+        public virtual List<DeliveryOrderDetail> DeliveryOrderDetailsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Item> ItemsCreated { get; set; }
+        public virtual List<Item> ItemsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Item> ItemsUpdated { get; set; }
+        public virtual List<Item> ItemsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<StockAdjustment> StockAdjustmentsCreated { get; set; }
+        public virtual List<StockAdjustment> StockAdjustmentsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<StockAdjustment> StockAdjustmentsUpdated { get; set; }
+        public virtual List<StockAdjustment> StockAdjustmentsUpdated { get; set; }
         [InverseProperty("ApprovedBySupervisor")]
-        public List<StockAdjustment> StockAdjustmentsSupervisorApproved { get; set; }
+        public virtual List<StockAdjustment> StockAdjustmentsSupervisorApproved { get; set; }
         [InverseProperty("ApprovedByManager")]
-        public List<StockAdjustment> StockAdjustmentsManagerApproved { get; set; }
+        public virtual List<StockAdjustment> StockAdjustmentsManagerApproved { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<StockAdjustmentDetail> StockAdjustmentDetailsUpdated { get; set; }
+        public virtual List<StockAdjustmentDetail> StockAdjustmentDetailsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<PurchaseOrder> PurchaseOrdersCreated { get; set; }
+        public virtual List<PurchaseOrder> PurchaseOrdersCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<PurchaseOrder> PurchaseOrdersUpdated { get; set; }
+        public virtual List<PurchaseOrder> PurchaseOrdersUpdated { get; set; }
         [InverseProperty("ApprovedBy")]
-        public List<PurchaseOrder> PurchaseOrdersApproved { get; set; }
+        public virtual List<PurchaseOrder> PurchaseOrdersApproved { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Requisition> RequisitionsCreated { get; set; }
+        public virtual List<Requisition> RequisitionsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Requisition> RequisitionsUpdated { get; set; }
+        public virtual List<Requisition> RequisitionsUpdated { get; set; }
         [InverseProperty("ApprovedBy")]
-        public List<Requisition> RequisitionsApproved { get; set; }
+        public virtual List<Requisition> RequisitionsApproved { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<ItemPrice> ItemPricesCreated { get; set; }
+        public virtual List<ItemPrice> ItemPricesCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<ItemPrice> ItemPricesUpdated { get; set; }
+        public virtual List<ItemPrice> ItemPricesUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Disbursement> DisbursementsCreated { get; set; }
+        public virtual List<Disbursement> DisbursementsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Disbursement> DisbursementsUpdated { get; set; }
+        public virtual List<Disbursement> DisbursementsUpdated { get; set; }
         [InverseProperty("CollectedBy")]
-        public List<Disbursement> DisbursementsCollected { get; set; }
+        public virtual List<Disbursement> DisbursementsCollected { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<DisbursementDetail> DisbursementDetailsUpdated { get; set; }
+        public virtual List<DisbursementDetail> DisbursementDetailsUpdated { get; set; }
         [InverseProperty("Representative")]
-        public List<Department> RepresentativeOf { get; set; }
+        public virtual List<Department> RepresentativeOf { get; set; }
         [InverseProperty("Head")]
-        public List<Department> HeadOf { get; set; }
+        public virtual List<Department> HeadOf { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Department> DepartmentsCreated { get; set; }
+        public virtual List<Department> DepartmentsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Department> DepartmentsUpdated { get; set; }
+        public virtual List<Department> DepartmentsUpdated { get; set; }
         [InverseProperty("ClerkInCharge")]
-        public List<CollectionPoint> CollectionPointsInCharge { get; set; }
+        public virtual List<CollectionPoint> CollectionPointsInCharge { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<CollectionPoint> CollectionPointsCreated { get; set; }
+        public virtual List<CollectionPoint> CollectionPointsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<CollectionPoint> CollectionPointsUpdated { get; set; }
+        public virtual List<CollectionPoint> CollectionPointsUpdated { get; set; }
         [InverseProperty("Receipient")]
-        public List<Delegation> DelegationsReceived { get; set; }
+        public virtual List<Delegation> DelegationsReceived { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Delegation> DelegationsCreated { get; set; }
+        public virtual List<Delegation> DelegationsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Delegation> DelegationsUpdated { get; set; }
+        public virtual List<Delegation> DelegationsUpdated { get; set; }
         [InverseProperty("CreatedFor")]
-        public List<Notification> NotificationsCreatedFor { get; set; }
+        public virtual List<Notification> NotificationsCreatedFor { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<NotificationType> NotificationTypesCreated { get; set; }
+        public virtual List<NotificationType> NotificationTypesCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<NotificationType> NotificationTypesUpdated { get; set; }
+        public virtual List<NotificationType> NotificationTypesUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Status> StatusCreated { get; set; }
+        public virtual List<Status> StatusCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Status> StatusUpdated { get; set; }
+        public virtual List<Status> StatusUpdated { get; set; }
         [InverseProperty("CreatedBy")]
-        public List<Retrieval> RetrievalsCreated { get; set; }
+        public virtual List<Retrieval> RetrievalsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
-        public List<Retrieval> RetrievalsUpdated { get; set; }
+        public virtual List<Retrieval> RetrievalsUpdated { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -146,7 +146,7 @@ namespace team7_ssis.Models
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
-        {
+        { 
         }
 
         public static ApplicationDbContext Create()

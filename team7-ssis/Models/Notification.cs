@@ -12,11 +12,11 @@ namespace team7_ssis.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int NotificationId { get; set; }
-        public NotificationType NotificationType { get; set; }
+        public virtual NotificationType NotificationType { get; set; }
         [MaxLength(200)]
         public String Contents { get; set; }
         public Status Status { get; set; }
-        public ApplicationUser CreatedFor { get; set; }
+        public virtual ApplicationUser CreatedFor { get; set; }
         public DateTime CreatedDateTime { get; set; }
     }
 }

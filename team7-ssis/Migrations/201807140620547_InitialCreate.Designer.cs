@@ -13,7 +13,7 @@ namespace team7_ssis.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201807130834366_InitialCreate"; }
+            get { return "201807140620547_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

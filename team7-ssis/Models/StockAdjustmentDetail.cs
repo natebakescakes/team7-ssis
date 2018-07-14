@@ -16,16 +16,16 @@ namespace team7_ssis.Models
         [Column(Order = 2)]
         public string ItemCode { get; set; }
         [ForeignKey("StockAdjustmentId")]
-        public StockAdjustment StockAdjustment { get; set; }
+        public virtual StockAdjustment StockAdjustment { get; set; }
         [ForeignKey("ItemCode")]
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         public int OriginalQuantity { get; set; }
         public int AfterQuantity { get; set; }
         [MaxLength(200)]
         public string Reason { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("StockAdjustmentDetail")]
-        public List<StockMovement> StockMovements { get; set; }
+        public virtual List<StockMovement> StockMovements { get; set; }
     }
 }

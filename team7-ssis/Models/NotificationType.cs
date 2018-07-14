@@ -11,8 +11,8 @@ namespace team7_ssis.Models
         public int NotificationTypeId { get; set; }
         [MaxLength(30)]
         public string Name { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
     }

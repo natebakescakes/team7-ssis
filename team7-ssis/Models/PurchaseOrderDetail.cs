@@ -14,9 +14,9 @@ namespace team7_ssis.Models
         [Column(Order = 2)]
         public string ItemCode { get; set; }
         [ForeignKey("PurchaseOrderNo")]
-        public PurchaseOrder PurchaseOrder { get; set; }
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
         [ForeignKey("ItemCode")]
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         public int Quantity { get; set; }
     }
 }

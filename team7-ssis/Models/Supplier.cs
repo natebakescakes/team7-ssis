@@ -23,12 +23,12 @@ namespace team7_ssis.Models
         [MaxLength(30)]
         public string GstRegistrationNo { get; set; }
         [InverseProperty("Supplier")]
-        public List<ItemPrice> ItemPrices { get; set; }
+        public virtual List<ItemPrice> ItemPrices { get; set; }
         [InverseProperty("Supplier")]
-        public List<PurchaseOrder> PurchaseOrders { get; set; }
-        public Status Status { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual List<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual Status Status { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
     }

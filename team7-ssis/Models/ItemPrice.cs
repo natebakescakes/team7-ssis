@@ -15,15 +15,15 @@ namespace team7_ssis.Models
         [Column(Order = 2)]
         public String SupplierCode { get; set; }
         [ForeignKey("ItemCode")]
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         [ForeignKey("SupplierCode")]
-        public Supplier Supplier { get; set; }
+        public virtual Supplier Supplier { get; set; }
         public int PrioritySequence { get; set; }
         public decimal Price { get; set; }
         //[ForeignKey("StatusId")]
-        public Status Status { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual Status Status { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
     }

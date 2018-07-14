@@ -14,14 +14,14 @@ namespace team7_ssis.Models
         public String DeliveryOrderFileName { get; set; }
         [MaxLength(200)]
         public String InvoiceFileName { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("DeliveryOrder")]
-        public List<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
-        public PurchaseOrder PurchaseOrder { get; set; }
-        public Supplier Supplier { get; set; }
-        public Status Status { get; set; }
+        public virtual List<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
+        public virtual Supplier Supplier { get; set; }
+        public virtual Status Status { get; set; }
     }
 }

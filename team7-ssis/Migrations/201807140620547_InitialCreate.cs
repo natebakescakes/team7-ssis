@@ -217,7 +217,7 @@ namespace team7_ssis.Migrations
                     Name = c.String(maxLength: 30),
                     Description = c.String(maxLength: 200),
                     Uom = c.String(maxLength: 30),
-                    itemCategory_ItemCategoryId = c.Int(),
+                    ItemCategory_ItemCategoryId = c.Int(),
                     Bin = c.String(maxLength: 8),
                     ReorderLevel = c.Int(nullable: false),
                     ReorderQuantity = c.Int(nullable: false),
@@ -228,11 +228,11 @@ namespace team7_ssis.Migrations
                     UpdatedDateTime = c.DateTime(nullable: true),
                 })
                 .PrimaryKey(t => t.ItemCode)
-                .ForeignKey("dbo.ItemCategories", t => t.itemCategory_ItemCategoryId)
+                .ForeignKey("dbo.ItemCategories", t => t.ItemCategory_ItemCategoryId)
                 .ForeignKey("dbo.Status", t => t.Status_StatusId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedBy_Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedBy_Id)
-                .Index(t => t.itemCategory_ItemCategoryId)
+                .Index(t => t.ItemCategory_ItemCategoryId)
                 .Index(t => t.Status_StatusId)
                 .Index(t => t.CreatedBy_Id)
                 .Index(t => t.UpdatedBy_Id);
@@ -723,7 +723,7 @@ namespace team7_ssis.Migrations
             DropForeignKey("dbo.ItemPrices", "SupplierCode", "dbo.Suppliers");
             DropForeignKey("dbo.ItemPrices", "Status_StatusId", "dbo.Status");
             DropForeignKey("dbo.ItemCategories", "Status_StatusId", "dbo.Status");
-            DropForeignKey("dbo.Items", "itemCategory_ItemCategoryId", "dbo.ItemCategories");
+            DropForeignKey("dbo.Items", "ItemCategory_ItemCategoryId", "dbo.ItemCategories");
             DropForeignKey("dbo.Inventory", "ItemCode", "dbo.Items");
             DropForeignKey("dbo.DeliveryOrders", "PurchaseOrder_PurchaseOrderNo", "dbo.PurchaseOrders");
             DropForeignKey("dbo.DeliveryOrderDetails", "DeliveryOrderNo", "dbo.DeliveryOrders");
@@ -801,7 +801,7 @@ namespace team7_ssis.Migrations
             DropIndex("dbo.Items", new[] { "UpdatedBy_Id" });
             DropIndex("dbo.Items", new[] { "CreatedBy_Id" });
             DropIndex("dbo.Items", new[] { "Status_StatusId" });
-            DropIndex("dbo.Items", new[] { "itemCategory_ItemCategoryId" });
+            DropIndex("dbo.Items", new[] { "ItemCategory_ItemCategoryId" });
             DropIndex("dbo.PurchaseOrderDetails", new[] { "ItemCode" });
             DropIndex("dbo.PurchaseOrderDetails", new[] { "PurchaseOrderNo" });
             DropIndex("dbo.PurchaseOrders", new[] { "UpdatedBy_Id" });

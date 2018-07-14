@@ -19,21 +19,21 @@ namespace team7_ssis.Models
         [MaxLength(30)]
         public String Uom { get; set; }
         //[ForeignKey("ItemCategoryId")]
-        public ItemCategory itemCategory { get; set; }
+        public virtual ItemCategory ItemCategory { get; set; }
         [MaxLength(8)]
         public String Bin { get; set; }
         public int ReorderLevel { get; set; }
         public int ReorderQuantity { get; set; }
         //[ForeignKey("StatusId")]
-        public Status Status { get; set; }
+        public virtual Status Status { get; set; }
         [InverseProperty("Item")]
-        public List<ItemPrice> ItemPrices { get; set; }
+        public virtual List<ItemPrice> ItemPrices { get; set; }
         [InverseProperty("Item")]
-        public List<StockMovement> StockMovements { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual List<StockMovement> StockMovements { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
-        public Inventory Inventory { get; set; }
+        public virtual Inventory Inventory { get; set; }
     }
 }

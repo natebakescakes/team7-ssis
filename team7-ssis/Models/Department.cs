@@ -12,25 +12,25 @@ namespace team7_ssis.Models
         public string DepartmentCode { get; set; }
         [MaxLength(30)]
         public string Name { get; set; }
-        public ApplicationUser Representative { get; set; }
-        public ApplicationUser Head { get; set; }
-        public CollectionPoint CollectionPoint { get; set; }
+        public virtual ApplicationUser Representative { get; set; }
+        public virtual ApplicationUser Head { get; set; }
+        public virtual CollectionPoint CollectionPoint { get; set; }
         [MaxLength(30)]
         public string ContactName { get; set; }
         [MaxLength(30)]
         public string PhoneNumber { get; set; }
         [MaxLength(30)]
         public string FaxNumber { get; set; }
-        public Status Status { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
+        public virtual Status Status { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
         public ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
         [InverseProperty("Department")]
-        public List<ApplicationUser> Employees { get; set; }
+        public virtual List<ApplicationUser> Employees { get; set; }
         [InverseProperty("Department")]
-        public List<Requisition> Requisitions { get; set; }
+        public virtual List<Requisition> Requisitions { get; set; }
         [InverseProperty("Department")]
-        public List<Disbursement> Disbursements { get; set; }
+        public virtual List<Disbursement> Disbursements { get; set; }
     }
 }

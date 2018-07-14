@@ -12,12 +12,12 @@ namespace team7_ssis.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int DelegationId { get; set; }
-        public ApplicationUser Receipient { get; set; }
+        public virtual ApplicationUser Receipient { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public Status Status { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
-        public ApplicationUser UpdatedBy { get; set; }
+        public virtual Status Status { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
     }

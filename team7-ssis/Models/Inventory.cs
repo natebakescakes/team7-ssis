@@ -14,7 +14,7 @@ namespace team7_ssis.Models
         [MaxLength(4)]
         [ForeignKey("Item")]
         public String ItemCode { get; set; }
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         public int Quantity { get; set; }
     }
 }
