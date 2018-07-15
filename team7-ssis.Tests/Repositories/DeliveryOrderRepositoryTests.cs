@@ -104,5 +104,17 @@ namespace team7_ssis.Tests.Repositories
             // Assert
             Assert.IsNull(deliveryOrderRepository.FindById("UNIT TEST"));
         }
+
+        [TestMethod]
+        public void FindByCreatedDateTimeTestNotNull()
+        {
+            // Arrange
+
+            // Act
+            var result = deliveryOrderRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
+
+            // Assert
+            Assert.IsTrue(result.Count() >= 1);
+        }
     }
 }
