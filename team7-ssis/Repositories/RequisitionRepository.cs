@@ -14,5 +14,18 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.Requisition;
         }
+
+        /// <summary>
+        /// Find Requisition objects that match start and end date range inclusive by CreatedDateTIme
+        /// </summary>
+        /// <param name="startDateRange"></param>
+        /// <param name="endDateRange"></param>
+        /// <returns>IQueryable of Requisition objects</returns>
+        public IQueryable<Requisition> FindByCreatedDateTime(DateTime startDateRange, DateTime endDateRange)
+        {
+            return context.Requisition
+                .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
+                    x.CreatedDateTime.CompareTo(endDateRange) <= 0);
+        }
     }
 }
