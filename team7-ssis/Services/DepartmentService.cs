@@ -8,6 +8,12 @@ namespace team7_ssis.Services
 {
     public class DepartmentService
     {
+        ApplicationDbContext context;
+        public DepartmentService(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
         public Department FindDepartmentByUser()
         {
             throw new NotImplementedException();
@@ -20,7 +26,7 @@ namespace team7_ssis.Services
         {
             throw new NotImplementedException();
         }
-        public static void Submit()
+        public Department Save()
         {
             throw new NotImplementedException();
         }
