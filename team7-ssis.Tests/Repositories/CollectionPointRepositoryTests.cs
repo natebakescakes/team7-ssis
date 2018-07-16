@@ -34,7 +34,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = collectionPointRepository.FindAll().Count;
+            int result = collectionPointRepository.FindAll().Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");

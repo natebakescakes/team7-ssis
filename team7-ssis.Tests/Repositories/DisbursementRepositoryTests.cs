@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
@@ -33,7 +34,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindAllTestNotNull()
         {
             // Act
-            int result = disbursementRepository.FindAll().Count;
+            int result = disbursementRepository.FindAll().Count();
 
             // Assert
             Assert.IsTrue(result >= 0, "Unable to find all properly");
@@ -102,6 +103,18 @@ namespace team7_ssis.Tests.Repositories
 
             // Assert
             Assert.IsNull(disbursementRepository.FindById("UNIT TEST"));
+        }
+
+        [TestMethod]
+        public void FindByCreatedDateTimeTestNotNull()
+        {
+            // Arrange
+
+            // Act
+            var result = disbursementRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
+
+            // Assert
+            Assert.IsTrue(result.Count() >= 1);
         }
     }
 }

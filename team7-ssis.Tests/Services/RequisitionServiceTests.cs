@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
-using team7_ssis.Services;
 
 namespace team7_ssis.Services.Tests
 {
