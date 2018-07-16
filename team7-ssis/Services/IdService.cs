@@ -30,6 +30,7 @@ namespace team7_ssis.Services
             string prefix = "DO";
             int serialNo = new DeliveryOrderRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                .Where(x => x.DeliveryOrderNo.Length == 13)
                 .Count() >= 0 ?
                 new DeliveryOrderRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
@@ -46,6 +47,7 @@ namespace team7_ssis.Services
             string prefix = "DSB";
             int serialNo = new DisbursementRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                .Where(x => x.DisbursementId.Length == 14)
                 .Count() >= 0 ?
                 new DisbursementRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
@@ -84,6 +86,7 @@ namespace team7_ssis.Services
             string prefix = "PO";
             int serialNo = new PurchaseOrderRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                .Where(x => x.PurchaseOrderNo.Length == 13)
                 .Count() >= 0 ?
                 new PurchaseOrderRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
@@ -100,6 +103,7 @@ namespace team7_ssis.Services
             string prefix = "REQ";
             int serialNo = new RequisitionRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                .Where(x => x.RequisitionId.Length == 14)
                 .Count() >= 0 ?
                 new RequisitionRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
@@ -116,6 +120,7 @@ namespace team7_ssis.Services
             string prefix = "RET";
             int serialNo = new RetrievalRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                .Where(x => x.RetrievalId.Length == 14)
                 .Count() >= 0 ?
                 new RetrievalRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
@@ -132,6 +137,7 @@ namespace team7_ssis.Services
             string prefix = "ADJ";
             int serialNo = new StockAdjustmentRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                .Where(x => x.StockAdjustmentId.Length == 14)
                 .Count() >= 0 ?
                 new StockAdjustmentRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
