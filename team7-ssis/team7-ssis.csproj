@@ -295,6 +295,7 @@
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
+    <Compile Include="Services\RetrievalService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Startup.cs" />
