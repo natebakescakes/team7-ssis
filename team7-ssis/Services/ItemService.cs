@@ -15,7 +15,7 @@ namespace team7_ssis.Services
             this.context = context;
         }
 
-        public Item FindItemByItemCode(string itemcode)
+        public Item FindItemByItemCode(string itemCode)
         {
             throw new NotImplementedException();
         }
@@ -25,38 +25,22 @@ namespace team7_ssis.Services
             throw new NotImplementedException();
         }
 
-        public List<Supplier> FindSuppliersByItemCode(string itemcode)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public List<Item> FindItemsByCategory(ItemCategory itemCategory)
         {
             throw new NotImplementedException();
         }
 
-        public Item SaveItem(Item item)
+        public Item Save(Item item)
         {
             throw new NotImplementedException();
         }
 
-        public List<Item> DeleteItem(Item item)
+        public void DeleteItem(Item item)
         {
             throw new NotImplementedException();
         }
         
-        public List<Item> EditItem(Item item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<ItemPrice> PrintItemPriceList()
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
     }
 }
