@@ -9,18 +9,25 @@ namespace team7_ssis.Services
 {
     public class SupplierService
     {
-        public Supplier FindSupplierById(ApplicationDbContext context, string supplierCode)
+        ApplicationDbContext context; 
+
+        public SupplierService(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
+        public Supplier FindSupplierById(string supplierCode)
         {
             //mapped from ShowSupplierDetails
             throw new NotImplementedException();
         }
 
-        public List<Supplier> FindSupplierBySearchQuery(ApplicationDbContext context, string query)
+        public List<Supplier> FindAllSuppliers(string query)
         {
             throw new NotImplementedException();
         }
 
-        public Supplier Save(ApplicationDbContext context, string supplierCode)
+        public Supplier Save(string supplierCode)
         {
             //mapped from AddNewSupplier, SaveEditDetails, EditPriceList
             throw new NotImplementedException();
