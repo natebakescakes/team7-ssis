@@ -16,57 +16,18 @@ namespace team7_ssis.Services
             this.context = context;         
         }
 
-        public List<Item> FindAllItems() 
-        {
-            ItemRepository i = new ItemRepository(context);
-            return i.FindAll().ToList();
-        }
-
-        public List<Item> SelectItems(List<Item> items)
-        {
-            throw new NotImplementedException();
-
-        }
-        public void DeleteRecord()
+        public void  DeleteItem(StockAdjustment stockAdjustment, Item item)
         {
             throw new NotImplementedException(); 
         }
-
+        
+      
         public void CreateNewStockAdjustment(StockAdjustment stockadjustment)
         {
             throw new NotImplementedException();
 
         }
 
-        public StockAdjustment SearchStockAdjustment(string input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public StockAdjustment SearchStockAdjustment(Status status)
-        {
-            throw new NotImplementedException();
-
-        }
-        public List<Item> SearchItems(String input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Item> SearchItems(Supplier supplier)
-        {
-            throw new NotImplementedException();
-
-        }
-
-
-
-
-
-
-
-
-
-
+    
     }
 }
