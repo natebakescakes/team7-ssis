@@ -299,10 +299,14 @@
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
+    <Compile Include="Services\ItemCategoryService.cs" />
+    <Compile Include="Services\ItemPriceService.cs" />
     <Compile Include="Services\PurchaseOrderService.cs" />
     <Compile Include="Services\RetrievalService.cs" />
+    <Compile Include="Services\StockMovementService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\SupplierService.cs" />
+    <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
