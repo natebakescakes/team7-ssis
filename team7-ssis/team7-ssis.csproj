@@ -291,6 +291,7 @@
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Startup.cs" />
