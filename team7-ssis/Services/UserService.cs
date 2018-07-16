@@ -6,22 +6,15 @@ using team7_ssis.Models;
 
 namespace team7_ssis.Services
 {
-    public class RegisterService
+    public class UserService
     {
         ApplicationDbContext context;
-        public RegisterService(ApplicationDbContext context)
+        public UserService(ApplicationDbContext context)
         {
             this.context = context;
         }
-        public List<Department> FindAllDepartments()
-        {
-            throw new NotImplementedException();
-        }
+    
         public ApplicationUser RegisterNewUser()
-        {
-            throw new NotImplementedException();
-        }
-        public List<ApplicationUser> FindUsersByDepartment(Department department)
         {
             throw new NotImplementedException();
         }
