@@ -8,15 +8,15 @@ namespace team7_ssis.Services
 {
     public class DepartmentService
     {
-        public static void FindDepartmentByUser()
+        public Department FindDepartmentByUser()
         {
             throw new NotImplementedException();
         }
-        public static void FindAllCollectionPoint()
+        public CollectionPoint FindAllCollectionPoint()
         {
             throw new NotImplementedException();
         }
-        public static void FindUsersByRole(ApplicationUser user)
+        public ApplicationUser FindUsersByRole(ApplicationUser user)
         {
             throw new NotImplementedException();
         }
