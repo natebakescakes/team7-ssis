@@ -291,8 +291,16 @@
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\CollectionPointService.cs" />
+    <Compile Include="Services\DepartmentService.cs" />
+    <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
+
     <Compile Include="Services\ManageStockAdjustmentService.cs" />
+
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\SupplierService.cs" />
+
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
