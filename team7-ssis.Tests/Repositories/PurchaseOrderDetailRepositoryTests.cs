@@ -75,7 +75,7 @@ namespace team7_ssis.Tests.Repositories
             Assert.AreEqual(999999, result.Quantity);
 
             // Tear Down
-            purchaseOrderDetail.Quantity = 999999;
+            purchaseOrderDetail.Quantity = original;
             purchaseOrderDetailRepository.Save(purchaseOrderDetail);
         }
 
