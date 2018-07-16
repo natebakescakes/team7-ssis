@@ -14,19 +14,16 @@ namespace team7_ssis.Services
             this.context = context;
         }
 
-        public Department FindDepartmentByUser()
+        public Department FindDepartmentByUser(ApplicationUser user)
         {
             throw new NotImplementedException();
         }
-        public CollectionPoint FindAllCollectionPoint()
+        
+        public ApplicationUser FindUsersByRole(string role)
         {
             throw new NotImplementedException();
         }
-        public ApplicationUser FindUsersByRole(ApplicationUser user)
-        {
-            throw new NotImplementedException();
-        }
-        public Department Save()
+        public Department Save(Department department)
         {
             throw new NotImplementedException();
         }
