@@ -21,7 +21,7 @@ namespace team7_ssis.Services
         {
             throw new NotImplementedException();
         }
-        public ApplicationUser FindUsersByDepartment(Department department)
+        public List<ApplicationUser> FindUsersByDepartment(Department department)
         {
             throw new NotImplementedException();
         }
