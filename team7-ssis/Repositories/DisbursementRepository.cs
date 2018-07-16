@@ -14,5 +14,18 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.Disbursement;
         }
+
+        /// <summary>
+        /// Find Disbursement objects that match start and end date range inclusive by CreatedDateTime
+        /// </summary>
+        /// <param name="startDateRange"></param>
+        /// <param name="endDateRange"></param>
+        /// <returns>IQueryable of Disbursement objects</returns>
+        public IQueryable<Disbursement> FindByCreatedDateTime(DateTime startDateRange, DateTime endDateRange)
+        {
+            return context.Disbursement
+                .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
+                    x.CreatedDateTime.CompareTo(endDateRange) <= 0);
+        }
     }
 }

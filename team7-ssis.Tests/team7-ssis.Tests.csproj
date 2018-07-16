@@ -129,6 +129,7 @@
     <Compile Include="Repositories\RequisitionDetailRepositoryTests.cs" />
     <Compile Include="Repositories\StockAdjustmentDetailRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
+    <Compile Include="Services\IdServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -142,9 +143,7 @@
       <Name>team7-ssis</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

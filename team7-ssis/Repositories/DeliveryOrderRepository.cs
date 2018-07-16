@@ -14,5 +14,18 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.DeliveryOrder;
         }
+
+        /// <summary>
+        /// Find DeliveryOrder objects that match start and end date range inclusive by CreatedDateTime
+        /// </summary>
+        /// <param name="startDateRange"></param>
+        /// <param name="endDateRange"></param>
+        /// <returns>IQueryable of DeliveryOrder objects</returns>
+        public IQueryable<DeliveryOrder> FindByCreatedDateTime(DateTime startDateRange, DateTime endDateRange)
+        {
+            return context.DeliveryOrder
+                .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
+                    x.CreatedDateTime.CompareTo(endDateRange) <= 0);
+        }
     }
 }
