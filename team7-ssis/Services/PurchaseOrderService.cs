@@ -16,7 +16,7 @@ namespace team7_ssis.Services
 
             }
 
-            public Item RemoveDraftItemFromPurchaseOrder(string itemCode, PurchaseOrder purchaseOrder)
+            public void RemoveDraftItemFromPurchaseOrder(string itemCode, PurchaseOrder purchaseOrder)
             {
                 throw new NotImplementedException();
             }
@@ -31,7 +31,7 @@ namespace team7_ssis.Services
                 throw new NotImplementedException();
             }
 
-            public PurchaseOrderDetail FindPurchaseOrderDetailsById(string purchaseOrderNo)
+            public List<PurchaseOrderDetail> FindPurchaseOrderDetailsById(string purchaseOrderNo)
             {
                 throw new NotImplementedException();
             }
@@ -51,7 +51,7 @@ namespace team7_ssis.Services
                 throw new NotImplementedException();
             }
 
-            public List<PurchaseOrder> FindPurchaseOrderByStatus(string statusId)
+            public List<PurchaseOrder> FindPurchaseOrderByStatus(params string[] statusId)
             {
                 throw new NotImplementedException();
             }
