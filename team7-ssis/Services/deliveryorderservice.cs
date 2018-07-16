@@ -14,36 +14,41 @@ namespace team7_ssis.Services
             this.context = context;
         }
         
-        public DeliveryOrder FindDeliveryOrderById(string deliveryorderno)
+        public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
         {
             throw new NotImplementedException();
         }
 
-        public List<DeliveryOrder> FindAllDeliveryOrders(string query)
+        public List<DeliveryOrder> FindAllDeliveryOrders()
         {
             throw new NotImplementedException();
         }
 
-        public List<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseorderno)
+        public List<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
             throw new NotImplementedException();
         }
 
-        public DeliveryOrder FindDeliveryOrderBySupplier(string suppliercode)
+        public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
         {
             throw new NotImplementedException();
         }
 
        
-        public void Save(DeliveryOrder DeliveryOrder)
+        public DeliveryOrder Save(DeliveryOrder DeliveryOrder)
         {
             throw new NotImplementedException();
         }
        
-        public void SavePOFileToDeliveryOrder(string filepath)
+        public void SaveDOFileToDeliveryOrder(string filepath)
         {
             throw new NotImplementedException();
         }
-                                 
+
+        public void SaveInvoiceFileToDeliveryOrder(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
