@@ -55,12 +55,16 @@ namespace team7_ssis.Models
         public virtual List<PurchaseOrder> PurchaseOrdersUpdated { get; set; }
         [InverseProperty("ApprovedBy")]
         public virtual List<PurchaseOrder> PurchaseOrdersApproved { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public virtual List<PurchaseOrderDetail> PurchaseOrderDetailsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
         public virtual List<Requisition> RequisitionsCreated { get; set; }
         [InverseProperty("UpdatedBy")]
         public virtual List<Requisition> RequisitionsUpdated { get; set; }
         [InverseProperty("ApprovedBy")]
         public virtual List<Requisition> RequisitionsApproved { get; set; }
+        [InverseProperty("UpdatedBy")]
+        public virtual List<RequisitionDetail> RequisitionDetailsUpdated { get; set; }
         [InverseProperty("CreatedBy")]
         public virtual List<ItemPrice> ItemPricesCreated { get; set; }
         [InverseProperty("UpdatedBy")]

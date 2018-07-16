@@ -235,6 +235,10 @@
     <Compile Include="Migrations\201807140620547_InitialCreate.Designer.cs">
       <DependentUpon>201807140620547_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807161016120_StatusToDetails.cs" />
+    <Compile Include="Migrations\201807161016120_StatusToDetails.Designer.cs">
+      <DependentUpon>201807161016120_StatusToDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CollectionPoint.cs" />
@@ -291,10 +295,13 @@
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\CollectionPointService.cs" />
     <Compile Include="Services\RequisitionService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
+    <Compile Include="Services\RetrievalService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
@@ -380,6 +387,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201807140620547_InitialCreate.resx">
       <DependentUpon>201807140620547_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807161016120_StatusToDetails.resx">
+      <DependentUpon>201807161016120_StatusToDetails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
