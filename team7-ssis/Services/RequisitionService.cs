@@ -9,17 +9,17 @@ namespace team7_ssis.Services
 {
     public class RequisitionService : Controller
     {
-        public ActionResult FindRequisitionsByStatus(List<Status> statusList)
+        public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
             throw new NotImplementedException();
         }
 
-        public ActionResult GetRequisitionDetails(string requisitionId)
+        public RequisitionDetail GetRequisitionDetails(string requisitionId)
         {
             throw new NotImplementedException();
         }
 
-        void ProcessRequisitions(List<Requisition> requestList)
+        public void ProcessRequisitions(List<Requisition> requestList)
         {
             throw new NotImplementedException();
 
@@ -68,90 +68,32 @@ namespace team7_ssis.Services
 
         }
 
-        public ActionResult FindRetrievalById(string retrievalId)
+        public List<Item> AddItemsToRequisition(List<Item> items)
         {
             throw new NotImplementedException();
         }
 
-        public ActionResult UpdateActualQuantities(int quantity)
+        public Requisition CreateRequisition(Requisition req)
         {
             throw new NotImplementedException();
         }
 
-        public ActionResult ContinueToDisbursement()
-        {
-            throw new NotImplementedException();
-        }
-        public ActionResult FindDisbursementsByRetrievalId(string retrievalId)
-        {
-            throw new NotImplementedException();
-        }
-        public ActionResult ViewDisbursementDetails(string disbursementId)
+        public Item AddItemsToRequisition(Item item)
         {
             throw new NotImplementedException();
         }
 
-        public ActionResult GetDisbursementById(string disbursementId)
+        public Requisition CancelRequisition(Requisition req)
         {
             throw new NotImplementedException();
         }
 
-        public ActionResult ConfirmDelivery(string disbursementId)
+        public List<Requisition> ApproveRequisitions(List<Requisition> reqList)
         {
             throw new NotImplementedException();
         }
 
-        public ActionResult CreateNewRequisition()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult AddItemPopUp()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult AddToRequisitions(List<Item> items)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult CreateNewRequisition(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult ShowRequisition(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult EditRequisition(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult AddItem(List<Item> items)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult CancelRequisition(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult Approve(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult ViewRequisitionDetails(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public ActionResult ApproveAll()
+        public Requisition ApproveRequisitions(Requisition requisition)
         {
             throw new NotImplementedException();
         }
