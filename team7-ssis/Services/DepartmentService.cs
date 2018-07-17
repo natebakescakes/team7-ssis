@@ -3,29 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
     public class DepartmentService
     {
         ApplicationDbContext context;
+        DepartmentRepository departmentRepository;
+        UserRepository userRepository;
         public DepartmentService(ApplicationDbContext context)
         {
             this.context = context;
+            this.departmentRepository = new DepartmentRepository(context);
+            this.userRepository = new UserRepository(context);
         }
 
         public Department FindDepartmentByUser(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            return user.Department;
         }
         
-        public ApplicationUser FindUsersByRole(string role)
+        public List<ApplicationUser> FindUsersByDepartment(Department department)
         {
-            throw new NotImplementedException();
+            return userRepository.FindAll().Where(x => x.Department == department).ToList();
         }
         public Department Save(Department department)
         {
-            throw new NotImplementedException();
+            return departmentRepository.Save(department);
         }
     }
 }
