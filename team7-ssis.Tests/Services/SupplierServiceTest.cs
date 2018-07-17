@@ -17,7 +17,7 @@ namespace team7_ssis.Tests.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            // Arrange
+         
             context = new ApplicationDbContext();
             supplierService = new SupplierService(context);
             supplierRepository = new SupplierRepository(context);
