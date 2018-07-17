@@ -296,14 +296,16 @@
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\CollectionPointService.cs" />
+    <Compile Include="Services\RequisitionService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
-    <Compile Include="Services\DeliveryorderService.cs" />
+    <Compile Include="Services\DeliveryOrderService.cs" />
     <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
     <Compile Include="Services\ItemCategoryService.cs" />
     <Compile Include="Services\ItemPriceService.cs" />
     <Compile Include="Services\PurchaseOrderService.cs" />
     <Compile Include="Services\RetrievalService.cs" />
+    <Compile Include="Services\StockAdjustmentService.cs" />
     <Compile Include="Services\StockMovementService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\SupplierService.cs" />
