@@ -20,9 +20,11 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void DeleteItemTest()
+        public void FindAllItemsTest()
         {
-            
+
         }
+
+        
     }
 }
