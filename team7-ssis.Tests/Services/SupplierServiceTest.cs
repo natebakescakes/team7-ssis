@@ -47,11 +47,13 @@ namespace team7_ssis.Tests.Services
 
         }
 
+        [TestMethod]
         public void SaveTest()
         {
             //Arrange
             Supplier supplier = new Supplier();
             supplier.SupplierCode = "TEST";
+            supplier.CreatedDateTime = DateTime.Now;
             //Act
             var result = supplierService.Save(supplier);
             //Assert
