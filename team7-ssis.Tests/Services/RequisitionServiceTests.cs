@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
-namespace team7_ssis.Tests.Services
+namespace team7_ssis.Services.Tests
 {
     [TestClass()]
     public class RequisitionServiceTests
@@ -40,11 +40,7 @@ namespace team7_ssis.Tests.Services
         [TestMethod()]
         public void ProcessRequisitionsTest()
         {
-            // Arrange
 
-
-            // Act
-            // Assert
         }
 
         [TestMethod()]
