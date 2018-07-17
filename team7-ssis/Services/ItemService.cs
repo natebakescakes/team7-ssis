@@ -11,11 +11,13 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         ItemRepository itemRepository;
+        StatusRepository statusRepository;
 
         public ItemService(ApplicationDbContext context)
         {
             this.context = context;
             itemRepository = new ItemRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
         public Item FindItemByItemCode(string itemCode)
@@ -41,7 +43,7 @@ namespace team7_ssis.Services
 
         public void DeleteItem(Item item)
         {
-            item.Status.StatusId = 0;
+            item.Status= statusRepository.FindById(0);
             itemRepository.Save(item);
         }
         
