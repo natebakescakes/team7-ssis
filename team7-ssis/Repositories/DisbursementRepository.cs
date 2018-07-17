@@ -27,5 +27,11 @@ namespace team7_ssis.Repositories
                 .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
                     x.CreatedDateTime.CompareTo(endDateRange) <= 0);
         }
+
+        public IQueryable<Disbursement> FindByRetrievalId(string id)
+        {
+            return context.Disbursement
+                .Where(x => x.Retrieval.RetrievalId == id);
+        }
     }
 }
