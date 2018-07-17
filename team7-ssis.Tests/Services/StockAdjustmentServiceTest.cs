@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
 {
-
-    [TestClass()]
-    class StockAdjustmentServiceTest
+    [TestClass]
+    public class StockAdjustmentServiceTest
     {
         ApplicationDbContext context;
         StockAdjustmentRepository stockAdjustmentRepository;
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
-
 
         [TestInitialize]
         public void TestInitialize()
@@ -40,7 +33,7 @@ namespace team7_ssis.Tests.Services
             // Act
             StockAdjustment stockadjustment = new StockAdjustment();
             service.CreateDraftStockAdjustment(stockadjustment);
-            StockAdjustment result = stockAdjustmentRepository.FindAll().Last();
+            StockAdjustment result = stockAdjustmentRepository.FindById(stockadjustment.StockAdjustmentId);
 
             // Assert
             Assert.Equals(expect, result);
@@ -52,7 +45,7 @@ namespace team7_ssis.Tests.Services
         //Delete one item if StockAdjustment in Draft Status
         public void DeleteItemFromDraftStockAdjustmentTest()
         {
-           
+
 
         }
 
@@ -60,7 +53,7 @@ namespace team7_ssis.Tests.Services
         //Delete whole StockAdjustment in Draft Status
         public void DeleteDraftStockAdjustmentTest()
         {
-            
+
 
         }
         [TestMethod()]
@@ -68,7 +61,7 @@ namespace team7_ssis.Tests.Services
         //create new StockAdjustment with status: pending
         public void CreatePendingStockAdjustmentTest()
         {
-           
+
 
         }
 
@@ -76,7 +69,7 @@ namespace team7_ssis.Tests.Services
         //cancel pening stockadjustment before being approved/rejected
         public void CancelPendingStockAdjustmentTest()
         {
-          
+
 
         }
 
@@ -86,14 +79,14 @@ namespace team7_ssis.Tests.Services
         //find all stockadjustemnt
         public void FindAllStockAdjustmentTest()
         {
-            
+
         }
 
         [TestMethod()]
         //find stockadjustment by stockjustmentid
         public void FindStockAdjustmentByIdTest()
         {
-          
+
 
         }
 
@@ -101,7 +94,7 @@ namespace team7_ssis.Tests.Services
         //approve pending stockadjustment
         public void ApproveStockAdjustmentTest()
         {
-           
+
 
         }
 
@@ -109,15 +102,14 @@ namespace team7_ssis.Tests.Services
         //reject pending stockadjustment
         public void RejectStockAdjustmentTest()
         {
-            
+
         }
 
         [TestMethod()]
         // show sepcific StockAdjustmentDetail in the StockAdjustment
         public void ShowStockAdjustmentDetailTest()
         {
-           
-        }
 
+        }
     }
 }
