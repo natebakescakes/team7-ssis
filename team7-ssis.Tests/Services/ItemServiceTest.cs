@@ -11,18 +11,22 @@ namespace team7_ssis.Tests.Services
     class ItemServiceTest
     {
         ApplicationDbContext context;
+        ItemService itemService;
+        ItemRepository itemRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            // Arrange
             context = new ApplicationDbContext();
+            itemService = new ItemService(context);
+            itemRepository = new ItemRepository(context);
+
         }
 
         [TestMethod]
         public void FindAllItemsTest()
         {
-
+            //test
         }
 
         
