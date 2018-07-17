@@ -42,7 +42,7 @@ namespace team7_ssis.Services
 
         public List<PurchaseOrderDetail> FindPurchaseOrderDetailsById(string purchaseOrderNo)
         {
-            return purchaseOrderDetailRepository.FindDetailsById(purchaseOrderNo).ToList();
+            return purchaseOrderDetailRepository.FindAllDetailsById(purchaseOrderNo).ToList();
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
