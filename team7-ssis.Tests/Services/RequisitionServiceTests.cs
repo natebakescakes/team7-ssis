@@ -38,85 +38,25 @@ namespace team7_ssis.Services.Tests
         }
 
         [TestMethod()]
-        public void FindRetrievalByIdTest()
+        public void ProcessRequisitionsTest()
         {
 
         }
 
         [TestMethod()]
-        public void UpdateActualQuantitiesTest()
+        public void AddItemsToRequisitionTest()
         {
 
         }
 
         [TestMethod()]
-        public void ContinueToDisbursementTest()
+        public void CreateRequisitionTest()
         {
 
         }
 
         [TestMethod()]
-        public void FindDisbursementsByRetrievalIdTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void ViewDisbursementDetailsTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void GetDisbursementByIdTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void ConfirmDeliveryTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void CreateNewRequisitionTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void AddItemPopUpTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void AddToRequisitionsTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void CreateNewRequisitionTest1()
-        {
-
-        }
-
-        [TestMethod()]
-        public void ShowRequisitionTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void EditRequisitionTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void AddItemTest()
+        public void AddItemsToRequisitionTest1()
         {
 
         }
@@ -128,19 +68,13 @@ namespace team7_ssis.Services.Tests
         }
 
         [TestMethod()]
-        public void ApproveTest()
+        public void ApproveRequisitionsTest()
         {
 
         }
 
         [TestMethod()]
-        public void ViewRequisitionDetailsTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void ApproveAllTest()
+        public void ApproveRequisitionsTest1()
         {
 
         }
