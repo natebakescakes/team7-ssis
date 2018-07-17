@@ -27,7 +27,7 @@ namespace team7_ssis.Services
         
         public List<ApplicationUser> FindUsersByDepartment(Department department)
         {
-            return userRepository.FindAll().Where(x => x.Department.DepartmentCode == department.DepartmentCode).ToList();
+            return userRepository.FindByDepartment(department).ToList();
         }
         public Department Save(Department department)
         {
