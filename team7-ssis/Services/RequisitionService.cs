@@ -7,7 +7,7 @@ using team7_ssis.Models;
 
 namespace team7_ssis.Services
 {
-    public class RequisitionService : Controller
+    public class RequisitionService
     {
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
