@@ -3,51 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
     public class DeliveryorderService
     {
         ApplicationDbContext context;
-        public DeliveryorderService(ApplicationDbContext context)
+        DeliveryOrderRepository deliveryOrderRepository;
+
+        public DeliveryorderService(ApplicationDbContext context,DeliveryOrderRepository deliveryOrderRepository)
         {
             this.context = context;
-        }
-        
-        public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
-        {
-            throw new NotImplementedException();
+            this.deliveryOrderRepository = deliveryOrderRepository;
         }
 
         public List<DeliveryOrder> FindAllDeliveryOrders()
         {
-            throw new NotImplementedException();
+            return deliveryOrderRepository.FindAll().ToList();
         }
 
-        public List<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
+        public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
         {
-            throw new NotImplementedException();
+            return deliveryOrderRepository.FindById(deliveryOrderNo);
+        }
+
+
+        public DeliveryOrder FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
+        {
+            return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo);
         }
 
         public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
         {
-            throw new NotImplementedException();
+            return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
 
        
         public DeliveryOrder Save(DeliveryOrder DeliveryOrder)
         {
-            throw new NotImplementedException();
+            return deliveryOrderRepository.Save(DeliveryOrder);
         }
        
-        public void SaveDOFileToDeliveryOrder(string filepath)
+        public void SaveDOFileToDeliveryOrder(String Filepath)
         {
-            throw new NotImplementedException();
+           // deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
+            //Need to send to Finance department
         }
 
-        public void SaveInvoiceFileToDeliveryOrder(string filepath)
+        public void SaveInvoiceFileToDeliveryOrder(String Filepath)
         {
-            throw new NotImplementedException();
+          //  deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
+            //Need to send to Finance department
         }
 
     }
