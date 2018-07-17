@@ -9,6 +9,7 @@ namespace team7_ssis.Services
 {
     public static class IdService
     {
+        //TEST CI
         public static int GetNewCollectionPointId(ApplicationDbContext context)
         {
             return context.CollectionPoint
