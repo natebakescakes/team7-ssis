@@ -38,6 +38,17 @@ namespace team7_ssis.Services
 
         }
 
+        public void Save(List<Disbursement> disbursements)
+        {
+
+            //Edit Disbursement and confirmDeliveryStatus and also delete
+            foreach(var a in disbursements)
+            {
+                this.Save(a);
+            }
+            
+          }
+
         public List<Disbursement> FindDisbursementsByRetrievalId(string Rid)
         {
 
