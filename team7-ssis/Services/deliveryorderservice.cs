@@ -7,12 +7,12 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
-    public class DeliveryorderService
+    public class DeliveryOrderService
     {
         ApplicationDbContext context;
         DeliveryOrderRepository deliveryOrderRepository;
 
-        public DeliveryorderService(ApplicationDbContext context,DeliveryOrderRepository deliveryOrderRepository)
+        public DeliveryOrderService(ApplicationDbContext context,DeliveryOrderRepository deliveryOrderRepository)
         {
             this.context = context;
             this.deliveryOrderRepository = deliveryOrderRepository;
@@ -45,14 +45,16 @@ namespace team7_ssis.Services
             return deliveryOrderRepository.Save(DeliveryOrder);
         }
        
-        public void SaveDOFileToDeliveryOrder(String Filepath)
+        public void SaveDOFileToDeliveryOrder(string Filepath)
         {
-           // deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
+            throw new NotImplementedException();
+            // deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
             //Need to send to Finance department
         }
 
-        public void SaveInvoiceFileToDeliveryOrder(String Filepath)
+        public void SaveInvoiceFileToDeliveryOrder(string Filepath)
         {
+            throw new NotImplementedException();
           //  deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
             //Need to send to Finance department
         }
