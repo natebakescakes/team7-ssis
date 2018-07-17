@@ -129,10 +129,13 @@
     <Compile Include="Repositories\RequisitionDetailRepositoryTests.cs" />
     <Compile Include="Repositories\StockAdjustmentDetailRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
+    <Compile Include="Services\DeliveryOrderServiceTest.cs" />
+    <Compile Include="Services\CollectionPointServiceTests.cs" />
     <Compile Include="Services\DepartmentServiceTests.cs" />
     <Compile Include="Services\IdServiceTests.cs" />
     <Compile Include="Services\SupplierServiceTest.cs" />
     <Compile Include="Services\RequisitionServiceTests.cs" />
+    <Compile Include="Services\DisbursementServiceTest.cs" />
     <Compile Include="Services\PurchaseOrderServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
