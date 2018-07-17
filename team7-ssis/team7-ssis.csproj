@@ -297,6 +297,7 @@
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\CollectionPointService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
+    <Compile Include="Services\DeliveryorderService.cs" />
     <Compile Include="Services\DisbursementService.cs" />
     <Compile Include="Services\IdService.cs" />
     <Compile Include="Services\ItemCategoryService.cs" />
