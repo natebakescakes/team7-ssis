@@ -25,5 +25,9 @@ namespace team7_ssis.Repositories
         {
             return entity.FirstOrDefault(x => x.Email == email) != null;
         }
+        public IQueryable<ApplicationUser> FindByDepartment(Department department)
+        {
+            return context.Users.Where(x => x.Department.DepartmentCode == department.DepartmentCode);
+        }
     }
 }
