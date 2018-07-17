@@ -24,7 +24,7 @@ namespace team7_ssis.Tests.Services
         {
             // Arrange
             int expected = context.CollectionPoint.OrderByDescending(x => x.CollectionPointId).FirstOrDefault().CollectionPointId + 1;
-
+            
             // Act
             var result = IdService.GetNewCollectionPointId(context);
 
