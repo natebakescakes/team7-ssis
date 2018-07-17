@@ -9,6 +9,7 @@ using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
 {
+    [TestClass]
     public class DepartmentServiceTests
     {
         ApplicationDbContext context;
@@ -34,5 +35,17 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result);
         }
+        //[TestMethod]
+        //public void FindDepartmentByUserTest()
+        //{
+        //    //Arrange
+        //    ApplicationUser user = new ApplicationUser();
+        //    user.Department.DepartmentCode = "COMM";
+        //    string expected = "COMM";
+        //    //Act
+        //    var result = departmentService.FindDepartmentByUser(user).ToString();
+        //    //Assert
+        //    Assert.AreEqual(expected, result);
+        //}
     }
 }

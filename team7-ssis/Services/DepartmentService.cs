@@ -19,14 +19,15 @@ namespace team7_ssis.Services
             this.userRepository = new UserRepository(context);
         }
 
-        public Department FindDepartmentByUser(ApplicationUser user)
+        //method not needed
+        public Department FindDepartmentByUser(ApplicationUser user) 
         {
-            return user.Department;
+            throw new NotImplementedException();
         }
         
         public List<ApplicationUser> FindUsersByDepartment(Department department)
         {
-            return userRepository.FindAll().Where(x => x.Department == department).ToList();
+            return userRepository.FindAll().Where(x => x.Department.DepartmentCode == department.DepartmentCode).ToList();
         }
         public Department Save(Department department)
         {
