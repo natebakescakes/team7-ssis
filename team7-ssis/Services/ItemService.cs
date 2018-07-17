@@ -41,10 +41,10 @@ namespace team7_ssis.Services
             return itemRepository.Save(item);
         }
 
-        public void DeleteItem(Item item)
+        public static Item DeleteItem(Item item)
         {
             item.Status= statusRepository.FindById(0);
-            itemRepository.Save(item);
+            return itemRepository.Save(item);
         }
         
     }
