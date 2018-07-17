@@ -9,39 +9,39 @@ namespace team7_ssis.Services
 {
     public  class ItemService
     {
-        static ApplicationDbContext context;
-        static ItemRepository itemRepository;
-        static StatusRepository statusRepository;
+        ApplicationDbContext context;
+        ItemRepository itemRepository;
+        StatusRepository statusRepository;
 
-        public  ItemService(ApplicationDbContext context)
+        public ItemService(ApplicationDbContext context)
         {
-            context = context;
+            this.context = context;
             itemRepository = new ItemRepository(context);
             statusRepository = new StatusRepository(context);
         }
 
-        public static Item FindItemByItemCode(string itemCode)
+        public Item FindItemByItemCode(string itemCode)
         {
             return itemRepository.FindById(itemCode);
         }
 
-        public static List<Item> FindAllItems()
+        public  List<Item> FindAllItems()
         {
             return itemRepository.FindAll().ToList();
         }
 
 
-        public static List<Item> FindItemsByCategory(ItemCategory itemCategory)
+        public List<Item> FindItemsByCategory(ItemCategory itemCategory)
         {
-            return itemRepository.FindItemsByCategory(itemCategory).ToList();
+            return itemRepository.FindByCategory(itemCategory).ToList();
         }
 
-        public static Item Save(Item item)
+        public Item Save(Item item)
         {
             return itemRepository.Save(item);
         }
 
-        public static Item DeleteItem(Item item)
+        public Item DeleteItem(Item item)
         {
             item.Status= statusRepository.FindById(0);
             return itemRepository.Save(item);

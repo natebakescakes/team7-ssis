@@ -15,10 +15,10 @@ namespace team7_ssis.Repositories
             this.entity = context.Item;
         }
 
-        public IQueryable<Item> FindItemsByCategory(ItemCategory itemCategory)
+        public IQueryable<Item> FindByCategory(ItemCategory itemCategory)
         {
             return context.Item
-                .Where(x => x.ItemCategory == itemCategory);
+                .Where(x => x.ItemCategory.ItemCategoryId == itemCategory.ItemCategoryId);
         }
     }
 }

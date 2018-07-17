@@ -25,9 +25,9 @@ namespace team7_ssis.Services
             return itemPriceRepository.FindAll().ToList();
         }
 
-        public ItemPrice FindItemPriceByItemCode(string itemCode)
+        public List<ItemPrice> FindItemPriceByItemCode(string itemCode)
         {
-            return (ItemPrice)itemPriceRepository.FindByItemCode(itemCode);
+            return itemPriceRepository.FindByItemCode(itemCode).ToList();
         }
 
         public List<ItemPrice> FindItemPriceBySupplierCode(string supplierCode)
