@@ -12,10 +12,10 @@ namespace team7_ssis.Services
         ApplicationDbContext context;
         DeliveryOrderRepository deliveryOrderRepository;
 
-        public DeliveryOrderService(ApplicationDbContext context,DeliveryOrderRepository deliveryOrderRepository)
+        public DeliveryOrderService(ApplicationDbContext context)
         {
             this.context = context;
-            this.deliveryOrderRepository = deliveryOrderRepository;
+            this.deliveryOrderRepository = new DeliveryOrderRepository(context);
         }
 
         public List<DeliveryOrder> FindAllDeliveryOrders()
@@ -25,17 +25,32 @@ namespace team7_ssis.Services
 
         public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
         {
-            return deliveryOrderRepository.FindById(deliveryOrderNo);
+            // Exceptions
+            if (deliveryOrderRepository.FindById(deliveryOrderNo)==null)
+            {
+                throw new ArgumentException();
+            }
+             return deliveryOrderRepository.FindById(deliveryOrderNo);
         }
 
-
+        
         public DeliveryOrder FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
+            // Exceptions
+            if (deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo) == null)
+            {
+                throw new ArgumentException();
+            }
             return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo);
         }
 
         public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
         {
+            // Exceptions
+            if (deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode) == null)
+            {
+                throw new ArgumentException();
+            }
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
 

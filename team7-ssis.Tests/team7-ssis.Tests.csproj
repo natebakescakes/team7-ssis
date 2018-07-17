@@ -129,7 +129,10 @@
     <Compile Include="Repositories\RequisitionDetailRepositoryTests.cs" />
     <Compile Include="Repositories\StockAdjustmentDetailRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
+    <Compile Include="Services\DeliveryOrderServiceTest.cs" />
     <Compile Include="Services\IdServiceTests.cs" />
+    <Compile Include="Services\SupplierServiceTest.cs" />
+    <Compile Include="Services\RequisitionServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
