@@ -27,5 +27,20 @@ namespace team7_ssis.Repositories
                 .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
                     x.CreatedDateTime.CompareTo(endDateRange) <= 0);
         }
-    }
+
+        public DeliveryOrder FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
+        {
+            return context.DeliveryOrder
+                .Where(x => x.PurchaseOrder.PurchaseOrderNo == purchaseOrderNo)
+                .FirstOrDefault();
+        }
+
+        public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
+        {
+            return context.DeliveryOrder
+                .Where(x => x.Supplier.SupplierCode == supplierCode)
+                .FirstOrDefault();
+        }
+
+     }
 }
