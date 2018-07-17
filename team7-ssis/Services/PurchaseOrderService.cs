@@ -3,62 +3,67 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
+
 
 namespace team7_ssis.Services
 {
     public class PurchaseOrderService
     {
+        PurchaseOrderRepository purchaseOrderRepository;
+        PurchaseOrderDetailRepository purchaseOrderDetailRepository;
         ApplicationDbContext context;
 
         public PurchaseOrderService(ApplicationDbContext context)
         {
             this.context = context;
-
+            purchaseOrderRepository = new PurchaseOrderRepository(context);
+            purchaseOrderDetailRepository = new PurchaseOrderDetailRepository(context);
         }
 
-        public void RemoveDraftItemFromPurchaseOrder(string itemCode, PurchaseOrder purchaseOrder)
+        public void RemoveDraftItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
         {
-            throw new NotImplementedException();
+           foreach(string s in itemCodes)
+            {
+                purchaseOrderDetailRepository.DeleteItemFromPO(s, purchaseOrder.PurchaseOrderNo);
+            }
         }
 
         public List<PurchaseOrder> FindAllPurchaseOrders()
         {
-            throw new NotImplementedException();
+            return purchaseOrderRepository.FindAll().ToList();
         }
 
         public PurchaseOrder FindPurchaseOrderById(string purchaseOrderNo)
         {
-            throw new NotImplementedException();
+            return purchaseOrderRepository.FindById(purchaseOrderNo);
         }
 
         public List<PurchaseOrderDetail> FindPurchaseOrderDetailsById(string purchaseOrderNo)
         {
-            throw new NotImplementedException();
+            return purchaseOrderDetailRepository.FindPODetailsById(purchaseOrderNo).ToList();
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
         {
-            throw new NotImplementedException();
+            return purchaseOrderRepository.FindPOBySupplier(supplier.SupplierCode).ToList();
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(string supplierCode)
         {
-            throw new NotImplementedException();
+            return purchaseOrderRepository.FindPOBySupplier(supplierCode).ToList();
         }
 
-        public PurchaseOrder FindPurchaseOrderByDeliveryOrder(string deliveryOrderNo)
+        
+        public List<PurchaseOrder> FindPurchaseOrderByStatus(params int[] statusId)
         {
-            throw new NotImplementedException();
-        }
-
-        public List<PurchaseOrder> FindPurchaseOrderByStatus(params string[] statusId)
-        {
-            throw new NotImplementedException();
+            return purchaseOrderRepository.FindPOByStatus(statusId).ToList();
         }
 
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
         {
-            throw new NotImplementedException();
+            return purchaseOrderRepository.Save(purchaseOrder);
+            
         }
 
     }
