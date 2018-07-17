@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
@@ -12,13 +13,14 @@ namespace team7_ssis.Tests.Services
     {
         ApplicationDbContext context;
         SupplierService supplierService;
-
+        SupplierRepository supplierRepository; 
         [TestInitialize]
         public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
             supplierService = new SupplierService(context);
+            supplierRepository = new SupplierRepository(context);
         }
 
         [TestMethod]
@@ -44,7 +46,7 @@ namespace team7_ssis.Tests.Services
             var result = supplierService.FindAllSuppliers().Count();
             //Assert
             Assert.AreEqual(expected, result);
-
+           
         }
 
         [TestMethod]
@@ -52,13 +54,14 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             Supplier supplier = new Supplier();
-            supplier.SupplierCode = "TEST";
+            supplier.SupplierCode = "YYYY";
             supplier.CreatedDateTime = DateTime.Now;
             //Act
             var result = supplierService.Save(supplier);
             //Assert
-            Assert.AreEqual("TEST", result.SupplierCode);
-            Assert.IsNotNull(context.Supplier.Where(x => x.SupplierCode == "TEST").First());
+            Assert.AreEqual("YYYY", result.SupplierCode);
+            Assert.IsNotNull(context.Supplier.Where(x => x.SupplierCode == "YYYY").First());
+            supplierRepository.Delete(result);
         }
 
     }
