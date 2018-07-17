@@ -305,6 +305,7 @@
     <Compile Include="Services\ItemPriceService.cs" />
     <Compile Include="Services\PurchaseOrderService.cs" />
     <Compile Include="Services\RetrievalService.cs" />
+    <Compile Include="Services\StockAdjustmentService.cs" />
     <Compile Include="Services\StockMovementService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\SupplierService.cs" />
@@ -337,7 +338,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
