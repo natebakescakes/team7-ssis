@@ -10,48 +10,107 @@ namespace team7_ssis.Tests.Services
     class StockAdjustmentService
     {
         ApplicationDbContext context;
+        StockAdjustmentRepository stockAdjustmentRepository;
+        StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         public StockAdjustmentService(ApplicationDbContext context)
         {
             this.context = context;
+            this.stockAdjustmentRepository = new StockAdjustmentRepository(context);
+           this.stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
         }
 
-        public void DeleteItem(StockAdjustment stockAdjustment, Item item)
+        //create new StockAdjustment with status: draft
+        public void CreateDraftStockAdjustment(StockAdjustment stockadjustment)
         {
-            throw new NotImplementedException();
+            StockAdjustment st = stockadjustment;
+            st.Status.StatusId = 3;
+            stockAdjustmentRepository.Save(st);
         }
 
-
-        //create new StockAdjustment with status pending
-        public void CreateNewStockAdjustment(StockAdjustment stockadjustment)
+        //Delete one item if StockAdjustment in Draft Status
+        public void DeleteItemFromDraftStockAdjustment(StockAdjustment stockAdjustment, Item item)
         {
-            throw new NotImplementedException();
+            string stockadjustment_id = stockAdjustment.StockAdjustmentId;
+            string itemcode = item.ItemCode;
+            if (stockAdjustment.Status.StatusId==3)
+            {
+                StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id,itemcode);
+                //remove one StockAdjustmentDetail in List<StockAdjustmentDetail>
+                stockAdjustment.StockAdjustmentDetails.Remove(s);
+                //delete one stockadjustmentdetail
+                stockAdjustmentDetailRepository.Delete(s);
+            }
 
         }
 
+        //Delete whole StockAdjustment in Draft Status
+        public void DeleteDraftStockAdjustment(StockAdjustment stockAdjustment)
+        {
+            if (stockAdjustment.Status.StatusId == 3)
+            {
+                stockAdjustmentRepository.Delete(stockAdjustment);
+            }
+      
+        }
+
+        //create new StockAdjustment with status: pending
+        public void CreatePendingStockAdjustment(StockAdjustment stockadjustment)
+        {
+            stockadjustment.Status.StatusId = 4;
+            stockAdjustmentRepository.Save(stockadjustment);
+
+        }
+
+        //cancel pening stockadjustment before being approved/rejected
+        public void CancelPendingStockAdjustment(StockAdjustment stockadjustment)
+        {
+            stockadjustment.Status.StatusId = 2;
+            stockAdjustmentRepository.Save(stockadjustment);
+
+        }
+
+
+
+        //find all stockadjustemnt
         public List<StockAdjustment>  FindAllStockAdjustment()
         {
-            throw new NotImplementedException();
+            return stockAdjustmentRepository.FindAll().ToList();
         }
 
-        public List<StockAdjustment> FindAllStockAdjustmentById()
+        //find stockadjustment by stockjustmentid
+        public StockAdjustment FindStockAdjustmentById(string id)
         {
-            throw new NotImplementedException();
+            return stockAdjustmentRepository.FindById(id);
+            
         }
+
+        //approve pending stockadjustment
 
         public void ApproveStockAdjustment(StockAdjustment stockadjustment)
         {
-            throw new NotImplementedException();
+            if(stockadjustment.Status.StatusId==4)
+            {
+                stockadjustment.Status.StatusId = 6;
+                stockAdjustmentRepository.Save(stockadjustment);
+            }
 
         }
 
+        //reject pending stockadjustment
         public void RejectStockAdjustment(StockAdjustment stockadjustment)
         {
-            throw new NotImplementedException();
-
+            if (stockadjustment.Status.StatusId == 4)
+            {
+                stockadjustment.Status.StatusId = 5;
+                stockAdjustmentRepository.Save(stockadjustment);
+            }
         }
-        public void ShowStockAdjustmentDetails(StockAdjustment stockadjustment)
+        public StockAdjustmentDetail ShowStockAdjustmentDetails(StockAdjustment stockadjustment,Item item)
         {
-            throw new NotImplementedException();
+            string stockadjustment_id = stockadjustment.StockAdjustmentId;
+            string itemcode = item.ItemCode;
+            StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode);
+            return s;
         }
 
     }
