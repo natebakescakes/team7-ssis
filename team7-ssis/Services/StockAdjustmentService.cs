@@ -85,7 +85,6 @@ namespace team7_ssis.Tests.Services
         }
 
         //approve pending stockadjustment
-
         public void ApproveStockAdjustment(StockAdjustment stockadjustment)
         {
             if(stockadjustment.Status.StatusId==4)
@@ -105,7 +104,9 @@ namespace team7_ssis.Tests.Services
                 stockAdjustmentRepository.Save(stockadjustment);
             }
         }
-        public StockAdjustmentDetail ShowStockAdjustmentDetails(StockAdjustment stockadjustment,Item item)
+
+        // show sepcific StockAdjustmentDetail in the StockAdjustment
+        public StockAdjustmentDetail ShowStockAdjustmentDetail(StockAdjustment stockadjustment,Item item)
         {
             string stockadjustment_id = stockadjustment.StockAdjustmentId;
             string itemcode = item.ItemCode;
