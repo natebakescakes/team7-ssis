@@ -7,7 +7,7 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Services
 {
-    class StockAdjustmentService
+   public class StockAdjustmentService
     {
         ApplicationDbContext context;
         StockAdjustmentRepository stockAdjustmentRepository;
