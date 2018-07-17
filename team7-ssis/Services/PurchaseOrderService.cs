@@ -25,7 +25,8 @@ namespace team7_ssis.Services
         {
            foreach(string s in itemCodes)
             {
-                purchaseOrderDetailRepository.DeleteItemFromPO(s, purchaseOrder.PurchaseOrderNo);
+               PurchaseOrderDetail detail = purchaseOrderDetailRepository.FindById(purchaseOrder.PurchaseOrderNo,s);
+               purchaseOrderDetailRepository.Delete(detail); 
             }
         }
 
@@ -41,23 +42,23 @@ namespace team7_ssis.Services
 
         public List<PurchaseOrderDetail> FindPurchaseOrderDetailsById(string purchaseOrderNo)
         {
-            return purchaseOrderDetailRepository.FindPODetailsById(purchaseOrderNo).ToList();
+            return purchaseOrderDetailRepository.FindDetailsById(purchaseOrderNo).ToList();
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
         {
-            return purchaseOrderRepository.FindPOBySupplier(supplier.SupplierCode).ToList();
+            return purchaseOrderRepository.FindBySupplier(supplier.SupplierCode).ToList();
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(string supplierCode)
         {
-            return purchaseOrderRepository.FindPOBySupplier(supplierCode).ToList();
+            return purchaseOrderRepository.FindBySupplier(supplierCode).ToList();
         }
 
         
         public List<PurchaseOrder> FindPurchaseOrderByStatus(params int[] statusId)
         {
-            return purchaseOrderRepository.FindPOByStatus(statusId).ToList();
+            return purchaseOrderRepository.FindByStatus(statusId).ToList();
         }
 
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
