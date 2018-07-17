@@ -53,8 +53,7 @@ namespace team7_ssis.Services
             }
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
-
-       
+  
         public DeliveryOrder Save(DeliveryOrder DeliveryOrder)
         {
             return deliveryOrderRepository.Save(DeliveryOrder);
