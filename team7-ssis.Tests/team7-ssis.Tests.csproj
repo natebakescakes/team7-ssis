@@ -142,6 +142,7 @@
     <Compile Include="Services\ItemPriceServiceTest.cs" />
 	<Compile Include="Services\ItemCategoryServiceTest.cs" />
   
+    <Compile Include="Services\StockMovementTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

@@ -14,5 +14,20 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.StockMovement;
         }
+
+        public IQueryable<StockMovement> FindByItemCode(string itemCode)
+        {
+            return context.StockMovement.Where(x => x.Item.ItemCode == itemCode);
+        }
+
+        public IQueryable<StockMovement> FindByDisbursementId(string id)
+        {
+            return context.StockMovement.Where(x => x.DisbursementId==id);
+        }
+
+        public IQueryable<StockMovement> FindByStockAdjustmentId(string id)
+        {
+            return context.StockMovement.Where(x => x.StockAdjustmentId == id);
+        }
     }
 }
