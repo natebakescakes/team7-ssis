@@ -53,15 +53,63 @@ namespace team7_ssis.Services.Tests
             context.SaveChanges();
         }
 
-        public void AddDisbursementDetailsForEachDisbursementTest()
+        [TestMethod()]
+        public void AddDisbursementDetailsForEachDepartmentTest()
         {
-            // Arrange
+            //// Arrange
+            List<Requisition> reqList = new List<Requisition>();
 
+            // Create 5 Requisition Details
+            RequisitionDetail rd1 = new RequisitionDetail();
+            RequisitionDetail rd2 = new RequisitionDetail();
+            RequisitionDetail rd3 = new RequisitionDetail();
+            RequisitionDetail rd4 = new RequisitionDetail();
+            RequisitionDetail rd5 = new RequisitionDetail();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd2.Item = context.Item.Where(x => x.ItemCode == "C002").ToList().First();
+            rd3.Item = context.Item.Where(x => x.ItemCode == "C003").ToList().First();
+            rd4.Item = context.Item.Where(x => x.ItemCode == "C004").ToList().First();
+            rd5.Item = context.Item.Where(x => x.ItemCode == "C005").ToList().First();
+            
+            // Create 3 Requisitions
+            Requisition r1 = new Requisition(); // Commerce Dept ordered 1 item
+            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
+            r1.RequisitionDetails = new List<RequisitionDetail>();
+            r1.RequisitionDetails.Add(rd1);
+            r1.CreatedDateTime = DateTime.Now;
+
+            Requisition r2 = new Requisition(); // Computer Science ordered 2 items
+            r2.Department = context.Department.Where(x => x.DepartmentCode == "CPSC").ToList().First();
+            r2.RequisitionDetails = new List<RequisitionDetail>();
+            r2.RequisitionDetails.Add(rd2);
+            r2.RequisitionDetails.Add(rd3);
+            r2.CreatedDateTime = DateTime.Now;
+            Requisition r3 = new Requisition(); // English Dept ordered 2 items
+            r3.Department = context.Department.Where(x => x.DepartmentCode == "ENGL").ToList().First();
+            r3.RequisitionDetails = new List<RequisitionDetail>();
+            r3.RequisitionDetails.Add(rd4);
+            r3.RequisitionDetails.Add(rd5);
+            r3.CreatedDateTime = DateTime.Now;
+
+            // Add Requisitions to List<Requisition>
+            reqList.Add(r1);
+            reqList.Add(r2);
+            reqList.Add(r3);
 
             // Act
-            
-            
-            // Assert - RequisitionDetail should go in the correct Disbursement.DisbursementDetail
+            List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
+
+            //// Assert
+
+            // There should be 3 Disbursements created, one for each department
+            Assert.AreEqual(disbList.Count, 3);
+            Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
+                            .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
+
+            // TODO: Write a case which checks that the correct items are in DisbursementDetails 
+
+            // TODO: Write a case which tests same department, multiple requisitions
+
         }
 
         [TestMethod()]
