@@ -137,7 +137,9 @@
     <Compile Include="Services\RequisitionServiceTests.cs" />
     <Compile Include="Services\ItemServiceTest.cs" />
     <Compile Include="Services\DisbursementServiceTest.cs" />
+    <Compile Include="Services\RetrievalServiceTest.cs" />
     <Compile Include="Services\StockAdjustmentServiceTest.cs" />
+    <Compile Include="Services\ItemPriceServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

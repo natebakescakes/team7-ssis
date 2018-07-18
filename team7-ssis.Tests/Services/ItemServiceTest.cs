@@ -14,6 +14,7 @@ namespace team7_ssis.Tests.Services
         ApplicationDbContext context;
         ItemService itemService;
         ItemRepository itemRepository;
+        InventoryRepository inventoryRepository;
 
         [TestInitialize]
         public void TestInitialize()
@@ -50,7 +51,7 @@ namespace team7_ssis.Tests.Services
         [TestMethod]
         public void FindItemsByCategory()
         {
-            //Arrage
+            //Arrange
             ItemCategory i = new ItemCategory();
             i.ItemCategoryId = 2;
 
@@ -70,25 +71,66 @@ namespace team7_ssis.Tests.Services
             i.CreatedDateTime = DateTime.Now;
 
             //Act
-            var result = itemService.Save(i);
+            var result = itemService.Save(i,20);
 
             //Assert
             Assert.AreEqual("BBB", result.ItemCode);
+            Assert.AreEqual(20, result.Inventory.Quantity);
+            itemRepository.Delete(i);
+            
+        }
+
+        [TestMethod]
+        public void SaveInventoryTest()
+        {
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "BBB";
+            i.CreatedDateTime = DateTime.Now;
+            new ItemRepository(context).Save(i);
+
+            //Act
+            var result = itemService.SaveInventory(i,40);
+
+            //Arrange
+            Assert.AreEqual("BBB", result.ItemCode);
+            //Assert.AreEqual(40, result.Quantity);
             itemRepository.Delete(i);
         }
+
 
         [TestMethod]
         public void DeleteItemTest()
         {
             //Arrage
             Item i = new Item();
-            i.ItemCode = "AAA";
+            i.ItemCode = "BBB";
+            i.CreatedDateTime = DateTime.Now;
+            itemService.Save(i, 20);
 
             //Act
             var result = itemService.DeleteItem(i);
 
             //Assert
             Assert.AreEqual("Disabled", result.Status.Name);
+            itemRepository.Delete(i);
+        }
+
+        [TestMethod]
+        public void UpdateQuantityTest()
+        {
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "BBB";
+            i.CreatedDateTime = DateTime.Now;
+            itemService.Save(i, 20);
+
+            //Act
+            var result = itemService.UpdateQuantity(i, 30);
+
+            //Assert
+            Assert.AreEqual(30,result.Quantity);
+            itemRepository.Delete(i);
         }
 
     }
