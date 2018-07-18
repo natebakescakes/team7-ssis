@@ -145,9 +145,10 @@ namespace team7_ssis.Tests.Services
             //Arrange
             int expected = stockAdjustmentRepository.Count();
             //Act
-            var result = service.FindAllStockAdjustment().Count;
+            var result = service.FindAllStockAdjustment();
             //Assert
-            Assert.AreEqual(expected, result);
+            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(StockAdjustment));
+
 
         }
         //find stockadjustment by stockjustmentid
