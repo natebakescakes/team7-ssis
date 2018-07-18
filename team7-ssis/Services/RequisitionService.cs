@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,14 @@ namespace team7_ssis.Services
 {
     public class RequisitionService
     {
+        ApplicationDbContext context;
+        RetrievalService retrievalService;
+
+        public RequisitionService(ApplicationDbContext context)
+        {
+            this.context = context;
+            retrievalService = new RetrievalService(context);
+        }
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
             throw new NotImplementedException();
@@ -19,53 +28,73 @@ namespace team7_ssis.Services
             throw new NotImplementedException();
         }
 
-        public void ProcessRequisitions(List<Requisition> requestList)
+        public string ProcessRequisitions(List<Requisition> requestList)
         {
+            // create one Retrieval
+            Retrieval r = new Retrieval();
+            r.RetrievalId = IdService.GetNewRetrievalId(context);
+
+            // save the Retrieval
+            retrievalService.Save(r);
+
+            // create Disbursements, one for each department
+            List<Disbursement> disbursementList = CreateDisbursementsByDepartment(requestList);
+
+            // create DisbursementDetails, one for each item by department
+            foreach (Disbursement d in disbursementList)
+            {
+                foreach (Requisition rq in requestList)
+                {
+                    if (rq.Department == d.Department)
+                    {
+                        foreach (RequisitionDetail rd in rq.RequisitionDetails)
+                        {
+                            foreach (DisbursementDetail dd in d.DisbursementDetails)
+                            {
+                                if (dd.ItemCode == rd.ItemCode)
+                                {
+                                    dd.PlanQuantity += rd.Quantity;
+                                }
+                                else
+                                {
+                                    DisbursementDetail newDd = new DisbursementDetail();
+                                    newDd.ItemCode = rd.ItemCode;
+                                    newDd.PlanQuantity = rd.Quantity;
+
+                                    d.DisbursementDetails.Add(newDd);
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
+
+            // return retrievalId
+
             throw new NotImplementedException();
+        }
 
-            //
-            // Part 1. Create Retrieval Form w/Details
-            //
+        public List<Disbursement> CreateDisbursementsByDepartment(List<Requisition> requestList)
+        {
+            List<Disbursement> disbursementList = new List<Disbursement>();
 
-            // receive list of requisitions
-            // create HashMap<Item, int> map
-            // get a map of the items you need to retrieve, and how many of them. Implements Retrieval
+            // select all distinct departments from disbursementList
+            IEnumerable<Department> departments = disbursementList.Select(x => x.Department).Distinct();
 
-            // foreach (requisition in requestList):
-            //      foreach (reqDetail in requisition.requisitionDetails):
-            //          if reqDetail.itemCode not in map:
-            //              put(reqDetail.itemCode, reqDetail.quantity)
-            //          else:
-            //              set(reqDetail.itemCode, quantity + reqDetail.quantity)
+            foreach (Requisition r in requestList)
+            {
+                if (!departments.Contains(r.Department)) {
+                    // create new disbursement
+                    Disbursement d = new Disbursement();
+                    d.DisbursementId = IdService.GetNewDisbursementId(context);
+                    d.Department = r.Department;
 
-            // convert the map to a List
-            // return this list for display.
+                    disbursementList.Add(d);
+                }
+            }
 
-            //
-            // Part 2. Create Disbursement Forms
-            //
-
-            // collect how much each department wanted of each item
-            // - get list of departments in the requestList called deptList
-
-            // foreach (dept in deptList):
-
-            //      create a new Disbursement, d
-            //      d.DepartmentCode = dept.DepartmentCode
-
-            //      foreach (req in reqList):
-            //          foreach (requisitionDetail in req)
-            //              foreach (disbursementDetail in d.DisbursementDetails)
-            //                  if requsitionDetail.itemCode in disbursementDetail.itemCode.values()
-            //                      disbursementDetail.plannedQuantity += requisitionDetail.quantity
-            //                  else:
-            //                      DisbursementDetail db = new DisbursemsentDetail();
-            //                      db.itemCode = requisitionDetail.itemCode;
-            //                      db.plannedQuantity = requisitionDetail.quantity;
-            //                      d.DisbursementDetails.add(db)
-            //
-            //      persist disbursement
-
+            return disbursementList;
         }
 
         public List<Item> AddItemsToRequisition(List<Item> items)
