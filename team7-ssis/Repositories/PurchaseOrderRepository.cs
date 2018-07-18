@@ -27,5 +27,28 @@ namespace team7_ssis.Repositories
                 .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
                     x.CreatedDateTime.CompareTo(endDateRange) <= 0);
         }
+
+
+        public IQueryable<PurchaseOrder> FindPOBySupplier(string supplierCode)
+        {
+            return context.PurchaseOrder
+                .Where(x => x.SupplierCode == supplierCode);
+        }
+
+        public IQueryable<PurchaseOrder> FindPOByStatus(params int[] statusId)
+        {
+            return context.PurchaseOrder.Where(x => statusId.Contains(x.Status.StatusId));
+        }
+
+
+
+
+
+
+
+
+
+
+
     }
 }

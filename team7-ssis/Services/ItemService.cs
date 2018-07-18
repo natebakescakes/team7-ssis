@@ -7,39 +7,45 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
-    public class ItemService
+    public  class ItemService
     {
         ApplicationDbContext context;
+        ItemRepository itemRepository;
+        StatusRepository statusRepository;
+
         public ItemService(ApplicationDbContext context)
         {
             this.context = context;
+            itemRepository = new ItemRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
         public Item FindItemByItemCode(string itemCode)
         {
-            throw new NotImplementedException();
+            return itemRepository.FindById(itemCode);
         }
 
-        public List<Item> FindAllItems()
+        public  List<Item> FindAllItems()
         {
-            throw new NotImplementedException();
+            return itemRepository.FindAll().ToList();
         }
 
-        
 
         public List<Item> FindItemsByCategory(ItemCategory itemCategory)
         {
-            throw new NotImplementedException();
+            return itemRepository.FindByCategory(itemCategory).ToList();
         }
 
         public Item Save(Item item)
         {
-            throw new NotImplementedException();
+            return itemRepository.Save(item);
         }
 
-        public void DeleteItem(Item item)
+        public Item DeleteItem(Item item)
         {
-            throw new NotImplementedException();
+            Item a = itemRepository.FindById(item.ItemCode);
+            a.Status= statusRepository.FindById(0);
+            return itemRepository.Save(a);
         }
         
     }

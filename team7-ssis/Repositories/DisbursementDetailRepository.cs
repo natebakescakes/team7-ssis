@@ -14,9 +14,6 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.DisbursementDetail;
         }
-        public RequisitionDetail UpdateActualQuantitiesForRequisitionDetail(int quantity)
-        {
-            throw new NotImplementedException();
-        }
+    
     }
 }
