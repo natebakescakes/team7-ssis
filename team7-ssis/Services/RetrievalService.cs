@@ -3,26 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
     public class RetrievalService
     {
         ApplicationDbContext context;
+        RetrievalRepository retrievalRepository;
 
         public RetrievalService(ApplicationDbContext context)
         {
             this.context = context;
+            retrievalRepository = new RetrievalRepository(context);
         }
 
-        public Retrieval ShowRetrievalDetails(string id)
+        public List<Retrieval> FindAllRetrievals()
         {
-            throw new NotImplementedException();
+            return retrievalRepository.FindAll().ToList();
+        }
+
+        public Retrieval FindRetrievalById(string id)
+        {
+            return retrievalRepository.FindById(id);
         }
         public Retrieval Save(Retrieval retrieval)
         {
             //mapped to confirm retrieval, add and edit retrievals (if any) 
-            throw new NotImplementedException();
+            return retrievalRepository.Save(retrieval);
+
         }
 
 
