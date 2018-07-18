@@ -19,7 +19,7 @@ namespace team7_ssis.Services
             stockmovementRepository = new StockMovementRepository(context);
         }
 
-        public List<StockMovement> FindAllStockMovementService()
+        public List<StockMovement> FindAllStockMovement()
         {
             return stockmovementRepository.FindAll().ToList();
         }
