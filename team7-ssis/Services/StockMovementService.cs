@@ -27,12 +27,12 @@ namespace team7_ssis.Services
             throw new NotImplementedException();
         }
 
-        public List<StockMovement> FindStockMovementByDisbursementId(int disbursementId)
+        public List<StockMovement> FindStockMovementByDisbursementId(string disbursementId)
         {
             throw new NotImplementedException();
         }
 
-        public List<StockMovement> FindStockMovementByStockAdjustmentId(int stockAdjustmentId)
+        public List<StockMovement> FindStockMovementByStockAdjustmentId(string stockAdjustmentId)
         {
             throw new NotImplementedException();
         }

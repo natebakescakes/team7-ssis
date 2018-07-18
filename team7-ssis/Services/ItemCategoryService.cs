@@ -10,30 +10,35 @@ namespace team7_ssis.Services
     public class ItemCategoryService
     {
         ApplicationDbContext context;
+        ItemCategoryRepository itemCategoryRepository;
+        StatusRepository statusRepository;
 
         public ItemCategoryService(ApplicationDbContext context)
         {
             this.context = context;
+            itemCategoryRepository = new ItemCategoryRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
         public List<ItemCategory> FindAllItemCategory()
         {
-            throw new NotImplementedException();
+            return itemCategoryRepository.FindAll().ToList();
         }
 
         public ItemCategory FindItemCategoryByItemCategoryId(int itemCategoryId)
         {
-            throw new NotImplementedException();
+            return itemCategoryRepository.FindById(itemCategoryId);
         }
 
         public ItemCategory Save(ItemCategory itemCategory)
         {
-            throw new NotImplementedException();
+            return itemCategoryRepository.Save(itemCategory);
         }
 
-        public ItemCategory Delete(ItemCategory itemCategory)
+        public void Delete(ItemCategory itemCategory)
         {
-            throw new NotImplementedException();
+            itemCategory.Status = statusRepository.FindById(0);
+            itemCategoryRepository.Save(itemCategory);
         }
 
     }
