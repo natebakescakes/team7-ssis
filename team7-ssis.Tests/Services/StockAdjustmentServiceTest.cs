@@ -25,7 +25,8 @@ namespace team7_ssis.Tests.Services
         }
 
         //create new StockAdjustment with status: draft
-        [TestMethod()] 
+        [TestMethod()]
+        
         public void CreateDraftStockAdjustmentTest()
         {
             //Arrange 
@@ -35,17 +36,24 @@ namespace team7_ssis.Tests.Services
             string id = i.ToString();
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
-            // Act
-            var result = service.CreateDraftStockAdjustment(expect);
-            //Assert
-            Assert.AreEqual(3, result.Status.StatusId);
-            stockAdjustmentRepository.Delete(expect);
-
+            // Act     
+            try
+            {
+                var result = service.CreateDraftStockAdjustment(expect);
+                Assert.AreEqual(3, result.Status.StatusId);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch(Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find such status"));
+            }
+               
         }
 
         //Delete one item if StockAdjustment in Draft Status
         [TestMethod()]
-        public void DeleteItemFromDraftStockAdjustmentTest()
+       
+        public void DeleteItemFromDraftOrPendingStockAdjustmentTest()
         {
             //Arrange 
             Random rd = new Random();
@@ -69,20 +77,57 @@ namespace team7_ssis.Tests.Services
             list.Add(s2);
             expect.StockAdjustmentDetails = list;
             service.CreateDraftStockAdjustment(expect);
+            string delete_Item = "C001";
 
-            // Act        
-           string delete_Item = "C001";
-           var result= service.DeleteItemFromDraftStockAdjustment(id, delete_Item);
-            //Assert
-            Assert.AreEqual(delete_Item, result);
-            Assert.AreEqual(stockAdjustmentDetailRepository.FindById(id,result), null);
-            Assert.AreEqual(expect.StockAdjustmentDetails.Count, 1);
-            stockAdjustmentRepository.Delete(expect);      
+            //test can't find StockAdjustment
+            try
+            {
+              
+                var result = service.DeleteItemFromDraftOrPendingStockAdjustment(id, "123");
+                //Assert
+                Assert.AreEqual(delete_Item, result);
+                Assert.AreEqual(stockAdjustmentDetailRepository.FindById(id, result), null);
+                Assert.AreEqual(expect.StockAdjustmentDetails.Count, 1);
+                //stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            { Assert.IsTrue(e.Message.Contains("can't find stockAdjustmentDetail")); }
+
+
+            // test can't find stockAdjustment
+            try
+            {
+                
+                var result = service.DeleteItemFromDraftOrPendingStockAdjustment("3", delete_Item);//don't exist
+                //Assert
+                Assert.AreEqual(delete_Item, result);
+                Assert.AreEqual(stockAdjustmentDetailRepository.FindById(id, result), null);
+                Assert.AreEqual(expect.StockAdjustmentDetails.Count, 1);
+                // stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            { Assert.IsTrue(e.Message.Contains("can't find StockAdjustment")); }
+
+            // No Exception part    
+            try
+            {
+                string delete_Item1 = "C001";
+                var result = service.DeleteItemFromDraftOrPendingStockAdjustment(id, delete_Item1);
+                //Assert
+                Assert.AreEqual(delete_Item1, result);
+                Assert.AreEqual(stockAdjustmentDetailRepository.FindById(id, result), null);
+                Assert.AreEqual(expect.StockAdjustmentDetails.Count, 1);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            { Assert.IsTrue(e.Message.Contains("can't find StockAdjustmentDetail")); }
+
+
         }
 
-        //Delete whole StockAdjustment in Draft Status
+        //Cancel StockAdjustment in Draft or Pending Status
         [TestMethod()]
-        public void DeleteDraftStockAdjustmentTest()
+        public void CancelDraftOrPendingStockAdjustmentTest()
         {
             //Arrange
             StockAdjustment expect = new StockAdjustment();
@@ -92,10 +137,34 @@ namespace team7_ssis.Tests.Services
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
             service.CreateDraftStockAdjustment(expect);
-            //Act
-            var result=service.DeleteDraftStockAdjustment(id);
-            //Assert
-            Assert.AreEqual(id, result);
+          
+
+            //Test Exception
+            try
+            {
+                //Act
+                var result = service.CancelDraftOrPendingStockAdjustment("3");
+                Assert.AreEqual(2, result.Status.StatusId);
+            }
+            catch (Exception e)
+            {
+                //Assert
+                Assert.IsTrue(e.Message.Contains("can't find the StockAdjustment"));
+            }
+
+            //No exception part
+            try
+            {
+                //Act
+                var result = service.CancelDraftOrPendingStockAdjustment(id);
+                Assert.AreEqual(2, result.Status.StatusId);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            {
+                //Assert
+                Assert.IsTrue(e.Message.Contains("can't find the StockAdjustment"));
+            }
         }
 
 
@@ -111,48 +180,35 @@ namespace team7_ssis.Tests.Services
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
             service.CreateDraftStockAdjustment(expect);
-            //Act
-            var result=service.CreatePendingStockAdjustment(expect);
-            //Assert
-            Assert.IsTrue(result.Status.StatusId == 4);
-            stockAdjustmentRepository.Delete(expect);
+            try
+            {
+                //Act
+                var result = service.CreatePendingStockAdjustment(expect);
+                //Assert
+                Assert.IsTrue(result.Status.StatusId == 4);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch(Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find such status"));
+            }
 
         }
 
-        //cancel pening stockadjustment before being approved/rejected
-        [TestMethod()]
-        public void CancelPendingStockAdjustmentTest()
-        {
-            //Arrange
-            StockAdjustment expect = new StockAdjustment();
-            Random rd = new Random();
-            int i = rd.Next();
-            string id = i.ToString();
-            expect.StockAdjustmentId = id;
-            expect.CreatedDateTime = DateTime.Now;
-            service.CreateDraftStockAdjustment(expect);
-            //Act
-            service.CancelPendingStockAdjustment(id);
-            //Assert
-            Assert.IsTrue(expect.Status.StatusId == 2);
-
-        }
-
+  
 
         //find all stockadjustemnt
         [TestMethod()]
         public void FindAllStockAdjustmentTest()
         {
-
             //Arrange
             int expected = stockAdjustmentRepository.Count();
             //Act
             var result = service.FindAllStockAdjustment();
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(StockAdjustment));
-
-
         }
+
         //find stockadjustment by stockjustmentid
         [TestMethod()]
         public void FindStockAdjustmentByIdTest()
@@ -184,11 +240,34 @@ namespace team7_ssis.Tests.Services
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
             service.CreatePendingStockAdjustment(expect);
-            //Act
-            var result=service.ApproveStockAdjustment(id);
-            //Assert
-            Assert.IsTrue(expect.Status.StatusId == 6);
-            stockAdjustmentRepository.Delete(expect);
+            //test exception
+            try
+            {
+                //Act
+                var result = service.ApproveStockAdjustment(".");
+                //Assert
+                Assert.IsTrue(expect.Status.StatusId == 6);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
+            }
+
+
+            //No exception part
+            try
+            {
+                //Act
+                var result = service.ApproveStockAdjustment(id);
+                //Assert
+                Assert.IsTrue(expect.Status.StatusId == 6);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch(Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
+            }
         }
 
         //reject pending stockadjustment
@@ -203,12 +282,36 @@ namespace team7_ssis.Tests.Services
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
             service.CreatePendingStockAdjustment(expect);
-            //Act
-            var result = service.RejectStockAdjustment(id);
-            //Assert
-            Assert.IsTrue(expect.Status.StatusId == 5);
-           stockAdjustmentRepository.Delete(expect);
-        }
+            //test exception
+            try
+            {
+                //Act
+                var result = service.ApproveStockAdjustment(".");
+                //Assert
+                Assert.IsTrue(expect.Status.StatusId == 6);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
+            }
+
+
+            //No exception part
+            try
+            {
+                //Act
+                var result = service.ApproveStockAdjustment(id);
+                //Assert
+                Assert.IsTrue(expect.Status.StatusId == 6);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
+            }
+      
+    }
 
         // show sepcific StockAdjustmentDetail in the StockAdjustment
         [TestMethod()]
@@ -237,11 +340,32 @@ namespace team7_ssis.Tests.Services
             list.Add(s2);
             expect.StockAdjustmentDetails = list;
             service.CreateDraftStockAdjustment(expect);
-            //Act
-            var result = service.ShowStockAdjustmentDetail(id, s1.ItemCode);
-            //Assert
-            Assert.IsTrue(result.ItemCode == s1.ItemCode);
-            stockAdjustmentRepository.Delete(expect);
+            //test exception
+            try
+            {
+                //Act
+                var result = service.ShowStockAdjustmentDetail("123", s1.ItemCode);
+                //Assert
+                Assert.IsTrue(result.ItemCode == s1.ItemCode);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch (Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find stockAdjustmentDetail"));
+            }
+            //No exception part
+            try
+            {
+                //Act
+                var result = service.ShowStockAdjustmentDetail(id, s1.ItemCode);
+                //Assert
+                Assert.IsTrue(result.ItemCode == s1.ItemCode);
+                stockAdjustmentRepository.Delete(expect);
+            }
+            catch(Exception e)
+            {
+                Assert.IsTrue(e.Message.Contains("can't find stockAdjustmentDetail"));
+            }
         }
     }
 }
