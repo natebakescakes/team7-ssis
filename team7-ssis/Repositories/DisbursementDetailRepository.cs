@@ -14,5 +14,6 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.DisbursementDetail;
         }
+    
     }
 }
