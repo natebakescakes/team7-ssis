@@ -7,72 +7,107 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Services
 {
-    class StockAdjustmentService
+    public class StockAdjustmentService
     {
         ApplicationDbContext context;
         StockAdjustmentRepository stockAdjustmentRepository;
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
+        StatusRepository statusRepository;
         public StockAdjustmentService(ApplicationDbContext context)
         {
             this.context = context;
+            this.statusRepository = new StatusRepository(context);
             this.stockAdjustmentRepository = new StockAdjustmentRepository(context);
-           this.stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
+            this.stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
         }
 
         //create new StockAdjustment with status: draft
-        public void CreateDraftStockAdjustment(StockAdjustment stockadjustment)
+        public StockAdjustment CreateDraftStockAdjustment(StockAdjustment stockadjustment)
         {
-            StockAdjustment st = stockadjustment;
-            st.Status.StatusId = 3;
-            stockAdjustmentRepository.Save(st);
+            //controller pass stockadjustment to the method
+
+            
+            if (statusRepository.FindById(3) == null)
+            {
+                throw new Exception("can't find such status");
+
+            }
+            stockadjustment.Status = statusRepository.FindById(3);
+            stockAdjustmentRepository.Save(stockadjustment);
+            return stockadjustment;
+
         }
 
         //Delete one item if StockAdjustment in Draft Status
-        public void DeleteItemFromDraftStockAdjustment(StockAdjustment stockAdjustment, Item item)
+        public string DeleteItemFromDraftOrPendingStockAdjustment(string stockadjustment_id, string itemcode)
         {
-            string stockadjustment_id = stockAdjustment.StockAdjustmentId;
-            string itemcode = item.ItemCode;
-            if (stockAdjustment.Status.StatusId==3)
+            //controller pass stockadjustmentid and itemcode to the method
+            StockAdjustment s1 = stockAdjustmentRepository.FindById(stockadjustment_id);
+            StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode);
+            if (stockAdjustmentRepository.FindById(stockadjustment_id) == null)
             {
-                StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id,itemcode);
-                //remove one StockAdjustmentDetail in List<StockAdjustmentDetail>
-                stockAdjustment.StockAdjustmentDetails.Remove(s);
+                throw new Exception("can't find StockAdjustment");
+            }
+            else if (stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode) == null)
+            {
+                throw new Exception("can't find stockAdjustmentDetail");
+            }
+           
+            if (s1.Status.StatusId==3 || s1.Status.StatusId==4)
+            {
+               //remove one StockAdjustmentDetail in List<StockAdjustmentDetail>
+                s1.StockAdjustmentDetails.Remove(s);
                 //delete one stockadjustmentdetail
                 stockAdjustmentDetailRepository.Delete(s);
             }
+            return itemcode;
 
         }
 
-        //Delete whole StockAdjustment in Draft Status
-        public void DeleteDraftStockAdjustment(StockAdjustment stockAdjustment)
+        //Cancel StockAdjustment in Draft or Pending Status
+        public StockAdjustment CancelDraftOrPendingStockAdjustment(string id)
         {
-            if (stockAdjustment.Status.StatusId == 3)
+            //controller pass stockadjustmentid the method
+            StockAdjustment stockAdjustment = stockAdjustmentRepository.FindById(id);
+            if(stockAdjustmentRepository.FindById(id)==null)
             {
-                stockAdjustmentRepository.Delete(stockAdjustment);
+                throw new Exception("can't find the StockAdjustment");
             }
-      
+       
+            if (stockAdjustment.Status.StatusId == 3 || stockAdjustment.Status.StatusId==4)
+            {
+                stockAdjustment.Status = statusRepository.FindById(2);
+                if(statusRepository.FindById(2)==null)
+                {
+                    throw new Exception("can't find such status");
+                }
+
+            }
+            return stockAdjustment;
         }
 
         //create new StockAdjustment with status: pending
-        public void CreatePendingStockAdjustment(StockAdjustment stockadjustment)
+        public StockAdjustment CreatePendingStockAdjustment(StockAdjustment stockadjustment)
+            //controller pass stockadjustment to the method
         {
-            stockadjustment.Status.StatusId = 4;
+         
+          
+            if (statusRepository.FindById(4) == null)
+            {
+                throw new Exception("can't find such status");
+
+            }
+            stockadjustment.Status = statusRepository.FindById(4);
             stockAdjustmentRepository.Save(stockadjustment);
+                return stockadjustment;
 
         }
 
-        //cancel pening stockadjustment before being approved/rejected
-        public void CancelPendingStockAdjustment(StockAdjustment stockadjustment)
-        {
-            stockadjustment.Status.StatusId = 2;
-            stockAdjustmentRepository.Save(stockadjustment);
-
-        }
 
 
 
         //find all stockadjustemnt
-        public List<StockAdjustment>  FindAllStockAdjustment()
+        public List<StockAdjustment> FindAllStockAdjustment()
         {
             return stockAdjustmentRepository.FindAll().ToList();
         }
@@ -85,31 +120,46 @@ namespace team7_ssis.Tests.Services
         }
 
         //approve pending stockadjustment
-        public void ApproveStockAdjustment(StockAdjustment stockadjustment)
+        public StockAdjustment ApproveStockAdjustment(string id)
         {
-            if(stockadjustment.Status.StatusId==4)
+            //controller pass stockadjustmentid to the method
+            if(stockAdjustmentRepository.FindById(id)==null)
             {
-                stockadjustment.Status.StatusId = 6;
+                throw new Exception("can't find StockAdjustment");
+            }
+            StockAdjustment stockadjustment = stockAdjustmentRepository.FindById(id);
+            if (stockadjustment.Status.StatusId==4)
+            {
+                stockadjustment.Status = statusRepository.FindById(6);
                 stockAdjustmentRepository.Save(stockadjustment);
             }
-
+            return stockadjustment;
         }
 
         //reject pending stockadjustment
-        public void RejectStockAdjustment(StockAdjustment stockadjustment)
+        public StockAdjustment RejectStockAdjustment(string id)
         {
+            //controller pass stockadjustmentid to the method
+            if (stockAdjustmentRepository.FindById(id) == null)
+            {
+                throw new Exception("can't find StockAdjustment");
+            }
+            StockAdjustment stockadjustment = stockAdjustmentRepository.FindById(id);
             if (stockadjustment.Status.StatusId == 4)
             {
-                stockadjustment.Status.StatusId = 5;
+                stockadjustment.Status=statusRepository.FindById(5);
                 stockAdjustmentRepository.Save(stockadjustment);
             }
+            return stockadjustment;
         }
 
         // show sepcific StockAdjustmentDetail in the StockAdjustment
-        public StockAdjustmentDetail ShowStockAdjustmentDetail(StockAdjustment stockadjustment,Item item)
+        public StockAdjustmentDetail ShowStockAdjustmentDetail(string stockadjustment_id, string itemcode)
         {
-            string stockadjustment_id = stockadjustment.StockAdjustmentId;
-            string itemcode = item.ItemCode;
+            if(stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode)==null)
+            {
+                throw new Exception("can't find stockAdjustmentDetail");
+            }
             StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode);
             return s;
         }

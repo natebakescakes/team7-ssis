@@ -10,40 +10,51 @@ namespace team7_ssis.Services
     public class ItemPriceService
     {
         ApplicationDbContext context;
+        ItemPriceRepository itemPriceRepository;
+        StatusRepository statusRepository;
 
         public ItemPriceService(ApplicationDbContext context)
         {
             this.context = context;
+            itemPriceRepository = new ItemPriceRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
         public List<ItemPrice> FindAllItemPrice()
         {
-            throw new NotImplementedException();
+            return itemPriceRepository.FindAll().ToList();
         }
 
-        public ItemPrice FindItemPriceByItemCode(string itemCode)
+        public List<ItemPrice> FindItemPriceByItemCode(string itemCode)
         {
-            throw new NotImplementedException();
+            return itemPriceRepository.FindByItemCode(itemCode).ToList();
         }
 
         public List<ItemPrice> FindItemPriceBySupplierCode(string supplierCode)
         {
-            throw new NotImplementedException();
+            return itemPriceRepository.FindBySupplierCode(supplierCode).ToList();
         }
 
         public List<ItemPrice> FindItemPriceByPrioritySequence(int prioritySequence)
         {
-            throw new NotImplementedException();
+            return itemPriceRepository.FindByPrioritySequence(prioritySequence).ToList();
         }
 
         public ItemPrice Save(ItemPrice itemPrice)
         {
-            throw new NotImplementedException();
+            return itemPriceRepository.Save(itemPrice);
         }
 
-        public void DeleteItemPrice(ItemPrice itemPrice)
+        public List<ItemPrice> DeleteItemPrice(ItemPrice itemPrice)
         {
-            throw new NotImplementedException();
+           List<ItemPrice> p = itemPriceRepository.FindByItemCode(itemPrice.ItemCode).ToList();
+            List<ItemPrice> q = new List<ItemPrice>();
+            foreach (ItemPrice element in p)
+            {
+                element.Status = statusRepository.FindById(0);
+                q.Add(itemPriceRepository.Save(element));
+            }
+            return q;
         }
     }
 }
