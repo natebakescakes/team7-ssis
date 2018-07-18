@@ -50,7 +50,7 @@ namespace team7_ssis.Tests.Services
         [TestMethod]
         public void FindItemsByCategory()
         {
-            //Arrage
+            //Arrange
             ItemCategory i = new ItemCategory();
             i.ItemCategoryId = 2;
 
@@ -70,12 +70,30 @@ namespace team7_ssis.Tests.Services
             i.CreatedDateTime = DateTime.Now;
 
             //Act
-            var result = itemService.Save(i);
+            var result = itemService.Save(i,20);
 
             //Assert
             Assert.AreEqual("BBB", result.ItemCode);
+            Assert.AreEqual(20, result.Inventory.Quantity);
             itemRepository.Delete(i);
         }
+
+        [TestMethod]
+        public void SaveInventoryTest()
+        {
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "AAA";
+
+            //Act
+            var result = itemService.SaveInventory(i,40);
+
+            //Arrange
+            Assert.AreEqual("AAA", result.ItemCode);
+            Assert.AreEqual(40, result.Quantity);
+
+        }
+
 
         [TestMethod]
         public void DeleteItemTest()
@@ -89,6 +107,20 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual("Disabled", result.Status.Name);
+        }
+
+        [TestMethod]
+        public void UpdateQuantityTest()
+        {
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "AAA";
+
+            //Act
+            var result = itemService.UpdateQuantity(i, 30);
+
+            //Assert
+            Assert.AreEqual(30,result.Quantity);
         }
 
     }
