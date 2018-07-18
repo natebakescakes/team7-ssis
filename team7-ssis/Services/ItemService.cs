@@ -43,8 +43,9 @@ namespace team7_ssis.Services
 
         public Item DeleteItem(Item item)
         {
-            item.Status= statusRepository.FindById(0);
-            return itemRepository.Save(item);
+            Item a = itemRepository.FindById(item.ItemCode);
+            a.Status= statusRepository.FindById(0);
+            return itemRepository.Save(a);
         }
         
     }
