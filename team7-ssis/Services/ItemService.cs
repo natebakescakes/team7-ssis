@@ -7,39 +7,64 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
-    public class ItemService
+    public  class ItemService
     {
         ApplicationDbContext context;
+        ItemRepository itemRepository;
+        StatusRepository statusRepository;
+        InventoryRepository inventoryRepository;
+
         public ItemService(ApplicationDbContext context)
         {
             this.context = context;
+            itemRepository = new ItemRepository(context);
+            statusRepository = new StatusRepository(context);
+            inventoryRepository = new InventoryRepository(context);
         }
 
         public Item FindItemByItemCode(string itemCode)
         {
-            throw new NotImplementedException();
+            return itemRepository.FindById(itemCode);
         }
 
-        public List<Item> FindAllItems()
+        public  List<Item> FindAllItems()
         {
-            throw new NotImplementedException();
+            return itemRepository.FindAll().ToList();
         }
 
-        
 
         public List<Item> FindItemsByCategory(ItemCategory itemCategory)
         {
-            throw new NotImplementedException();
+            return itemRepository.FindByCategory(itemCategory).ToList();
+        }
+        
+        public Item Save(Item item,int quantity)
+        {
+            Item result=itemRepository.Save(item);
+            SaveInventory(result,quantity);
+            return result;
         }
 
-        public Item Save(Item item)
+        public Inventory SaveInventory(Item item,int quantity)
         {
-            throw new NotImplementedException();
+            Inventory iv = new Inventory();
+            iv.ItemCode = item.ItemCode;
+            iv.Quantity = quantity;
+            return inventoryRepository.Save(iv);
         }
 
-        public void DeleteItem(Item item)
+        public Inventory UpdateQuantity(Item item,int quantity)
         {
-            throw new NotImplementedException();
+            Inventory iv = inventoryRepository.FindById(item.ItemCode);
+            iv.Quantity = quantity;
+            return inventoryRepository.Save(iv);
+        }
+
+        public Item DeleteItem(Item item)
+        {
+            Item a = itemRepository.FindById(item.ItemCode);
+            a.Status= statusRepository.FindById(0);
+            return itemRepository.Save(a);
         }
         
     }
