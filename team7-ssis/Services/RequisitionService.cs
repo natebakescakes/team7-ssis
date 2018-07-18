@@ -33,14 +33,24 @@ namespace team7_ssis.Services
             // create one Retrieval
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);
+            r.CreatedDateTime = DateTime.Now;
 
             // save the Retrieval
             retrievalService.Save(r);
 
             // create Disbursements, one for each department
-            List<Disbursement> disbursementList = CreateDisbursementForEachDepartment(requestList);
+            List<Disbursement> emptyDisbursements = CreateDisbursementForEachDepartment(requestList);
 
             // create DisbursementDetails, one for each item by department
+            List<Disbursement> filledDisbursements = AddDisbursementDetailsForEachDisbursement(emptyDisbursements, requestList);
+
+            return r.RetrievalId;
+        }
+
+        private List<Disbursement> AddDisbursementDetailsForEachDisbursement(List<Disbursement> disbursementList, List<Requisition> requestList)
+        {
+
+            // create disbursementdetails, one for each item by department
             foreach (Disbursement d in disbursementList)
             {
                 foreach (Requisition rq in requestList)
@@ -51,28 +61,25 @@ namespace team7_ssis.Services
                         {
                             foreach (DisbursementDetail dd in d.DisbursementDetails)
                             {
-                                if (dd.ItemCode == rd.ItemCode)
+                                if (dd.Item.Equals(rd.Item))
                                 {
                                     dd.PlanQuantity += rd.Quantity;
                                 }
                                 else
                                 {
-                                    DisbursementDetail newDd = new DisbursementDetail();
-                                    newDd.ItemCode = rd.ItemCode;
-                                    newDd.PlanQuantity = rd.Quantity;
+                                    DisbursementDetail newdd = new DisbursementDetail();
+                                    newdd.Item = rd.Item;
+                                    newdd.PlanQuantity = rd.Quantity;
 
-                                    d.DisbursementDetails.Add(newDd);
+                                    d.DisbursementDetails.Add(newdd);
                                 }
                             }
-                            
                         }
                     }
                 }
             }
 
-            // return retrievalId
-
-            throw new NotImplementedException();
+            return disbursementList;
         }
 
         public List<Disbursement> CreateDisbursementForEachDepartment(List<Requisition> requestList)
