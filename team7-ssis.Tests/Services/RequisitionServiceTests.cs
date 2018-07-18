@@ -53,16 +53,18 @@ namespace team7_ssis.Services.Tests
         }
 
         [TestMethod()]
-        public void createDisbursementsByDepartmentTest()
+        public void CreateDisbursementForEachDepartmentTest()
         {
-            // Arrange
-            HashSet<string> expected = new HashSet<string> { "a", "b" };
+            //// Arrange
 
-            Department d1 = new Department();
-            d1.Name = "a";
-            Department d2 = new Department();
-            d2.Name = "b";
+            // get Departments
+            Department d1 = context.Department.ToList()[0];
+            Department d2 = context.Department.ToList()[1];
 
+            // Create expected result
+            HashSet<Department> expected = new HashSet<Department> { d1, d2 };
+
+            // Create mock Requisition list
             List<Requisition> reqList = new List<Requisition>();
             Requisition r1 = new Requisition();
             r1.Department = d1;
@@ -74,11 +76,11 @@ namespace team7_ssis.Services.Tests
             reqList.Add(r2);
             reqList.Add(r3);
 
-            // Act
-            List<Disbursement> disbursementList = requisitionService.CreateDisbursementsByDepartment(reqList);
+            //// Act
+            List<Disbursement> result = requisitionService.CreateDisbursementForEachDepartment(reqList);
 
-            // Assert
-            HashSet<string> depts = new HashSet<string>(reqList.Select(x => x.Department.Name).Distinct());
+            //// Assert
+            HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
 
             Assert.IsTrue(depts.SetEquals(expected));
         }
