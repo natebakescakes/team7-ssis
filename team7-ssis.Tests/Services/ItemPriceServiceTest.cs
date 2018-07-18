@@ -14,6 +14,7 @@ namespace team7_ssis.Tests.Services
         ApplicationDbContext context;
         ItemPriceService itemPriceService;
         ItemPriceRepository itemPriceRepository;
+        ItemRepository itemRepository;
 
         [TestInitialize]
         public void TestInitialize()
@@ -21,6 +22,7 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             itemPriceService = new ItemPriceService(context);
             itemPriceRepository = new ItemPriceRepository(context);
+            itemRepository = new ItemRepository(context);
         }
 
         [TestMethod]
@@ -88,34 +90,46 @@ namespace team7_ssis.Tests.Services
         public void SaveItemPriceTest()
         {
             //Arrange
+            Item it = new Item();
+            it.ItemCode = "BBB";
+            it.CreatedDateTime = DateTime.Now;
+            new ItemRepository(context).Save(it);
+
             ItemPrice i = new ItemPrice();
-            i.ItemCode = "AAA";
+            i.ItemCode = it.ItemCode;
             i.SupplierCode = "ALPA";
             i.PrioritySequence = 3;
-            i.Price = 20.34M;
+            i.Price = 20.30M;
             i.CreatedDateTime = DateTime.Now;
 
             //Act
             var result = itemPriceService.Save(i);
 
             //Arrange
-            Assert.AreEqual("AAA", result.ItemCode);
+            Assert.AreEqual("BBB", result.ItemCode);
             Assert.AreEqual("ALPA", result.SupplierCode);
             Assert.AreEqual(3, result.PrioritySequence);
-            Assert.AreEqual(20.34M, result.Price);
-
+            Assert.AreEqual(20.30M, result.Price);
+            
+            //clean
             itemPriceRepository.Delete(i);
+            itemRepository.Delete(it);
         }
 
         [TestMethod]
         public void DeleteItemPriceTest()
         {
             //Arrage
-            ItemPrice i = new ItemPrice();
-            i.ItemCode = "AAA";
+            Item it = new Item();
+            it.ItemCode = "BBB";
+            it.CreatedDateTime = DateTime.Now;
+            new ItemRepository(context).Save(it);
+
+            ItemPrice p = new ItemPrice();
+            p.ItemCode = it.ItemCode;
 
             //Act
-            var result = itemPriceService.DeleteItemPrice(i);
+            var result = itemPriceService.DeleteItemPrice(p);
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(ItemPrice));
@@ -123,6 +137,7 @@ namespace team7_ssis.Tests.Services
             {
                 Assert.AreEqual("Disabled", element.Status.Name);
             }
+            itemRepository.Delete(it);
         }
 
     }
