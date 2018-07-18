@@ -46,11 +46,7 @@ namespace team7_ssis.Services
             return purchaseOrderRepository.FindById(purchaseOrderNo);
         }
 
-        public List<PurchaseOrderDetail> FindPurchaseOrderDetailsById(string purchaseOrderNo)
-        {
-            return purchaseOrderDetailRepository.FindAllDetailsById(purchaseOrderNo).ToList();
-        }
-
+        
 
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
@@ -69,6 +65,7 @@ namespace team7_ssis.Services
             return purchaseOrderRepository.FindByStatus(statusId).ToList();
         }
 
+
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
         {
             if (purchaseOrderRepository.FindById(purchaseOrder.PurchaseOrderNo)==null)
@@ -81,7 +78,6 @@ namespace team7_ssis.Services
             {
                 return purchaseOrderRepository.Save(purchaseOrder);
             }
-            
             
         }
 

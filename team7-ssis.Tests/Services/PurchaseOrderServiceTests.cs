@@ -62,39 +62,7 @@ namespace team7_ssis.Tests.Services
 
         }
 
-        [TestMethod]
-        public void FindPurchaseOrderDetailsByIdTest()
-        {
-            //Arrange
-            PurchaseOrderDetail p1 = new PurchaseOrderDetail();
-            p1.PurchaseOrderNo = "TEST";
-            p1.ItemCode = "E004";
-            p1.Quantity = 50;
-
-            PurchaseOrderDetail p2 = new PurchaseOrderDetail();
-            p2.PurchaseOrderNo = "TEST";
-            p2.ItemCode = "E007";
-            p2.Quantity = 100;
-
-            purchaseOrderDetailRepository.Save(p1);
-            purchaseOrderDetailRepository.Save(p2);
-
-            //Act
-            var result = purchaseOrderService.FindPurchaseOrderDetailsById("TEST");
-            var result2 = purchaseOrderService.FindPurchaseOrderDetailsById("DUMMYYYY");
-            
-            //Assert
-            Assert.AreEqual(3, result.Count());
-            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(PurchaseOrderDetail));
-            result.ForEach(x => Assert.AreEqual("TEST", x.PurchaseOrderNo));
-
-            Assert.AreEqual(result2.Any(), false);//since result2 is an empty collection and not null
-            
-            //teardown
-            purchaseOrderDetailRepository.Delete(p1);
-            purchaseOrderDetailRepository.Delete(p2);
-
-        }
+        
         
 
         [TestMethod]

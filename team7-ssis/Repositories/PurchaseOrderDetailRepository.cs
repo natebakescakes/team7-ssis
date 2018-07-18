@@ -14,11 +14,7 @@ namespace team7_ssis.Repositories
             this.entity = context.PurchaseOrderDetail;
         }
 
-        public IQueryable<PurchaseOrderDetail> FindAllDetailsById(string purchaseOrderNo)
-        {
-            return context.PurchaseOrderDetail
-                .Where(x => x.PurchaseOrder.PurchaseOrderNo == purchaseOrderNo);
-        }
+        
 
 
 
