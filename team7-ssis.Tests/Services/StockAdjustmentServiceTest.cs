@@ -75,6 +75,8 @@ namespace team7_ssis.Tests.Services
            var result= service.DeleteItemFromDraftStockAdjustment(id, delete_Item);
             //Assert
             Assert.AreEqual(delete_Item, result);
+            Assert.AreEqual(stockAdjustmentDetailRepository.FindById(id,result), null);
+            Assert.AreEqual(expect.StockAdjustmentDetails.Count, 1);
             stockAdjustmentRepository.Delete(expect);      
         }
 
