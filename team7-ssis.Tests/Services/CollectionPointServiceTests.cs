@@ -32,5 +32,25 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result);
         }
+        [TestMethod]
+        public void FindAllCollectionPointsUniqueTest()
+        {
+            //Assert
+            CollectionAssert.AllItemsAreUnique(collectionPointService.FindAllCollectionPoints());
+        }
+        [TestMethod]
+        public void FindAllCollectionPointsObjectTest()
+        {
+            //Act
+            var result = collectionPointService.FindAllCollectionPoints();
+            //Assert
+            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(CollectionPoint));
+        }
+        [TestMethod]
+        public void FindAllCollectionPointsNotNullTest()
+        {
+            //Assert
+            CollectionAssert.AllItemsAreNotNull(collectionPointService.FindAllCollectionPoints());
+        }
     }
 }
