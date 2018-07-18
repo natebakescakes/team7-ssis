@@ -35,10 +35,10 @@ namespace team7_ssis.Services
             return itemCategoryRepository.Save(itemCategory);
         }
 
-        public void Delete(ItemCategory itemCategory)
+        public ItemCategory Delete(ItemCategory itemCategory)
         {
             itemCategory.Status = statusRepository.FindById(0);
-            itemCategoryRepository.Save(itemCategory);
+            return itemCategoryRepository.Save(itemCategory);
         }
 
     }
