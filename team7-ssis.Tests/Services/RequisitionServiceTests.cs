@@ -40,16 +40,28 @@ namespace team7_ssis.Services.Tests
         public void ProcessRequisitionsTest()
         {
             //// Arrange
-            //string expected = "A123";
+            List<Requisition> reqList = new List<Requisition>();
 
-            ////Act
-            //// create list of requests
-            //List<Requisition> reqList = new List<Requisition>();
-            //var result = requisitionService.ProcessRequisitions(reqList);
+            // Act
+            string id = requisitionService.ProcessRequisitions(reqList);
+
+            // Assert - the Requisition ID that ProcessRequisitions returns should return a Requisition
+            Retrieval result = context.Retrieval.Where(x => x.RetrievalId == id).ToList().First();
+            Assert.IsNotNull(result);
+
+            context.Retrieval.Remove(result);
+            context.SaveChanges();
+        }
+
+        public void AddDisbursementDetailsForEachDisbursementTest()
+        {
+            // Arrange
 
 
-            ////Assert
-            //Assert.AreEqual(expected, result);
+            // Act
+            
+            
+            // Assert - RequisitionDetail should go in the correct Disbursement.DisbursementDetail
         }
 
         [TestMethod()]
