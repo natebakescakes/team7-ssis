@@ -12,6 +12,7 @@ namespace team7_ssis.Services
     {
         PurchaseOrderRepository purchaseOrderRepository;
         PurchaseOrderDetailRepository purchaseOrderDetailRepository;
+        StatusRepository statusRepository;
         ApplicationDbContext context;
 
         public PurchaseOrderService(ApplicationDbContext context)
@@ -19,15 +20,20 @@ namespace team7_ssis.Services
             this.context = context;
             purchaseOrderRepository = new PurchaseOrderRepository(context);
             purchaseOrderDetailRepository = new PurchaseOrderDetailRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
-        public void RemoveDraftItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
+        public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
         {
-           foreach(string s in itemCodes)
+            if (purchaseOrder.Status.StatusId == 11)
             {
-               PurchaseOrderDetail detail = purchaseOrderDetailRepository.FindById(purchaseOrder.PurchaseOrderNo,s);
-               purchaseOrderDetailRepository.Delete(detail); 
+                foreach (string s in itemCodes)
+                {
+                    PurchaseOrderDetail detail = purchaseOrderDetailRepository.FindById(purchaseOrder.PurchaseOrderNo, s);
+                    purchaseOrderDetailRepository.Delete(detail);
+                }
             }
+          
         }
 
         public List<PurchaseOrder> FindAllPurchaseOrders()
@@ -44,6 +50,8 @@ namespace team7_ssis.Services
         {
             return purchaseOrderDetailRepository.FindAllDetailsById(purchaseOrderNo).ToList();
         }
+
+
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
         {
@@ -63,7 +71,17 @@ namespace team7_ssis.Services
 
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
         {
-            return purchaseOrderRepository.Save(purchaseOrder);
+            if (purchaseOrderRepository.FindById(purchaseOrder.PurchaseOrderNo)==null)
+            {
+                purchaseOrder.Status = statusRepository.FindById(11);
+                return purchaseOrderRepository.Save(purchaseOrder);
+            }
+
+            else
+            {
+                return purchaseOrderRepository.Save(purchaseOrder);
+            }
+            
             
         }
 
