@@ -117,20 +117,21 @@ namespace team7_ssis.Services
         public List<PurchaseOrder> AddItemsToPurchaseOrders(List<OrderItem> orderItems,List<PurchaseOrder> poList)
         {
            
-            foreach (PurchaseOrder po in poList)
+            foreach(PurchaseOrder po in poList)
             {
+                po.PurchaseOrderDetails=new List<PurchaseOrderDetail>();
                 foreach(OrderItem orderItem in orderItems)
                 {
                     ItemPrice ip = orderItem.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First();
 
-                    if(po.SupplierCode == ip.SupplierCode)
+                    if(po.Supplier.SupplierCode == ip.Supplier.SupplierCode)
                     {
                         PurchaseOrderDetail pd = new PurchaseOrderDetail();
-                        pd.PurchaseOrder = po;
+                        pd.PurchaseOrderNo = po.PurchaseOrderNo;
                         pd.Item = orderItem.Item;
                         pd.Quantity = orderItem.Quantity;
 
-                        //po.PurchaseOrderDetails.Add(pd);
+                        po.PurchaseOrderDetails.Add(pd);
                         
                     }
                 }
@@ -142,10 +143,16 @@ namespace team7_ssis.Services
 
         public bool IsPurchaseOrderCreated(Item item, List<PurchaseOrder> poList)
         {
+            //if(poList!=null && poList.Where(x => x.PurchaseOrderDetails.ForEach(y=>y.)!=null))
+            //{ 
+
+            //}
             foreach(PurchaseOrder po in poList)
             {
-               bool result=purchaseOrderDetailRepository.ExistsById(po.PurchaseOrderNo, item.ItemCode);
-               if (result)
+               //bool result=purchaseOrderDetailRepository.ExistsById(po.PurchaseOrderNo, item.ItemCode);
+               bool result2 = po.PurchaseOrderDetails.Count(x => x.Item.ItemCode == item.ItemCode) > 0;
+                    
+                    if (result2)
                 {
                     return true;
                 }
