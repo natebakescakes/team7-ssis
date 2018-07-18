@@ -38,7 +38,7 @@ namespace team7_ssis.Services
             retrievalService.Save(r);
 
             // create Disbursements, one for each department
-            List<Disbursement> disbursementList = CreateDisbursementsByDepartment(requestList);
+            List<Disbursement> disbursementList = CreateDisbursementForEachDepartment(requestList);
 
             // create DisbursementDetails, one for each item by department
             foreach (Disbursement d in disbursementList)
@@ -75,25 +75,23 @@ namespace team7_ssis.Services
             throw new NotImplementedException();
         }
 
-        public List<Disbursement> CreateDisbursementsByDepartment(List<Requisition> requestList)
+        public List<Disbursement> CreateDisbursementForEachDepartment(List<Requisition> requestList)
         {
             List<Disbursement> disbursementList = new List<Disbursement>();
 
-            // select all distinct departments from disbursementList
-            IEnumerable<Department> departments = disbursementList.Select(x => x.Department).Distinct();
+            // select all distinct Department from requestList
+            var departments = requestList.Select(x => x.Department).Distinct();
 
-            foreach (Requisition r in requestList)
+            // create Disbursement for each Department
+            foreach (Department dept in departments)
             {
-                if (!departments.Contains(r.Department)) {
-                    // create new disbursement
-                    Disbursement d = new Disbursement();
-                    d.DisbursementId = IdService.GetNewDisbursementId(context);
-                    d.Department = r.Department;
-
-                    disbursementList.Add(d);
-                }
+                Disbursement d = new Disbursement();
+                d.DisbursementId = IdService.GetNewDisbursementId(context);
+                d.Department = dept;
+                disbursementList.Add(d);
             }
 
+            //disbursementService.Save(disbursementList);
             return disbursementList;
         }
 
