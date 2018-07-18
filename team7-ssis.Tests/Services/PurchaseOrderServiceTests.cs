@@ -72,7 +72,7 @@ namespace team7_ssis.Tests.Services
             PurchaseOrder p1 = new PurchaseOrder();
             p1.PurchaseOrderNo = "TEST2";
             p1.CreatedDateTime = DateTime.Now;
-            p1.SupplierCode = "CHEP";
+            p1.Supplier = supplierRepository.FindById("CHEP");
             purchaseOrderRepository.Save(p1);
         
             //Act
@@ -178,7 +178,7 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             result.ForEach(x => Assert.IsTrue(x.Status.StatusId == 11 || x.Status.StatusId == 12));
-            Assert.AreEqual(result.Count(), 3);
+            Assert.AreEqual(result.Count(), 2);
 
             //teardown
             purchaseOrderRepository.Delete(p1);
