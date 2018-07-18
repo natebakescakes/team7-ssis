@@ -14,5 +14,24 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.ItemPrice;
         }
+
+        public IQueryable<ItemPrice> FindByItemCode(string itemCode)
+        {
+            return context.ItemPrice
+                .Where(x => x.ItemCode == itemCode);
+        }
+        
+
+        public IQueryable<ItemPrice> FindBySupplierCode(string supplierCode)
+        {
+            return context.ItemPrice
+                .Where(x => x.SupplierCode== supplierCode);
+        }
+
+        public IQueryable<ItemPrice> FindByPrioritySequence(int prioritySequence)
+        {
+            return context.ItemPrice
+                .Where(x => x.PrioritySequence == prioritySequence);
+        }
     }
 }

@@ -41,6 +41,5 @@ namespace team7_ssis.Repositories
                 .Where(x => x.Supplier.SupplierCode == supplierCode)
                 .FirstOrDefault();
         }
-
-     }
+    }
 }
