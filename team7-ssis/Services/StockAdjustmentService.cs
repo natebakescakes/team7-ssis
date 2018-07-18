@@ -47,19 +47,17 @@ namespace team7_ssis.Tests.Services
 
         }
 
-        //Delete whole StockAdjustment in Draft Status
-        public string DeleteDraftStockAdjustment(string id)
+        //cancel StockAdjustment in Draft Status
+        public StockAdjustment CancelDraftStockAdjustment(string id)
         {
             //controller pass stockadjustmentid the method
             StockAdjustment stockAdjustment = stockAdjustmentRepository.FindById(id);
        
             if (stockAdjustment.Status.StatusId == 3)
             {
-                stockAdjustmentRepository.Delete(stockAdjustment);
+                stockAdjustment.Status = statusRepository.FindById(2);
             }
-            return stockAdjustment.StockAdjustmentId;
-
-
+            return stockAdjustment;
         }
 
         //create new StockAdjustment with status: pending

@@ -80,9 +80,9 @@ namespace team7_ssis.Tests.Services
             stockAdjustmentRepository.Delete(expect);      
         }
 
-        //Delete whole StockAdjustment in Draft Status
+        //Cancel StockAdjustment in Draft Status
         [TestMethod()]
-        public void DeleteDraftStockAdjustmentTest()
+        public void CancelDraftStockAdjustmentTest()
         {
             //Arrange
             StockAdjustment expect = new StockAdjustment();
@@ -93,9 +93,9 @@ namespace team7_ssis.Tests.Services
             expect.CreatedDateTime = DateTime.Now;
             service.CreateDraftStockAdjustment(expect);
             //Act
-            var result=service.DeleteDraftStockAdjustment(id);
+            var result=service.CancelDraftStockAdjustment(id);
             //Assert
-            Assert.AreEqual(id, result);
+            Assert.AreEqual(2, result.Status.StatusId);
         }
 
 
