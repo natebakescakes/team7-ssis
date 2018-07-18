@@ -76,7 +76,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
 
-            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "YYY").First();
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
           
             Disbursement a = new Disbursement();
             a.DisbursementId = IdService.GetNewDisbursementId(context);
