@@ -11,35 +11,37 @@ namespace team7_ssis.Services
     public class StockMovementService
     {
         ApplicationDbContext context;
+        StockMovementRepository stockmovementRepository;
 
         public StockMovementService(ApplicationDbContext context)
         {
             this.context = context;
+            stockmovementRepository = new StockMovementRepository(context);
         }
 
         public List<StockMovement> FindAllStockMovementService()
         {
-            throw new NotImplementedException();
+            return stockmovementRepository.FindAll().ToList();
         }
 
         public List<StockMovement> FindStockMovementByItemCode(string itemCode)
         {
-            throw new NotImplementedException();
+            return stockmovementRepository.FindByItemCode(itemCode).ToList();
         }
 
         public List<StockMovement> FindStockMovementByDisbursementId(string disbursementId)
         {
-            throw new NotImplementedException();
+            return stockmovementRepository.FindByDisbursementId(disbursementId).ToList();
         }
 
         public List<StockMovement> FindStockMovementByStockAdjustmentId(string stockAdjustmentId)
         {
-            throw new NotImplementedException();
+            return stockmovementRepository.FindByStockAdjustmentId(stockAdjustmentId).ToList();
         }
 
         public StockMovement Save(StockMovement stockMovement)
         {
-            throw new NotImplementedException();
+            return stockmovementRepository.Save(stockMovement);
         }
     }
 }
