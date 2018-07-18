@@ -3,6 +3,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace team7_ssis.Tests.Services
@@ -216,7 +217,28 @@ namespace team7_ssis.Tests.Services
 
         }
 
+        [TestMethod]
         public void CreatePOForEachSupplierTest()
+        {
+            //Arrange
+            List<Item> items = new List<Item>();
+            items.Add(itemRepository.FindById("C001"));
+            items.Add(itemRepository.FindById("E005"));
+            items.Add(itemRepository.FindById("E006"));
+            items.Add(itemRepository.FindById("E007"));
+            items.Add(itemRepository.FindById("E008"));
+            
+
+            //Act
+            var result = purchaseOrderService.CreatePOForEachSupplier(items);
+
+            //Assert
+            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(PurchaseOrder));
+            Assert.AreEqual("CHEP", result.First().Supplier.SupplierCode);
+            Assert.AreEqual(result.Count(),3);
+        }
+
+        public void AddItemsToPurchaseOrdersTest()
         {
 
         }

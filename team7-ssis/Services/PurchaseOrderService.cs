@@ -105,7 +105,7 @@ namespace team7_ssis.Services
                     p.Supplier = ip.Supplier;
                     p.CreatedDateTime = DateTime.Now;
 
-                   // poList.Add(p);
+                    poList.Add(p);
 
                 } 
             }
@@ -114,7 +114,7 @@ namespace team7_ssis.Services
         }
 
 
-        public List<PurchaseOrder> AddItemsToPurchaseOrders(List<OrderItem> orderItems,List<PurchaseOrder> poList,)
+        public List<PurchaseOrder> AddItemsToPurchaseOrders(List<OrderItem> orderItems,List<PurchaseOrder> poList)
         {
            
             foreach (PurchaseOrder po in poList)
@@ -130,7 +130,7 @@ namespace team7_ssis.Services
                         pd.Item = orderItem.Item;
                         pd.Quantity = orderItem.Quantity;
 
-                        po.PurchaseOrderDetails.Add(pd);
+                        //po.PurchaseOrderDetails.Add(pd);
                         
                     }
                 }
