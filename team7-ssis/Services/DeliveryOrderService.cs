@@ -71,7 +71,7 @@ namespace team7_ssis.Services
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
   
-        public void Save(DeliveryOrder deliveryOrder)
+        public DeliveryOrder Save(DeliveryOrder deliveryOrder)
         {
             Inventory inv;
             StockMovement sm;
