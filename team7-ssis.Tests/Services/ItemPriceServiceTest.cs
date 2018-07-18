@@ -103,6 +103,8 @@ namespace team7_ssis.Tests.Services
             Assert.AreEqual("ALPA", result.SupplierCode);
             Assert.AreEqual(3, result.PrioritySequence);
             Assert.AreEqual(20.34M, result.Price);
+
+            itemPriceRepository.Delete(i);
         }
 
         [TestMethod]
