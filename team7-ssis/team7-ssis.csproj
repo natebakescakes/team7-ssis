@@ -311,6 +311,7 @@
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

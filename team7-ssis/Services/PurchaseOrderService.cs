@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
+using team7_ssis.ViewModels;
+
 
 
 namespace team7_ssis.Services
@@ -13,6 +15,7 @@ namespace team7_ssis.Services
         PurchaseOrderRepository purchaseOrderRepository;
         PurchaseOrderDetailRepository purchaseOrderDetailRepository;
         StatusRepository statusRepository;
+        ItemPriceRepository itemPriceRepository;
         ApplicationDbContext context;
 
         public PurchaseOrderService(ApplicationDbContext context)
@@ -21,6 +24,7 @@ namespace team7_ssis.Services
             purchaseOrderRepository = new PurchaseOrderRepository(context);
             purchaseOrderDetailRepository = new PurchaseOrderDetailRepository(context);
             statusRepository = new StatusRepository(context);
+            itemPriceRepository = new ItemPriceRepository(context);
         }
 
         public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
@@ -79,6 +83,75 @@ namespace team7_ssis.Services
                 return purchaseOrderRepository.Save(purchaseOrder);
             }
             
+        }
+
+
+        public List<PurchaseOrder> CreatePOForEachSupplier(List<Item> items)
+        {
+            List<Supplier> supList = new List<Supplier>();
+            List<PurchaseOrder> poList = new List<PurchaseOrder>();
+
+            foreach (Item i in items)
+            {
+                ItemPrice ip = i.ItemPrices.Where(x => x.PrioritySequence == 1).First();
+                int num = 1;
+
+                if (!supList.Contains(ip.Supplier))
+                {
+                    supList.Add(ip.Supplier);
+
+                    PurchaseOrder p = new PurchaseOrder();
+                    p.PurchaseOrderNo = "PONO" + num;
+                    p.Supplier = ip.Supplier;
+                    p.CreatedDateTime = DateTime.Now;
+
+                   // poList.Add(p);
+
+                } 
+            }
+
+            return poList;
+        }
+
+
+        public List<PurchaseOrder> AddItemsToPurchaseOrders(List<OrderItem> orderItems,List<PurchaseOrder> poList,)
+        {
+           
+            foreach (PurchaseOrder po in poList)
+            {
+                foreach(OrderItem orderItem in orderItems)
+                {
+                    ItemPrice ip = orderItem.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First();
+
+                    if(po.SupplierCode == ip.SupplierCode)
+                    {
+                        PurchaseOrderDetail pd = new PurchaseOrderDetail();
+                        pd.PurchaseOrder = po;
+                        pd.Item = orderItem.Item;
+                        pd.Quantity = orderItem.Quantity;
+
+                        po.PurchaseOrderDetails.Add(pd);
+                        
+                    }
+                }
+            }
+
+                return poList;
+        }
+
+
+        public bool IsPurchaseOrderCreated(Item item, List<PurchaseOrder> poList)
+        {
+            foreach(PurchaseOrder po in poList)
+            {
+               bool result=purchaseOrderDetailRepository.ExistsById(po.PurchaseOrderNo, item.ItemCode);
+               if (result)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     }
