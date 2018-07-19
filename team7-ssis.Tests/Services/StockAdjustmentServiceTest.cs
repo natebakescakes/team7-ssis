@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
+using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
 {
@@ -13,6 +14,10 @@ namespace team7_ssis.Tests.Services
         StockAdjustmentRepository stockAdjustmentRepository;
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         StockAdjustmentService service ;
+       // ItemService itemService;
+        ItemRepository itemRepository;
+        InventoryRepository inventoryRepository;
+        ItemService itemService;
 
         [TestInitialize]
         public void TestInitialize()
@@ -22,6 +27,9 @@ namespace team7_ssis.Tests.Services
             stockAdjustmentRepository = new StockAdjustmentRepository(context);
             stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
             service = new StockAdjustmentService(context);
+            itemRepository = new ItemRepository(context);
+            inventoryRepository = new InventoryRepository(context);
+            itemService = new ItemService(context);
         }
 
         //create new StockAdjustment with status: draft
@@ -64,7 +72,7 @@ namespace team7_ssis.Tests.Services
             expect.CreatedDateTime = DateTime.Now;
             StockAdjustmentDetail s1 = new StockAdjustmentDetail();
             s1.StockAdjustmentId = id;
-            s1.ItemCode = "C001";
+            s1.ItemCode = "C003";
             s1.OriginalQuantity = 10;
             s1.AfterQuantity = 20;
             StockAdjustmentDetail s2 = new StockAdjustmentDetail();
@@ -77,7 +85,7 @@ namespace team7_ssis.Tests.Services
             list.Add(s2);
             expect.StockAdjustmentDetails = list;
             service.CreateDraftStockAdjustment(expect);
-            string delete_Item = "C001";
+            string delete_Item = "C003";
 
             //test can't find StockAdjustment
             try
@@ -111,7 +119,7 @@ namespace team7_ssis.Tests.Services
             // No Exception part    
             try
             {
-                string delete_Item1 = "C001";
+                string delete_Item1 = "C003";
                 var result = service.DeleteItemFromDraftOrPendingStockAdjustment(id, delete_Item1);
                 //Assert
                 Assert.AreEqual(delete_Item1, result);
@@ -233,40 +241,46 @@ namespace team7_ssis.Tests.Services
         public void ApproveStockAdjustmentTest()
         {
             //Arrange
+            Item item = new Item();
+            item.ItemCode = "BBB";
+            item.CreatedDateTime = DateTime.Now;
+            itemRepository.Save(item);
+            itemService.SaveInventory(item, 40);
+
+
+            StockAdjustmentDetail sd = new StockAdjustmentDetail();
+            sd.Item = item;
+            sd.OriginalQuantity = 10;
+            sd.AfterQuantity = 20;
+
+            List<StockAdjustmentDetail> li = new List<StockAdjustmentDetail>();
+            li.Add(sd);
+
             StockAdjustment expect = new StockAdjustment();
             Random rd = new Random();
             int i = rd.Next();
             string id = i.ToString();
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
+            expect.StockAdjustmentDetails = li;
             service.CreatePendingStockAdjustment(expect);
-            //test exception
-            try
-            {
-                //Act
-                var result = service.ApproveStockAdjustment(".");
-                //Assert
-                Assert.IsTrue(expect.Status.StatusId == 6);
-                stockAdjustmentRepository.Delete(expect);
-            }
-            catch (Exception e)
-            {
-                Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
-            }
 
-
-            //No exception part
+                 
             try
             {
                 //Act
                 var result = service.ApproveStockAdjustment(id);
                 //Assert
                 Assert.IsTrue(expect.Status.StatusId == 6);
+                Assert.IsTrue(item.Inventory.Quantity==20);
                 stockAdjustmentRepository.Delete(expect);
+               itemRepository.Delete(item);
+          
             }
             catch(Exception e)
             {
                 Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
+                
             }
         }
 
@@ -286,9 +300,9 @@ namespace team7_ssis.Tests.Services
             try
             {
                 //Act
-                var result = service.ApproveStockAdjustment(".");
+                var result = service.RejectStockAdjustment(".");
                 //Assert
-                Assert.IsTrue(expect.Status.StatusId == 6);
+                Assert.IsTrue(result.Status.StatusId == 6);
                 stockAdjustmentRepository.Delete(expect);
             }
             catch (Exception e)
@@ -298,18 +312,13 @@ namespace team7_ssis.Tests.Services
 
 
             //No exception part
-            try
-            {
+
                 //Act
-                var result = service.ApproveStockAdjustment(id);
+                var result1 = service.RejectStockAdjustment(id);
                 //Assert
-                Assert.IsTrue(expect.Status.StatusId == 6);
+                Assert.IsTrue(result1.Status.StatusId == 5);
                 stockAdjustmentRepository.Delete(expect);
-            }
-            catch (Exception e)
-            {
-                Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
-            }
+
       
     }
 
@@ -327,7 +336,7 @@ namespace team7_ssis.Tests.Services
             expect.CreatedDateTime = DateTime.Now;
             StockAdjustmentDetail s1 = new StockAdjustmentDetail();
             s1.StockAdjustmentId = id;
-            s1.ItemCode = "C001";
+            s1.ItemCode = "C003";
             s1.OriginalQuantity = 10;
             s1.AfterQuantity = 20;
             StockAdjustmentDetail s2 = new StockAdjustmentDetail();
