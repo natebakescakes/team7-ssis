@@ -62,12 +62,13 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = retrievalService.Save(newRetrieval);
+            retrievalRepository.Delete(newRetrieval);
 
             //Assert
             Assert.AreEqual(expected, result.RetrievalId);
 
-            //Delete dummy model for test
-            retrievalRepository.Delete(newRetrieval);
+            
+           
         }
 
         [TestMethod]
