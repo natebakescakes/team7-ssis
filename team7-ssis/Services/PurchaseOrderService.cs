@@ -12,6 +12,7 @@ namespace team7_ssis.Services
     {
         PurchaseOrderRepository purchaseOrderRepository;
         PurchaseOrderDetailRepository purchaseOrderDetailRepository;
+        StatusRepository statusRepository;
         ApplicationDbContext context;
 
         public PurchaseOrderService(ApplicationDbContext context)
@@ -19,14 +20,20 @@ namespace team7_ssis.Services
             this.context = context;
             purchaseOrderRepository = new PurchaseOrderRepository(context);
             purchaseOrderDetailRepository = new PurchaseOrderDetailRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
-        public void RemoveDraftItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
+        public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
         {
-           foreach(string s in itemCodes)
+            if (purchaseOrder.Status.StatusId == 11)
             {
-                purchaseOrderDetailRepository.DeleteItemFromPO(s, purchaseOrder.PurchaseOrderNo);
+                foreach (string s in itemCodes)
+                {
+                    PurchaseOrderDetail detail = purchaseOrderDetailRepository.FindById(purchaseOrder.PurchaseOrderNo, s);
+                    purchaseOrderDetailRepository.Delete(detail);
+                }
             }
+          
         }
 
         public List<PurchaseOrder> FindAllPurchaseOrders()
@@ -39,30 +46,38 @@ namespace team7_ssis.Services
             return purchaseOrderRepository.FindById(purchaseOrderNo);
         }
 
-        public List<PurchaseOrderDetail> FindPurchaseOrderDetailsById(string purchaseOrderNo)
-        {
-            return purchaseOrderDetailRepository.FindPODetailsById(purchaseOrderNo).ToList();
-        }
+        
+
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
         {
-            return purchaseOrderRepository.FindPOBySupplier(supplier.SupplierCode).ToList();
+            return purchaseOrderRepository.FindBySupplier(supplier.SupplierCode).ToList();
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(string supplierCode)
         {
-            return purchaseOrderRepository.FindPOBySupplier(supplierCode).ToList();
+            return purchaseOrderRepository.FindBySupplier(supplierCode).ToList();
         }
 
         
         public List<PurchaseOrder> FindPurchaseOrderByStatus(params int[] statusId)
         {
-            return purchaseOrderRepository.FindPOByStatus(statusId).ToList();
+            return purchaseOrderRepository.FindByStatus(statusId).ToList();
         }
+
 
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
         {
-            return purchaseOrderRepository.Save(purchaseOrder);
+            if (purchaseOrderRepository.FindById(purchaseOrder.PurchaseOrderNo)==null)
+            {
+                purchaseOrder.Status = statusRepository.FindById(11);
+                return purchaseOrderRepository.Save(purchaseOrder);
+            }
+
+            else
+            {
+                return purchaseOrderRepository.Save(purchaseOrder);
+            }
             
         }
 
