@@ -45,6 +45,11 @@ namespace team7_ssis.Services
             return result;
         }
 
+        public List<Item> FindItemQuantityLessThanReorderLevel()
+        {
+            return itemRepository.FindQuantity().ToList();
+        }
+
         public Inventory SaveInventory(Item item,int quantity)
         {
             Inventory iv = new Inventory();
