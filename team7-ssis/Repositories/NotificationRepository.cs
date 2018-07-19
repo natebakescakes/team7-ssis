@@ -13,5 +13,15 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.Notification;
         }
+
+        public IQueryable<Notification> FindByUser(ApplicationUser user)
+        {
+            return context.Notification.Where(x => x.CreatedFor == user);
+        }
+
+        public IQueryable<Notification> FindByType(NotificationType type)
+        {
+            return context.Notification.Where(x => x.NotificationType == type);
+        }
     }
 }

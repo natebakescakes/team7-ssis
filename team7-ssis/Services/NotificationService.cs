@@ -10,40 +10,74 @@ namespace team7_ssis.Services
     public class NotificationService
     {
         ApplicationDbContext context;
-        NotificationRepository notificationRepository; 
+        NotificationRepository notificationRepository;
+        NotificationTypeRepository notificationtypeRepository;
+        StatusRepository statusRepository;
 
         public NotificationService(ApplicationDbContext context)
         {
             this.context = context;
             notificationRepository = new NotificationRepository(context);
+            notificationtypeRepository = new NotificationTypeRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
-        public Notification CreateCollectionNotification(Disbursement disbursement, ApplicationUser recipient)
+        private Notification InstantiateNotification(ApplicationUser recipient)
         {
-            throw new NotImplementedException();
+            //instantiate new notification object and populating the fields
+            return new Notification {
+                NotificationId = IdService.GetNewNotificationId(context),
+                CreatedDateTime = DateTime.Now,
+                CreatedFor = recipient,
+
+                Status = statusRepository.FindById(14)
+            };
+
         }
 
-        public Notification CreateStockAdjustmentApprovalNotification(StockAdjustment stockAdjustment, ApplicationUser recpient)
+        public Notification CreateNotification(Disbursement disbursement, ApplicationUser recipient)
         {
-            throw new NotImplementedException();
+            Notification notification = InstantiateNotification(recipient);
+                
+            notification.NotificationType = notificationtypeRepository.FindById(1);
+            notification.Contents = String.Format("Your Disbursement with ID: {0} is ready for collection", disbursement.DisbursementId);
+            return this.Save(notification);
 
         }
 
-        public Notification CreateRequisitionApprovalNotification(Requisition requisition, ApplicationUser recipient)
+        public Notification CreateNotification(Requisition requisition, ApplicationUser recipient)
         {
-            throw new NotImplementedException();
-
+            Notification notification = InstantiateNotification(recipient);
+           
+                notification.NotificationType = notificationtypeRepository.FindById(2);
+                notification.Contents = String.Format("New Stationary Requisition Request: {0} for your approval", requisition.RequisitionId);
+            return this.Save(notification);
         }
 
+        public Notification CreateNotification(StockAdjustment SA, ApplicationUser recipient)
+        {
+            Notification notification = InstantiateNotification(recipient);
+            notification.NotificationType = notificationtypeRepository.FindById(3);
+            notification.Contents = String.Format("New Stock Adjustment Request: {0} for your approval", SA.StockAdjustmentId);
+
+            return this.Save(notification);
+        }
+
+       
         public List<Notification> FindNotificationsByUser(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            return notificationRepository.FindByUser(user).ToList();
         }
 
         public List<Notification> FindNotificationByType(NotificationType type)
         {
-            throw new NotImplementedException();
+            return notificationRepository.FindByType(type).ToList();
 
+        }
+
+        public Notification Save(Notification notification)
+        {
+            return notificationRepository.Save(notification);
         }
 
     }
