@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.IO;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
@@ -11,11 +12,23 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         DeliveryOrderRepository deliveryOrderRepository;
+        StatusRepository statusRepository;
+        InventoryRepository inventoryRepository;
+        PurchaseOrderRepository purchaseOrderRepository;
+        PurchaseOrderDetailRepository purchaseOrderDetailsRepository;
+        ItemRepository itemRepository;
+        StockMovementRepository stockMovementRepository;
 
         public DeliveryOrderService(ApplicationDbContext context)
         {
             this.context = context;
             this.deliveryOrderRepository = new DeliveryOrderRepository(context);
+            this.statusRepository = new StatusRepository(context);
+            this.inventoryRepository = new InventoryRepository(context);
+            this.purchaseOrderRepository = new PurchaseOrderRepository(context);
+            this.stockMovementRepository = new StockMovementRepository(context);
+            this.purchaseOrderDetailsRepository= new PurchaseOrderDetailRepository(context) ;
+            this.itemRepository = new ItemRepository(context);
         }
 
         public List<DeliveryOrder> FindAllDeliveryOrders()
@@ -54,16 +67,71 @@ namespace team7_ssis.Services
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
   
-        public DeliveryOrder Save(DeliveryOrder DeliveryOrder)
+        public DeliveryOrder Save(DeliveryOrder deliveryOrder)
         {
-            return deliveryOrderRepository.Save(DeliveryOrder);
+            foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
+            {
+                if (dod.ActualQuantity == dod.PlanQuantity)
+                    dod.Status = statusRepository.FindById(13);
+                else
+                    dod.Status = statusRepository.FindById(12);
+
+                SaveInventory(itemRepository.FindById(dod.ItemCode), dod.ActualQuantity);
+                SaveStockMovement(itemRepository.FindById(dod.ItemCode), dod.ActualQuantity);
+            }
+             PurchaseOrder po = deliveryOrder.PurchaseOrder;
+            foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
+            {
+                if(dod.Status.StatusId==12)
+                {
+                    itemRepository.FindById(dod.ItemCode);
+                    po.Status = statusRepository.FindById(12);
+                    purchaseOrderRepository.Save(po);
+                    break;
+                }        
+            }
+
+            if (po.Status.StatusId == 11)
+            {
+                po.Status = statusRepository.FindById(13);
+                purchaseOrderRepository.Save(po);
+            }
+
+            
+            purchaseOrderRepository.Save(deliveryOrder.PurchaseOrder);
+            return deliveryOrderRepository.Save(deliveryOrder);
         }
-       
-        public void SaveDOFileToDeliveryOrder(string Filepath)
+
+        public Inventory SaveInventory(Item item, int quantity)
         {
-            throw new NotImplementedException();
-            // deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
-            //Need to send to Finance department
+            Inventory iv = inventoryRepository.FindById(item.ItemCode);
+            iv.Quantity = iv.Quantity+quantity;
+            return inventoryRepository.Save(iv);
+        }
+
+        public StockMovement SaveStockMovement(Item item, int quantity)
+        {
+            StockMovement sm = new StockMovement();
+            sm.Item = itemRepository.FindById(item.ItemCode);
+            sm.OriginalQuantity = inventoryRepository.FindById(item.ItemCode).Quantity; 
+            sm.AfterQuantity = sm.OriginalQuantity + quantity;
+            sm.CreatedDateTime = DateTime.Now;
+            return stockMovementRepository.Save(sm);
+        }
+
+
+        public void SaveDOFileToDeliveryOrder(HttpPostedFileBase file)
+        {
+            // string targetpath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/DOFiles"), filename);
+
+            // throw new NotImplementedException();
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = System.Web.HttpContext.Current.Server.MapPath("~/DOFiles");
+
+                file.SaveAs(path + fileName);
+            }
         }
 
         public void SaveInvoiceFileToDeliveryOrder(string Filepath)
@@ -73,5 +141,6 @@ namespace team7_ssis.Services
             //Need to send to Finance department
         }
 
+        
     }
 }
