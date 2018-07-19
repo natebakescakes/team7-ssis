@@ -225,6 +225,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\InventoryAPIController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\CollectionPointService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\RequisitionService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\DeliveryOrderService.cs" />
@@ -311,6 +314,7 @@
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -374,6 +378,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Inventory\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

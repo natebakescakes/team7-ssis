@@ -35,7 +35,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindItemByItemCodeTest()
+        public void FindItemByItemCodeTest() 
         {
             //Arrange
             string test = "C001";
@@ -49,7 +49,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindItemsByCategory()
+        public void FindItemsByCategoryTest()
         {
             //Arrange
             ItemCategory i = new ItemCategory();
@@ -60,6 +60,22 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+            
+        }
+
+        [TestMethod]
+        public void FindItemQuantityLessThanReorderLevel()
+        {
+            //Act
+            var result = itemService.FindItemQuantityLessThanReorderLevel();
+
+            //Assert
+            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+            foreach (Item element in result)
+            {
+                Assert.IsTrue(element.Inventory.Quantity < element.ReorderLevel);
+            }
+
         }
 
         [TestMethod]
@@ -85,7 +101,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             Item i = new Item();
-            i.ItemCode = "BBB";
+            i.ItemCode = "CCC";
             i.CreatedDateTime = DateTime.Now;
             new ItemRepository(context).Save(i);
 
@@ -93,7 +109,7 @@ namespace team7_ssis.Tests.Services
             var result = itemService.SaveInventory(i,40);
 
             //Arrange
-            Assert.AreEqual("BBB", result.ItemCode);
+            Assert.AreEqual("CCC", result.ItemCode);
             //Assert.AreEqual(40, result.Quantity);
             itemRepository.Delete(i);
         }
@@ -104,7 +120,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrage
             Item i = new Item();
-            i.ItemCode = "BBB";
+            i.ItemCode = "DDD";
             i.CreatedDateTime = DateTime.Now;
             itemService.Save(i, 20);
 
@@ -121,7 +137,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             Item i = new Item();
-            i.ItemCode = "BBB";
+            i.ItemCode = "EEE";
             i.CreatedDateTime = DateTime.Now;
             itemService.Save(i, 20);
 

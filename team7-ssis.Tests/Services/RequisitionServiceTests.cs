@@ -31,6 +31,8 @@ namespace team7_ssis.Services.Tests
         [TestCleanup]
         public void TestCleanup()
         {
+            // Clean up Requisitions
+
             Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First();
             Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First();
             Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First();
@@ -38,6 +40,10 @@ namespace team7_ssis.Services.Tests
             context.Requisition.Remove(r2);
             context.Requisition.Remove(r3);
             context.SaveChanges();
+
+            // TODO: Clean up Retrieval
+
+            // TODO: Clean up Disbursements
         }
 
         private void populateRequisitions()
@@ -119,9 +125,9 @@ namespace team7_ssis.Services.Tests
         }
 
         [TestMethod()]
-        public void ProcessRequisitionsTest()
+        public void ProcessRequisitions_CreatesRetrieval()
         {
-            //// Arrange
+            // Arrange
             List<Requisition> reqList = new List<Requisition>();
             reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First());
             reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First());
@@ -134,12 +140,13 @@ namespace team7_ssis.Services.Tests
             Retrieval result = context.Retrieval.Where(x => x.RetrievalId == retrievalId).ToList().First();
             Assert.IsNotNull(result);
 
+            // Cleanup
             context.Retrieval.Remove(result);
             context.SaveChanges();
         }
 
         [TestMethod()]
-        public void AddDisbursementDetailsForEachDepartmentTest()
+        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
         {
             //// Arrange
             List<Requisition> reqList = new List<Requisition>();
@@ -158,11 +165,11 @@ namespace team7_ssis.Services.Tests
             Assert.AreEqual(disbList.Count, 3);
             Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
                             .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
-
-            // TODO: Write a case which checks that the correct items are in DisbursementDetails 
-
-            // TODO: Write a case which tests same department, multiple requisitions
-
+        }
+        [TestMethod()]
+        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDisbursementDetails()
+        {
+            // TODO
         }
 
         [TestMethod()]
