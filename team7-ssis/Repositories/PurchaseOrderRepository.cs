@@ -29,13 +29,13 @@ namespace team7_ssis.Repositories
         }
 
 
-        public IQueryable<PurchaseOrder> FindPOBySupplier(string supplierCode)
+        public IQueryable<PurchaseOrder> FindBySupplier(string supplierCode)
         {
             return context.PurchaseOrder
                 .Where(x => x.SupplierCode == supplierCode);
         }
 
-        public IQueryable<PurchaseOrder> FindPOByStatus(params int[] statusId)
+        public IQueryable<PurchaseOrder> FindByStatus(params int[] statusId)
         {
             return context.PurchaseOrder.Where(x => statusId.Contains(x.Status.StatusId));
         }
