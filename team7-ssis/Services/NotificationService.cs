@@ -49,14 +49,15 @@ namespace team7_ssis.Services
         {
             Notification notification = InstantiateNotification(recipient);
            
-                notification.NotificationType = notificationtypeRepository.FindById(2);
-                notification.Contents = String.Format("New Stationary Requisition Request: {0} for your approval", requisition.RequisitionId);
+            notification.NotificationType = notificationtypeRepository.FindById(2);
+            notification.Contents = String.Format("New Stationary Requisition Request: {0} for your approval", requisition.RequisitionId);
             return this.Save(notification);
         }
 
         public Notification CreateNotification(StockAdjustment SA, ApplicationUser recipient)
         {
             Notification notification = InstantiateNotification(recipient);
+
             notification.NotificationType = notificationtypeRepository.FindById(3);
             notification.Contents = String.Format("New Stock Adjustment Request: {0} for your approval", SA.StockAdjustmentId);
 
