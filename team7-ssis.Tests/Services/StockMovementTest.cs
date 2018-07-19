@@ -69,7 +69,6 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result);
 
-           
             
         }
 
@@ -104,16 +103,17 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
 
-            //Revert edit object
-            result.DisbursementId = null;
-            stockmovementService.Save(result);
+           
 
   
         }
         [TestCleanup]
         public void TestCleanUp()
         {
-
+            StockMovement a = context.StockMovement.Where(x => x.StockMovementId == 1).First();
+            //Revert edit object
+            a.DisbursementId = null;
+            stockmovementService.Save(a);
         }
 
     }

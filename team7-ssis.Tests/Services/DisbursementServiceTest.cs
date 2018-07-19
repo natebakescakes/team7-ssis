@@ -104,7 +104,7 @@ namespace team7_ssis.Tests.Services
         public void UpdateActualQuantityForDisbursementDetailTest()
         {
             //Arrange
-            Disbursement newDisbursement = context.Disbursement.First();
+            Disbursement newDisbursement = context.Disbursement.Where(x=>x.DisbursementId=="TEST").First();
       
             DisbursementDetail disbursementDetail = context.DisbursementDetail
                 .Where(x => x.DisbursementId == newDisbursement.DisbursementId).First();
