@@ -64,12 +64,13 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = stockmovementService.FindStockMovementByDisbursementId(a.DisbursementId).Count;
+            stockmovementRepository.Delete(a);
 
             //Assert
             Assert.AreEqual(expected, result);
 
-            //Delete dummy data
-            stockmovementRepository.Delete(a);
+           
+            
         }
 
         [TestMethod]
@@ -107,6 +108,13 @@ namespace team7_ssis.Tests.Services
             result.DisbursementId = null;
             stockmovementService.Save(result);
 
+  
         }
+        [TestCleanup]
+        public void TestCleanUp()
+        {
+
+        }
+
     }
 }
