@@ -132,6 +132,12 @@ namespace team7_ssis.Tests.Services
             {
                 stockadjustment.Status = statusRepository.FindById(6);
                 stockAdjustmentRepository.Save(stockadjustment);
+                //update item inventory
+                foreach (StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
+                {
+                    // update each Item inventory = sd.AfterQuantity;
+                }
+
             }
             return stockadjustment;
         }
