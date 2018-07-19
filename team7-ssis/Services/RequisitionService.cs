@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 
 namespace team7_ssis.Services
 {
@@ -12,11 +13,16 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         RetrievalService retrievalService;
+        DisbursementService disbursementService;
+
+        RequisitionRepository requisitionRepository;
 
         public RequisitionService(ApplicationDbContext context)
         {
             this.context = context;
             retrievalService = new RetrievalService(context);
+            disbursementService = new DisbursementService(context);
+            requisitionRepository = new RequisitionRepository(context);
         }
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
@@ -44,35 +50,42 @@ namespace team7_ssis.Services
             // create DisbursementDetails, one for each item by department
             List<Disbursement> filledDisbursements = AddDisbursementDetailsForEachDisbursement(emptyDisbursements, requestList);
 
+            disbursementService.Save(filledDisbursements);
+
             return r.RetrievalId;
         }
 
         private List<Disbursement> AddDisbursementDetailsForEachDisbursement(List<Disbursement> disbursementList, List<Requisition> requestList)
         {
 
-            // create disbursementdetails, one for each item by department
+            // create Disbursement Details, one for each item by department
             foreach (Disbursement d in disbursementList)
             {
+                // prepare to populate DisbursementDetails
+                d.DisbursementDetails = new List<DisbursementDetail>();
+
+                // populate them
                 foreach (Requisition rq in requestList)
                 {
                     if (rq.Department == d.Department)
                     {
                         foreach (RequisitionDetail rd in rq.RequisitionDetails)
                         {
-                            foreach (DisbursementDetail dd in d.DisbursementDetails)
+                            var query = d.DisbursementDetails.Where(x => x.ItemCode == rd.ItemCode);
+                            // if a DisbursementDetail has the same ItemCode as the RequisitionDetail
+                            if (query.Count() > 0)
                             {
-                                if (dd.Item.Equals(rd.Item))
-                                {
-                                    dd.PlanQuantity += rd.Quantity;
-                                }
-                                else
-                                {
-                                    DisbursementDetail newdd = new DisbursementDetail();
-                                    newdd.Item = rd.Item;
-                                    newdd.PlanQuantity = rd.Quantity;
+                                DisbursementDetail existingDD = query.ToList().First();
+                                existingDD.PlanQuantity += rd.Quantity;
+                            }
+                            else // Create a DD with the RD
+                            {
+                                DisbursementDetail newDD = new DisbursementDetail();
+                                newDD.Item = rd.Item;
+                                newDD.PlanQuantity = rd.Quantity;
 
-                                    d.DisbursementDetails.Add(newdd);
-                                }
+                                // Add to the Disbursement
+                                d.DisbursementDetails.Add(newDD);
                             }
                         }
                     }
@@ -130,6 +143,20 @@ namespace team7_ssis.Services
         public Requisition ApproveRequisitions(Requisition requisition)
         {
             throw new NotImplementedException();
+        }
+
+        public Requisition Save(Requisition requisition)
+        {
+            return requisitionRepository.Save(requisition);
+        }
+
+        public List<Requisition> Save(List<Requisition> reqList)
+        {
+            foreach (Requisition r in reqList)
+            {
+                requisitionRepository.Save(r);
+            }
+            return reqList;
         }
 
     }
