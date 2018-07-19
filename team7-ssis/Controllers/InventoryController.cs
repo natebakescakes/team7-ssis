@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,9 +22,24 @@ namespace team7_ssis.Controllers
 
         public ActionResult Manage()
         {
-            List<Item> items = itemService.FindAllItems();
-            ViewData["Items"] = items;
-            return View();
+            //List<Item> items = itemService.FindAllItems();
+            //ViewData["Items"] = items;
+            //return View();
+
+            using (var client = new HttpClient())
+            {
+                var inventoryItemUrl = Url.RouteUrl(
+                    "DefaultApi",
+                    new { httproute = "", controller = "InventoryAPI" },
+                    Request.Url.Scheme
+                );
+                var model = client
+                            .GetAsync(inventoryItemUrl)
+                            .Result
+                            .Content.ReadAsAsync<Item>().Result;
+
+                return View(model);
+            }
         }
 
         
