@@ -71,26 +71,28 @@ namespace team7_ssis.Services
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
   
-        //public DeliveryOrder Save(DeliveryOrder deliveryOrder)
-        //{
-        //    Inventory inv;
-        //    StockMovement sm;
-        //    foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
-        //        if (dod.ActualQuantity == dod.PlanQuantity)
-        //            deliveryOrder.PurchaseOrder.Status = statusRepository.FindById(13);
-        //        else
-        //            deliveryOrder.PurchaseOrder.Status = statusRepository.FindById(12);
-        //    deliveryOrderRepository.Save(deliveryOrder);
-        //    purchaseOrderRepository.Save(deliveryOrder.PurchaseOrder);
-        //    foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
-        //    {
-        //        inv = inventoryRepository.FindById(dod.ItemCode);
-        //        inventoryRepository.Save(inv);
-        //        sm = new StockMovement();
-        //        sm.Item = itemRepository.FindById(dod.ItemCode);
-        //        stockMovementRepository.Save(sm);
-        //    }
-        //}
+        public void Save(DeliveryOrder deliveryOrder)
+        {
+            //Inventory inv;
+            //StockMovement sm;
+            //foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
+            //    if (dod.ActualQuantity == dod.PlanQuantity)
+            //        deliveryOrder.PurchaseOrder.Status = statusRepository.FindById(13);
+            //    else
+            //        deliveryOrder.PurchaseOrder.Status = statusRepository.FindById(12);
+            //deliveryOrderRepository.Save(deliveryOrder);
+            //purchaseOrderRepository.Save(deliveryOrder.PurchaseOrder);
+            //foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
+            //{
+            //    inv = inventoryRepository.FindById(dod.ItemCode);
+            //    inventoryRepository.Save(inv);
+            //    sm = new StockMovement();
+            //    sm.Item = itemRepository.FindById(dod.ItemCode);
+            //    stockMovementRepository.Save(sm);
+            //}
+
+            throw new NotImplementedException();
+        }
 
         public void SaveDOFileToDeliveryOrder(HttpPostedFileBase file)
         {

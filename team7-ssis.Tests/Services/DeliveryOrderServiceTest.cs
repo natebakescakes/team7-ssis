@@ -110,15 +110,15 @@ namespace team7_ssis.Tests.Services
         [TestMethod]
         public void SaveTest()
         {
-            //Arrange
-            DeliveryOrder deliveryorder = new DeliveryOrder();
-            deliveryorder.DeliveryOrderNo = "D002";
-            deliveryorder.CreatedDateTime = DateTime.Now;
-            //Act
+            ////Arrange
+            //DeliveryOrder deliveryorder = new DeliveryOrder();
+            //deliveryorder.DeliveryOrderNo = "D002";
+            //deliveryorder.CreatedDateTime = DateTime.Now;
+            ////Act
             //var result = deliveryOrderService.Save(deliveryorder);
-            //Assert
-           // Assert.AreEqual("D002", result.DeliveryOrderNo);
-           // Assert.IsNotNull(context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "D002").First());
+            ////Assert
+            //Assert.AreEqual("D002", result.DeliveryOrderNo);
+            //Assert.IsNotNull(context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "D002").First());
             //deliveryorderRepository.Delete(result);
         }
     }
