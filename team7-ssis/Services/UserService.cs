@@ -18,5 +18,16 @@ namespace team7_ssis.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<ApplicationUser> listSupervisorsByUser(ApplicationUser user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ApplicationUser> listManagersByUser(ApplicationUser user)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

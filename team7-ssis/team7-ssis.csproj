@@ -228,6 +228,8 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\StockAdjustmentAPIController.cs" />
+    <Compile Include="Controllers\StockAdjustmentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -374,6 +376,11 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\StockAdjustment\Home.cshtml" />
+    <Content Include="Views\StockAdjustment\Add.cshtml" />
+    <Content Include="Views\StockAdjustment\List.cshtml" />
+    <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
+    <Content Include="Views\StockAdjustment\SubmitAsPending.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

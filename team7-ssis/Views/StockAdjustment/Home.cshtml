@@ -1,0 +1,67 @@
+﻿
+@{
+    
+}
+
+<h2>Make Stock Adjustment</h2>
+
+<div>
+    <table>
+        <tr>
+            <td width="400"> Possible cause:</td>
+            <td width="400"> Authorising Adjustments:</td>
+        </tr>
+        <tr>
+            <td width="400">1.items broken or expired</td>
+            <td width="400"> Minor:Anything under &250 per item adjustment can be</td>
+        </tr>
+        <tr>
+            <td width="400">2.adhoc(i.e.deteced when trying to issue the item(s))</td>
+            <td width="400">authorised by Supervisor</td>
+        </tr>
+
+        <tr>
+            <td width="400"> 3.when issue/receipt of them is not recorded(i.e oversight)</td>
+            <td width="400"> Major:Anything over &250 must be authorised by Manager</td>
+        </tr>
+    </table>
+    <br />
+</div>
+
+    <input type="button" value="Add Item" onclick="location.href='@Url.Action("list","ItemController")'">
+    <br/>
+    <div>
+
+        <br />
+        <div>
+            here is a datatables
+        </div>
+        <br />
+
+        <table>
+            <tr>
+                <td width="400"> Authorising Supervisor</td>
+                <td width="400"> Authorising Manager</td>
+
+            </tr>
+            <tr>
+                <td width="400">dropdownlist @*@Html.DropDownList("supervisors")*@  </td>
+                <td width="400">dropdownlist@*@Html.DropDownList("managers")*@</td>
+
+            </tr>
+        </table>
+        <br />
+
+        <input type="button" value="cancel" onclik="location.href='@Url.Action("Home","StockAdjustmentController")'">
+        <input type="button" value="Save" onclikc="location.href='@Url.Action("SaveAsDraft","StockAdjustmentComtroller")'">
+        <input type="button" value="Submit" onclikc="location.href='@Url.Action("SubmitAsPending","StockAdjustmentComtroller")'">
+
+    </div>
+
+
+
+
+
+
+
+
