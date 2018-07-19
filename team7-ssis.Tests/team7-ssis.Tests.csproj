@@ -140,14 +140,15 @@
     <Compile Include="Services\RetrievalServiceTest.cs" />
     <Compile Include="Services\StockAdjustmentServiceTest.cs" />
     <Compile Include="Services\ItemPriceServiceTest.cs" />
-	<Compile Include="Services\ItemCategoryServiceTest.cs" />
-  
+    <Compile Include="Services\ItemCategoryServiceTest.cs" />
     <Compile Include="Services\StockMovementTest.cs" />
     <Compile Include="Services\PurchaseOrderServiceTests.cs" />
     <Compile Include="Services\NotificationServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.config" />
+    <Content Include="App.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
