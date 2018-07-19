@@ -144,6 +144,7 @@
   
     <Compile Include="Services\StockMovementTest.cs" />
     <Compile Include="Services\PurchaseOrderServiceTests.cs" />
+    <Compile Include="Services\NotificationServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

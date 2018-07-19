@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
+using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
 {
@@ -13,12 +14,15 @@ namespace team7_ssis.Tests.Services
         StockAdjustmentRepository stockAdjustmentRepository;
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         StatusRepository statusRepository;
+        ItemService itemService;
+
         public StockAdjustmentService(ApplicationDbContext context)
         {
             this.context = context;
             this.statusRepository = new StatusRepository(context);
             this.stockAdjustmentRepository = new StockAdjustmentRepository(context);
             this.stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
+            this.itemService = new ItemService(context);
         }
 
         //create new StockAdjustment with status: draft
@@ -132,6 +136,13 @@ namespace team7_ssis.Tests.Services
             {
                 stockadjustment.Status = statusRepository.FindById(6);
                 stockAdjustmentRepository.Save(stockadjustment);
+                //update item inventory
+                foreach (StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
+                {
+                    // update each Item inventory = sd.AfterQuantity;
+                    itemService.UpdateQuantity(sd.Item, sd.AfterQuantity);                   
+                }
+
             }
             return stockadjustment;
         }

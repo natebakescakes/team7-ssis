@@ -64,12 +64,12 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = stockmovementService.FindStockMovementByDisbursementId(a.DisbursementId).Count;
+            stockmovementRepository.Delete(a);
 
             //Assert
             Assert.AreEqual(expected, result);
 
-            //Delete dummy data
-            stockmovementRepository.Delete(a);
+            
         }
 
         [TestMethod]
@@ -103,10 +103,18 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
 
-            //Revert edit object
-            result.DisbursementId = null;
-            stockmovementService.Save(result);
+           
 
+  
         }
+        [TestCleanup]
+        public void TestCleanUp()
+        {
+            StockMovement a = context.StockMovement.Where(x => x.StockMovementId == 1).First();
+            //Revert edit object
+            a.DisbursementId = null;
+            stockmovementService.Save(a);
+        }
+
     }
 }
