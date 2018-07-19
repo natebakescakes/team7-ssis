@@ -298,6 +298,7 @@
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\CollectionPointService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\RequisitionService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\DeliveryOrderService.cs" />
@@ -313,6 +314,7 @@
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
