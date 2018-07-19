@@ -225,8 +225,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DeliveryOrderApiController.cs" />
-    <Compile Include="Controllers\DeliveryOrderController.cs" />
+    <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
