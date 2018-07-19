@@ -156,17 +156,17 @@ namespace team7_ssis.Tests.Services
             //Arrange
             PurchaseOrder p1 = new PurchaseOrder();
             p1.Status = statusRepository.FindById(11);
-            p1.PurchaseOrderNo = "DUMMY";
+            p1.PurchaseOrderNo = "DUMMYS1";
             p1.CreatedDateTime = DateTime.Now;
 
             PurchaseOrder p2 = new PurchaseOrder();
             p2.Status = statusRepository.FindById(12);
-            p2.PurchaseOrderNo = "DUMMY2";
+            p2.PurchaseOrderNo = "DUMMYS2";
             p2.CreatedDateTime = DateTime.Now;
 
             PurchaseOrder p3 = new PurchaseOrder();
             p3.Status = statusRepository.FindById(13);
-            p3.PurchaseOrderNo = "DUMMY3";
+            p3.PurchaseOrderNo = "DUMMYS3";
             p3.CreatedDateTime = DateTime.Now;
 
             purchaseOrderRepository.Save(p1);
@@ -193,12 +193,12 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             PurchaseOrder p1 = new PurchaseOrder();
-            p1.PurchaseOrderNo = "DUMMY";
+            p1.PurchaseOrderNo = "DUMMYSA1";
             p1.CreatedDateTime = DateTime.Now;
 
             PurchaseOrder p2 = new PurchaseOrder();
             p2.Status = statusRepository.FindById(15);
-            p2.PurchaseOrderNo = "DUMMY2";
+            p2.PurchaseOrderNo = "DUMMYSA2";
             p2.CreatedDateTime = DateTime.Now;
 
             purchaseOrderRepository.Save(p2);
@@ -209,7 +209,7 @@ namespace team7_ssis.Tests.Services
             var result2 = purchaseOrderService.Save(p2);
 
             //Assert
-            Assert.AreEqual(result1.PurchaseOrderNo,"DUMMY");
+            Assert.AreEqual(result1.PurchaseOrderNo,"DUMMYSA1");
             Assert.AreEqual(result2.SupplierCode, "ALPA");
 
             //teardown
@@ -292,27 +292,27 @@ namespace team7_ssis.Tests.Services
             List<PurchaseOrder> poList = new List<PurchaseOrder>();
 
             PurchaseOrder p1 = new PurchaseOrder();
-            p1.PurchaseOrderNo = "P1";
+            p1.PurchaseOrderNo = "P11";
             p1.Supplier = supplierRepository.FindById("CHEP");
 
             PurchaseOrder p2 = new PurchaseOrder();
-            p2.PurchaseOrderNo = "P2";
+            p2.PurchaseOrderNo = "P21";
             p2.Supplier = supplierRepository.FindById("BANE");
 
             PurchaseOrderDetail pd1 = new PurchaseOrderDetail();
-            pd1.PurchaseOrderNo = "P1";
+            pd1.PurchaseOrderNo = "P11";
             pd1.Item = itemRepository.FindById("E005");
             pd1.Quantity = 50;
             pd1.Status = statusRepository.FindById(11);
 
             PurchaseOrderDetail pd2 = new PurchaseOrderDetail();
-            pd2.PurchaseOrderNo = "P2";
+            pd2.PurchaseOrderNo = "P21";
             pd2.Item = itemRepository.FindById("E007");
             pd2.Quantity = 100;
             pd2.Status = statusRepository.FindById(11);
 
             PurchaseOrderDetail pd3 = new PurchaseOrderDetail();
-            pd3.PurchaseOrderNo = "P1";
+            pd3.PurchaseOrderNo = "P11";
             pd3.Item = itemRepository.FindById("C001");
             pd3.Quantity = 100;
             pd3.Status = statusRepository.FindById(11);
