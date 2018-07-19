@@ -16,7 +16,6 @@ namespace team7_ssis.Services.Tests
     {
         ApplicationDbContext context;
         RequisitionService requisitionService;
-        string userId;
 
         [TestInitialize]
         public void TestInitialize()
@@ -31,11 +30,6 @@ namespace team7_ssis.Services.Tests
 
         [TestCleanup]
         public void TestCleanup()
-        {
-            removeRequisitions();
-        }
-
-        private void removeRequisitions()
         {
             Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First();
             Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First();
@@ -121,17 +115,6 @@ namespace team7_ssis.Services.Tests
             r3.RequisitionDetails.Add(rd5);
 
             requisitionService.Save(r3);
-        }
-
-        [TestMethod()]
-        public void FindRequisitionsByStatusTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void GetRequisitionDetailsTest()
-        {
 
         }
 
@@ -213,42 +196,6 @@ namespace team7_ssis.Services.Tests
             HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
 
             Assert.IsTrue(depts.SetEquals(expected));
-        }
-
-        [TestMethod()]
-        public void AddItemsToRequisitionTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void CreateRequisitionTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void AddItemsToRequisitionTest1()
-        {
-
-        }
-
-        [TestMethod()]
-        public void CancelRequisitionTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void ApproveRequisitionsTest()
-        {
-
-        }
-
-        [TestMethod()]
-        public void ApproveRequisitionsTest1()
-        {
-
         }
     }
 }

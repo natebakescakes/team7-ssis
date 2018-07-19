@@ -50,7 +50,11 @@ namespace team7_ssis.Services
             // create DisbursementDetails, one for each item by department
             List<Disbursement> filledDisbursements = AddDisbursementDetailsForEachDisbursement(emptyDisbursements, requestList);
 
-            disbursementService.Save(filledDisbursements);
+            foreach (Disbursement d in filledDisbursements)
+            {
+                d.DisbursementId = IdService.GetNewDisbursementId(context);
+                disbursementService.Save(d);
+            }
 
             return r.RetrievalId;
         }
@@ -106,7 +110,8 @@ namespace team7_ssis.Services
             foreach (Department dept in departments)
             {
                 Disbursement d = new Disbursement();
-                d.DisbursementId = IdService.GetNewDisbursementId(context);
+                d.CreatedDateTime = DateTime.Now;
+                // d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Department = dept;
                 disbursementList.Add(d);
             }
@@ -115,35 +120,35 @@ namespace team7_ssis.Services
             return disbursementList;
         }
 
-        public List<Item> AddItemsToRequisition(List<Item> items)
-        {
-            throw new NotImplementedException();
-        }
+        //public List<Item> AddItemsToRequisition(List<Item> items)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Requisition CreateRequisition(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
+        //public Requisition CreateRequisition(Requisition req)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Item AddItemsToRequisition(Item item)
-        {
-            throw new NotImplementedException();
-        }
+        //public Item AddItemsToRequisition(Item item)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Requisition CancelRequisition(Requisition req)
-        {
-            throw new NotImplementedException();
-        }
+        //public Requisition CancelRequisition(Requisition req)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public List<Requisition> ApproveRequisitions(List<Requisition> reqList)
-        {
-            throw new NotImplementedException();
-        }
+        //public List<Requisition> ApproveRequisitions(List<Requisition> reqList)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Requisition ApproveRequisitions(Requisition requisition)
-        {
-            throw new NotImplementedException();
-        }
+        //public Requisition ApproveRequisitions(Requisition requisition)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public Requisition Save(Requisition requisition)
         {
