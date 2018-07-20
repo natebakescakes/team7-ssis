@@ -30,7 +30,10 @@ namespace team7_ssis.Repositories
 
         public IQueryable<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
-            return context.Requisition.Where(x => statusList.Contains(x.Status));
+
+            var statusIdList = statusList.Select(x => x.StatusId);
+
+            return context.Requisition.Where(requisition => statusIdList.Contains(requisition.Status.StatusId));
         }
         public IQueryable<RequisitionDetail> FindRequisitionDetails(string requisitionId)
         {
