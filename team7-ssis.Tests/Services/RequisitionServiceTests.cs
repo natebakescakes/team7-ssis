@@ -9,7 +9,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using Microsoft.AspNet.Identity;
 
-namespace team7_ssis.Services.Tests
+namespace team7_ssis.Tests.Services
 {
     [TestClass()]
     public class RequisitionServiceTests
