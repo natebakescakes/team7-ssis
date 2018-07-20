@@ -47,9 +47,9 @@ namespace team7_ssis.Services.Tests
         {
             // Arrange
             List<Status> statusList = new List<Status>();
-            statusList.Add(context.Status.Where(x => x.Name == "Ready For Collection").First());
-            statusList.Add(context.Status.Where(x => x.Name == "Pending Approval").First());
-            statusList.Add(context.Status.Where(x => x.Name == "Items Collected").First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 8).First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 9).First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 10).First());
 
             // Act
             List<Requisition> result = requisitionService.FindRequisitionsByStatus(statusList);
