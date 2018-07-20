@@ -1,8 +1,10 @@
 ﻿$(document).ready(function ()
 {  
-        var oTable = $('#myTable').DataTable({
+    var oTable = $('#myTable').DataTable({
+        ajax: {
             url: "api/receivegoods/all",
-                dataSrc: "",
+            dataSrc: "",
+                },
 
                 columns: [
                     {data: "DeliveryOrderNo"},

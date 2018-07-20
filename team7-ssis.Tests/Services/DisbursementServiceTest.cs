@@ -64,6 +64,10 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
+
+            // CLEANUP
+            context.Disbursement.Remove(result);
+            context.SaveChanges();
         }
 
 

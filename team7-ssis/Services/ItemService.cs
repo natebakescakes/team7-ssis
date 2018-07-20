@@ -72,5 +72,25 @@ namespace team7_ssis.Services
             return itemRepository.Save(a);
         }
         
+        
+
+        public int UploadItemImage(HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                string path = HttpContext.Current.Server.MapPath("~/Uploads/");
+                if (!System.IO.Directory.Exists(path))
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                }
+
+                file.SaveAs(path + System.IO.Path.GetFileName(file.FileName));
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
     }
 }

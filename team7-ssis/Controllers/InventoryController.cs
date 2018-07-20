@@ -20,26 +20,50 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        public ActionResult Manage()
+        [HttpPost]
+        public ActionResult ImageUpload(HttpPostedFileBase file)
         {
-            //List<Item> items = itemService.FindAllItems();
-            //ViewData["Items"] = items;
-            //return View();
-
-            using (var client = new HttpClient())
+            if (file != null && file.ContentLength > 0)
+                try
+                {
+                    int i=itemService.UploadItemImage(file);
+                    if (i == 1)
+                    {
+                        ViewBag.Message = "File uploaded successfully";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "File uploaded unsuccessful!";
+                    }
+                   
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                }
+            else
             {
-                var inventoryItemUrl = Url.RouteUrl(
-                    "DefaultApi",
-                    new { httproute = "", controller = "InventoryAPI" },
-                    Request.Url.Scheme
-                );
-                var model = client
-                            .GetAsync(inventoryItemUrl)
-                            .Result
-                            .Content.ReadAsAsync<Item>().Result;
-
-                return View(model);
+                ViewBag.Message = "You have not specified a file.";
             }
+            return RedirectToAction("Manage");
+        }
+
+        public ActionResult LoadItems()
+        {
+            List<Item> list = itemService.FindAllItems();
+
+            var data = list.Select(x => new {
+                ItemCode = x.ItemCode,
+                ItemCategoryName = x.ItemCategory.Name,
+                Description = x.Description,
+                ReorderLevel = x.ReorderLevel,
+                ReorderQuantity = x.ReorderQuantity,
+                Uom = x.Uom,
+                Quantity = x.Inventory.Quantity
+
+            });
+
+            return Json(new { data = data }, JsonRequestBehavior.AllowGet);
         }
 
         
