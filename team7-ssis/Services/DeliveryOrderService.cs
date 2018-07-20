@@ -12,6 +12,7 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         DeliveryOrderRepository deliveryOrderRepository;
+        DeliveryOrderDetailRepository deliveryOrderDetailRepository;
         StatusRepository statusRepository;
         InventoryRepository inventoryRepository;
         PurchaseOrderRepository purchaseOrderRepository;
@@ -29,6 +30,7 @@ namespace team7_ssis.Services
             this.stockMovementRepository = new StockMovementRepository(context);
             this.purchaseOrderDetailsRepository= new PurchaseOrderDetailRepository(context) ;
             this.itemRepository = new ItemRepository(context);
+            this.deliveryOrderDetailRepository = new DeliveryOrderDetailRepository(context);
         }
 
         public List<DeliveryOrder> FindAllDeliveryOrders()
@@ -69,15 +71,16 @@ namespace team7_ssis.Services
   
         public DeliveryOrder Save(DeliveryOrder deliveryOrder)
         {
+            deliveryOrderRepository.Save(deliveryOrder);
             foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
             {
                 if (dod.ActualQuantity == dod.PlanQuantity)
                     dod.Status = statusRepository.FindById(13);
                 else
                     dod.Status = statusRepository.FindById(12);
-
+                deliveryOrderDetailRepository.Save(dod);
                 SaveInventory(itemRepository.FindById(dod.ItemCode), dod.ActualQuantity);
-                SaveStockMovement(itemRepository.FindById(dod.ItemCode), dod.ActualQuantity);
+                SaveStockMovement(dod, itemRepository.FindById(dod.ItemCode), dod.ActualQuantity);
             }
              PurchaseOrder po = deliveryOrder.PurchaseOrder;
             foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
@@ -96,10 +99,9 @@ namespace team7_ssis.Services
                 po.Status = statusRepository.FindById(13);
                 purchaseOrderRepository.Save(po);
             }
-
             
             purchaseOrderRepository.Save(deliveryOrder.PurchaseOrder);
-            return deliveryOrderRepository.Save(deliveryOrder);
+            return deliveryOrder;
         }
 
         public Inventory SaveInventory(Item item, int quantity)
@@ -109,10 +111,12 @@ namespace team7_ssis.Services
             return inventoryRepository.Save(iv);
         }
 
-        public StockMovement SaveStockMovement(Item item, int quantity)
+        public StockMovement SaveStockMovement(DeliveryOrderDetail deliveryOrderDetail, Item item, int quantity)
         {
             StockMovement sm = new StockMovement();
-            sm.Item = itemRepository.FindById(item.ItemCode);
+            sm.StockMovementId = IdService.GetNewStockMovementId(context);
+            sm.DeliveryOrderDetail = deliveryOrderDetail;
+            sm.Item = item;
             sm.OriginalQuantity = inventoryRepository.FindById(item.ItemCode).Quantity; 
             sm.AfterQuantity = sm.OriginalQuantity + quantity;
             sm.CreatedDateTime = DateTime.Now;
@@ -124,14 +128,14 @@ namespace team7_ssis.Services
         {
             // string targetpath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/DOFiles"), filename);
 
-            // throw new NotImplementedException();
-            if (file != null && file.ContentLength > 0)
-            {
-                var fileName = Path.GetFileName(file.FileName);
-                var path = System.Web.HttpContext.Current.Server.MapPath("~/DOFiles");
+             throw new NotImplementedException();
+            //if (file != null && file.ContentLength > 0)
+            //{
+            //    var fileName = Path.GetFileName(file.FileName);
+            //    var path = System.Web.HttpContext.Current.Server.MapPath("~/DOFiles");
 
-                file.SaveAs(path + fileName);
-            }
+            //    file.SaveAs(path + fileName);
+            //}
         }
 
         public void SaveInvoiceFileToDeliveryOrder(string Filepath)

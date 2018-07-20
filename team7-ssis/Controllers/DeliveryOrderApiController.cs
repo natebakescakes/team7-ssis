@@ -9,6 +9,7 @@ namespace team7_ssis.Controllers
 {
     public class DeliveryOrderApiController : ApiController
     {
+        //static ApplicationDbcontext 
         // GET api/<controller>
         public IEnumerable<string> Get()
         {
