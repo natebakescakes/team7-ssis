@@ -9,7 +9,7 @@ namespace team7_ssis.ViewModels
     {
         public string PNo { get; set; }
         public string SupplierName { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public string CreatedDate { get; set; }
         public string Status { get; set; }
     }
 }

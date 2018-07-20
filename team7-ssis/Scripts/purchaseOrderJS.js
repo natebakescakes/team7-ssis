@@ -1,4 +1,3 @@
-//var editor;
 $(document).ready(function(){
 	
 
@@ -6,42 +5,24 @@ $(document).ready(function(){
 		var $table=$('#poTable');
 	
 		
-		//var simple_checkbox=function(data,type,full, meta){
-		//	var checked= (data==true)? "checked" : "";
-		//	return '<input type="checkbox"  disabled="true" class="checkbox td-button" ' + checked + '/>';
-		//}
-		
-		
 		var datatbl = $table.DataTable(
 				{
-					ajax: {
-                        sAjaxSource: 'api/purchaseOrders/all',
-                        sAjaxDataProp: ''
+                ajax: {
+
+                    url: "api/purchaseOrder/all",
+                    dataSrc: ""    
                 },
-                select: 'single',
+                
                 columns: [
-                        //{
-                        //defaultContent: '<input type="checkbox"  class="checkbox" />'
-                        //},
-						{
-							data: 'PNo'
-						},
-						{
-							data: 'SupplierName'
-						},
-						{
-							data: 'CreatedDate'
-						},
-						{
-							data: 'Status'
-						}
-					]
+                    { data: "PNo" },
+                    { data: "SupplierName"},
+                    { data: "CreatedDate"},
+                    { data: "Status" }
+                ],
+                select: "single"
 					
 				});
 		
-		
-		
-  
-	    
+	
 
 });

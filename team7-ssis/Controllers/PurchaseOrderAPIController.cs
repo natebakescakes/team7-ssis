@@ -15,30 +15,20 @@ namespace team7_ssis.Controllers
     {
         public static ApplicationDbContext context = new ApplicationDbContext();
         PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
+        
 
-        [Route("api/purchaseOrders/all")]
+        [Route("api/purchaseOrder/all")]
         [HttpGet]
-        public IEnumerable<PurchaseOrderViewModel> PurchaseOrders()
+        public List<PurchaseOrderViewModel> PurchaseOrders()
         {
-           //context.Configuration.LazyLoadingEnabled = false; // if your table is relational, contain foreign key
-            List<PurchaseOrder> poList = purchaseOrderService.FindAllPurchaseOrders();
-
-            List<PurchaseOrderViewModel> data = new List<PurchaseOrderViewModel>();
-
-            foreach(PurchaseOrder p in poList)
+            //context.Configuration.LazyLoadingEnabled.Equals("false");
+            return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
             {
-                data.Add(new PurchaseOrderViewModel
-                {
-                    PNo = p.PurchaseOrderNo,
-                    SupplierName = p.Supplier.Name,
-                    CreatedDate = p.CreatedDateTime,
-                    Status = p.Status.Name
-                
-                });
- 
-            }
-
-            return data;
+                PNo = po.PurchaseOrderNo,
+                SupplierName=po.Supplier.Name,
+                CreatedDate=po.CreatedDateTime.ToShortDateString(),
+                Status=po.Status.Name
+            }).ToList();
         }
        
 
