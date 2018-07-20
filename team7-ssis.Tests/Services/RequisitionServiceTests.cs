@@ -93,6 +93,9 @@ namespace team7_ssis.Services.Tests
             Assert.IsNotNull(result);
 
             // Cleanup
+            var disb = context.Disbursement.Where(x => x.Retrieval.RetrievalId == result.RetrievalId).AsEnumerable();
+            context.Disbursement.RemoveRange(disb);
+
             context.Retrieval.Remove(result);
             context.SaveChanges();
         }
