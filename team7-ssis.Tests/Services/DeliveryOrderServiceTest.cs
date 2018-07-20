@@ -9,7 +9,6 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Web;
 
 namespace team7_ssis.Tests.Services
 {
@@ -20,7 +19,6 @@ namespace team7_ssis.Tests.Services
         DeliveryOrderService deliveryOrderService;
         DeliveryOrderRepository deliveryOrderRepository;
         PurchaseOrderRepository purchaseOrderRepository;
-        DeliveryOrderDetail deliveryOrderDetail;
         StatusRepository statusRepository;
         InventoryRepository inventoryRepository;
         ItemRepository itemRepository;
