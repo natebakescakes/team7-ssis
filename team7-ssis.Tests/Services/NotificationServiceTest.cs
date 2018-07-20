@@ -31,12 +31,12 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = notificationService.CreateNotification(disbursement, notification.CreatedFor);
+            
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
+            notificationRepository.Delete(result); //Delete test dummy object
 
-            //Delete test dummy object
-            notificationRepository.Delete(result);
         }
 
         [TestMethod]
@@ -48,12 +48,12 @@ namespace team7_ssis.Tests.Services
             int expected = 2;
             //Act
             var result = notificationService.CreateNotification(requisition, notification.CreatedFor);
+            
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
 
-            //Delete test dummy object
-            notificationRepository.Delete(result);
+            notificationRepository.Delete(result);  //Delete test dummy object
         }
 
         [TestMethod]
@@ -66,12 +66,12 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = notificationService.CreateNotification(stockAdjustment, notification.CreatedFor);
-
+            
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
+            notificationRepository.Delete(result); //Delete test dummy object
 
-            //Delete test dummy object
-            notificationRepository.Delete(result);
+
         }
 
         [TestMethod]
