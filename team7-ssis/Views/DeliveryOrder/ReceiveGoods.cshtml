@@ -1,0 +1,43 @@
+﻿@using team7_ssis.Models
+@model IEnumerable<PurchaseOrder>
+
+@{
+    ViewBag.Title = "Receive Goods";
+}
+
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <h2>Receive Goods</h2>
+        <h3>Submit delivery order forms & invoices and update inventory</h3>
+        <input type="button" value="View Purchase Order Form" onclick="location.href='@Url.Action("Home", "PurchaseOrderController")'" />
+        <table>
+            @{
+            var data = (List<PurchaseOrder>)ViewData["list"];
+            }
+            @foreach (var po in @data)
+            {
+            <tr><td> @po.SupplierCode </td></tr>
+             }
+        </table>
+        <table>
+            <tr>
+                <td> Purchase Order #  </td>
+                <td> Supplier Name </td>
+                <td> Order Date </td>
+            </tr>
+            <tr>
+                <td> Purchase Order #  </td>
+                <td> Supplier Name </td>
+                <td> Order Date </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
