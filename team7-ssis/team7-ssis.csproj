@@ -314,6 +314,7 @@
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
@@ -378,7 +379,8 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
-    <Content Include="Views\Inventory\Manage.cshtml" />
+    <Content Include="Views\Shared\_itemtable.cshtml" />
+    <Content Include="Views\Inventory\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

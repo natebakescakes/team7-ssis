@@ -48,26 +48,22 @@ namespace team7_ssis.Controllers
             return RedirectToAction("Manage");
         }
 
-        public ActionResult Manage()
+        public ActionResult LoadItems()
         {
-            List<Item> items = itemService.FindAllItems();
-            ViewData["Items"] = items;
-            return View();
+            List<Item> list = itemService.FindAllItems();
 
-            //using (var client = new HttpClient())
-            //{
-            //    var inventoryItemUrl = Url.RouteUrl(
-            //        "DefaultApi",
-            //        new { httproute = "", controller = "InventoryAPI" },
-            //        Request.Url.Scheme
-            //    );
-            //    var model = client
-            //                .GetAsync(inventoryItemUrl)
-            //                .Result
-            //                .Content.ReadAsAsync<Item>().Result;
+            var data = list.Select(x => new {
+                ItemCode = x.ItemCode,
+                ItemCategory = x.ItemCategory,
+                Description = x.Description,
+                ReorderLevel = x.ReorderLevel,
+                ReorderQuantity = x.ReorderQuantity,
+                Uom = x.Uom,
+                Inventory = x.Inventory
 
-            //    return View(model);
-            //}
+            });
+
+            return Json(new { data = data }, JsonRequestBehavior.AllowGet);
         }
 
         

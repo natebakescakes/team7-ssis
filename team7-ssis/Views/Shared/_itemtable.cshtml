@@ -1,0 +1,64 @@
+﻿<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Manage Inventory</title>
+
+</head>
+
+<body>
+
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>Item Number</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Reorder Level</th>
+                    <th>Reorder Quantity</th>
+                    <th>Unit of Measurement</th>
+                    <th>In Stock</th>
+
+
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#myTable').DataTable({
+
+                "ajax": {
+                    "url": '/Inventory/LoadItems',
+                    "type": "get",
+                    "datatype": "json"
+                },
+                select:'single',
+                "columns": [
+                    { "data": "ItemCode", "autoWidth": true },
+                    { "data": "ItemCategory", "autoWidth": true },
+                    { "data": "Description", "autoWidth": true },
+                    { "data": "ReorderLevel", "autoWidth": true },
+                    { "data": "ReorderQuantity", "autoWidth": true },
+                    { "data": "Uom", "autoWidth": true },
+                    { "data": "Inventory","autoWidth":true}
+
+                ]
+
+            });
+
+
+
+        })
+
+    </script>
+
+</body>
