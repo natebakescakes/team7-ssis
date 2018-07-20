@@ -61,12 +61,27 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = disbursementService.Save(newDisbursement);
-
+            disbursementRepository.Delete(newDisbursement);
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
         }
 
+        [TestMethod]
+        public void ConfirmCollectionTest()
+        {
+            //Arrange
+            Disbursement disbursement = disbursementRepository.FindById("TEST");
+            disbursement.Retrieval = context.Retrieval.First();
+            disbursementService.Save(disbursement);
+            Disbursement expected = disbursementService.ConfirmCollection(disbursement.DisbursementId);
 
+            //Act
+            Disbursement result = context.Disbursement.Where(x => x.DisbursementId == "TEST").First();
+            
+            //Asert
+            Assert.IsNotNull(result.CollectedBy);
+            Assert.IsNotNull(result.CollectedDateTime);
+        }
 
         [TestMethod]
          public void FindDisbursementsByRetrievalIdTest()

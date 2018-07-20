@@ -11,11 +11,12 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         RetrievalRepository retrievalRepository;
-
+        ItemService itemService;
         public RetrievalService(ApplicationDbContext context)
         {
             this.context = context;
             retrievalRepository = new RetrievalRepository(context);
+            itemService = new ItemService(context);
         }
 
         public List<Retrieval> FindAllRetrievals()
@@ -34,6 +35,23 @@ namespace team7_ssis.Services
 
         }
 
+        public Retrieval RetrieveItems(Retrieval other)
+        {
+            // Get RetrieveByRetrievalId
+            Retrieval retrieval = this.FindRetrievalById(other.RetrievalId);
+
+            // Update Actual Quantity
+            retrieval.Disbursements = other.Disbursements;
+
+            // Save Retrieval
+            this.Save(retrieval);
+
+            // Update Item Quantity based on amount retrieved into Inventory
+
+            //Create Stock Movement Transaction
+            return retrieval;
+
+        }
 
     }
 }
