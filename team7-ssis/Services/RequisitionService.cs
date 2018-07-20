@@ -26,12 +26,19 @@ namespace team7_ssis.Services
         }
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
-            throw new NotImplementedException();
+            return requisitionRepository.FindRequisitionsByStatus(statusList).ToList();
         }
 
-        public RequisitionDetail GetRequisitionDetails(string requisitionId)
+        public List<RequisitionDetail> GetRequisitionDetails(string requisitionId)
         {
-            throw new NotImplementedException();
+            var query = requisitionRepository.FindRequisitionDetails(requisitionId).ToList();
+            if (query == null)
+            {
+                throw new Exception("No Requisition Details Found");
+            } else
+            {
+                return query;
+            }
         }
 
         public string ProcessRequisitions(List<Requisition> requestList)
@@ -57,6 +64,42 @@ namespace team7_ssis.Services
             }
 
             return r.RetrievalId;
+        }
+
+
+        public List<Disbursement> CreateDisbursementForEachDepartment(List<Requisition> requestList)
+        {
+            List<Disbursement> disbursementList = new List<Disbursement>();
+
+            // select all distinct Department from requestList
+            var departments = requestList.Select(x => x.Department).Distinct();
+
+            // create Disbursement for each Department
+            foreach (Department dept in departments)
+            {
+                Disbursement d = new Disbursement();
+                d.CreatedDateTime = DateTime.Now;
+                // d.DisbursementId = IdService.GetNewDisbursementId(context);
+                d.Department = dept;
+                disbursementList.Add(d);
+            }
+
+            //disbursementService.Save(disbursementList);
+            return disbursementList;
+        }
+
+        public Requisition Save(Requisition requisition)
+        {
+            return requisitionRepository.Save(requisition);
+        }
+
+        public List<Requisition> Save(List<Requisition> reqList)
+        {
+            foreach (Requisition r in reqList)
+            {
+                requisitionRepository.Save(r);
+            }
+            return reqList;
         }
 
         private List<Disbursement> AddDisbursementDetailsForEachDisbursement(List<Disbursement> disbursementList, List<Requisition> requestList)
@@ -97,71 +140,6 @@ namespace team7_ssis.Services
             }
 
             return disbursementList;
-        }
-
-        public List<Disbursement> CreateDisbursementForEachDepartment(List<Requisition> requestList)
-        {
-            List<Disbursement> disbursementList = new List<Disbursement>();
-
-            // select all distinct Department from requestList
-            var departments = requestList.Select(x => x.Department).Distinct();
-
-            // create Disbursement for each Department
-            foreach (Department dept in departments)
-            {
-                Disbursement d = new Disbursement();
-                d.CreatedDateTime = DateTime.Now;
-                // d.DisbursementId = IdService.GetNewDisbursementId(context);
-                d.Department = dept;
-                disbursementList.Add(d);
-            }
-
-            //disbursementService.Save(disbursementList);
-            return disbursementList;
-        }
-
-        //public List<Item> AddItemsToRequisition(List<Item> items)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Requisition CreateRequisition(Requisition req)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Item AddItemsToRequisition(Item item)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Requisition CancelRequisition(Requisition req)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public List<Requisition> ApproveRequisitions(List<Requisition> reqList)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Requisition ApproveRequisitions(Requisition requisition)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public Requisition Save(Requisition requisition)
-        {
-            return requisitionRepository.Save(requisition);
-        }
-
-        public List<Requisition> Save(List<Requisition> reqList)
-        {
-            foreach (Requisition r in reqList)
-            {
-                requisitionRepository.Save(r);
-            }
-            return reqList;
         }
 
     }
