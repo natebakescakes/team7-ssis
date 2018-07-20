@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using team7_ssis.Models;
+using team7_ssis.Services;
 
 namespace team7_ssis.Controllers
 {
@@ -16,8 +17,19 @@ namespace team7_ssis.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        private ApplicationDbContext context;
+        private TitleService titleService;
+        private DepartmentService departmentService;
+        private UserService userService;
+
+
         public ManageController()
         {
+            context = new ApplicationDbContext();
+
+            titleService = new TitleService(context);
+            departmentService = new DepartmentService(context);
+            userService = new UserService(context);
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -70,9 +82,25 @@ namespace team7_ssis.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
             };
             return View(model);
+        }
+
+        //
+        // GET: /Manage/Profile
+        public new ActionResult Profile()
+        {
+            var user = UserManager.FindByName(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            return View(new ViewProfileViewModel()
+            {
+                Title = user.Title.Name,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Department = user.Department.Name,
+                Supervisor = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}"
+            });
         }
 
         //

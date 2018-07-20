@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
@@ -12,6 +13,45 @@ namespace team7_ssis.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+    }
+
+    public class ViewProfileViewModel
+    {
+        public string Title { get; set; }
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Department { get; set; }
+        public string Supervisor { get; set; }
+
+    }
+
+    public class EditProfileViewModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+        [Required]
+        public string TitleId { get; set; }
+        [Display(Name = "Title")]
+        public IEnumerable<SelectListItem> Titles { get; set; }
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+        [Required]
+        public string DepartmentCode { get; set; }
+        [Display(Name = "Department")]
+        public IEnumerable<SelectListItem> Departments { get; set; }
+        [Required]
+        public string SupervisorEmail { get; set; }
+        [Display(Name = "Supervisor")]
+        public IEnumerable<SelectListItem> Supervisors { get; set; }
     }
 
     public class ManageLoginsViewModel
@@ -35,7 +75,7 @@ namespace team7_ssis.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -54,7 +94,7 @@ namespace team7_ssis.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
