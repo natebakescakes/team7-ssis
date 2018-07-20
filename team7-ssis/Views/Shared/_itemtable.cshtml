@@ -37,22 +37,20 @@
         $(document).ready(function () {
             var oTable = $('#itemTable').DataTable({
 
-                "ajax": {
-                    "url": '/Inventory/LoadItems',
-                    "type": "get",
-                    "datatype": "json"
-                },
-                select:'single',
+                sAjaxSource: "/api/manage/items",
+                sAjaxDataProp: "",
+
                 "columns": [
                     { "data": "ItemCode", "autoWidth": true },
-                    { "data": "ItemCategory", "autoWidth": true },
+                    { "data": "ItemCategoryName", "autoWidth": true },
                     { "data": "Description", "autoWidth": true },
                     { "data": "ReorderLevel", "autoWidth": true },
                     { "data": "ReorderQuantity", "autoWidth": true },
                     { "data": "Uom", "autoWidth": true },
-                    { "data": "Inventory","autoWidth":true}
+                    { "data": "Quantity", "autoWidth": true }
 
-                ]
+                ],
+                select: 'single'
 
             });
 

@@ -27,12 +27,12 @@ namespace team7_ssis.Controllers
                 items.Add(new ItemViewModel
                 {
                     ItemCode = i.ItemCode,
-                    ItemCategory = i.ItemCategory,
+                    ItemCategoryName = i.ItemCategory.Name,
                     Description = i.Description,
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,
                     Uom = i.Uom,
-                    Inventory= i.Inventory
+                    Quantity= i.Inventory.Quantity
                 });
             }
             return items;

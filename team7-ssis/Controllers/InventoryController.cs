@@ -54,12 +54,12 @@ namespace team7_ssis.Controllers
 
             var data = list.Select(x => new {
                 ItemCode = x.ItemCode,
-                ItemCategory = x.ItemCategory,
+                ItemCategoryName = x.ItemCategory.Name,
                 Description = x.Description,
                 ReorderLevel = x.ReorderLevel,
                 ReorderQuantity = x.ReorderQuantity,
                 Uom = x.Uom,
-                Inventory = x.Inventory
+                Quantity = x.Inventory.Quantity
 
             });
 
