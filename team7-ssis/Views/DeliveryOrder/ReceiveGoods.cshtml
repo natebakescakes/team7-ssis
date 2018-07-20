@@ -1,43 +1,31 @@
-﻿@using team7_ssis.Models
-@model IEnumerable<PurchaseOrder>
-
-@{
-    ViewBag.Title = "Receive Goods";
+﻿@section scripts
+{
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    <script src="~/Scripts/DeliveryOrder.js"></script>
 }
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Receive Goods</title>
+    </head>
 
-
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-        <h2>Receive Goods</h2>
-        <h3>Submit delivery order forms & invoices and update inventory</h3>
-        <input type="button" value="View Purchase Order Form" onclick="location.href='@Url.Action("Home", "PurchaseOrderController")'" />
-        <table>
-            @{
-            var data = (List<PurchaseOrder>)ViewData["list"];
-            }
-            @foreach (var po in @data)
-            {
-            <tr><td> @po.SupplierCode </td></tr>
-             }
-        </table>
-        <table>
-            <tr>
-                <td> Purchase Order #  </td>
-                <td> Supplier Name </td>
-                <td> Order Date </td>
-            </tr>
-            <tr>
-                <td> Purchase Order #  </td>
-                <td> Supplier Name </td>
-                <td> Order Date </td>
-            </tr>
-        </table>
-    </div>
-</body>
+    <body>
+        <div style="width:90%; margin:0 auto" class="container">
+            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">View Purchase Order Form</a>
+            <table id="myTable" class="hover">
+                <thead>
+                    <tr>
+                        <th>DeliveryOrderNo</th>
+                        <th>PurchaseOrder_PurchaseOrderNo</th>
+                        <th>Supplier_SupplierCode</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </body>
 </html>
