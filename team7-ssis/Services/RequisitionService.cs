@@ -60,6 +60,7 @@ namespace team7_ssis.Services
             foreach (Disbursement d in filledDisbursements)
             {
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
+                d.Retrieval = r;
                 disbursementService.Save(d);
             }
 
