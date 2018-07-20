@@ -12,9 +12,9 @@ namespace team7_ssis.ViewModels
 
   
         public string CreatedBy { get; set; }
-        public string ApprovedBySupervisor { get; set; }
+        public  string ApprovedBySupervisor { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public string StatusId { get; set; }
+        public  string  StatusName { get; set; }
 
 
     }

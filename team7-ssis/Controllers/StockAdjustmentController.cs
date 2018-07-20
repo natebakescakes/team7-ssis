@@ -15,18 +15,12 @@ namespace team7_ssis.Controllers
 
 
         // GET: StockAdjustment
-        public ActionResult Home()
+        public ActionResult Index()
          {
             return View();
           }
 
-        public ActionResult List()
-        {
-            List<StockAdjustment> list = stockAdjustmentService.FindAllStockAdjustment();
-            ViewData["list"] = list;
-            return View();
 
-        }
 
         public ActionResult Add()
         {

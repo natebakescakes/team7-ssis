@@ -391,15 +391,14 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
-	 <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
-    
+    <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_itemtable.cshtml" />
     <Content Include="Views\StockAdjustment\Home.cshtml" />
     <Content Include="Views\StockAdjustment\Add.cshtml" />
-    <Content Include="Views\StockAdjustment\List.cshtml" />
+    <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\Inventory\Manage.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
