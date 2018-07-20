@@ -20,26 +20,54 @@ namespace team7_ssis.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult ImageUpload(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentLength > 0)
+                try
+                {
+                    int i=itemService.UploadItemImage(file);
+                    if (i == 1)
+                    {
+                        ViewBag.Message = "File uploaded successfully";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "File uploaded unsuccessful!";
+                    }
+                   
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                }
+            else
+            {
+                ViewBag.Message = "You have not specified a file.";
+            }
+            return RedirectToAction("Manage");
+        }
+
         public ActionResult Manage()
         {
-            //List<Item> items = itemService.FindAllItems();
-            //ViewData["Items"] = items;
-            //return View();
+            List<Item> items = itemService.FindAllItems();
+            ViewData["Items"] = items;
+            return View();
 
-            using (var client = new HttpClient())
-            {
-                var inventoryItemUrl = Url.RouteUrl(
-                    "DefaultApi",
-                    new { httproute = "", controller = "InventoryAPI" },
-                    Request.Url.Scheme
-                );
-                var model = client
-                            .GetAsync(inventoryItemUrl)
-                            .Result
-                            .Content.ReadAsAsync<Item>().Result;
+            //using (var client = new HttpClient())
+            //{
+            //    var inventoryItemUrl = Url.RouteUrl(
+            //        "DefaultApi",
+            //        new { httproute = "", controller = "InventoryAPI" },
+            //        Request.Url.Scheme
+            //    );
+            //    var model = client
+            //                .GetAsync(inventoryItemUrl)
+            //                .Result
+            //                .Content.ReadAsAsync<Item>().Result;
 
-                return View(model);
-            }
+            //    return View(model);
+            //}
         }
 
         

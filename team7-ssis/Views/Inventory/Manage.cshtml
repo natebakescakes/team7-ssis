@@ -1,7 +1,7 @@
 ﻿@using team7_ssis.Models
 @model IEnumerable<Item>
 @{
-    ViewBag.Title = "Manage Inventory";
+    ViewBag.Title = "Manage";
 }
 <!DOCTYPE html>
 
@@ -15,13 +15,23 @@
         <h2>Manage Inventory Item</h2>
         <table>
             @{
-        var data = (List<Item>)ViewData["Items"];
+            var data = (List<Item>)ViewData["Items"];
             }
             @foreach (var item in @data)
-             {
-                <tr><td> @item.Name </td></tr>
-            }
+        {
+            <tr><td> @item.Name </td></tr>
+    }
         </table>
+        <br />
+        <h2>Upload Image</h2>
+        @using (Html.BeginForm("ImageUpload","Inventory", FormMethod.Post,
+                             new { enctype = "multipart/form-data" }))
+    {
+        <input type="file" name="file" id="file" /><br><br>
+        <input type="submit" value="Upload file" />
+        <br><br>
+        @ViewBag.Message
+}
     </div>
 </body>
 </html>

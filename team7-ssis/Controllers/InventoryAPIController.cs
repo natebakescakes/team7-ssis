@@ -10,7 +10,7 @@ using team7_ssis.Models;
 
 namespace team7_ssis.Controllers
 {
-    public class InventoryAPIController : ApiController
+    public class InventoryApiController : ApiController
     {
         public static ApplicationDbContext context = new ApplicationDbContext();
         ItemService itemService = new ItemService(context);
