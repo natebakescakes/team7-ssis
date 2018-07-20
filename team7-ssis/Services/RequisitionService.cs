@@ -26,7 +26,14 @@ namespace team7_ssis.Services
         }
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
-            return requisitionRepository.FindRequisitionsByStatus(statusList).ToList();
+            var query = requisitionRepository.FindRequisitionsByStatus(statusList);
+            if (query == null)
+            {
+                throw new Exception("No Requisitions contain given statuses.");
+            } else
+            {
+                return requisitionRepository.FindRequisitionsByStatus(statusList).ToList();
+            }
         }
 
         public List<RequisitionDetail> GetRequisitionDetails(string requisitionId)
