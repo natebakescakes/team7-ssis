@@ -77,7 +77,7 @@ namespace team7_ssis.Services.Tests
         }
 
         [TestMethod()]
-        public void ProcessRequisitions_CreatesRetrieval()
+        public void ProcessRequisitionsTest_CreatesRetrieval()
         {
             // Arrange
             List<Requisition> reqList = new List<Requisition>();
@@ -100,6 +100,50 @@ namespace team7_ssis.Services.Tests
             context.SaveChanges();
         }
 
+        [TestMethod]
+        public void ProcessRequisitionsTest_AddQuantity()
+        {
+            // ARRANGE
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First()); // department is COMM
+
+            Requisition r1 = new Requisition();
+            r1.RequisitionId = "TEST1";
+            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
+            r1.RequisitionDetails = new List<RequisitionDetail>();
+            r1.EmployeeRemarks = "From AddDisbursementDetailsFromEachDepartmentTest_AddQuantity";
+            r1.CreatedDateTime = DateTime.Now;
+
+            RequisitionDetail rd1 = new RequisitionDetail();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.Quantity = 20;
+
+            r1.RequisitionDetails.Add(rd1);
+
+            reqList.Add(r1);
+
+            //// ACT
+            string retrievalId = requisitionService.ProcessRequisitions(reqList);
+
+            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 20 items.
+            var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
+     
+            Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
+            var dd = query.First().DisbursementDetails.First();
+            Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
+            Assert.IsTrue(dd.PlanQuantity == 30); // DisbursementDetail's PlanQuantity is 30
+
+            //// CLEANUP
+            // remove Disbursement which has the generated DisbursementId
+            // will remove DisbursementDetails as well
+            var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
+            context.Disbursement.Remove(d.First());
+
+            // remove the Retrieval with the generated retrievalId
+            context.Retrieval.Remove(context.Retrieval.Where(x => x.RetrievalId == retrievalId).First());
+            context.SaveChanges();
+        }
+
         [TestMethod()]
         public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
         {
@@ -118,18 +162,6 @@ namespace team7_ssis.Services.Tests
             Assert.AreEqual(disbList.Count, 3);
             Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
                             .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
-        }
-        [TestMethod()]
-        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDisbursementDetails()
-        {
-            // TODO: Implement method
-
-            // Act
-
-
-            // Arrange
-
-            // Assert - 
         }
 
         [TestMethod()]
