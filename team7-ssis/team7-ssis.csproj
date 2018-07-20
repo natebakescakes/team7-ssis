@@ -232,6 +232,8 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SupplierAPIController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -318,6 +320,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\DeliveryOrderViewModel.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
+    <Compile Include="ViewModels\SupplierViewModel.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +345,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -384,6 +388,8 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Inventory\Manage.cshtml" />
     <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
+    <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\Supplier\_SupplierTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
