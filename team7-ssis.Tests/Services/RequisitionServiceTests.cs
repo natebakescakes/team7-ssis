@@ -14,11 +14,11 @@ namespace team7_ssis.Services.Tests
     [TestClass()]
     public class RequisitionServiceTests
     {
-        ApplicationDbContext context;
-        RequisitionService requisitionService;
+        static ApplicationDbContext context;
+        static RequisitionService requisitionService;
 
-        [TestInitialize]
-        public void TestInitialize()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
         {
             // Arrange
             context = new ApplicationDbContext();
@@ -28,100 +28,52 @@ namespace team7_ssis.Services.Tests
             populateRequisitions();
         }
 
-        [TestCleanup]
-        public void TestCleanup()
+        [ClassCleanup]
+        public static void TestCleanup()
         {
             // Clean up Requisitions
 
-            Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First();
-            Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First();
-            Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First();
+            Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First();
+            Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First();
+            Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First();
             context.Requisition.Remove(r1);
             context.Requisition.Remove(r2);
             context.Requisition.Remove(r3);
             context.SaveChanges();
-
-            // TODO: Clean up Retrieval
-
-            // TODO: Clean up Disbursements
         }
 
-        private void populateRequisitions()
+        [TestMethod]
+        public void FindRequisitionsByStatusTest()
         {
-            //// Create Requisition Details
+            // Arrange
+            List<Status> statusList = new List<Status>();
+            statusList.Add(context.Status.Where(x => x.Name == "Ready For Collection").First());
+            statusList.Add(context.Status.Where(x => x.Name == "Pending Approval").First());
+            statusList.Add(context.Status.Where(x => x.Name == "Items Collected").First());
 
-            RequisitionDetail rd1 = new RequisitionDetail();
-            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
-            rd1.Quantity = 10;
+            // Act
+            List<Requisition> result = requisitionService.FindRequisitionsByStatus(statusList);
 
-            RequisitionDetail rd2 = new RequisitionDetail();
-            rd2.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
-            rd2.Quantity = 10;
+            // Assert - All Requisitions in the list should have a Status which is in the statusList
+            foreach (Requisition req in result)
+            {
+                Assert.IsTrue(statusList.Contains(req.Status));
+            }
+        }
+        [TestMethod]
+        public void GetRequisitionDetailsTest()
+        {
+            // Arrange
+            string reqId = "REQ-201807-001";
 
-            RequisitionDetail rd3 = new RequisitionDetail();
-            rd3.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
-            rd3.Quantity = 10;
+            // Act
+            List<RequisitionDetail> reqList = requisitionService.GetRequisitionDetails(reqId);
 
-            RequisitionDetail rd4 = new RequisitionDetail();
-            rd4.Item = context.Item.Where(x => x.ItemCode == "C002").ToList().First();
-            rd4.Quantity = 10;
-
-            RequisitionDetail rd5 = new RequisitionDetail();
-            rd5.Item = context.Item.Where(x => x.ItemCode == "C003").ToList().First();
-            rd5.Quantity = 10;
-
-            //// Create Requisitions
-
-            Requisition r1 = new Requisition();
-            r1.RequisitionId = "REQ-201807001";
-            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
-            r1.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
-            r1.RequisitionDetails = new List<RequisitionDetail>();
-            r1.Retrieval = null;
-            r1.EmployeeRemarks = "Test by Gabriel";
-            r1.HeadRemarks = "Test by Gabriel Boss";
-            r1.Status = context.Status.Where(x => x.StatusId == 4).ToList().First(); ; // Pending Approval
-            r1.CreatedBy = null;
-            r1.CreatedDateTime = DateTime.Now;
-
-            r1.RequisitionDetails.Add(rd1);
-
-            requisitionService.Save(r1);
-
-            Requisition r2 = new Requisition();
-            r2.RequisitionId = "REQ-201807002";
-            r2.Department = context.Department.Where(x => x.DepartmentCode == "CPSC").ToList().First();
-            r2.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
-            r2.RequisitionDetails = new List<RequisitionDetail>();
-            r2.Retrieval = null;
-            r2.EmployeeRemarks = "Test by Gabriel";
-            r2.HeadRemarks = "Test by Gabriel Boss";
-            r2.Status = context.Status.Where(x => x.StatusId == 4).ToList().First(); ; // Pending Approval
-            r2.CreatedBy = null;
-            r2.CreatedDateTime = DateTime.Now;
-
-            r2.RequisitionDetails.Add(rd2);
-
-            requisitionService.Save(r2);
-
-            Requisition r3 = new Requisition();
-            r3.RequisitionId = "REQ-201807003";
-            r3.Department = context.Department.Where(x => x.DepartmentCode == "ENGL").ToList().First();
-            r3.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
-            r3.RequisitionDetails = new List<RequisitionDetail>();
-            r3.Retrieval = null;
-            r3.EmployeeRemarks = "Test by Gabriel";
-            r3.HeadRemarks = "Test by Gabriel Boss";
-            r3.Status = context.Status.Where(x => x.StatusId == 4).ToList().First(); ; // Pending Approval
-            r3.CreatedBy = null;
-            r3.CreatedDateTime = DateTime.Now;
-
-            r3.RequisitionDetails.Add(rd3);
-            r3.RequisitionDetails.Add(rd4);
-            r3.RequisitionDetails.Add(rd5);
-
-            requisitionService.Save(r3);
-
+            // Assert - Should return a List<Requistion> where Requisition.RequisitionId equals the one passed in
+            foreach (RequisitionDetail rd in reqList)
+            {
+                Assert.AreEqual(rd.RequisitionId, reqId);
+            }
         }
 
         [TestMethod()]
@@ -129,9 +81,9 @@ namespace team7_ssis.Services.Tests
         {
             // Arrange
             List<Requisition> reqList = new List<Requisition>();
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
 
             // Act
             string retrievalId = requisitionService.ProcessRequisitions(reqList);
@@ -148,20 +100,18 @@ namespace team7_ssis.Services.Tests
         [TestMethod()]
         public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
         {
-            //// Arrange
+            // Arrange
             List<Requisition> reqList = new List<Requisition>();
 
             // Add Requisitions to List<Requisition>
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
 
             // Act
             List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
 
-            //// Assert
-
-            // There should be 3 Disbursements created, one for each department
+            //// Assert - There should be 3 Disbursements created, one for each department
             Assert.AreEqual(disbList.Count, 3);
             Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
                             .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
@@ -169,7 +119,14 @@ namespace team7_ssis.Services.Tests
         [TestMethod()]
         public void AddDisbursementDetailsForEachDepartmentTest_CorrectDisbursementDetails()
         {
-            // TODO
+            // TODO: Implement method
+
+            // Act
+
+
+            // Arrange
+
+            // Assert - 
         }
 
         [TestMethod()]
@@ -203,6 +160,83 @@ namespace team7_ssis.Services.Tests
             HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
 
             Assert.IsTrue(depts.SetEquals(expected));
+        }
+
+        private static void populateRequisitions()
+        {
+            //// Create Requisition Details
+
+            RequisitionDetail rd1 = new RequisitionDetail();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.Quantity = 10;
+
+            RequisitionDetail rd2 = new RequisitionDetail();
+            rd2.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd2.Quantity = 10;
+
+            RequisitionDetail rd3 = new RequisitionDetail();
+            rd3.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd3.Quantity = 10;
+
+            RequisitionDetail rd4 = new RequisitionDetail();
+            rd4.Item = context.Item.Where(x => x.ItemCode == "C002").ToList().First();
+            rd4.Quantity = 10;
+
+            RequisitionDetail rd5 = new RequisitionDetail();
+            rd5.Item = context.Item.Where(x => x.ItemCode == "C003").ToList().First();
+            rd5.Quantity = 10;
+
+            //// Create Requisitions
+
+            Requisition r1 = new Requisition();
+            r1.RequisitionId = "REQ-201807-001";
+            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
+            r1.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
+            r1.RequisitionDetails = new List<RequisitionDetail>();
+            r1.Retrieval = null;
+            r1.EmployeeRemarks = "Test by Gabriel";
+            r1.HeadRemarks = "Test by Gabriel Boss";
+            r1.Status = context.Status.Where(x => x.StatusId == 8).ToList().First(); ; // Pending Approval
+            r1.CreatedBy = null;
+            r1.CreatedDateTime = DateTime.Now;
+
+            r1.RequisitionDetails.Add(rd1);
+
+            requisitionService.Save(r1);
+
+            Requisition r2 = new Requisition();
+            r2.RequisitionId = "REQ-201807-002";
+            r2.Department = context.Department.Where(x => x.DepartmentCode == "CPSC").ToList().First();
+            r2.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
+            r2.RequisitionDetails = new List<RequisitionDetail>();
+            r2.Retrieval = null;
+            r2.EmployeeRemarks = "Test by Gabriel";
+            r2.HeadRemarks = "Test by Gabriel Boss";
+            r2.Status = context.Status.Where(x => x.StatusId == 4).ToList().First(); ; // Pending Approval
+            r2.CreatedBy = null;
+            r2.CreatedDateTime = DateTime.Now;
+
+            r2.RequisitionDetails.Add(rd2);
+
+            requisitionService.Save(r2);
+
+            Requisition r3 = new Requisition();
+            r3.RequisitionId = "REQ-201807-003";
+            r3.Department = context.Department.Where(x => x.DepartmentCode == "ENGL").ToList().First();
+            r3.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
+            r3.RequisitionDetails = new List<RequisitionDetail>();
+            r3.Retrieval = null;
+            r3.EmployeeRemarks = "Test by Gabriel";
+            r3.HeadRemarks = "Test by Gabriel Boss";
+            r3.Status = context.Status.Where(x => x.StatusId == 4).ToList().First(); ; // Pending Approval
+            r3.CreatedBy = null;
+            r3.CreatedDateTime = DateTime.Now;
+
+            r3.RequisitionDetails.Add(rd3);
+            r3.RequisitionDetails.Add(rd4);
+            r3.RequisitionDetails.Add(rd5);
+
+            requisitionService.Save(r3);
         }
     }
 }
