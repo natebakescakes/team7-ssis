@@ -4,7 +4,12 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Services;
+using team7_ssis.Controllers;
 using team7_ssis.Repositories;
+using System.Web.Mvc;
+using System.Web;
+using System.IO;
+using Moq;
 
 namespace team7_ssis.Tests.Services
 {
@@ -147,6 +152,22 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(30,result.Quantity);
             itemRepository.Delete(i);
+        }
+
+        [TestMethod]
+        public void UploadItemImageTest()
+        {
+            //var file = MockRepository.GenerateStub<HttpPostedFileBase>();
+
+            //file.Expect(f => f.ContentLength).Return(1);
+            //file.Expect(f => f.FileName).Return("myFileName");
+            //controller.Index(file);
+        }
+
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            
         }
 
     }

@@ -29,5 +29,12 @@ namespace team7_ssis.Controllers
 
             return View();
         }
+
+        public ActionResult Inventory()
+        {
+            ViewBag.Message = "Manage Inventory";
+
+            return View();
+        }
     }
 }

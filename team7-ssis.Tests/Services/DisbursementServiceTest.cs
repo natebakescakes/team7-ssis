@@ -64,6 +64,10 @@ namespace team7_ssis.Tests.Services
             disbursementRepository.Delete(newDisbursement);
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
+
+            // CLEANUP
+            context.Disbursement.Remove(result);
+            context.SaveChanges();
         }
 
         [TestMethod]

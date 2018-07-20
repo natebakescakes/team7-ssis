@@ -4,20 +4,38 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Mvc;
-using team7_ssis.Services;
 using team7_ssis.Models;
+using team7_ssis.Services;
+using team7_ssis.ViewModels;
 
 namespace team7_ssis.Controllers
 {
-    public class InventoryAPIController : ApiController
+    public class InventoryApiController : ApiController
     {
         public static ApplicationDbContext context = new ApplicationDbContext();
         ItemService itemService = new ItemService(context);
-        public IEnumerable<Item> GetAllItem()
+
+        [Route("api/manage/items")]
+        [HttpGet]
+        public IEnumerable<ItemViewModel> FindAllItems()
         {
-            var k = itemService.FindAllItems();
-            return k;
+            List<Item> list = itemService.FindAllItems();
+            List<ItemViewModel> items = new List<ItemViewModel>();
+
+            foreach(Item i in list)
+            {
+                items.Add(new ItemViewModel
+                {
+                    ItemCode = i.ItemCode,
+                    ItemCategoryName = i.ItemCategory.Name,
+                    Description = i.Description,
+                    ReorderLevel = i.ReorderLevel,
+                    ReorderQuantity = i.ReorderQuantity,
+                    Uom = i.Uom,
+                    Quantity= i.Inventory.Quantity
+                });
+            }
+            return items;
         }
     }
 }
