@@ -332,7 +332,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="ApplicationInsights.config">
+    <Content Include="Views\ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\PublishProfiles\StationeryShopDebug - Web Deploy.pubxml" />
@@ -385,7 +385,6 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_itemtable.cshtml" />
-    <Content Include="Views\Inventory\Manage.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Shared\_SupplierTable.cshtml" />
   </ItemGroup>

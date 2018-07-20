@@ -8,8 +8,8 @@
 <body>
 
     <div style="width:90%; margin:0 auto" class="tablecontainer">
-        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
-        <table id="myTable">
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Inventory Item</a>
+        <table id="itemTable">
             <thead>
                 <tr>
                     <th>Item Number</th>
@@ -35,7 +35,7 @@
 
     <script>
         $(document).ready(function () {
-            var oTable = $('#myTable').DataTable({
+            var oTable = $('#itemTable').DataTable({
 
                 "ajax": {
                     "url": '/Inventory/LoadItems',
