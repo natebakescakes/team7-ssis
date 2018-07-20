@@ -237,6 +237,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Migrations\201807140620547_InitialCreate.cs" />
     <Compile Include="Migrations\201807140620547_InitialCreate.Designer.cs">
       <DependentUpon>201807140620547_InitialCreate.cs</DependentUpon>
@@ -312,8 +313,10 @@
     <Compile Include="Services\ItemPriceService.cs" />
     <Compile Include="Services\PurchaseOrderService.cs" />
     <Compile Include="Services\RetrievalService.cs" />
+    <Compile Include="Services\StatusService.cs" />
     <Compile Include="Services\StockAdjustmentService.cs" />
     <Compile Include="Services\StockMovementService.cs" />
+    <Compile Include="Services\TitleService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
@@ -385,8 +388,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
-	 <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
-    
+    <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
