@@ -4,6 +4,19 @@
 @{
     ViewBag.Title = "Manage Purchase Order";
 }
+
+
+@section scripts {
+    <script src="~/Scripts/purchaseOrderJS.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+    
+
+}
+
 <!DOCTYPE html>
 
 <html>
@@ -14,15 +27,21 @@
 <body>
     <div>
         <h2>Manage Purchase Order</h2>
-        <table>
-            @{
-                var data = (List<PurchaseOrder>)ViewData["poList"];
-            }
-            @foreach (var po in @data)
-            {
-                <tr><td> @po.PurchaseOrderNo </td></tr>
-            }
-        </table>
+        <div style="width:90%; margin:0 auto" class="tablecontainer">
+
+            <table id="poTable">
+                <thead>
+                    <tr>
+                        <th>Purchase Order No</th>
+                        <th>Supplier Name</th>
+                        <th>Created Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+
     </div>
 </body>
 </html>
