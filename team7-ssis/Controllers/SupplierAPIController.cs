@@ -15,8 +15,8 @@ namespace team7_ssis.Controllers
         static ApplicationDbContext context = new ApplicationDbContext();
         SupplierService supplierService = new SupplierService(context);
 
-        [Route("api/suppliers/all")]
-       [HttpGet]
+        [Route("api/supplier/all")]
+        [HttpGet]
         public IEnumerable<SupplierViewModel> Suppliers()
         {
             List<Supplier> list = supplierService.FindAllSuppliers();

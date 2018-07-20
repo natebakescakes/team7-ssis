@@ -2,9 +2,13 @@
 @{
     ViewBag.Title = "Index";
 }
+@{
+    Layout = null;
+}
+
+
 
 <h2>Supplier</h2>
 
-<button class="btn-block" type="submit">Add New Supplier</button>
+@Html.Partial("_SupplierTable")
 
-@Html.Partial("_suppliertable", ViewData["supplierList"])

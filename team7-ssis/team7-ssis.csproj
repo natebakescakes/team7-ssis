@@ -384,7 +384,7 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Inventory\Manage.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
-    <Content Include="Views\Shared\_suppliertable.cshtml" />
+    <Content Include="Views\Shared\_SupplierTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

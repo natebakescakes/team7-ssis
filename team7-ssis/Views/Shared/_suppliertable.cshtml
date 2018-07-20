@@ -1,37 +1,58 @@
-﻿this is the supplier table partial view
+﻿
+@{
+    Layout = null;
+}
 
 
-<div style="width:90%; margin:0 auto" class="tablecontainer">
-    <table id="myTable">
-        <thead>
-            <tr>
-                <th>Supplier Code</th>
-                <th>Company Name</th>
-                <th>Contact Name</th>
-                <th>Phone Number</th>
-                <th>Fax Number</th>
-                <th>Address</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <style>
+        span.field-validation-error {
+            color: red;
+        }
+    </style>
+</head>
 
-@section scripts {
+<body>
+
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>Supplier Code</th>
+                    <th>Company Name</th>
+                    <th>Contact Name</th>
+                    <th>Phone Number</th>
+                    <th>Fax Number</th>
+                    <th>Address</th>
+
+
+
+                </tr>
+            </thead>
+
+        </table>
+    </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-   
-    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+
 
     <script>
         $(document).ready(function () {
             var oTable = $('#myTable').DataTable({
                 "ajax": {
-                    "url": '@Url.Action("loaddata", "Supplier")',
+                    "url": '/Supplier/loaddata',
                     "type": "get",
                     "datatype": "json"
                 },
-
                 "columns": [
                     { "data": "SupplierCode", "autoWidth": true },
                     { "data": "Name", "autoWidth": true },
@@ -40,12 +61,63 @@
                     { "data": "FaxNumber", "autoWidth": true },
                     { "data": "Address", "autoWidth": true },
 
+
                 ]
+
             });
+
+
+            $('.tablecontainer').on('click', 'a.popup', function (e) {
+                e.preventDefault();
+                OpenPopup($(this).attr('href'));
+            })
+
+            function OpenPopup(pageUrl) {
+                var $pageContent = $('<div/>');
+                $pageContent.load(pageUrl, function () {
+                    $('#popupForm', $pageContent).removeData('validator');
+                    $('#popupForm', $pageContent).removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse('form');
+
+                });
+
+                $dialog = $('<div class="popupWindow" style="overflow:auto"></div>')
+                    .html($pageContent)
+                    .dialog({
+                        draggable: false,
+                        autoOpen: false,
+                        resizable: false,
+                        model: true,
+                        height: 550,
+                        width: 600,
+                        close: function () {
+                            $dialog.dialog('destroy').remove();
+                        }
+                    })
+
+
+                $('.popupWindow').on('submit', '#popupForm', function (e) {
+                    var url = $('#popupForm')[0].action;
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: $('#popupForm').serialize(),
+                        success: function (data) {
+                            if (data.status) {
+                                $dialog.dialog('close');
+                                oTable.ajax.reload();
+                            }
+                        }
+                    })
+
+                    e.preventDefault();
+                })
+                $dialog.dialog('open');
+            }
+
 
         })
 
-
     </script>
 
-}
+</body>
