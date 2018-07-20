@@ -13,6 +13,9 @@ namespace team7_ssis.Services
         DisbursementRepository disbursementRepository;
         DisbursementDetailRepository disbursementDetailRepository;
         StatusRepository statusRepository;
+        ItemService itemService;
+        StockMovementService stockMovementService;
+
 
         public DisbursementService(ApplicationDbContext context)
         {
@@ -20,6 +23,8 @@ namespace team7_ssis.Services
             disbursementRepository = new DisbursementRepository(context);
             disbursementDetailRepository = new DisbursementDetailRepository(context);
             statusRepository = new StatusRepository(context);
+            itemService = new ItemService(context);
+            stockMovementService = new StockMovementService(context);
         }
 
         public List<Disbursement> FindAllDisbursements()
@@ -53,10 +58,7 @@ namespace team7_ssis.Services
 
         public Disbursement ConfirmCollection(string DisbursementId)
         {
-            //initiate services needed
-            ItemService itemService = new ItemService(context);
-            StockMovementService stockMovementService = new StockMovementService(context);
-
+                      
             //get the disbursement object
             Disbursement disbursement = this.FindDisbursementById(DisbursementId);
 
@@ -64,6 +66,7 @@ namespace team7_ssis.Services
             disbursement.Status = statusRepository.FindById(10);
             disbursement.CollectedDateTime = DateTime.Now;
             disbursement.CollectedBy = disbursement.Retrieval.Requisitions.First().CreatedBy;
+
             return this.Save(disbursement);
 
          }
