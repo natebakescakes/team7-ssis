@@ -1,6 +1,6 @@
 ﻿
 @{
-    
+
 }
 
 <h2>Make Stock Adjustment</h2>
@@ -27,36 +27,40 @@
     </table>
     <br />
 </div>
+<table>
+    <tr>
+        <td width="400" align="left"> <input type="button" value="Add Item" onclick="location.href='@Url.Action("list","ItemController")'"></td>
+        <td width="400" align="right"> <input type="button" value="Save as Draft" onclikc="location.href='@Url.Action("SaveAsDraft","StockAdjustmentController")'"></td>
+    </tr>
+</table>
+<br />
+<div>
 
-    <input type="button" value="Add Item" onclick="location.href='@Url.Action("list","ItemController")'">
-    <br/>
+    <br />
     <div>
-
-        <br />
-        <div>
-            here is a datatables
-        </div>
-        <br />
-
-        <table>
-            <tr>
-                <td width="400"> Authorising Supervisor</td>
-                <td width="400"> Authorising Manager</td>
-
-            </tr>
-            <tr>
-                <td width="400">dropdownlist @*@Html.DropDownList("supervisors")*@  </td>
-                <td width="400">dropdownlist@*@Html.DropDownList("managers")*@</td>
-
-            </tr>
-        </table>
-        <br />
-
-        <input type="button" value="cancel" onclik="location.href='@Url.Action("Home","StockAdjustmentController")'">
-        <input type="button" value="Save" onclikc="location.href='@Url.Action("SaveAsDraft","StockAdjustmentComtroller")'">
-        <input type="button" value="Submit" onclikc="location.href='@Url.Action("SubmitAsPending","StockAdjustmentComtroller")'">
-
+        here is a datatables
     </div>
+    <br />
+
+    <table>
+        <tr>
+            <td width="400"> Authorising Supervisor</td>
+            <td width="400"> Authorising Manager</td>
+
+        </tr>
+        <tr>
+            <td width="400">dropdownlist @*@Html.DropDownList("supervisors")*@  </td>
+            <td width="400">dropdownlist@*@Html.DropDownList("managers")*@</td>
+
+        </tr>
+    </table>
+    <br />
+
+    <input type="button" value="cancel" onclik="location.href='@Url.Action("Cancel","StockAdjustmentController")'">
+
+    <input type="button" value="Submit" onclikc="location.href='@Url.Action("Submit","StockAdjustmentController")'">
+
+</div>
 
 
 

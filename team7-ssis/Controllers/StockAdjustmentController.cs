@@ -17,8 +17,6 @@ namespace team7_ssis.Controllers
         // GET: StockAdjustment
         public ActionResult Home()
          {
-           //var supervisors=
-
             return View();
           }
 
@@ -34,6 +32,10 @@ namespace team7_ssis.Controllers
         {
             return View();
         }
-        
+
+
+      
+           
+
     }
 }

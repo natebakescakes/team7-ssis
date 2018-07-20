@@ -317,6 +317,8 @@
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
+    <Compile Include="ViewModels\StockAdjustmentListViewModel.cs" />
+    <Compile Include="ViewModels\StockAdjustmentViewModel.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +346,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.4.2.debug.js" />
+    <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -384,8 +388,8 @@
     <Content Include="Views\StockAdjustment\Add.cshtml" />
     <Content Include="Views\StockAdjustment\List.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
-    <Content Include="Views\StockAdjustment\SubmitAsPending.cshtml" />
     <Content Include="Views\Inventory\Manage.cshtml" />
+    <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
