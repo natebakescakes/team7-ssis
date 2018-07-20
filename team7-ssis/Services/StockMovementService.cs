@@ -43,5 +43,10 @@ namespace team7_ssis.Services
         {
             return stockmovementRepository.Save(stockMovement);
         }
+
+        public StockMovement CreateStockMovement()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
