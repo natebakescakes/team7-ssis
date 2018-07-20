@@ -391,8 +391,9 @@ namespace team7_ssis.Tests.Services
         }
 
 
-        [TestMethod()]
-        public void DeleteAll()
+        
+        [TestCleanup]
+        public void CleanAllObjectCreated()
         {
             string[] ids = new string[]
             { "he01","he02","he03","he04","he05","he06","he07","he08","he09" };
