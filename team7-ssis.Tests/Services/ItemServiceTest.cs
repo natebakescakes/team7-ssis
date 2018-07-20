@@ -19,7 +19,6 @@ namespace team7_ssis.Tests.Services
         ApplicationDbContext context;
         ItemService itemService;
         ItemRepository itemRepository;
-        InventoryRepository inventoryRepository;
 
         [TestInitialize]
         public void TestInitialize()
@@ -57,8 +56,10 @@ namespace team7_ssis.Tests.Services
         public void FindItemsByCategoryTest()
         {
             //Arrange
-            ItemCategory i = new ItemCategory();
-            i.ItemCategoryId = 2;
+            ItemCategory i = new ItemCategory
+            {
+                ItemCategoryId = 2
+            };
 
             //Act
             var result = itemService.FindItemsByCategory(i);
@@ -87,9 +88,11 @@ namespace team7_ssis.Tests.Services
         public void SaveItemTest()
         {
             //Arrage
-            Item i = new Item();
-            i.ItemCode = "BBB";
-            i.CreatedDateTime = DateTime.Now;
+            Item i = new Item
+            {
+                ItemCode = "BBB",
+                CreatedDateTime = DateTime.Now
+            };
 
             //Act
             var result = itemService.Save(i,20);
@@ -105,9 +108,11 @@ namespace team7_ssis.Tests.Services
         public void SaveInventoryTest()
         {
             //Arrange
-            Item i = new Item();
-            i.ItemCode = "CCC";
-            i.CreatedDateTime = DateTime.Now;
+            Item i = new Item
+            {
+                ItemCode = "CCC",
+                CreatedDateTime = DateTime.Now
+            };
             new ItemRepository(context).Save(i);
 
             //Act
@@ -124,9 +129,11 @@ namespace team7_ssis.Tests.Services
         public void DeleteItemTest()
         {
             //Arrage
-            Item i = new Item();
-            i.ItemCode = "DDD";
-            i.CreatedDateTime = DateTime.Now;
+            Item i = new Item
+            {
+                ItemCode = "DDD",
+                CreatedDateTime = DateTime.Now
+            };
             itemService.Save(i, 20);
 
             //Act
@@ -141,9 +148,11 @@ namespace team7_ssis.Tests.Services
         public void UpdateQuantityTest()
         {
             //Arrange
-            Item i = new Item();
-            i.ItemCode = "EEE";
-            i.CreatedDateTime = DateTime.Now;
+            Item i = new Item
+            {
+                ItemCode = "EEE",
+                CreatedDateTime = DateTime.Now
+            };
             itemService.Save(i, 20);
 
             //Act
