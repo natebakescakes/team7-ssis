@@ -47,7 +47,7 @@ namespace team7_ssis.Tests.Services
             var result = departmentService.FindUsersByDepartment(department);
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(ApplicationUser));
-            result.ForEach(x => Assert.AreEqual("COMM", x.Department));
+            result.ForEach(x => Assert.AreEqual("COMM", x.Department.DepartmentCode));
         }
         [TestMethod]
         public void FindUsersByDepartmentNotNullTest()
