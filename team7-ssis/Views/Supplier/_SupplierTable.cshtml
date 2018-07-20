@@ -11,7 +11,7 @@
 
     <div style="width:90%; margin:0 auto" class="tablecontainer">
         <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
-        <table id="myTable">
+        <table id="myTable" class="hover">
             <thead>
                 <tr>
                     <th>Supplier Code</th>
@@ -33,19 +33,16 @@
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
 
     <script>
         $(document).ready(function () {
             var oTable = $('#myTable').DataTable({
+                
+                sAjaxSource: "api/supplier/all",
+                sAjaxDataProp: "",
                
-                "ajax": {
-                    "url": '/Supplier/loaddata',
-                    "type": "get",
-                    "datatype": "json"
-                },
-                select:'single',
-                "columns": [
+                 columns: [
                     { "data": "SupplierCode", "autoWidth": true },
                     { "data": "Name", "autoWidth": true },
                     { "data": "ContactName", "autoWidth": true },
@@ -54,12 +51,15 @@
                     { "data": "Address", "autoWidth": true },
 
 
-                ]
+                ],
+                 select: 'single'
 
             });
-          
 
-        
+         
+
+
+
         })
 
     </script>
