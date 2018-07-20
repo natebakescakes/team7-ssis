@@ -180,7 +180,7 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             result.ForEach(x => Assert.IsTrue(x.Status.StatusId == 11 || x.Status.StatusId == 12));
-            Assert.AreEqual(result.Count(), 2);
+            Assert.AreEqual(result.Count(), 3);
 
             //teardown
             purchaseOrderRepository.Delete(p1);

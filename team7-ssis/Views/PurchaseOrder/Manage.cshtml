@@ -1,0 +1,29 @@
+﻿
+@using team7_ssis.Models
+@model IEnumerable<PurchaseOrder>
+@{
+    ViewBag.Title = "Manage Purchase Order";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <h2>Manage Purchase Order</h2>
+        <table>
+            @{
+                var data = (List<PurchaseOrder>)ViewData["poList"];
+            }
+            @foreach (var po in @data)
+            {
+                <tr><td> @po.PurchaseOrderNo </td></tr>
+            }
+        </table>
+    </div>
+</body>
+</html>
+
