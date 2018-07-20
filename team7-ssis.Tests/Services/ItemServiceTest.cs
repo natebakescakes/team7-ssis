@@ -35,7 +35,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindItemByItemCodeTest()
+        public void FindItemByItemCodeTest() 
         {
             //Arrange
             string test = "C001";
@@ -49,7 +49,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindItemsByCategory()
+        public void FindItemsByCategoryTest()
         {
             //Arrange
             ItemCategory i = new ItemCategory();
@@ -60,6 +60,22 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+            
+        }
+
+        [TestMethod]
+        public void FindItemQuantityLessThanReorderLevel()
+        {
+            //Act
+            var result = itemService.FindItemQuantityLessThanReorderLevel();
+
+            //Assert
+            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+            foreach (Item element in result)
+            {
+                Assert.IsTrue(element.Inventory.Quantity < element.ReorderLevel);
+            }
+
         }
 
         [TestMethod]

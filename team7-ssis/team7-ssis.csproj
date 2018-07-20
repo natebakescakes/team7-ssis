@@ -225,12 +225,15 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\PurchaseOrderApiController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SupplierAPIController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -299,6 +302,7 @@
     <Compile Include="Repositories\TitleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\CollectionPointService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\RequisitionService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\DeliveryOrderService.cs" />
@@ -315,6 +319,7 @@
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
+    <Compile Include="ViewModels\SupplierViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
@@ -383,6 +388,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Inventory\Manage.cshtml" />
+    <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\Supplier\_SupplierTable.cshtml" />
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
