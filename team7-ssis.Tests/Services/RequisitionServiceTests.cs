@@ -132,28 +132,21 @@ namespace team7_ssis.Services.Tests
         [TestMethod()]
         public void CreateDisbursementForEachDepartmentTest()
         {
-            //// Arrange
+            // Arrange
 
-            // get Departments
-            Department d1 = context.Department.ToList()[0];
-            Department d2 = context.Department.ToList()[1];
-
-            // Create expected result
-            HashSet<Department> expected = new HashSet<Department> { d1, d2 };
-
-            // Create mock Requisition list
             List<Requisition> reqList = new List<Requisition>();
-            Requisition r1 = new Requisition();
-            r1.Department = d1;
-            Requisition r2 = new Requisition();
-            r2.Department = d2;
-            Requisition r3 = new Requisition();
-            r3.Department = d1;
-            reqList.Add(r1);
-            reqList.Add(r2);
-            reqList.Add(r3);
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").First());
 
             //// Act
+            HashSet<Department> expected = new HashSet<Department>
+            {
+                context.Department.Where(x => x.DepartmentCode == "COMM").First(),
+                context.Department.Where(x => x.DepartmentCode == "CPSC").First(),
+                context.Department.Where(x => x.DepartmentCode == "ENGL").First()
+            };
+
             List<Disbursement> result = requisitionService.CreateDisbursementForEachDepartment(reqList);
 
             //// Assert
