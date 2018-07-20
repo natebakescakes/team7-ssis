@@ -155,7 +155,7 @@ namespace team7_ssis.Tests.Services
             //clean
             deliveryOrderRepository.Delete(d1);
             po.Status = statusRepository.FindById(15);
-
+            purchaseOrderRepository.Save(po);
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@ namespace team7_ssis.Tests.Services
             var result = deliveryOrderService.SaveInventory(i, 40);
             Inventory inv = inventoryRepository.FindById("C002");
             inv.Quantity = 0;
-
+            inventoryRepository.Save(inv);
 
             //Arrange
             Assert.AreEqual("C002", result.ItemCode);
