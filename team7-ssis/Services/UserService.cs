@@ -16,7 +16,7 @@ namespace team7_ssis.Services
             this.context = context;
             this.userRepository = new UserRepository(context);
         }
-    
+
         public List<ApplicationUser> FindUserByDepartment(Department department)
         {
             return userRepository.FindByDepartment(department).ToList();
@@ -30,6 +30,11 @@ namespace team7_ssis.Services
         public ApplicationUser FindUserByEmail(string email)
         {
             return userRepository.FindByEmail(email);
+        }
+
+        public List<ApplicationUser> FindSupervisorsByDepartment(Department department)
+        {
+            return userRepository.FindSupervisorByDepartment(department).ToList();
         }
 
         public ApplicationUser Save(ApplicationUser user)
