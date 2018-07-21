@@ -30,6 +30,7 @@ namespace team7_ssis.Models
 
     public class EditProfileViewModel
     {
+        public string Title { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -46,10 +47,12 @@ namespace team7_ssis.Models
         public string LastName { get; set; }
         [Required]
         public string DepartmentCode { get; set; }
+        public string Department { get; set; }
         [Display(Name = "Department")]
         public IEnumerable<SelectListItem> Departments { get; set; }
         [Required]
         public string SupervisorEmail { get; set; }
+        public string Supervisor { get; set; }
         [Display(Name = "Supervisor")]
         public IEnumerable<SelectListItem> Supervisors { get; set; }
     }

@@ -394,6 +394,7 @@
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
+    <Content Include="Views\Manage\EditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

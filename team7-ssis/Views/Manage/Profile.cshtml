@@ -3,7 +3,7 @@
     ViewBag.Title = "View Profile";
 }
 
-<h2>View Profile</h2>
+<h2>@ViewBag.Title</h2>
 
 <h4>Your Profile</h4>
 <hr />
@@ -48,7 +48,7 @@
         <div class="col-md-offset-2 col-md-10">
             @*<input type="submit" class="btn btn-default" value="Profile" />*@
             @Html.ActionLink("Edit Profile", "EditProfile", "Manage",
-                new { id = 1 },
+                null,
                 new { @class = "btn btn-default" })
         </div>
     </div>

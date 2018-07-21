@@ -44,9 +44,9 @@ namespace team7_ssis.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -101,6 +101,87 @@ namespace team7_ssis.Controllers
                 Department = user.Department.Name,
                 Supervisor = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}"
             });
+        }
+
+        //
+        // GET: /Manage/EditProfile
+        public ActionResult EditProfile()
+        {
+            var user = UserManager.FindByName(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            return View(new EditProfileViewModel()
+            {
+                Title = user.Title.Name,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Department = user.Department.Name,
+                Supervisor = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}",
+
+                Titles = new SelectList(
+                    titleService.FindAllTitles().Select(x => new { Value = x.TitleId, Text = x.Name }),
+                    "Value",
+                    "Text",
+                    new { Value = user.Title.TitleId, Text = user.Title.Name }
+                ),
+                Departments = new SelectList(
+                    departmentService.FindAllDepartments().Select(x => new { Value = x.DepartmentCode, Text = x.Name }),
+                    "Value",
+                    "Text",
+                    new { Value = user.Department.DepartmentCode, Text = user.Department.Name }
+                ),
+                Supervisors = new SelectList(
+                    userService.FindAllUsers().Select(x => new { Value = x.Email, Text = $"{x.FirstName}{x.LastName}" }),
+                    "Value",
+                    "Text",
+                    new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}" }
+                )
+            });
+        }
+
+        //
+        // POST: /Manage/EditProfile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditProfile(EditProfileViewModel model)
+        {
+            var user = UserManager.FindByName(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+            if (ModelState.IsValid)
+            {
+                var context = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Department = new DepartmentService(context).FindDepartmentByDepartmentCode(model.DepartmentCode);
+                user.Supervisor = new UserService(context).FindUserByEmail(model.SupervisorEmail);
+                user.Title = new TitleService(context).FindTitleByTitleId(Int32.Parse(model.TitleId));
+                var result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Profile");
+                }
+                AddErrors(result);
+            }
+
+            model.Titles = new SelectList(
+                    titleService.FindAllTitles().Select(x => new { Value = x.TitleId, Text = x.Name }),
+                    "Value",
+                    "Text",
+                    new { Value = user.Title.TitleId, Text = user.Title.Name }
+                );
+            model.Departments = new SelectList(
+                departmentService.FindAllDepartments().Select(x => new { Value = x.DepartmentCode, Text = x.Name }),
+                "Value",
+                "Text",
+                new { Value = user.Department.DepartmentCode, Text = user.Department.Name }
+                );
+            model.Supervisors = new SelectList(
+                userService.FindAllUsers().Select(x => new { Value = x.Email, Text = $"{x.FirstName}{x.LastName}" }),
+                "Value",
+                "Text",
+                new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}" }
+            );
+
+            return View(model);
         }
 
         //
@@ -361,7 +442,7 @@ namespace team7_ssis.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -412,6 +493,6 @@ namespace team7_ssis.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }
