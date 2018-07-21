@@ -12,6 +12,7 @@ namespace team7_ssis.Services
         ApplicationDbContext context;
         DepartmentRepository departmentRepository;
         UserRepository userRepository;
+
         public DepartmentService(ApplicationDbContext context)
         {
             this.context = context;
@@ -32,6 +33,16 @@ namespace team7_ssis.Services
         public Department Save(Department department)
         {
             return departmentRepository.Save(department);
+        }
+
+        public List<Department> FindAllDepartments()
+        {
+            return departmentRepository.FindAll().ToList();
+        }
+
+        public Department FindDepartmentByDepartmentCode(string departmentCode)
+        {
+            return departmentRepository.FindById(departmentCode);
         }
     }
 }

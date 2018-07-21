@@ -17,17 +17,27 @@ namespace team7_ssis.Controllers
 
         [Route("api/supplier/all")]
         [HttpGet]
-        public List<SupplierViewModel> Suppliers()
+        public IEnumerable<SupplierViewModel> Suppliers()
         {
-            return supplierService.FindAllSuppliers().Select(supplier => new SupplierViewModel()
+            List<Supplier> list = supplierService.FindAllSuppliers();
+            List<SupplierViewModel> suppliers = new List<SupplierViewModel>();
+
+            foreach (Supplier s in list)
             {
-                SupplierCode = supplier.SupplierCode,
-                Address = supplier.Address,
-                PhoneNumber = supplier.PhoneNumber,
-                ContactName = supplier.ContactName,
-                FaxNumber = supplier.FaxNumber,
-                Name = supplier.Name
-            }).ToList();
+                suppliers.Add(new SupplierViewModel
+                {
+                    SupplierCode = s.SupplierCode,
+                    Address = s.Address,
+                    PhoneNumber = s.PhoneNumber,
+                    ContactName = s.ContactName,
+                    FaxNumber = s.FaxNumber,
+                    Name = s.Name
+
+                });
+            }
+
+            return suppliers;
         }
+        
     }
 }
