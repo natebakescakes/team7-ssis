@@ -75,7 +75,7 @@ namespace team7_ssis.Tests.Services
             //Arrange
 
             //Act
-            var result = itemPriceService.FindItemPriceByPrioritySequence(3);
+            var result = itemPriceService.FindItemPriceByPrioritySequence(test);
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(ItemPrice));

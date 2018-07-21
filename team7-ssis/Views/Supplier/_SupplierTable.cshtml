@@ -9,7 +9,7 @@
 
 <body>
 
-    <div style="width:90%; margin:0 auto" class="tablecontainer">
+    <div style="width:90%; margin:0 auto" class="container">
         <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
         <table id="myTable" class="hover">
             <thead>
@@ -39,7 +39,7 @@
         $(document).ready(function () {
             var oTable = $('#myTable').DataTable({
                 
-                sAjaxSource: "api/supplier/all",
+                sAjaxSource: "/api/supplier/all",
                 sAjaxDataProp: "",
                
                  columns: [
