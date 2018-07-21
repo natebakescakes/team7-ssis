@@ -29,5 +29,20 @@ namespace team7_ssis.Repositories
         {
             return context.Users.Where(x => x.Department.DepartmentCode == department.DepartmentCode);
         }
+
+        /// <summary>
+        /// Finds users who are supervisors and match department
+        /// </summary>
+        /// <param name="department"></param>
+        /// <returns>IQueryable of matching users</returns>
+        public IQueryable<ApplicationUser> FindSupervisorByDepartment(Department department)
+        {
+            // list of supervisors
+            var supervisorList = context.Users.Select(x => x.Supervisor.UserName).Distinct();
+
+            return context.Users
+                .Where(x => x.Department.DepartmentCode == department.DepartmentCode &&
+                    supervisorList.Contains(x.UserName));
+        }
     }
 }
