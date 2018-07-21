@@ -79,5 +79,17 @@ namespace team7_ssis.Tests.Services
             Assert.IsFalse(result.Select(x => x.UserName).Contains(expected.UserName));
 
         }
+
+        [TestMethod]
+        public void FindSupervisorByDepartment_NullInput()
+        {
+            // Arrange
+
+            // Act
+            var result = userService.FindSupervisorsByDepartment(null);
+
+            // Assert
+            Assert.IsTrue(result.Count == 0);
+        }
     }
 }
