@@ -19,13 +19,27 @@ namespace team7_ssis.Controllers
         }
 
         [Route("api/users/supervisors/{departmentCode}")]
-        public IHttpActionResult GetSupervisors(string departmentCode)
+        public IHttpActionResult GetSupervisorsFromDepartment(string departmentCode)
         {
             var supervisors = new UserService(context).FindSupervisorsByDepartment(new DepartmentService(context).FindDepartmentByDepartmentCode(departmentCode));
 
             if (supervisors.Count == 0) return NotFound();
 
             return Ok(supervisors.Select(supervisor => new EmailNameViewModel
+            {
+                Email = supervisor.Email,
+                Name = $"{supervisor.FirstName} {supervisor.LastName}"
+            }));
+        }
+
+        [Route("api/users/{departmentCode}")]
+        public IHttpActionResult GetUsersFromDepartment(string departmentCode)
+        {
+            var users = new UserService(context).FindUsersByDepartment(new DepartmentService(context).FindDepartmentByDepartmentCode(departmentCode));
+
+            if (users.Count == 0) return NotFound();
+
+            return Ok(users.Select(supervisor => new EmailNameViewModel
             {
                 Email = supervisor.Email,
                 Name = $"{supervisor.FirstName} {supervisor.LastName}"
