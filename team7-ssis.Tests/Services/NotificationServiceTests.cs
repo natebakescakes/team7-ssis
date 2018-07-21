@@ -8,7 +8,7 @@ using team7_ssis.Services;
 namespace team7_ssis.Tests.Services
 {
     [TestClass]
-    public class NotificationServiceTest
+    public class NotificationServiceTests
     {
         ApplicationDbContext context;
         NotificationService notificationService;
@@ -31,7 +31,7 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = notificationService.CreateNotification(disbursement, notification.CreatedFor);
-            
+
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
@@ -48,7 +48,7 @@ namespace team7_ssis.Tests.Services
             int expected = 2;
             //Act
             var result = notificationService.CreateNotification(requisition, notification.CreatedFor);
-            
+
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
@@ -66,7 +66,7 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = notificationService.CreateNotification(stockAdjustment, notification.CreatedFor);
-            
+
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
             notificationRepository.Delete(result); //Delete test dummy object
@@ -98,7 +98,7 @@ namespace team7_ssis.Tests.Services
             NotificationType type = notification.NotificationType;
 
             int expected = context.Notification
-                .Where(x => x.NotificationType.NotificationTypeId==notification.NotificationType.NotificationTypeId)
+                .Where(x => x.NotificationType.NotificationTypeId == notification.NotificationType.NotificationTypeId)
                 .Count();
 
             //Act

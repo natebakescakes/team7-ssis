@@ -61,24 +61,41 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = disbursementService.Save(newDisbursement);
-
+            disbursementRepository.Delete(newDisbursement);
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
 
-            // CLEANUP
-            context.Disbursement.Remove(result);
-            context.SaveChanges();
+
         }
 
+        [TestMethod]
+        public void ConfirmCollectionTest()
+        {
+            int expected = 10;
 
+            //Act
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
+
+            Disbursement a = new Disbursement();
+            a.DisbursementId = IdService.GetNewDisbursementId(context);
+            retrieval.Requisitions.Add(context.Requisition.First());
+            a.Retrieval = retrieval;
+            a.CreatedDateTime = DateTime.Now;
+            disbursementService.Save(a);
+
+            var result = disbursementService.ConfirmCollection(a.DisbursementId);
+
+            //Asert
+            Assert.AreEqual(expected, result.Status.StatusId);
+        }
 
         [TestMethod]
-         public void FindDisbursementsByRetrievalIdTest()
+        public void FindDisbursementsByRetrievalIdTest()
         {
             //Arrange
 
             Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
-          
+
             Disbursement a = new Disbursement();
             a.DisbursementId = IdService.GetNewDisbursementId(context);
             a.Retrieval = retrieval;
@@ -88,7 +105,7 @@ namespace team7_ssis.Tests.Services
             Disbursement b = new Disbursement();
             b.DisbursementId = IdService.GetNewDisbursementId(context);
             b.Retrieval = retrieval;
-            b.CreatedDateTime = DateTime.Now;     
+            b.CreatedDateTime = DateTime.Now;
             disbursementService.Save(b);
 
             int expected = 2;
@@ -100,7 +117,7 @@ namespace team7_ssis.Tests.Services
             Assert.AreEqual(expected, result);
 
             //Delete dummy test objects in TestCleanUp
-           
+
         }
 
 
@@ -108,12 +125,12 @@ namespace team7_ssis.Tests.Services
         public void UpdateActualQuantityForDisbursementDetailTest()
         {
             //Arrange
-            Disbursement newDisbursement = context.Disbursement.Where(x=>x.DisbursementId=="TEST").First();
-      
+            Disbursement newDisbursement = context.Disbursement.Where(x => x.DisbursementId == "TEST").First();
+
             DisbursementDetail disbursementDetail = context.DisbursementDetail
                 .Where(x => x.DisbursementId == newDisbursement.DisbursementId).First();
 
-            int expected = 5;
+            int expected = 1;
 
             //Act
             var result = disbursementService.UpdateActualQuantityForDisbursementDetail(newDisbursement.DisbursementId, disbursementDetail.ItemCode, expected);
@@ -122,7 +139,7 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual(expected, result.DisbursementDetails.First().ActualQuantity);
-          
+
 
         }
 
@@ -132,13 +149,14 @@ namespace team7_ssis.Tests.Services
             Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
 
             List<Disbursement> list = disbursementService.FindDisbursementsByRetrievalId(retrieval.RetrievalId);
-            foreach(Disbursement d in list)
+            foreach (Disbursement d in list)
             {
                 //Delete dummy test objects
                 disbursementRepository.Delete(d);
-              
+
             }
 
         }
+
     }
 }
