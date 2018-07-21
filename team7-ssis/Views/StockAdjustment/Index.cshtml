@@ -1,13 +1,12 @@
 ﻿<head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
-
 </head>
 
 <body>
-
+    <h2>Manage Stock Adjustments</h2>
     <div style="width:90%; margin:0 auto" class="tablecontainer">
-        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Filter</a>
+      
         <table id="mySATable" class="hover">
             <thead>
                 <tr>
@@ -16,6 +15,7 @@
                     <th> ApprovedBySupervisor</th>
                     <th>CreatedDateTime</th>
                     <th>StatusName</th>
+                    <th>Detail</th>
                 </tr>
             </thead>
 
@@ -35,16 +35,26 @@
                 sAjaxSource: "/api/stockadjustment/all",
                 sAjaxDataProp: "",
 
-                 columns: [
-                     { "data": "StockAdjustmentId", "autoWidth": true },
-                     { "data": "CreatedBy", "autoWidth": true },
-                     { "data": "ApprovedBySupervisor", "autoWidth": true },
-                     { "data": "CreatedDateTime", "autoWidth": true },
-                     { "data": "StatusName", "autoWidth": true },
-                  
+                columns: [
+                    { data: "StockAdjustmentId", "autoWidth": true },
+                    { data: "CreatedBy", "autoWidth": true },
+                    { data: "ApprovedBySupervisor", "autoWidth": true },
+                    { data: "CreatedDateTime", "autoWidth": true },
+                    { data: "StatusName", "autoWidth": true },
+                    
 
                 ],
-                 select: 'single'
+                select: 'single',
+
+                //ColumnDefs: [{
+                //    "targets": 5,
+                //    "data": null,
+                //    "render": function (data, type, row) {
+                //        var id = '"' + row.id + '"';
+                //        var html = "<a href='javascript:void(0);'  class='delete btn btn-default btn-xs'>Details</a>"
+                //        return html;
+                //    }
+                //}],
 
             });
 

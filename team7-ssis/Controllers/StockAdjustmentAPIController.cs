@@ -23,7 +23,7 @@ namespace team7_ssis.Controllers
     
         [Route("api/stockadjustment/all")]
         [HttpGet]
-        public IEnumerable<StockAdjustmentViewModel> Suppliers()
+        public IEnumerable<StockAdjustmentViewModel> stockadjustments()
         {
             List<StockAdjustment> list = stockAdjustmentService.FindAllStockAdjustment();
             List<StockAdjustmentViewModel > sadj= new List<StockAdjustmentViewModel>();
@@ -31,26 +31,35 @@ namespace team7_ssis.Controllers
 
             foreach (StockAdjustment s in list)
             {
-                //StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
-                //sv.CreatedBy = " ";
-                //sv.StockAdjustmentId = s.StockAdjustmentId;
-                //sv.ApprovedBySupervisor = " ";
-                //sv.CreatedDateTime = s.CreatedDateTime;
-                //sv.StatusId = s.Status.StatusId;
-                //StockAdjustments.Add(sv);
                 sadj.Add(new StockAdjustmentViewModel
                 {
                     StockAdjustmentId = s.StockAdjustmentId,
-
-                    CreatedBy = (s.CreatedBy==null)?"":s.CreatedBy.FirstName,
-                    ApprovedBySupervisor = (s.ApprovedBySupervisor==null)?"":s.ApprovedBySupervisor.FirstName,
+                    CreatedBy = (s.CreatedBy == null) ? "" : s.CreatedBy.FirstName,
+                    ApprovedBySupervisor = (s.ApprovedBySupervisor == null) ? "" : s.ApprovedBySupervisor.FirstName,
                     CreatedDateTime = s.CreatedDateTime,
-                    StatusName = (s.Status == null) ? "" : s.Status.Name
+                    StatusName = (s.Status == null) ? "" : s.Status.Name,
+                    Link = "/StockAdjustment/"+s.StockAdjustmentId
                 });
 
             }
 
             return sadj;
+        }
+
+
+
+        [Route("api/supervisor/all")]
+        [HttpGet]
+
+        public IEnumerable<ApplicationUser>  AllSupervisors()
+        {
+            return null;
+        }
+        [Route("api/manager/all")]
+        [HttpGet]
+        public IEnumerable<ApplicationUser> AllManagers()
+        {
+            return null;
         }
 
     }
