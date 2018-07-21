@@ -136,10 +136,12 @@ namespace team7_ssis.Tests.Services
 
             DeliveryOrderDetail dod1 = new DeliveryOrderDetail();
             dod1.DeliveryOrderNo = "DDDD";
-            dod1.ItemCode = itemRepository.FindById("C003").ItemCode;
+            dod1.ItemCode = itemRepository.FindById("E030").ItemCode;
             dod1.PlanQuantity = 100;
             dod1.ActualQuantity = 50;
             dod1.Status = statusRepository.FindById(0);
+
+            Item i = itemRepository.FindById("E030");
 
             List<DeliveryOrderDetail> list= new List<DeliveryOrderDetail>();
             list.Add(dod1);
@@ -147,6 +149,7 @@ namespace team7_ssis.Tests.Services
 
             // Act
             var result = deliveryOrderService.Save(d1);
+            var result1 = stockMovementRepository.FindById(2);
 
             //Assert
             Assert.AreEqual("DDDD", result.DeliveryOrderNo);
@@ -156,22 +159,23 @@ namespace team7_ssis.Tests.Services
             deliveryOrderRepository.Delete(d1);
             po.Status = statusRepository.FindById(15);
             purchaseOrderRepository.Save(po);
+            stockMovementRepository.Delete(result1);
         }
 
         [TestMethod]
         public void SaveInventoryTest()
         {
             //Arrange
-            Item i= itemRepository.FindById("C002");
+            Item i= itemRepository.FindById("E030");
 
             //Act
-            var result = deliveryOrderService.SaveInventory(i, 40);
-            Inventory inv = inventoryRepository.FindById("C002");
+            var result = deliveryOrderService.SaveInventory(i, 50);
+            Inventory inv = inventoryRepository.FindById("E030");
             inv.Quantity = 0;
             inventoryRepository.Save(inv);
 
             //Arrange
-            Assert.AreEqual("C002", result.ItemCode);
+            Assert.AreEqual("E030", result.ItemCode);
         }
 
         [TestMethod]
@@ -179,6 +183,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             Item i = itemRepository.FindById("E030");
+
             PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
 
             DeliveryOrder d1 = new DeliveryOrder();
@@ -188,7 +193,7 @@ namespace team7_ssis.Tests.Services
 
             DeliveryOrderDetail dod1 = new DeliveryOrderDetail();
             dod1.DeliveryOrder = d1;
-            dod1.Item = itemRepository.FindById("E030");
+            dod1.Item = i;
             dod1.PlanQuantity = 100;
             dod1.ActualQuantity = 50;
 
@@ -200,7 +205,7 @@ namespace team7_ssis.Tests.Services
           
 
             //Act
-            var result = deliveryOrderService.SaveStockMovement(dod1,i, 40);
+            var result = deliveryOrderService.SaveStockMovement(dod1,i, 50);
 
             //Arrange
             Assert.AreEqual("E030",result.Item.ItemCode);
