@@ -19,5 +19,10 @@ namespace team7_ssis.Controllers
         {
             return View("ReceiveGoods");
         }
+
+        public ActionResult OutstandingItems()
+        {
+            return View();
+        }
     }
 }

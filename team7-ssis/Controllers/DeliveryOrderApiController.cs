@@ -16,18 +16,20 @@ namespace team7_ssis.Controllers
     {
         static ApplicationDbContext context = new ApplicationDbContext();
         DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
+        ItemService itemService = new ItemService(context);
 
         [Route("api/receivegoods/all")]
         [HttpGet]
         public List<DeliveryOrderViewModel> DeliveryOrders()
         {
-            return deliveryOrderService.FindAllDeliveryOrders().Select(deliveryOrder => new DeliveryOrderViewModel()
+            return deliveryOrderService.FindAllDeliveryOrders().Select(x => new DeliveryOrderViewModel()
                 {
-                DeliveryOrderNo = deliveryOrder.DeliveryOrderNo,
+                DeliveryOrderNo = x.DeliveryOrderNo,
 
-                PurchaseOrder_PurchaseOrderNo = deliveryOrder.PurchaseOrder.PurchaseOrderNo,
+                PurchaseOrder_PurchaseOrderNo = x.PurchaseOrder.PurchaseOrderNo,
 
-                 Supplier_SupplierCode = deliveryOrder.Supplier.SupplierCode
+                 Supplier_SupplierCode = x.Supplier.SupplierCode,
+                 
                 }).ToList();
          }
     }
