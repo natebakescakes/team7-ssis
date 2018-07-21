@@ -73,6 +73,7 @@ namespace team7_ssis.Tests.Services
         public void FindItemPriceByPrioritySequenceTest()
         {
             //Arrange
+            var test = 3;
 
             //Act
             var result = itemPriceService.FindItemPriceByPrioritySequence(test);
