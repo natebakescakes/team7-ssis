@@ -1,0 +1,51 @@
+﻿<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+</head>
+
+<body>
+
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
+        <table id="myTable" class="hover">
+            <thead>
+                <tr>
+                    <th>Requisition</th>
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#myTable').DataTable({
+
+                sAjaxSource: "api/reqdetail/all",
+                sAjaxDataProp: "",
+
+                 columns: [
+                     { "data": "Requisition", "autoWidth": true },
+                     { "data": "ItemCode", "autoWidth": true },
+                     { "data": "Description", "autoWidth": true },
+                     { "data": "Quantity", "autoWidth": true },
+                     { "data": "Status", "autoWidth": true },
+                ],
+                 select: 'single'
+            });
+        })
+
+    </script>
+</body>
