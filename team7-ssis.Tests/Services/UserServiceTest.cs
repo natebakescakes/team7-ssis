@@ -91,5 +91,17 @@ namespace team7_ssis.Tests.Services
             // Assert
             Assert.IsTrue(result.Count == 0);
         }
+
+        [TestMethod]
+        public void FindUserByDepartment_NullInput()
+        {
+            // Arrange
+
+            // Act
+            var result = userService.FindUsersByDepartment(null);
+
+            // Assert
+            Assert.IsTrue(result.Count == 0);
+        }
     }
 }

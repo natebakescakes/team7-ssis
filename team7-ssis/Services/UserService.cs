@@ -17,8 +17,10 @@ namespace team7_ssis.Services
             this.userRepository = new UserRepository(context);
         }
 
-        public List<ApplicationUser> FindUserByDepartment(Department department)
+        public List<ApplicationUser> FindUsersByDepartment(Department department)
         {
+            if (department == null) return new List<ApplicationUser>();
+
             return userRepository.FindByDepartment(department).ToList();
         }
 

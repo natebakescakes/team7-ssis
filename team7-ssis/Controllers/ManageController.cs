@@ -131,11 +131,10 @@ namespace team7_ssis.Controllers
                     "Value",
                     "Text"
                 ),
-                Supervisors = new SelectList(
-                    userService.FindAllUsers().Select(x => new { Value = x.Email, Text = $"{x.FirstName}{x.LastName}" }),
-                    "Value",
-                    "Text"
-                )
+                Supervisors = new SelectList(new[]
+                {
+                new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" },
+                }, "Value", "Text")
             });
         }
 
@@ -175,12 +174,10 @@ namespace team7_ssis.Controllers
                 "Text",
                 new { Value = user.Department.DepartmentCode, Text = user.Department.Name }
                 );
-            model.Supervisors = new SelectList(
-                userService.FindAllUsers().Select(x => new { Value = x.Email, Text = $"{x.FirstName}{x.LastName}" }),
-                "Value",
-                "Text",
-                new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}" }
-            );
+            model.Supervisors = new SelectList(new[]
+            {
+                new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" },
+            }, "Value", "Text");
 
             return View(model);
         }
