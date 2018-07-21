@@ -8,7 +8,7 @@ using team7_ssis.Services;
 namespace team7_ssis.Tests.Services
 {
     [TestClass]
-    public class NotificationServiceTest
+    public class NotificationServiceTests
     {
         ApplicationDbContext context;
         NotificationService notificationService;

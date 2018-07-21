@@ -130,7 +130,7 @@ namespace team7_ssis.Tests.Services
             DisbursementDetail disbursementDetail = context.DisbursementDetail
                 .Where(x => x.DisbursementId == newDisbursement.DisbursementId).First();
 
-            int expected = 5;
+            int expected = 1;
 
             //Act
             var result = disbursementService.UpdateActualQuantityForDisbursementDetail(newDisbursement.DisbursementId, disbursementDetail.ItemCode, expected);

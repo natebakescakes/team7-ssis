@@ -9,7 +9,7 @@ using team7_ssis.Services;
 namespace team7_ssis.Tests.Services
 {
     [TestClass]
-    public class SupplierServiceTest
+    public class SupplierServiceTests
     {
         ApplicationDbContext context;
         SupplierService supplierService;

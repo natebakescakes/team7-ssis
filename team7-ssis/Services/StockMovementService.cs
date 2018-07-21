@@ -58,6 +58,7 @@ namespace team7_ssis.Services
         {
             StockMovement sm = this.InstantiateStockMovement();
             sm.DisbursementDetail = detail;
+            sm.Item = detail.Item;
             sm.OriginalQuantity = detail.Item.Inventory.Quantity;
             sm.AfterQuantity =sm.OriginalQuantity - detail.ActualQuantity;
 
@@ -71,6 +72,7 @@ namespace team7_ssis.Services
         {
             StockMovement sm = this.InstantiateStockMovement();
             sm.DeliveryOrderDetail = detail;
+            sm.Item = detail.Item;
             sm.OriginalQuantity = detail.Item.Inventory.Quantity;
             sm.AfterQuantity = sm.OriginalQuantity + detail.ActualQuantity;
 
@@ -84,6 +86,7 @@ namespace team7_ssis.Services
         {
             StockMovement sm = this.InstantiateStockMovement();
             sm.StockAdjustmentDetail = detail;
+            sm.Item = detail.Item;
             sm.OriginalQuantity = detail.Item.Inventory.Quantity; //should be same as detail.OriginalQuantity
             sm.AfterQuantity = detail.AfterQuantity;
 

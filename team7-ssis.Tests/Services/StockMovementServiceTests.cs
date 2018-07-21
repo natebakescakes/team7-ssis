@@ -8,11 +8,12 @@ using team7_ssis.Services;
 namespace team7_ssis.Tests.Services
 {
     [TestClass]
-    public class StockMovementTest
+    public class StockMovementServiceTests
     {
         ApplicationDbContext context;
         StockMovementService stockmovementService;
         StockMovementRepository stockmovementRepository;
+        ItemService itemService;
 
         [TestInitialize]
         public void TestInitialize()
@@ -20,6 +21,7 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             stockmovementRepository = new StockMovementRepository(context);
             stockmovementService = new StockMovementService(context);
+            itemService = new ItemService(context);
 
         }
         [TestMethod]
@@ -105,6 +107,60 @@ namespace team7_ssis.Tests.Services
 
 
         }
+
+        [TestMethod]
+        public void CreateDisbursementStockMovementTest()
+        {
+            //Arrange
+            DisbursementDetail detail = context.DisbursementDetail.First();
+            int expected = detail.Item.Inventory.Quantity;
+
+            //Act
+           var result = stockmovementService.CreateStockMovement(detail);
+
+            //Assert
+            Assert.AreEqual(detail.DisbursementId, result.DisbursementId);
+
+            //Clean-up
+            itemService.UpdateQuantity(detail.Item, expected); //reset item quantity after stock movement test
+            stockmovementRepository.Delete(result);
+        }
+
+        [TestMethod]
+        public void CreateStockAdjustmentStockMovementTest()
+        {
+            //Arrange
+            StockAdjustmentDetail detail = context.StockAdjustmentDetail.First();
+            int expected = detail.Item.Inventory.Quantity;
+
+            //Act
+            var result = stockmovementService.CreateStockMovement(detail);
+
+            //Assert
+            Assert.AreEqual(detail.StockAdjustmentId, result.StockAdjustmentId);
+
+            //Clean-up
+            itemService.UpdateQuantity(detail.Item, expected); //reset item quantity after stock movement test
+            stockmovementRepository.Delete(result);
+        }
+        [TestMethod]
+        public void CreateDeliveryOrderStockMovementTest()
+        {
+            //Arrange
+            DeliveryOrderDetail detail = context.DeliveryOrderDetail.First();
+            int expected = detail.Item.Inventory.Quantity;
+
+            //Act
+            var result = stockmovementService.CreateStockMovement(detail);
+
+            //Assert
+            Assert.AreEqual(detail.DeliveryOrderNo, result.DeliveryOrderNo);
+
+            //Clean-up
+            itemService.UpdateQuantity(detail.Item, expected); //reset item quantity after stock movement test
+            stockmovementRepository.Delete(result);
+        }
+
         [TestCleanup]
         public void TestCleanUp()
         {
