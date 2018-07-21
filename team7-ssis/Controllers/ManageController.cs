@@ -117,23 +117,24 @@ namespace team7_ssis.Controllers
                 Department = user.Department.Name,
                 Supervisor = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}",
 
+                TitleId = $"{user.Title.TitleId}",
+                DepartmentCode = user.Department.DepartmentCode,
+                SupervisorEmail = user.Supervisor.Email,
+
                 Titles = new SelectList(
                     titleService.FindAllTitles().Select(x => new { Value = x.TitleId, Text = x.Name }),
                     "Value",
-                    "Text",
-                    new { Value = user.Title.TitleId, Text = user.Title.Name }
+                    "Text"
                 ),
                 Departments = new SelectList(
                     departmentService.FindAllDepartments().Select(x => new { Value = x.DepartmentCode, Text = x.Name }),
                     "Value",
-                    "Text",
-                    new { Value = user.Department.DepartmentCode, Text = user.Department.Name }
+                    "Text"
                 ),
                 Supervisors = new SelectList(
                     userService.FindAllUsers().Select(x => new { Value = x.Email, Text = $"{x.FirstName}{x.LastName}" }),
                     "Value",
-                    "Text",
-                    new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}" }
+                    "Text"
                 )
             });
         }
