@@ -9,7 +9,6 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Web;
 
 namespace team7_ssis.Tests.Services
 {
@@ -20,7 +19,6 @@ namespace team7_ssis.Tests.Services
         DeliveryOrderService deliveryOrderService;
         DeliveryOrderRepository deliveryOrderRepository;
         PurchaseOrderRepository purchaseOrderRepository;
-        DeliveryOrderDetail deliveryOrderDetail;
         StatusRepository statusRepository;
         InventoryRepository inventoryRepository;
         ItemRepository itemRepository;
@@ -129,22 +127,28 @@ namespace team7_ssis.Tests.Services
             // Arrange
            
             PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
-            DeliveryOrder d1 = new DeliveryOrder();
-            d1.DeliveryOrderNo = "DDDD";
-            d1.PurchaseOrder = po;
-            d1.CreatedDateTime = DateTime.Now;
+            DeliveryOrder d1 = new DeliveryOrder
+            {
+                DeliveryOrderNo = "DDDD",
+                PurchaseOrder = po,
+                CreatedDateTime = DateTime.Now
+            };
 
-            DeliveryOrderDetail dod1 = new DeliveryOrderDetail();
-            dod1.DeliveryOrderNo = "DDDD";
-            dod1.ItemCode = itemRepository.FindById("E030").ItemCode;
-            dod1.PlanQuantity = 100;
-            dod1.ActualQuantity = 50;
-            dod1.Status = statusRepository.FindById(0);
+            DeliveryOrderDetail dod1 = new DeliveryOrderDetail
+            {
+                DeliveryOrderNo = "DDDD",
+                ItemCode = itemRepository.FindById("E030").ItemCode,
+                PlanQuantity = 100,
+                ActualQuantity = 50,
+                Status = statusRepository.FindById(0)
+            };
 
             Item i = itemRepository.FindById("E030");
 
-            List<DeliveryOrderDetail> list= new List<DeliveryOrderDetail>();
-            list.Add(dod1);
+            List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>
+            {
+                dod1
+            };
             d1.DeliveryOrderDetails = list;
 
             // Act
@@ -186,19 +190,25 @@ namespace team7_ssis.Tests.Services
 
             PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
 
-            DeliveryOrder d1 = new DeliveryOrder();
-            d1.DeliveryOrderNo = "DDDD";
-            d1.PurchaseOrder = po;
-            d1.CreatedDateTime = DateTime.Now;
+            DeliveryOrder d1 = new DeliveryOrder
+            {
+                DeliveryOrderNo = "DDDD",
+                PurchaseOrder = po,
+                CreatedDateTime = DateTime.Now
+            };
 
-            DeliveryOrderDetail dod1 = new DeliveryOrderDetail();
-            dod1.DeliveryOrder = d1;
-            dod1.Item = i;
-            dod1.PlanQuantity = 100;
-            dod1.ActualQuantity = 50;
+            DeliveryOrderDetail dod1 = new DeliveryOrderDetail
+            {
+                DeliveryOrder = d1,
+                Item = i,
+                PlanQuantity = 100,
+                ActualQuantity = 50
+            };
 
-            List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>();
-            list.Add(dod1);
+            List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>
+            {
+                dod1
+            };
             d1.DeliveryOrderDetails = list;
             new DeliveryOrderRepository(context).Save(d1);
             new DeliveryOrderDetailRepository(context).Save(dod1);
