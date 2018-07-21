@@ -225,9 +225,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\InventoryApiController.cs" />
     <Compile Include="Controllers\DeliveryOrderApiController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
+    <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -323,6 +323,7 @@
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\DeliveryOrderViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
@@ -333,10 +334,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\editProfile.js" />
@@ -346,6 +347,7 @@
     </Content>
     <None Include="Properties\PublishProfiles\StationeryShopDebug - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\DeliveryOrder.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -395,6 +397,7 @@
     <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
+    <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
