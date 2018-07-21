@@ -26,7 +26,7 @@ namespace team7_ssis.Controllers
             {
                 PNo = po.PurchaseOrderNo,
                 SupplierName=po.Supplier.Name,
-                CreatedDate=po.CreatedDateTime.ToShortDateString(),
+                CreatedDate=po.CreatedDateTime.ToShortDateString() + " "+ po.CreatedDateTime.ToShortTimeString(),
                 Status=po.Status.Name
             }).ToList();
         }

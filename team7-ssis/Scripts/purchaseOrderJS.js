@@ -19,6 +19,7 @@ $(document).ready(function(){
                     { data: "CreatedDate"},
                     { data: "Status" }
                 ],
+                autowidth:"true",
                 select: "single"
 					
 				});
