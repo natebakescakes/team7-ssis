@@ -10,19 +10,19 @@ namespace team7_ssis.Controllers
 {
     public class NotificationController : Controller
     {
-        private ApplicationDbContext context;
-        
         public NotificationController()
         {
-            context = new ApplicationDbContext();
+            Context = new ApplicationDbContext();
         }
+
+        public ApplicationDbContext Context { get; set; }
 
         // POST: Notification
         [HttpPost]
         [Route("Notification/Read")]
         public ActionResult ReadNotification(int notificationId)
         {
-            var notification = new NotificationService(context).ReadNotification(notificationId);
+            var notification = new NotificationService(Context).ReadNotification(notificationId);
 
             switch (notification.NotificationType.NotificationTypeId) {
                 case 1:
