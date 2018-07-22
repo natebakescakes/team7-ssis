@@ -13,16 +13,15 @@ namespace team7_ssis.Controllers
         public static ApplicationDbContext context = new ApplicationDbContext();
         DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
         PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
+
         // GET: DeliveryOrder
         public ActionResult Index()
         {
-            return View();
+            return View("ReceiveGoods");
         }
 
-        public ActionResult ReceiveGoods()
+        public ActionResult OutstandingItems()
         {
-            List<PurchaseOrder> outstandingitems = purchaseOrderService.FindAllPurchaseOrders();
-            ViewData["list"] = outstandingitems;
             return View();
         }
     }

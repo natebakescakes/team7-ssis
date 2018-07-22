@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
@@ -14,6 +15,7 @@ namespace team7_ssis.Tests.Services
     {
         ApplicationDbContext context;
         DepartmentService departmentService;
+        DepartmentRepository departmentRepository;
 
         [TestInitialize]
         public void TestInitialize()
@@ -21,6 +23,7 @@ namespace team7_ssis.Tests.Services
             // Arrange
             context = new ApplicationDbContext();
             departmentService = new DepartmentService(context);
+            departmentRepository = new DepartmentRepository(context);
         }
         
         [TestMethod]
@@ -44,14 +47,16 @@ namespace team7_ssis.Tests.Services
             var result = departmentService.FindUsersByDepartment(department);
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(ApplicationUser));
-            result.ForEach(x => Assert.AreEqual("COMM", x.Department));
+            result.ForEach(x => Assert.AreEqual("COMM", x.Department.DepartmentCode));
         }
         [TestMethod]
         public void FindUsersByDepartmentNotNullTest()
         {
             //Arrange
-            Department department = new Department();
-            department.DepartmentCode = "ENGL";
+            Department department = new Department
+            {
+                DepartmentCode = "ENGL"
+            };
             //Assert
             CollectionAssert.AllItemsAreNotNull(departmentService.FindUsersByDepartment(department));
         }
@@ -59,11 +64,40 @@ namespace team7_ssis.Tests.Services
         public void FindUsersByDepartmentUniqueTest()
         {
             //Arrange
-            Department department = new Department();
-            department.DepartmentCode = "ENGL";
+            Department department = new Department
+            {
+                DepartmentCode = "ENGL"
+            };
             //Assert
             CollectionAssert.AllItemsAreUnique(departmentService.FindUsersByDepartment(department));
         }
+
+        [TestMethod]
+        public void FindAllTest()
+        {
+            // Arrange
+            var expected = departmentRepository.Count();
+
+            // Act
+            var result = departmentService.FindAllDepartments().Count;
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void FindByIdTest()
+        {
+            // Arrange
+            var expected = "ENGL";
+
+            // Act
+            var result = departmentService.FindDepartmentByDepartmentCode("ENGL");
+
+            // Assert
+            Assert.AreEqual(expected, result.DepartmentCode);
+        }
+
         //[TestMethod]
         //public void FindDepartmentByUserTest()
         //{
