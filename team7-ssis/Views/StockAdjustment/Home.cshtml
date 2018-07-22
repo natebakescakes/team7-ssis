@@ -1,4 +1,4 @@
-﻿
+﻿@Model.
 @{
 
 }
@@ -49,8 +49,9 @@
 
         </tr>
         <tr>
-            <td width="400">dropdownlist @*@Html.DropDownList()*@ </td>
-            <td width="400">dropdownlist @*@Html.DropDownList()*@</td>
+            <td>
+            @Html.DropDownList("supervisors") 
+           </td>
 
         </tr>
     </table>
