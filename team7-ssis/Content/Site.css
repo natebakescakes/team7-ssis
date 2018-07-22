@@ -23,7 +23,7 @@ textarea {
     max-width: 280px;
 }
 
-.dataTables_wrapper .dataTables_length {
+/*.dataTables_wrapper .dataTables_length {
     float: right; 
 }
 
@@ -36,10 +36,7 @@ textarea {
 }
 
 
-.dataTables_wrapper .dataTables_filter {
-        float: left;
-        text-align: left;
-    }
+
 
 
 
@@ -64,25 +61,26 @@ textarea {
     box-sizing: border-box;
     font-weight: normal;
     font-family: Arial;
-}
+}*/
 
-
+/*.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: left;
+}*/
 
 .delivered {
-    background-color: PaleGreen !important;
-    border: 5px solid white !important;
+    background-color: MediumSeaGreen !important;
     text-align: center;
+    color: white;
 }
 
 .awaiting-delivery {
-    background-color: FireBrick !important;
-    border: 5px solid white !important;
+    background-color: firebrick !important;
     color: white;
     text-align: center;
 }
 
 .partially-delivered {
-    background-color: Gold !important;
-    border: 5px solid white !important;
+    background-color: gold !important;
     text-align: center;
 }

@@ -18,6 +18,13 @@ namespace team7_ssis.Controllers
         }
 
 
+        [HttpPost]
+        public string Details(string poNum, int val )
+        {
+            return poNum + "  YESSS  " + val.ToString();
+        }
+
+
 
 
     }

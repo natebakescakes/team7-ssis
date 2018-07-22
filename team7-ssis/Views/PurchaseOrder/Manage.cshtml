@@ -8,14 +8,7 @@
 
 @section scripts {
     <script src="~/Scripts/Custom/PurchaseOrder.js"></script>
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
 
 
 }
@@ -30,31 +23,44 @@
     <title></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/Content/Site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap-select.min.css">
 
 
 </head>
 <body>
     <div>
-        <h2>Manage Purchase Order</h2>
-        
-        <div style="width:90%; margin:0 auto" class="tablecontainer">
-            <div class="form-group">
-                <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>   Download Selected</a>
-                <select class="form-control input-sm " id="sel1">
-                    <option value="">All Statuses</option>
-                </select>
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <h2>Manage Purchase Order</h2>
             </div>
-            <br/>
-            <table id="poTable">
+            <div class="col-md-4">
+              
+            </div>
+        </div>
+
+        <div>
+            @*<div>
+                <h2>Manage Purchase Order</h2>
+
+                <div style="width:90%; margin:0 auto" class="tablecontainer">
+                    <div class="form-group">
+                        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>   Download Selected</a>
+                        <select class="form-control input-sm " id="sel1">
+                            <option value="">All Statuses</option>
+                        </select>
+                    </div>
+                    <br />*@
+            <table id="poTable" class="table table-striped table-bordered dataTable no-footer">
                 <thead>
-                  
+
+
                     <tr>
-                        <th></th>
-                        <th>Purchase Order No</th>
-                        <th>Supplier</th>
-                        <th>Order Date</th>
-                        <th>Status</th>
-                        <th></th>
+                        <th class="first"></th>
+                        <th class="second">Purchase Order No</th>
+                        <th class="third">Supplier</th>
+                        <th class="fourth">Order Date</th>
+                        <th class="fifth">Status</th>
+                        <th class="sixth"></th>
                     </tr>
                 </thead>
             </table>
