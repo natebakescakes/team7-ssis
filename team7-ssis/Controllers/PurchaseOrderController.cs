@@ -4,14 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
+using team7_ssis.ViewModels;
 using team7_ssis.Services;
 
 
 namespace team7_ssis.Controllers
-{
+{ 
     public class PurchaseOrderController : Controller
     {
-        // GET: PurchaseOrder
+        public static ApplicationDbContext context = new ApplicationDbContext();
+        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
+
+     
         public ActionResult Index()
         {
             return View("Manage");
@@ -19,9 +23,17 @@ namespace team7_ssis.Controllers
 
 
         [HttpPost]
-        public string Details(string poNum, int val )
+        public ActionResult Details(string poNum)
         {
-            return poNum + "  YESSS  " + val.ToString();
+            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+            PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
+
+            podModel.PNo = po.PurchaseOrderNo;
+            podModel.SupplierName = po.Supplier.Name;
+            podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
+            podModel.Status = po.Status.Name;
+
+            return View(podModel);
         }
 
 

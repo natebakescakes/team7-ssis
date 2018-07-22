@@ -95,23 +95,19 @@ $(document).ready(function(){
                
         });
 
+
     $('#poTable tbody').on('change', '.action', function (e) {
 
         var poNum = JSON.stringify(datatbl.row($(this).parents('tr')).data().PNo);
-        //alert(poNum);
         var value = Number($(this).val());
-        //if (value == 0) { var u = 'PurchaseOrder/'; }
-        //else if (value == 1) { alert(value); }
-        //else if (value == 2) { alert(value); }
-        //else { alert("HIIIIIII"); }
+        if (value == 0) { var u = 'PurchaseOrder/details'; }
+        else if (value == 1) { u = ''; }
+        else if (value == 2) { u = ''; }
+        else { u = ''; }
         $.ajax({
             type: 'POST',
-            data: { poNum: poNum, val: value },
-            url: 'PurchaseOrder/details',
-            success: function (result) {
-                alert("HIIIII" + result);
-            }
-
+            data: { poNum: poNum},
+            url: u,
         });
     });
                        

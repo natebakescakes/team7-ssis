@@ -461,6 +461,7 @@
     <Content Include="Views\Requisition\Index.cshtml" />
     <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
+    <Content Include="Views\PurchaseOrder\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
