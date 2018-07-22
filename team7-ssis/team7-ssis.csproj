@@ -458,6 +458,7 @@
     <Content Include="Views\Requisition\RequisitionDetails.cshtml" />
     <Content Include="Views\Requisition\_RequisitionDetailTable.cshtml" />
     <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
+    <Content Include="Views\Requisition\StationeryDisbursement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
