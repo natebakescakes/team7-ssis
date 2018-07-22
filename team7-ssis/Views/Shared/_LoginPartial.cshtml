@@ -6,7 +6,11 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-envelope-o fa-lg"></i></a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="http://example.com" id="notification-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-envelope-o fa-lg"></i></a>
+                <div class="dropdown-menu" aria-labelledby="notification-dropdown" id="notification-dropdown">
+                </div>
+            </li>
             <li class="nav-item">
                 @Html.ActionLink($"{User.Identity.GetUserName()}", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
             </li>
