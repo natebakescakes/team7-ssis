@@ -107,5 +107,17 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result);
         }
+
+        [TestMethod]
+        public void FindUserByDepartment_NullInput()
+        {
+            // Arrange
+
+            // Act
+            var result = notificationService.FindNotificationsByUser(null);
+
+            // Assert
+            Assert.IsTrue(result.Count == 0);
+        }
     }
 }

@@ -67,6 +67,8 @@ namespace team7_ssis.Services
        
         public List<Notification> FindNotificationsByUser(ApplicationUser user)
         {
+            if (user == null) return new List<Notification>();
+
             return notificationRepository.FindByUser(user).ToList();
         }
 
