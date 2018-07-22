@@ -21,7 +21,6 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<PurchaseOrderViewModel> PurchaseOrders()
         {
-            //context.Configuration.LazyLoadingEnabled.Equals("false");
             return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
             {
                 PNo = po.PurchaseOrderNo,

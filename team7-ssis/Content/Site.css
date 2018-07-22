@@ -24,16 +24,65 @@ textarea {
 }
 
 .dataTables_wrapper .dataTables_length {
-    float: right;
+    float: right; 
 }
+
+.dataTables_length label {
+    padding: 4px 4px;
+    margin: 8px 0;
+    display: inline-block;
+    font-weight: normal;
+    font-family: Arial;
+}
+
 
 .dataTables_wrapper .dataTables_filter {
-    float: left;
-    text-align: left;
-   
+        float: left;
+        text-align: left;
+    }
+
+
+
+.dataTables_filter input {
+    padding: 4px 4px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-weight:normal;
+    font-family:Arial;
 }
 
-.red {
-    background-color: red !important;
+
+.dataTables_length select {
+    padding: 4px 4px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-weight: normal;
+    font-family: Arial;
 }
 
+
+
+.delivered {
+    background-color: PaleGreen !important;
+    border: 5px solid white !important;
+    text-align: center;
+}
+
+.awaiting-delivery {
+    background-color: FireBrick !important;
+    border: 5px solid white !important;
+    color: white;
+    text-align: center;
+}
+
+.partially-delivered {
+    background-color: Gold !important;
+    border: 5px solid white !important;
+    text-align: center;
+}
