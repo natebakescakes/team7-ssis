@@ -27,5 +27,17 @@ namespace team7_ssis.Repositories
                 .Where(x => x.CreatedDateTime.CompareTo(startDateRange) >= 0 &&
                     x.CreatedDateTime.CompareTo(endDateRange) <= 0);
         }
+
+        public IQueryable<Requisition> FindRequisitionsByStatus(List<Status> statusList)
+        {
+
+            var statusIdList = statusList.Select(x => x.StatusId);
+
+            return context.Requisition.Where(requisition => statusIdList.Contains(requisition.Status.StatusId));
+        }
+        public IQueryable<RequisitionDetail> FindRequisitionDetails(string requisitionId)
+        {
+            return context.RequisitionDetail.Where(x => x.RequisitionId == requisitionId);
+        }
     }
 }

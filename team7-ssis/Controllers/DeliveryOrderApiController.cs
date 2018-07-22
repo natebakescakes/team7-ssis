@@ -4,37 +4,33 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using team7_ssis.Models;
+using team7_ssis.Services;
+using team7_ssis.ViewModels;
+
+
 
 namespace team7_ssis.Controllers
 {
     public class DeliveryOrderApiController : ApiController
     {
-        //static ApplicationDbcontext 
-        // GET api/<controller>
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        static ApplicationDbContext context = new ApplicationDbContext();
+        DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
+        ItemService itemService = new ItemService(context);
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [Route("api/receivegoods/all")]
+        [HttpGet]
+        public List<DeliveryOrderViewModel> DeliveryOrders()
         {
-            return "value";
-        }
+            return deliveryOrderService.FindAllDeliveryOrders().Select(x => new DeliveryOrderViewModel()
+                {
+                DeliveryOrderNo = x.DeliveryOrderNo,
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
+                PurchaseOrder_PurchaseOrderNo = x.PurchaseOrder.PurchaseOrderNo,
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
-        }
+                 Supplier_SupplierCode = x.Supplier.SupplierCode,
+                 
+                }).ToList();
+         }
     }
 }

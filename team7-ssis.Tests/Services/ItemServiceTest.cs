@@ -4,12 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Services;
-using team7_ssis.Controllers;
 using team7_ssis.Repositories;
-using System.Web.Mvc;
-using System.Web;
-using System.IO;
-using Moq;
 
 namespace team7_ssis.Tests.Services
 {
