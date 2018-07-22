@@ -99,7 +99,8 @@ namespace team7_ssis.Controllers
                 LastName = user.LastName,
                 Email = user.Email,
                 Department = user.Department.Name,
-                Supervisor = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}"
+                Supervisor = user.Supervisor != null ?
+                    $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" : ""
             });
         }
 
@@ -115,11 +116,12 @@ namespace team7_ssis.Controllers
                 LastName = user.LastName,
                 Email = user.Email,
                 Department = user.Department.Name,
-                Supervisor = $"{user.Supervisor.FirstName}{user.Supervisor.LastName}",
+                Supervisor = user.Supervisor != null ? 
+                    $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" : "",
 
                 TitleId = $"{user.Title.TitleId}",
                 DepartmentCode = user.Department.DepartmentCode,
-                SupervisorEmail = user.Supervisor.Email,
+                SupervisorEmail = user.Supervisor != null ? user.Supervisor.Email : "",
 
                 Titles = new SelectList(
                     titleService.FindAllTitles().Select(x => new { Value = x.TitleId, Text = x.Name }),
@@ -133,7 +135,11 @@ namespace team7_ssis.Controllers
                 ),
                 Supervisors = new SelectList(new[]
                 {
-                new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" },
+                    new {
+                        Value = user.Supervisor != null ? user.Supervisor.Email : "",
+                        Text = user.Supervisor != null ?
+                            $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" : ""
+                    },
                 }, "Value", "Text")
             });
         }
@@ -176,7 +182,11 @@ namespace team7_ssis.Controllers
                 );
             model.Supervisors = new SelectList(new[]
             {
-                new { Value = user.Supervisor.Email, Text = $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" },
+                new {
+                    Value = user.Supervisor.Email,
+                    Text = user.Supervisor != null ?
+                        $"{user.Supervisor.FirstName} {user.Supervisor.LastName}" : ""
+                },
             }, "Value", "Text");
 
             return View(model);
