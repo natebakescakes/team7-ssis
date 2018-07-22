@@ -16,6 +16,7 @@ namespace team7_ssis.Services
         DisbursementService disbursementService;
 
         RequisitionRepository requisitionRepository;
+        RequisitionDetailRepository requisitionDetailRepository;
 
         public RequisitionService(ApplicationDbContext context)
         {
@@ -23,9 +24,12 @@ namespace team7_ssis.Services
             retrievalService = new RetrievalService(context);
             disbursementService = new DisbursementService(context);
             requisitionRepository = new RequisitionRepository(context);
+            requisitionDetailRepository = new RequisitionDetailRepository(context);
         }
+
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
         {
+            // TODO: To be obseleted
             var query = requisitionRepository.FindRequisitionsByStatus(statusList);
             if (query == null)
             {
@@ -34,6 +38,18 @@ namespace team7_ssis.Services
             {
                 return requisitionRepository.FindRequisitionsByStatus(statusList).ToList();
             }
+        }
+
+        public List<Requisition> FindAllRequisitions()
+        {
+            // TODO: Write Test
+            return requisitionRepository.FindAll().ToList();
+        }
+
+        public List<RequisitionDetail> FindAllRequisitionDetail()
+        {
+            // TODO: Write Test
+            return requisitionDetailRepository.FindAll().ToList();
         }
 
         public List<RequisitionDetail> GetRequisitionDetails(string requisitionId)
