@@ -8,6 +8,7 @@ namespace team7_ssis.ViewModels
 {
     public class NotificationViewModel
     {
+        public int NotificationId { get; set; }
         public string NotificationType { get; set; }
         public string Contents { get; set; }
         public string Status { get; set; }

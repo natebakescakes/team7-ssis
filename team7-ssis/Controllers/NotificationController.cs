@@ -19,8 +19,7 @@ namespace team7_ssis.Controllers
 
         // POST: Notification
         [HttpPost]
-        [Route("Notification/Read")]
-        public ActionResult ReadNotification(int notificationId)
+        public ActionResult Read(int notificationId)
         {
             var notification = new NotificationService(Context).ReadNotification(notificationId);
 

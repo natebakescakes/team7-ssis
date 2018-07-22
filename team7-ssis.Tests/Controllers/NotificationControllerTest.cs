@@ -42,9 +42,10 @@ namespace team7_ssis.Tests.Controllers
             });
 
             // Act
-            var result = controller.ReadNotification(notificationId);
+            var result = controller.Read(notificationId);
 
             // Assert
+            Assert.AreEqual(15, notificationService.FindNotificationById(notificationId).Status.StatusId);
             result.AssertActionRedirect().ToAction("Index");
         }
 

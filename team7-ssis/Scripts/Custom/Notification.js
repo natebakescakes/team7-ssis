@@ -9,7 +9,7 @@ function GetDropDownData() {
     contentType: 'application/json; charset=utf-8',
     dataType: 'json',
     success: function(data) {
-      if (data.length > 0) {
+      if (data.filter(x => x.Status === 'Unread').length > 0) {
         $('#notification-dropdown span').remove();
         $('#notification-dropdown')
           .append(' ')
@@ -22,42 +22,37 @@ function GetDropDownData() {
           );
       }
       $.each(data, function() {
-        // if (data.NotificationType === 'Collection Ready') {
+        if (this.NotificationType === 'Collection Ready') {
           $('#notification-dropdown-items').append(
             $(
-              '<a class="dropdown-item" href="http://' +
-                location.host +
-                '/Requisition?=' +
+              '<form action="/Notification/Read" method="post" role="form"><input type="number" style="display: none;" id="NotificationId", name="NotificationId", value="' +
+                this.NotificationId +
+                '" /><input type="submit" class="dropdown-item" value="Requisition ' +
                 this.Contents +
-                '">Requisition ' +
-                this.Contents +
-                ' is ready for collection.</a>',
-            ),
-          );
-        // }
-        if (data.NotificationType === 'Requisition Approval') {
-          $('#notification-dropdown-items').append(
-            $(
-              '<a class="dropdown-item" href="http://' +
-                location.host +
-                '/Requisition?=' +
-                this.Contents +
-                '">Requisition ' +
-                this.Contents +
-                ' is awaiting your approval.</a>',
+                ' is ready for collection. "/></form>',
             ),
           );
         }
-        if (data.NotificationType === 'Stock Adjustment Approval') {
+        // }
+        if (this.NotificationType === 'Requisition Approval') {
           $('#notification-dropdown-items').append(
             $(
-              '<a class="dropdown-item" href="http://' +
-                location.host +
-                '/StockAdjustment?=' +
+              '<form action="/Notification/Read" method="post" role="form"><input type="number" style="display: none;" id="NotificationId", name="NotificationId", value="' +
+                this.NotificationId +
+                '" /><input type="submit" class="dropdown-item" value="Requisition ' +
                 this.Contents +
-                '">Stock Adjustment ' +
+                ' is awaiting your approval. "/></form>',
+            ),
+          );
+        }
+        if (this.NotificationType === 'Stock Adjustment Approval') {
+          $('#notification-dropdown-items').append(
+            $(
+              '<form action="/Notification/Read" method="post" role="form"><input type="number" style="display: none;" id="NotificationId", name="NotificationId", value="' +
+                this.NotificationId +
+                '" /><input type="submit" class="dropdown-item" value="Stock Adjustment ' +
                 this.Contents +
-                ' is awaiting your approval.</a>',
+                ' is awaiting your approval. "/></form>',
             ),
           );
         }

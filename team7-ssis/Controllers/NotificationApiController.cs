@@ -37,6 +37,7 @@ namespace team7_ssis.Controllers
 
             return Ok(notifications.Select(notification => new NotificationViewModel()
             {
+                NotificationId = notification.NotificationId,
                 NotificationType = notification.NotificationType.Name,
                 Contents = notification.Contents,
                 Status = notification.Status.Name,
