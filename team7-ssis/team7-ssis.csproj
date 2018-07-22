@@ -437,7 +437,6 @@
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
     <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
-    <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
     <Content Include="Views\Manage\EditProfile.cshtml" />
