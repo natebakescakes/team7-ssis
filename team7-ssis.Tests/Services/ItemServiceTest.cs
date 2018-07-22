@@ -155,6 +155,23 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        public void AddQuantityTest()
+        {
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "GGG";
+            i.CreatedDateTime = DateTime.Now;
+            itemService.Save(i, 40);
+
+            //Act
+            var result = itemService.AddQuantity(i, -10);
+
+            //Assert
+            Assert.AreEqual(30, result.Quantity);
+            itemRepository.Delete(i);
+        }
+
+        [TestMethod]
         public void UploadItemImageTest()
         {
             //var file = MockRepository.GenerateStub<HttpPostedFileBase>();
@@ -167,7 +184,15 @@ namespace team7_ssis.Tests.Services
         [TestCleanup()]
         public void MyTestCleanup()
         {
-            
+            string[] ids = new string[]
+           { "BBB","CCC","DDD","EEE","GGG","FFF" };
+
+            foreach (string id in ids)
+            {
+               Item i = itemRepository.FindById(id);
+                if (i != null)
+                    itemRepository.Delete(i);
+            }
         }
 
     }
