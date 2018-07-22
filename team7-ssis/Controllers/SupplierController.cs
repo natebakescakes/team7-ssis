@@ -19,22 +19,5 @@ namespace team7_ssis.Controllers
         {
             return View();
         }
-
-        public ActionResult LoadData()
-        {
-            List<Supplier> list = supplierService.FindAllSuppliers();
-
-            var data = list.Select(x => new {
-            SupplierCode = x.SupplierCode,
-            Name = x.Name,
-            ContactName = x.ContactName,
-            PhoneNumber = x.PhoneNumber,
-            FaxNumber = x.FaxNumber,
-            Address = x.Address
-
-            });
-
-            return Json(new { data = data }, JsonRequestBehavior.AllowGet);
-        }
     }
 }
