@@ -2,60 +2,44 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Manage Inventory</title>
-    <link href="css/dataTables.checkboxes.css" rel="stylesheet" />
+
 </head>
 
 <body>
 
     <div style="width:90%; margin:0 auto" class="tablecontainer">
-        <form id="myform" method="post">
-            <pre id="view-rows"></pre>
-            <p>Form data as submitted to the server</p>
-            <pre id="view-form"></pre>
-            <p><button>View Selected</button></p>
-            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Inventory Item</a>
-            <table id="itemTable">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Item Number</th>
-                        <th>Category</th>
-                        <th>Description</th>
-                        <th>Reorder Level</th>
-                        <th>Reorder Quantity</th>
-                        <th>Unit of Measurement</th>
-                        <th>In Stock</th>
-                    </tr>
-                </thead>
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Inventory Item</a>
+        <table id="itemTable">
+            <thead>
+                <tr>
+                    <th>Item Number</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Reorder Level</th>
+                    <th>Reorder Quantity</th>
+                    <th>Unit of Measurement</th>
+                    <th>In Stock</th>
 
-            </table>
-        </form>
+
+                </tr>
+            </thead>
+
+        </table>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
-    <script src="~/Scripts/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.11/js/dataTables.checkboxes.min.js"></script>
+
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
 
 
     <script>
         $(document).ready(function () {
             var oTable = $('#itemTable').DataTable({
+
                 sAjaxSource: "/api/manage/items",
                 sAjaxDataProp: "",
-                columnDefs: [{
-                    targets: 0,
-                    checkboxes: {
-                        selectRow: true
-                    }
-                }],
-                select: {
-                    style: 'multi'
-                },
-                order: [[1, 'asc']],
+
                 "columns": [
                     { "data": "ItemCode", "autoWidth": true },
                     { "data": "ItemCategoryName", "autoWidth": true },
@@ -67,20 +51,10 @@
 
                 ],
                 select: 'single'
-            })
-            $("#myform").on('submit', function (e) {
-                var form = this
-                var rowsel = oTable.column(0).checkboxes.selected();
-                $.each(rowsel, function (index, rowId) {
-                    $(form).append(
-                        $('<input>').attr('type', 'hidden').attr('name', 'id[]').val(rowId)
-                    )
-                })
-                $("#view-rows").text(rowsel.join(","))
-                $("#view-form").text($(form).serialize())
-                $('input[name="id\[\]"]', form).remove()
-                e.preventDefault()
-            })
+
+            });
+
+
 
         })
 

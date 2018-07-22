@@ -65,13 +65,6 @@ namespace team7_ssis.Services
             return inventoryRepository.Save(iv);
         }
 
-        public Inventory AddQuantity(Item item,int quantity)
-        {
-            Inventory iv = inventoryRepository.FindById(item.ItemCode);
-            iv.Quantity = iv.Quantity + quantity;
-            return inventoryRepository.Save(iv);
-        }
-
         public Item DeleteItem(Item item)
         {
             Item a = itemRepository.FindById(item.ItemCode);
