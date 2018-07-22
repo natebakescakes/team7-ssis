@@ -28,7 +28,13 @@ namespace team7_ssis.Controllers
 
             if (notifications.Count == 0) return Ok(new List<NotificationViewModel>());
 
-            return Ok(notifications.Select(notification => new NotificationViewModel()));
+            return Ok(notifications.Select(notification => new NotificationViewModel()
+            {
+                NotificationType = notification.NotificationType.Name,
+                Contents = notification.Contents,
+                Status = notification.Status.Name,
+                CreatedDateTIme = notification.CreatedDateTime
+            }));
         }
     }
 }
