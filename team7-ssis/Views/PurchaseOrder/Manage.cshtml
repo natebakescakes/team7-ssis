@@ -12,38 +12,45 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+   <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
 
 
-}
+    }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-        <h2>Manage Purchase Order</h2>
-        <div style="width:90%; margin:0 auto" class="tablecontainer">
 
-            <table id="poTable">
-                <thead>
-                    <tr>
-                        <th>Purchase Order No</th>
-                        <th>Supplier Name</th>
-                        <th>Created Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-            </table>
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title></title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="~/Content/Site.css">
+    </head>
+    <body>
+        <div>
+            <h2>Manage Purchase Order</h2>
+            <div style="width:90%; margin:0 auto" class="tablecontainer">
+                <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>   Download Selected</a>
+
+                <table id="poTable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Purchase Order No</th>
+                            <th>Supplier</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
         </div>
-
-
-    </div>
-</body>
+    </body>
 </html>
 
