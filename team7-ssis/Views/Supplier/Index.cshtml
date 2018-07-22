@@ -6,21 +6,25 @@
 
 <h2>Suppliers</h2>
 
-@Html.Partial("_SupplierTable")
+@*
+    @Html.Partial("_SupplierTable")
 
+*@
+
+@Html.Partial("_example")
 <br />
 <div class="panel panel-default">
     <div class="panel-body">
         <form>
-    
-                <div class="form-group">
-                        <label for="SupplierCode">Supplier Code</label><br />
-                        <input type="text" class="form-control" id="supplierCode">
-                </div>
-               
-       
+
+            <div class="form-group">
+                <label for="SupplierCode">Supplier Code</label><br />
+                <input type="text" class="form-control" id="supplierCode">
+            </div>
+
+
             <div class="row">
-                         
+
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="CompanyName">Company Name</label><br />
@@ -45,35 +49,35 @@
                         <input type="text" class="form-control" id="faxNumber">
                     </div>
                 </div>
-                
-            </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="Address">Address</label><br />
-                            <textarea class="form-control" rows="3" id="address"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="Fax">GST Registration No.</label><br />
-                            <input type="text" class="form-control" id="faxNumber">
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="Status">Status</label><br />
-                            <select class="form-control" id="status">
-                                <option>Active</option>
-                                <option>Inactive</option>
 
-                            </select>
-                        </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="Address">Address</label><br />
+                        <textarea class="form-control" rows="3" id="address"></textarea>
                     </div>
                 </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Fax">GST Registration No.</label><br />
+                        <input type="text" class="form-control" id="faxNumber">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Status">Status</label><br />
+                        <select class="form-control" id="status">
+                            <option>Active</option>
+                            <option>Inactive</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
 
 
-            </form>
+        </form>
     </div>
 
 
