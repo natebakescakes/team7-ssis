@@ -73,10 +73,10 @@ namespace team7_ssis.Tests.Services
         public void FindItemPriceByPrioritySequenceTest()
         {
             //Arrange
-            int test = 3;
+            var test = 3;
 
             //Act
-            var result = itemPriceService.FindItemPriceByPrioritySequence(3);
+            var result = itemPriceService.FindItemPriceByPrioritySequence(test);
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(ItemPrice));
@@ -90,17 +90,21 @@ namespace team7_ssis.Tests.Services
         public void SaveItemPriceTest()
         {
             //Arrange
-            Item it = new Item();
-            it.ItemCode = "BBB";
-            it.CreatedDateTime = DateTime.Now;
+            Item it = new Item
+            {
+                ItemCode = "BBB",
+                CreatedDateTime = DateTime.Now
+            };
             new ItemRepository(context).Save(it);
 
-            ItemPrice i = new ItemPrice();
-            i.ItemCode = it.ItemCode;
-            i.SupplierCode = "ALPA";
-            i.PrioritySequence = 3;
-            i.Price = 20.30M;
-            i.CreatedDateTime = DateTime.Now;
+            ItemPrice i = new ItemPrice
+            {
+                ItemCode = it.ItemCode,
+                SupplierCode = "ALPA",
+                PrioritySequence = 3,
+                Price = 20.30M,
+                CreatedDateTime = DateTime.Now
+            };
 
             //Act
             var result = itemPriceService.Save(i);
@@ -120,13 +124,17 @@ namespace team7_ssis.Tests.Services
         public void DeleteItemPriceTest()
         {
             //Arrage
-            Item it = new Item();
-            it.ItemCode = "BBB";
-            it.CreatedDateTime = DateTime.Now;
+            Item it = new Item
+            {
+                ItemCode = "BBB",
+                CreatedDateTime = DateTime.Now
+            };
             new ItemRepository(context).Save(it);
 
-            ItemPrice p = new ItemPrice();
-            p.ItemCode = it.ItemCode;
+            ItemPrice p = new ItemPrice
+            {
+                ItemCode = it.ItemCode
+            };
 
             //Act
             var result = itemPriceService.DeleteItemPrice(p);

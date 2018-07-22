@@ -9,16 +9,16 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using Microsoft.AspNet.Identity;
 
-namespace team7_ssis.Services.Tests
+namespace team7_ssis.Tests.Services
 {
     [TestClass()]
     public class RequisitionServiceTests
     {
-        ApplicationDbContext context;
-        RequisitionService requisitionService;
+        static ApplicationDbContext context;
+        static RequisitionService requisitionService;
 
-        [TestInitialize]
-        public void TestInitialize()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
         {
             // Arrange
             context = new ApplicationDbContext();
@@ -28,25 +28,169 @@ namespace team7_ssis.Services.Tests
             populateRequisitions();
         }
 
-        [TestCleanup]
-        public void TestCleanup()
+        [ClassCleanup]
+        public static void TestCleanup()
         {
             // Clean up Requisitions
 
-            Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First();
-            Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First();
-            Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First();
+            Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First();
+            Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First();
+            Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First();
             context.Requisition.Remove(r1);
             context.Requisition.Remove(r2);
             context.Requisition.Remove(r3);
             context.SaveChanges();
-
-            // TODO: Clean up Retrieval
-
-            // TODO: Clean up Disbursements
         }
 
-        private void populateRequisitions()
+        [TestMethod]
+        public void FindRequisitionsByStatusTest()
+        {
+            // Arrange
+            List<Status> statusList = new List<Status>();
+            statusList.Add(context.Status.Where(x => x.StatusId == 8).First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 9).First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 10).First());
+
+            // Act
+            List<Requisition> result = requisitionService.FindRequisitionsByStatus(statusList);
+
+            // Assert - All Requisitions in the list should have a Status which is in the statusList
+            foreach (Requisition req in result)
+            {
+                Assert.IsTrue(statusList.Contains(req.Status));
+            }
+        }
+        [TestMethod]
+        public void GetRequisitionDetailsTest()
+        {
+            // Arrange
+            string reqId = "REQ-201807-001";
+
+            // Act
+            List<RequisitionDetail> reqList = requisitionService.GetRequisitionDetails(reqId);
+
+            // Assert - Should return a List<Requistion> where Requisition.RequisitionId equals the one passed in
+            foreach (RequisitionDetail rd in reqList)
+            {
+                Assert.AreEqual(rd.RequisitionId, reqId);
+            }
+        }
+
+        [TestMethod()]
+        public void ProcessRequisitionsTest_CreatesRetrieval()
+        {
+            // Arrange
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
+
+            // Act
+            string retrievalId = requisitionService.ProcessRequisitions(reqList);
+
+            // Assert - the Retrieval ID that ProcessRequisitions returns should return a Requisition
+            Retrieval result = context.Retrieval.Where(x => x.RetrievalId == retrievalId).ToList().First();
+            Assert.IsNotNull(result);
+
+            // Cleanup
+            var disb = context.Disbursement.Where(x => x.Retrieval.RetrievalId == result.RetrievalId).AsEnumerable();
+            context.Disbursement.RemoveRange(disb);
+
+            context.Retrieval.Remove(result);
+            context.SaveChanges();
+        }
+
+        [TestMethod]
+        public void ProcessRequisitionsTest_AddQuantity()
+        {
+            // ARRANGE
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First()); // department is COMM
+
+            Requisition r1 = new Requisition();
+            r1.RequisitionId = "TEST1";
+            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
+            r1.RequisitionDetails = new List<RequisitionDetail>();
+            r1.EmployeeRemarks = "From AddDisbursementDetailsFromEachDepartmentTest_AddQuantity";
+            r1.CreatedDateTime = DateTime.Now;
+
+            RequisitionDetail rd1 = new RequisitionDetail();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.Quantity = 20;
+
+            r1.RequisitionDetails.Add(rd1);
+
+            reqList.Add(r1);
+
+            //// ACT
+            string retrievalId = requisitionService.ProcessRequisitions(reqList);
+
+            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 20 items.
+            var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
+     
+            Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
+            var dd = query.First().DisbursementDetails.First();
+            Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
+            Assert.IsTrue(dd.PlanQuantity == 30); // DisbursementDetail's PlanQuantity is 30
+
+            //// CLEANUP
+            // remove Disbursement which has the generated DisbursementId
+            // will remove DisbursementDetails as well
+            var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
+            context.Disbursement.Remove(d.First());
+
+            // remove the Retrieval with the generated retrievalId
+            context.Retrieval.Remove(context.Retrieval.Where(x => x.RetrievalId == retrievalId).First());
+            context.SaveChanges();
+        }
+
+        [TestMethod()]
+        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
+        {
+            // Arrange
+            List<Requisition> reqList = new List<Requisition>();
+
+            // Add Requisitions to List<Requisition>
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
+
+            // Act
+            List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
+
+            //// Assert - There should be 3 Disbursements created, one for each department
+            Assert.AreEqual(disbList.Count, 3);
+            Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
+                            .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
+        }
+
+        [TestMethod()]
+        public void CreateDisbursementForEachDepartmentTest()
+        {
+            // Arrange
+
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").First());
+
+            //// Act
+            HashSet<Department> expected = new HashSet<Department>
+            {
+                context.Department.Where(x => x.DepartmentCode == "COMM").First(),
+                context.Department.Where(x => x.DepartmentCode == "CPSC").First(),
+                context.Department.Where(x => x.DepartmentCode == "ENGL").First()
+            };
+
+            List<Disbursement> result = requisitionService.CreateDisbursementForEachDepartment(reqList);
+
+            //// Assert
+            HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
+
+            Assert.IsTrue(depts.SetEquals(expected));
+        }
+
+        private static void populateRequisitions()
         {
             //// Create Requisition Details
 
@@ -73,14 +217,14 @@ namespace team7_ssis.Services.Tests
             //// Create Requisitions
 
             Requisition r1 = new Requisition();
-            r1.RequisitionId = "REQ-201807001";
+            r1.RequisitionId = "REQ-201807-001";
             r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
             r1.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
             r1.RequisitionDetails = new List<RequisitionDetail>();
             r1.Retrieval = null;
             r1.EmployeeRemarks = "Test by Gabriel";
             r1.HeadRemarks = "Test by Gabriel Boss";
-            r1.Status = context.Status.Where(x => x.StatusId == 4).ToList().First(); ; // Pending Approval
+            r1.Status = context.Status.Where(x => x.StatusId == 8).ToList().First(); ; // Pending Approval
             r1.CreatedBy = null;
             r1.CreatedDateTime = DateTime.Now;
 
@@ -89,7 +233,7 @@ namespace team7_ssis.Services.Tests
             requisitionService.Save(r1);
 
             Requisition r2 = new Requisition();
-            r2.RequisitionId = "REQ-201807002";
+            r2.RequisitionId = "REQ-201807-002";
             r2.Department = context.Department.Where(x => x.DepartmentCode == "CPSC").ToList().First();
             r2.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
             r2.RequisitionDetails = new List<RequisitionDetail>();
@@ -105,7 +249,7 @@ namespace team7_ssis.Services.Tests
             requisitionService.Save(r2);
 
             Requisition r3 = new Requisition();
-            r3.RequisitionId = "REQ-201807003";
+            r3.RequisitionId = "REQ-201807-003";
             r3.Department = context.Department.Where(x => x.DepartmentCode == "ENGL").ToList().First();
             r3.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
             r3.RequisitionDetails = new List<RequisitionDetail>();
@@ -121,88 +265,6 @@ namespace team7_ssis.Services.Tests
             r3.RequisitionDetails.Add(rd5);
 
             requisitionService.Save(r3);
-
-        }
-
-        [TestMethod()]
-        public void ProcessRequisitions_CreatesRetrieval()
-        {
-            // Arrange
-            List<Requisition> reqList = new List<Requisition>();
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First());
-
-            // Act
-            string retrievalId = requisitionService.ProcessRequisitions(reqList);
-
-            // Assert - the Retrieval ID that ProcessRequisitions returns should return a Requisition
-            Retrieval result = context.Retrieval.Where(x => x.RetrievalId == retrievalId).ToList().First();
-            Assert.IsNotNull(result);
-
-            // Cleanup
-            context.Retrieval.Remove(result);
-            context.SaveChanges();
-        }
-
-        [TestMethod()]
-        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
-        {
-            //// Arrange
-            List<Requisition> reqList = new List<Requisition>();
-
-            // Add Requisitions to List<Requisition>
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807001").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807002").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807003").ToList().First());
-
-            // Act
-            List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
-
-            //// Assert
-
-            // There should be 3 Disbursements created, one for each department
-            Assert.AreEqual(disbList.Count, 3);
-            Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
-                            .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
-        }
-        [TestMethod()]
-        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDisbursementDetails()
-        {
-            // TODO
-        }
-
-        [TestMethod()]
-        public void CreateDisbursementForEachDepartmentTest()
-        {
-            //// Arrange
-
-            // get Departments
-            Department d1 = context.Department.ToList()[0];
-            Department d2 = context.Department.ToList()[1];
-
-            // Create expected result
-            HashSet<Department> expected = new HashSet<Department> { d1, d2 };
-
-            // Create mock Requisition list
-            List<Requisition> reqList = new List<Requisition>();
-            Requisition r1 = new Requisition();
-            r1.Department = d1;
-            Requisition r2 = new Requisition();
-            r2.Department = d2;
-            Requisition r3 = new Requisition();
-            r3.Department = d1;
-            reqList.Add(r1);
-            reqList.Add(r2);
-            reqList.Add(r3);
-
-            //// Act
-            List<Disbursement> result = requisitionService.CreateDisbursementForEachDepartment(reqList);
-
-            //// Assert
-            HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
-
-            Assert.IsTrue(depts.SetEquals(expected));
         }
     }
 }
