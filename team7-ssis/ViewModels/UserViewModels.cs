@@ -47,7 +47,6 @@ namespace team7_ssis.Models
         public string Department { get; set; }
         [Display(Name = "Department")]
         public IEnumerable<SelectListItem> Departments { get; set; }
-        [Required]
         public string SupervisorEmail { get; set; }
         public string Supervisor { get; set; }
         [Display(Name = "Supervisor")]
