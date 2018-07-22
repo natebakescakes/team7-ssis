@@ -455,6 +455,9 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Requisition\Index.cshtml" />
     <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
+    <Content Include="Views\Requisition\RequisitionDetails.cshtml" />
+    <Content Include="Views\Requisition\_RequisitionDetailTable.cshtml" />
+    <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

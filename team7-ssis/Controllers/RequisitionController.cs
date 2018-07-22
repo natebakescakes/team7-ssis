@@ -13,8 +13,24 @@ namespace team7_ssis.Controllers
         static ApplicationDbContext context = new ApplicationDbContext();
         RequisitionService requisitionService = new RequisitionService(context); 
         
-        // GET: Requisition
+        // GET: /Requisition
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: /Requisiton/RequisitionDetails
+        public ActionResult RequisitionDetails()
+        {
+            return View();
+        }
+        // GET: /Requisiton/StationeryRetrieval
+        public ActionResult StationeryRetrieval()
+        {
+            return View();
+        }
+        // GET: /Requisiton/StationeryDisbursement
+        public ActionResult StationeryDisbursement()
         {
             return View();
         }
