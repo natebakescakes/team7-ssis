@@ -21,10 +21,14 @@ namespace team7_ssis.Controllers
           }
         public ActionResult Home()
         {
+
             return View();
         }
 
-
+        public ActionResult SaveAsDraft()
+        {
+            return View();
+        }
 
         public ActionResult Add()
         {
