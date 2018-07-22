@@ -168,7 +168,7 @@
     <Compile Include="Services\CollectionPointServiceTests.cs" />
     <Compile Include="Services\DepartmentServiceTests.cs" />
     <Compile Include="Services\IdServiceTests.cs" />
-    <Compile Include="Services\SupplierServiceTest.cs" />
+    <Compile Include="Services\SupplierServiceTests.cs" />
     <Compile Include="Services\RequisitionServiceTests.cs" />
     <Compile Include="Services\ItemServiceTest.cs" />
     <Compile Include="Services\DisbursementServiceTest.cs" />
@@ -176,9 +176,9 @@
     <Compile Include="Services\StockAdjustmentServiceTest.cs" />
     <Compile Include="Services\ItemPriceServiceTest.cs" />
     <Compile Include="Services\ItemCategoryServiceTest.cs" />
-    <Compile Include="Services\StockMovementTest.cs" />
+    <Compile Include="Services\StockMovementServiceTests.cs" />
     <Compile Include="Services\PurchaseOrderServiceTests.cs" />
-    <Compile Include="Services\NotificationServiceTest.cs" />
+    <Compile Include="Services\NotificationServiceTests.cs" />
     <Compile Include="Services\TitleServiceTest.cs" />
     <Compile Include="Services\StatusServiceTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />

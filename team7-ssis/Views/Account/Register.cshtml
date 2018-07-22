@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="form-group">
-        @Html.Label("Supervisor")
+        @Html.Label("Supervisor", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.DropDownListFor(m => m.SupervisorEmail, new SelectList(new[]
             {
@@ -72,5 +72,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/register.js")
+    @Scripts.Render("~/Scripts/Custom/Register.js")
 }
