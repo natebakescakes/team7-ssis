@@ -18,6 +18,7 @@ namespace team7_ssis.Controllers
         RequisitionRepository requisitionRepository = new RequisitionRepository(context);
         RetrievalService retrievalService = new RetrievalService(context);
         DisbursementService disbursementService = new DisbursementService(context);
+        StatusService statusService = new StatusService(context);
 
         [Route("api/reqdetail/all")]
         [HttpGet]
@@ -73,7 +74,6 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<StationeryRetrievalViewModel> StationeryRetrieval(string rId)
         {
-            List<StationeryRetrievalViewModel> list = new List<StationeryRetrievalViewModel>();
             List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
 
             // get all the relevant Disbursement Details
@@ -85,7 +85,7 @@ namespace team7_ssis.Controllers
                 dd.ItemCode,
                 dd.Bin
             });
-            List<StationeryRetrievalViewModel> list2 = finalList.Select(y => new StationeryRetrievalViewModel
+            List<StationeryRetrievalViewModel> viewModel = finalList.Select(y => new StationeryRetrievalViewModel
             {
                 ProductID = y.Key.ItemCode,
                 //Bin = y.Key.Bin,
@@ -94,7 +94,30 @@ namespace team7_ssis.Controllers
                 Description = context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description
             }).ToList();
 
-            return list2;
+            return viewModel;
+        }
+        [Route("api/stationerydisbursement/{rId}")]
+        [HttpGet]
+        public IEnumerable<StationeryDisbursementViewModel> StationeryDisbursement(string rId)
+        {
+            List<StationeryDisbursementViewModel> viewModel = new List<StationeryDisbursementViewModel>();
+            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
+            foreach (Disbursement d in dList)
+            {
+                var clerk = d.Department.CollectionPoint.ClerkInCharge;
+                string disbursedBy = String.Format("{0} {1}", clerk.FirstName, clerk.LastName);
+
+                viewModel.Add(new StationeryDisbursementViewModel
+                {
+                    DisbursementID = d.DisbursementId,
+                    Department = d.Department.Name,
+                    //CollectionPoint = d.Department.CollectionPoint.Name,
+                    //DisbursedBy = disbursedBy,
+                    //Status = d.Status.Name
+                });
+            }
+
+            return viewModel;
         }
     }
 }

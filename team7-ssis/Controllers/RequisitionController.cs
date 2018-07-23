@@ -30,6 +30,7 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public ActionResult StationeryRetrieval(string id)
         {
+            // TODO: Remove hardcoded values
             id = "RET-201807-001";
             Retrieval r = retrievalService.FindRetrievalById(id);
             ViewBag.Retrieval = r;
@@ -38,6 +39,8 @@ namespace team7_ssis.Controllers
         // GET: /Requisiton/StationeryDisbursement
         public ActionResult StationeryDisbursement()
         {
+            // TODO: Remove hardcorded values
+            ViewBag.Retrieval = "RET-201807-001";
             return View();
         }
         

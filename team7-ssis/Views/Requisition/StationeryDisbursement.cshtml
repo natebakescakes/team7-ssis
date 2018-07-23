@@ -40,6 +40,8 @@
     </div>
 </div>
 
+<h3>Disbursement Forms</h3>
+
 <table id="myTable" class="table table-striped table-bordered" style="width: 100%">
     <thead>
         <tr>
@@ -59,14 +61,14 @@
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
 
-            sAjaxSource: "",
-            sAjaxDataProp: "",
+            sAjaxSource: "api/stationerydisbursement/@ViewBag.Retrieval",
 
             columns: [
-                { "data": "Catalogue Item Code", "autoWidth": true },
-                { "data": "Description", "autoWidth": true },
-                { "data": "Quantity", "autoWidth": true },
-                { "data": "Status", "autoWidth": true },
+                { "data": "DisbursementID", "autoWidth": true },
+                { "data": "Department", "autoWidth": true },
+                { "data": "CollectionPoint", "autoWidth": true },
+                { "data": "DisbursedBy", "autoWidth": true },
+                { "data": "Status", "autoWidth": true }
             ],
             select: 'single'
         });
