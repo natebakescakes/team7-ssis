@@ -345,7 +345,7 @@
     <Compile Include="ViewModels\StockAdjustmentViewModel.cs" />
     <Compile Include="ViewModels\ReportViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
-    <Compile Include="ViewModels\UrlTokenViewModel.cs" />
+    
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
