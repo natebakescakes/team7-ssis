@@ -100,6 +100,7 @@ $(document).ready(function(){
 
         var poNum = JSON.stringify(datatbl.row($(this).parents('tr')).data().PNo);
         var value = Number($(this).val());
+        alert(value);
         if (value == 0) { var u = 'PurchaseOrder/details'; }
         else if (value == 1) { u = ''; }
         else if (value == 2) { u = ''; }
