@@ -489,6 +489,11 @@
             select: true
             
         });
+
+        table.on('select'), function () {
+            var data = table.row($(this).parents('tr')).data();
+            alert(data[0] +"is the supplier code");
+        }
     });
 
 </script>

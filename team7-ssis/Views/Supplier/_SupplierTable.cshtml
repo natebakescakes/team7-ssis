@@ -10,8 +10,8 @@
 <body>
 
     <div style="margin:0 auto" class="container">
-        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
-        <table id="myTable" class="display">
+        
+        <table id="myTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>Supplier Code</th>
@@ -27,21 +27,15 @@
         </table>
     </div>
 
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
 
     <script>
         $(document).ready(function () {
              
-            var oTable = $('#myTable').DataTable({
+            var table = $('#myTable').DataTable({
                 select: true,
                 sAjaxSource: "/api/supplier/all",
                 sAjaxDataProp: "",
-                
+                pageLength:'5',
                 columns: [
                     { "data": "SupplierCode", "autoWidth": true },
                     { "data": "Name", "autoWidth": true },
@@ -55,11 +49,29 @@
                 select: {
                     style: 'single'
                 }
+   
             
+            });
+
+
+            $('#myTable tbody').on('click', 'tr', function () {
+                var rowdata = table.row(this).data();
+                var xid = rowdata.SupplierCode;
+                $(".collapse").collapse('toggle');
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/supplierapi/',
+                    dataType: 'json',
+                    data: { id: xid },
+                    success: function (data) {
+                        var i;
+                        for (i in data) {
+                            $('#supplier-form').find('[id="' + i + '"]').val(data[i]);
+                        }
+                    }
                 });
-
-       
-
+                
+            });
 
 
         })

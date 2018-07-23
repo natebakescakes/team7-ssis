@@ -4,81 +4,26 @@
 }
 
 
-<h2>Suppliers</h2>
-
-@*
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Manage Suppliers</h2>
+    </div>
+    <div class="col-md-4">
+        <a class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Supplier</a>
+    </div>
+</div>
+<br /><br />
     @Html.Partial("_SupplierTable")
 
-*@
 
-@Html.Partial("_example")
+
 <br />
-<div class="panel panel-default">
-    <div class="panel-body">
-        <form>
+<div id="demo" class="collapse">
+    
 
-            <div class="form-group">
-                <label for="SupplierCode">Supplier Code</label><br />
-                <input type="text" class="form-control" id="supplierCode">
-            </div>
+        @Html.Partial("_SupplierDetail")
 
 
-            <div class="row">
-
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="CompanyName">Company Name</label><br />
-                        <input type="text" class="form-control" id="companyName">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="ContactName">Contact Name</label><br />
-                        <input type="text" class="form-control" id="contactName">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label><br />
-                        <input type="text" class="form-control" id="phoneNumber">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="Fax">Fax Number</label><br />
-                        <input type="text" class="form-control" id="faxNumber">
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="Address">Address</label><br />
-                        <textarea class="form-control" rows="3" id="address"></textarea>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="Fax">GST Registration No.</label><br />
-                        <input type="text" class="form-control" id="faxNumber">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="Status">Status</label><br />
-                        <select class="form-control" id="status">
-                            <option>Active</option>
-                            <option>Inactive</option>
-
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-
-        </form>
-    </div>
 
 
 </div>
