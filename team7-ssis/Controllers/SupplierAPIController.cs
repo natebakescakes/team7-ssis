@@ -43,7 +43,7 @@ namespace team7_ssis.Controllers
                 FaxNumber = supplier.FaxNumber,
                 Name = supplier.Name,
                 GSTNumber = supplier.GstRegistrationNo,
-                Status = supplier.Status.Name
+                Status = supplier.Status.StatusId
             };
             
         }

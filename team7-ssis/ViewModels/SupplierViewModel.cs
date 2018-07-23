@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace team7_ssis.ViewModels
 {
@@ -15,8 +16,9 @@ namespace team7_ssis.ViewModels
         public string Address { get; set; }
 
         public string GSTNumber { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
 
+        public IEnumerable<SelectListItem> Statuses { get; set; }
     }
 
 }

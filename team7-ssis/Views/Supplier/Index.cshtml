@@ -9,22 +9,26 @@
         <h2>Manage Suppliers</h2>
     </div>
     <div class="col-md-4">
-        <a class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Supplier</a>
+        <button class="popup btn btn-primary pull-right" value="Save" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i> Create New Supplier</button>
     </div>
 </div>
 <br /><br />
-    @Html.Partial("_SupplierTable")
+@Html.Partial("_SupplierTable")
 
 
 
 <br />
-<div id="demo" class="collapse">
-    
+<div class="collapse">
 
-        @Html.Partial("_SupplierDetail")
-
-
-
+    @Html.Partial("_SupplierDetail")
 
 </div>
 
+
+@Html.Partial("_AddSupplier")
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/Custom/Supplier.js")
+}
