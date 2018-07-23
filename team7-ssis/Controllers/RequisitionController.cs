@@ -13,6 +13,7 @@ namespace team7_ssis.Controllers
         static ApplicationDbContext context = new ApplicationDbContext();
         RequisitionService requisitionService = new RequisitionService(context);
         RetrievalService retrievalService = new RetrievalService(context);
+        ItemService itemService = new ItemService(context);
         
         // GET: /Requisition
         public ActionResult Index()
@@ -43,6 +44,20 @@ namespace team7_ssis.Controllers
             ViewBag.Retrieval = "RET-201807-001";
             return View();
         }
-        
+        [Route("Requisition/RetrievalDetail/")]
+        [HttpGet]
+        public ActionResult RetrievalDetails(string retId, string itemId)
+        {
+            // TODO: Remove hardcoded values
+            retId = "RET-201807-001";
+            itemId = "C001";
+
+            Item i = itemService.FindItemByItemCode(itemId);
+
+            ViewBag.RetrievalId = retId;
+            ViewBag.Item = i;
+
+            return View();
+        }
     }
 }

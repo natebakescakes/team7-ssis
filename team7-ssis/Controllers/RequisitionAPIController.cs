@@ -96,6 +96,33 @@ namespace team7_ssis.Controllers
 
             return viewModel;
         }
+        /// <summary>
+        /// Retrieves Disbursement Details linked to a given Retrieval and Item.
+        /// </summary>
+        /// <param name="retId"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        [Route("api/retrievaldetails")]
+        [HttpPost]
+        public IEnumerable<RetrievalDetail> RetrievalDetails(string retId, string itemId)
+        {
+            List<RetrievalDetail> viewModel = new List<RetrievalDetail>();
+
+            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(retId);
+            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).Where(x => x.ItemCode == itemId).ToList();
+
+            foreach(DisbursementDetail dd in ddList)
+            {
+                viewModel.Add(new RetrievalDetail
+                {
+                    DeptId = dd.Disbursement.Department.DepartmentCode,
+                    DeptName = dd.Disbursement.Department.Name,
+                    Needed = dd.PlanQuantity
+                });
+            }
+            return viewModel;
+        }
+
         [Route("api/stationerydisbursement/{rId}")]
         [HttpGet]
         public IEnumerable<StationeryDisbursementViewModel> StationeryDisbursement(string rId)
