@@ -59,23 +59,7 @@ namespace team7_ssis.Controllers
             return null;
         }
 
-        [Route("api/supervisor/all")]
-        [HttpGet]
-        public IEnumerable<SupervisorViewModel> AllSupervisors()
-        {
-            //String user_id = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            //ApplicationUser user = userRepository.FindById(user_id);
-            ApplicationUser user = userRepository.FindByEmail("StoreClerk1@email.com");
-            List<ApplicationUser> supervisors = userService.FindSupervisorsByDepartment(user.Department);
-            List<SupervisorViewModel> sv = new List<SupervisorViewModel>();
-            foreach (ApplicationUser a in supervisors)
-            {
-                sv.Add(new SupervisorViewModel
-                { Name = a.FirstName + " " + a.LastName });
-
-            }
-            return sv;
-        }
+       
 
 
 

@@ -12,13 +12,13 @@
 
         ],
         createdRow: function (row, data, dataIndex) {
-            if (data.Status == "Delivered") {
+            if (data.StatusName === "Approved") {
                 $('td', row).eq(4).addClass('delivered');
             }
-            if (data.Status == "Partially Delivered") {
+            if (data.StatusName === "Pending Approval") {
                 $('td', row).eq(4).addClass('partially-delivered');
             }
-            if (data.Status == "Awaiting Delivery") {
+            if (data.StatusName === "Rejected") {
                 $('td', row).eq(4).addClass('awaiting-delivery');
             }
         },

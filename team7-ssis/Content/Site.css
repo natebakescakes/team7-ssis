@@ -22,3 +22,20 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.delivered {
+    background-color: MediumSeaGreen !important;
+    text-align: center;
+    color: white;
+}
+
+.awaiting-delivery {
+    background-color: firebrick !important;
+    color: white;
+    text-align: center;
+}
+
+.partially-delivered {
+    background-color: gold !important;
+    text-align: center;
+}
