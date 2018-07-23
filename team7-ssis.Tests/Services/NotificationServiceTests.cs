@@ -35,8 +35,6 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
-            notificationRepository.Delete(result); //Delete test dummy object
-
         }
 
         [TestMethod]
@@ -52,8 +50,6 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
-
-            notificationRepository.Delete(result);  //Delete test dummy object
         }
 
         [TestMethod]
@@ -69,15 +65,18 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
-            notificationRepository.Delete(result); //Delete test dummy object
-
-
         }
 
         [TestMethod]
         public void FindNotificationsByUserTest()
         {
             //Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                CreatedDateTime = DateTime.Now
+            });
             Notification notification = context.Notification.First();
             ApplicationUser user = notification.CreatedFor;
 
@@ -94,6 +93,13 @@ namespace team7_ssis.Tests.Services
         public void FindNotificationsByTypeTest()
         {
             //Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                CreatedDateTime = DateTime.Now
+            });
+
             Notification notification = context.Notification.First();
             NotificationType type = notification.NotificationType;
 
@@ -106,6 +112,105 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void FindUserByDepartment_NullInput()
+        {
+            // Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                CreatedDateTime = DateTime.Now
+            });
+
+            // Act
+            var result = notificationService.FindNotificationsByUser(null);
+
+            // Assert
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [TestMethod()]
+        public void FindNotificationById_Exists()
+        {
+            // Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                CreatedDateTime = DateTime.Now
+            });
+
+            // Act
+            var result = notificationService.FindNotificationById(notificationId);
+
+            // Assert
+            Assert.AreEqual(notificationId, result.NotificationId);
+        }
+
+        [TestMethod]
+        public void FindNotificationById_DoesNotExist_ReturnNull()
+        {
+            // Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                CreatedDateTime = DateTime.Now
+            });
+
+            // Act
+            var result = notificationService.FindNotificationById(0);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod()]
+        public void ReadNotification_Valid()
+        {
+            // Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            var expected = 15; // Read status
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                Status = new StatusService(context).FindStatusByStatusId(14),
+                CreatedDateTime = DateTime.Now
+            });
+
+            // Act
+            var result = notificationService.ReadNotification(notificationId);
+
+            // Assert
+            Assert.AreEqual(expected, result.Status.StatusId);
+        }
+
+        [TestMethod()]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ReadNotification_AlreadyRead()
+        {
+            // Arrange
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                Status = new StatusService(context).FindStatusByStatusId(15),
+                CreatedDateTime = DateTime.Now
+            });
+
+            // Act
+            var result = notificationService.ReadNotification(notificationId);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            var usedNotificationId = IdService.GetNewNotificationId(context) - 1;
+            if (notificationRepository.ExistsById(usedNotificationId))
+                notificationRepository.Delete(notificationRepository.FindById(usedNotificationId));
         }
     }
 }

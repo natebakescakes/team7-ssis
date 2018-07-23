@@ -2,19 +2,19 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Manage Inventory</title>
-    <link href="css/dataTables.checkboxes.css" rel="stylesheet" />
 </head>
 
 <body>
 
     <div style="width:90%; margin:0 auto" class="tablecontainer">
         <form id="myform" method="post">
-            <pre id="view-rows"></pre>
-            <p>Form data as submitted to the server</p>
-            <pre id="view-form"></pre>
-            <p><button>View Selected</button></p>
+            <a class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;">Delete Selected</a>
+
+            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px; margin-left:480px">Generate Prices List</a>
+
             <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Inventory Item</a>
-            <table id="itemTable">
+
+            <table id="itemTable" class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
                         <th></th>
@@ -25,64 +25,62 @@
                         <th>Reorder Quantity</th>
                         <th>Unit of Measurement</th>
                         <th>In Stock</th>
+                        <th></th>
                     </tr>
                 </thead>
 
             </table>
+            <b>Data submitted to the server:</b><br>
+<pre id="example-console">
+</pre>
         </form>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
-    <script src="~/Scripts/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.11/js/dataTables.checkboxes.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
 
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
 
     <script>
+        var row_selected = [];
         $(document).ready(function () {
             var oTable = $('#itemTable').DataTable({
                 sAjaxSource: "/api/manage/items",
                 sAjaxDataProp: "",
-                columnDefs: [{
-                    targets: 0,
-                    checkboxes: {
-                        selectRow: true
+                //'ajax':"/api/manage/items",
+                'columnDefs': [{
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
                     }
                 }],
-                select: {
-                    style: 'multi'
+                'select': {
+                    'style': 'multi'
                 },
-                order: [[1, 'asc']],
+                'order': [[1, 'asc']],
                 "columns": [
+                    //{ "defaultContent": "<input type='checkbox' name='check-select' value=''>"},
+                    {
+                        sortable: false,
+                        "render": function (data, type, full, meta) {
+                            return '<input type="checkbox">';
+                         }
+                    },
                     { "data": "ItemCode", "autoWidth": true },
                     { "data": "ItemCategoryName", "autoWidth": true },
                     { "data": "Description", "autoWidth": true },
                     { "data": "ReorderLevel", "autoWidth": true },
                     { "data": "ReorderQuantity", "autoWidth": true },
                     { "data": "Uom", "autoWidth": true },
-                    { "data": "Quantity", "autoWidth": true }
+                    { "data": "Quantity", "autoWidth": true },
+                    { "defaultContent": "<select><option value='makeStAdj'>Make Stock Adjustment</option><option value='editReorder'>Edit Reorder Level & Quantity</option><option value='viewItem'>View Item Details</option></select>"}
 
-                ],
-                select: 'single'
+                ]
+                
             })
-            $("#myform").on('submit', function (e) {
-                var form = this
-                var rowsel = oTable.column(0).checkboxes.selected();
-                $.each(rowsel, function (index, rowId) {
-                    $(form).append(
-                        $('<input>').attr('type', 'hidden').attr('name', 'id[]').val(rowId)
-                    )
-                })
-                $("#view-rows").text(rowsel.join(","))
-                $("#view-form").text($(form).serialize())
-                $('input[name="id\[\]"]', form).remove()
-                e.preventDefault()
-            })
-
-        })
+            });
+        
 
     </script>
 
