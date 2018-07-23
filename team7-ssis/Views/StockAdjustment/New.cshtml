@@ -1,7 +1,4 @@
-﻿@Model.
-@{
-
-}
+﻿@using team7_ssis.ViewModels
 
 <h2>Make Stock Adjustment</h2>
 
@@ -30,7 +27,7 @@
 <table>
     <tr>
         <td width="400" align="left"> <input type="button" value="Add Item" onclick="location.href='@Url.Action("list","ItemController")'"></td>
-        <td width="400" align="right"> <input type="button" value="Save as Draft" ></td>
+        <td width="400" align="right"> <input type="button" value="Save as Draft"></td>
     </tr>
 </table>
 <br />
@@ -50,16 +47,21 @@
         </tr>
         <tr>
             <td>
-            @Html.DropDownList("supervisors") 
-           </td>
+                @Html.DropDownList("FirstName", ViewBag.select1 as SelectList, "pls select supervicor")
+            </td>
+
+            <td>
+
+                @Html.DropDownList("FirstName", ViewBag.select2 as SelectList, "pls select managers")
+            </td>
 
         </tr>
     </table>
     <br />
 
-    <input type="button" value="cancel" >
+    <input type="button" value="cancel">
 
-    <input type="button" value="Submit" >
+    <input type="button" value="Submit">
 
 </div>
 
