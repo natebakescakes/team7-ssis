@@ -241,6 +241,8 @@
     <Compile Include="Controllers\SupplierAPIController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
+    <Compile Include="Controllers\StockAdjustmentAPIController.cs" />
+    <Compile Include="Controllers\StockAdjustmentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -335,6 +337,8 @@
     <Compile Include="ViewModels\ManageRequisitionsViewModel.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
+    <Compile Include="ViewModels\StockAdjustmentListViewModel.cs" />
+    <Compile Include="ViewModels\StockAdjustmentViewModel.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -404,6 +408,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.4.2.debug.js" />
+    <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -459,6 +465,11 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Requisition\Index.cshtml" />
     <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
+    <Content Include="Views\StockAdjustment\Home.cshtml" />
+    <Content Include="Views\StockAdjustment\Add.cshtml" />
+    <Content Include="Views\StockAdjustment\Index.cshtml" />
+    <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
+    <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
