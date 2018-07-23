@@ -10,4 +10,10 @@ namespace team7_ssis.ViewModels
         public string Url { get; set; }
         public string Token { get; set; }
     }
+    
+    public class ReportViewModel
+    {
+        public UrlTokenViewModel DashboardConfig { get; set; }
+    }
+
 }
