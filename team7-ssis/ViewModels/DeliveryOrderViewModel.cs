@@ -13,4 +13,13 @@ namespace team7_ssis.ViewModels
         public DateTime OrderDate { get; set; }
         public string Status { get; set; }
     }
+
+    public class DeliveryOrderDetailsViewModel
+    {
+        public string ItemCode { get; set; }
+        public string Description { get; set; }
+        public int QtyOrdered { get; set; }
+        public int ReceivedQty { get; set; }
+        public int RemainingQuantity { get; set; }
+    }
 }

@@ -15,7 +15,9 @@ namespace team7_ssis.Controllers
     {
         static ApplicationDbContext context = new ApplicationDbContext();
         DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
+        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
         ItemService itemService = new ItemService(context);
+
 
         [Route("api/receivegoods/all")]
         [HttpGet]
@@ -27,13 +29,39 @@ namespace team7_ssis.Controllers
 
                 PurchaseOrderNo = x.PurchaseOrder.PurchaseOrderNo,
 
-                SupplierName = x.Supplier.SupplierCode,
+                SupplierName = x.Supplier.Name,
 
                 OrderDate = x.PurchaseOrder.CreatedDateTime,
 
                 Status = x.PurchaseOrder.Status.Name
-                 
-                }).ToList();
+
+            }).ToList();
          }
+
+
+        [Route("api/receivegoods/{id}")]
+
+        [HttpPost]
+
+        public List<DeliveryOrderDetailsViewModel> DeliveryOrderDetails(string poNum)
+        {
+
+           DeliveryOrder deliveryOrder= deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(poNum);
+         
+            return deliveryOrder.DeliveryOrderDetails.Select(dod => new DeliveryOrderDetailsViewModel()
+
+            {
+
+                ItemCode = dod.Item.ItemCode,
+
+                Description = dod.Item.Description,
+
+                QtyOrdered = dod.PlanQuantity,
+
+                ReceivedQty = 0
+
+            }).ToList();
+
+        }
     }
 }

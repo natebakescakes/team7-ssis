@@ -5,30 +5,42 @@
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
     <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
 }
-<!DOCTYPE html>
-    <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>View Delivery Orders</title>
-    </head>
 
-    <body>
-            <div>
-                <table id="myDOTable" class="hover">
-                    <thead>
-                        <tr>
-                            <th>Delivery Order No</th>
-                            <th>Purchase Order No</th>
-                            <th>Supplier Name</th>
-                            <th>Order Date</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-    </body>
+<link rel="stylesheet" href="~/Content/Site.css">
+
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div class="col-md-8">
+
+        <h2>View Delivery Orders</h2>
+
+    </div>
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+
+        <div class="form-group">
+
+            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>Download Selected</a>
+
+        </div>
+        <table id="myTable" class="hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Delivery Order No</th>
+                    <th>Purchase Order No</th>
+                    <th>Supplier Name</th>
+                    <th>Order Date</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
 </html>
 

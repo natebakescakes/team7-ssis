@@ -283,7 +283,6 @@
     <Compile Include="Models\StockMovement.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Title.cs" />
-    <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -471,6 +470,7 @@
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
+    <Content Include="Views\DeliveryOrder\PurchaseOrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
