@@ -229,6 +229,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DeliveryOrderApiController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
+    <Compile Include="Controllers\DisbursementController.cs" />
     <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\NotificationApiController.cs" />
@@ -286,6 +287,9 @@
     <Compile Include="Models\StockMovement.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Title.cs" />
+    <Compile Include="ViewModels\RetrievalDetail.cs" />
+    <Compile Include="ViewModels\StationeryDisbursementViewModel.cs" />
+    <Compile Include="ViewModels\StationeryRetrievalViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -474,6 +478,16 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Requisition\Index.cshtml" />
     <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
+    <Content Include="Views\Requisition\RequisitionDetails.cshtml" />
+    <Content Include="Views\Requisition\_RequisitionDetailTable.cshtml" />
+    <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
+    <Content Include="Views\Requisition\StationeryDisbursement.cshtml" />
+    <Content Include="Views\Requisition\RetrievalDetails.cshtml" />
+    <Content Include="Views\Requisition\_RetrievalDetailsTable.cshtml" />
+    <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
+    <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
+    <Content Include="Views\Requisition\CreateRequisition.cshtml" />
+    <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\Home.cshtml" />
     <Content Include="Views\StockAdjustment\Add.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />

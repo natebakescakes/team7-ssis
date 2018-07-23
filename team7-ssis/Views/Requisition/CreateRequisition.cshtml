@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Create Requisition";
+}
+
+<div class="row mb-3">
+<div class="col-md-8">
+    <h2>Create Requisition</h2>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
+    </div>
+</div>
+
+@Html.Partial("_CreateRequisitionTable")
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <h3>Select Collection Point</h3>
+        @*Bind input to List<CollectionPoint>*@
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown button
+            </button>
+        </div>
+
+        <p>Once requisition in processed, you will receive an email on the pickup date. This will be the following Monday if the requisition was created by Wednesday.</p>
+        <h3>Representative</h3>
+        Jenny Wong Mei Lin
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <button class="btn btn-default">Cancel</button>
+        <button class="btn btn-primary">Confirm</button>
+    </div>
+</div>
+
