@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Manage Requisitions</h2>
+    </div>
+    <div class="col-md-4">
+        <a class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>
+    </div>
+</div>
+
+@Html.Partial("_RequisitionTable")
