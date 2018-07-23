@@ -1,9 +1,8 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "StationeryRetrieval";
 }
 <div class="alert alert-primary mb-3" role="alert">
-    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> 5 requisitions processed. Retrieval Form #RET-201807-001 created. 
+    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> 5 requisitions processed. Retrieval Form #@ViewBag.Retrieval.RetrievalId created.
 </div>
 
 <div class="row mb-3 step__container">
@@ -43,28 +42,28 @@
 <div class="row mb-3">
     <div class="col-md-4">
         <div>Retrieval ID</div>
-        RET-201807-011<br />
+        @ViewBag.Retrieval.RetrievalId<br />
         <i class="fa fa-print" aria-hidden="true"></i>
 
     </div>
     <div class="col-md-4">
         <div class="col-md-12">
             <div>Created By</div>
-            Jamie Wong Wai Wai
+            @ViewBag.Retrieval.CreatedBy
         </div>
         <div class="col-md-12">
             <div>Created On</div>
-            12/7/2018 00:00
+            @ViewBag.Retrieval.CreatedDateTime
         </div>
     </div>
     <div class="col-md-4">
         <div class="col-md-12">
             <div>Updated By</div>
-            Aaron Wong Wai Wai
+            @ViewBag.Retrieval.UpdatedBy
         </div>
         <div class="col-md-12">
             <div>Updated On</div>
-            15/7/2018 00:00
+            @ViewBag.Retrieval.UpdatedDateTime
         </div>
     </div>
 </div>
@@ -87,14 +86,13 @@
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
 
-            sAjaxSource: "api/reqdetail/all",
-            sAjaxDataProp: "",
+            sAjaxSource: "api/stationeryretrieval/@ViewBag.Retrieval.RetrievalId",
 
             columns: [
-                { "data": "Catalogue Item Code", "autoWidth": true },
+                { "data": "ProductID", "autoWidth": true },
+                { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
-                { "data": "Quantity", "autoWidth": true },
-                { "data": "Status", "autoWidth": true },
+                { "data": "QtyOrdered", "autoWidth": true },
             ],
             select: 'single'
         });

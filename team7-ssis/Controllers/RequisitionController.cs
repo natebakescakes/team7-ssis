@@ -11,7 +11,8 @@ namespace team7_ssis.Controllers
     public class RequisitionController : Controller
     {
         static ApplicationDbContext context = new ApplicationDbContext();
-        RequisitionService requisitionService = new RequisitionService(context); 
+        RequisitionService requisitionService = new RequisitionService(context);
+        RetrievalService retrievalService = new RetrievalService(context);
         
         // GET: /Requisition
         public ActionResult Index()
@@ -25,8 +26,13 @@ namespace team7_ssis.Controllers
             return View();
         }
         // GET: /Requisiton/StationeryRetrieval
-        public ActionResult StationeryRetrieval()
+        [Route("/Requisition/StationeryRetrieval/{id}")]
+        [HttpGet]
+        public ActionResult StationeryRetrieval(string id)
         {
+            id = "RET-201807-001";
+            Retrieval r = retrievalService.FindRetrievalById(id);
+            ViewBag.Retrieval = r;
             return View();
         }
         // GET: /Requisiton/StationeryDisbursement
