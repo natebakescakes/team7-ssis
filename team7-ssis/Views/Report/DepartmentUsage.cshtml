@@ -1,0 +1,10 @@
+﻿@model team7_ssis.ViewModels.DepartmentUsageViewModel
+@{
+    ViewBag.Title = "Department Usage Statistics";
+}
+
+<div class="embed-responsive embed-responsive-16by9">
+    <iframe class="embed-responsive-item" src="@Model.DashboardConfig.Url/embed/dashboard/@Model.DashboardConfig.Token#bordered=true&titled=true"
+            frameborder="0"
+            allowtransparency></iframe>
+</div>
