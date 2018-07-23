@@ -4,63 +4,31 @@
 }
 
 
-<h2>Suppliers</h2>
-
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Manage Suppliers</h2>
+    </div>
+    <div class="col-md-4">
+        <button class="popup btn btn-primary pull-right" value="Save" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i> Create New Supplier</button>
+    </div>
+</div>
+<br /><br />
 @Html.Partial("_SupplierTable")
 
+
+
 <br />
-<div class="panel panel-default">
-    <div class="panel-body">
-        <form>
-            <div class="row">
+<div class="collapse">
 
-                <div class="form-group">
-                    <label for="SupplierCode">Supplier Code</label><br />
-                    <input type="text" class="form-control" id="supplierCode">
-                </div>
-                <div class="form-group">
-                    <label for="CompanyName">Company Name</label><br />
-                    <input type="text" class="form-control" id="companyName">
-                </div>
-
-                <div class="form-group">
-                    <label for="ContactName">Contact Name</label><br />
-                    <input type="text" class="form-control" id="contactName">
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label><br />
-                    <input type="text" class="form-control" id="phoneNumber">
-                </div>
-                <div class="form-group">
-                    <label for="Fax">Fax Number</label><br />
-                    <input type="text" class="form-control" id="faxNumber">
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <label for="Address">Address</label><br />
-                    <textarea class="form-control" rows="3" id="address"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="Fax">GST Registration No.</label><br />
-                    <input type="text" class="form-control" id="faxNumber">
-                </div>
-
-                <div class="form-group">
-                    <label for="Status">Status</label><br />
-                    <select class="form-control" id="status">
-                        <option>Active</option>
-                        <option>Inactive</option>
-
-                    </select>
-                </div>
-            </div>
-
-        
-        </form>
-    </div>
-
+    @Html.Partial("_SupplierDetail")
 
 </div>
+
+
+@Html.Partial("_AddSupplier")
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/Custom/Supplier.js")
+}
