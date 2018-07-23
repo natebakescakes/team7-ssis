@@ -12,7 +12,7 @@ namespace team7_ssis.ViewModels
 
             public string PurchaseOrder_PurchaseOrderNo { get; set; }
 
-            public string Supplier_SupplierCode{ get; set; }
-        
+            public string Supplier_SupplierCode { get; set; }
+
     }
 }

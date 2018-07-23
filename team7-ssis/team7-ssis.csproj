@@ -341,6 +341,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\editProfile.js" />
+    <Content Include="Scripts\OutstandingItems.js" />
     <Content Include="Scripts\register.js" />
     <Content Include="Views\ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

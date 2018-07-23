@@ -1,25 +1,21 @@
-﻿    $(document).ready(function () {
+﻿$(document).ready(function () {
 
-            var oTable = $('#myOutstandingTable').DataTable({
+    var oTable = $('#myOutstandingTable').DataTable({
 
-        "ajax": {
+        ajax: {
+            url: "outstandingitems",
 
-            "url": "outstandingitems",
+            dataSrc: "",
+        },
 
-                    "type": "get",
+        columns: [
 
-                    "datatype": "json"
+            { data: "Item Code" },
 
-                },
+            { data: "Description" },
 
-                "columns": [
+            { data: "Outstanding Qty" },
 
-                    {"data": "Item Code", "autoWidth": true},
-
-                    {"data": "Description", "autoWidth": true },
-
-                    {"data": "Outstanding Qty", "autoWidth": true },
-
-                ]
-            });
-
+        ]
+    });
+}
