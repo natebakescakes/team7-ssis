@@ -160,7 +160,7 @@ namespace team7_ssis.Tests.Services
             Assert.IsInstanceOfType(result, typeof(DeliveryOrder));
 
             //clean
-            deliveryOrderRepository.Delete(d1);
+           deliveryOrderRepository.Delete(d1);
             po.Status = statusRepository.FindById(15);
             purchaseOrderRepository.Save(po);
             stockMovementRepository.Delete(result1);

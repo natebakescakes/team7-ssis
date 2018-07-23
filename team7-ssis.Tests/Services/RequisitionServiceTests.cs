@@ -125,7 +125,7 @@ namespace team7_ssis.Tests.Services
             //// ACT
             string retrievalId = requisitionService.ProcessRequisitions(reqList);
 
-            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 20 items.
+            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 30 items.
             var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
      
             Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
