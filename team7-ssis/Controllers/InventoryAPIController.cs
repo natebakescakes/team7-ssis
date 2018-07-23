@@ -12,14 +12,18 @@ namespace team7_ssis.Controllers
 {
     public class InventoryApiController : ApiController
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        ItemService itemService = new ItemService(context);
+        private ApplicationDbContext context;
+
+        public InventoryApiController()
+        {
+            context = new ApplicationDbContext();
+        }
 
         [Route("api/manage/items")]
         [HttpGet]
         public IEnumerable<ItemViewModel> FindAllItems()
         {
-            List<Item> list = itemService.FindAllItems();
+            List<Item> list = new ItemService(context).FindAllItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
             foreach(Item i in list)

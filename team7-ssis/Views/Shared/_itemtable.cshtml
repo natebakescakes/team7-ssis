@@ -3,12 +3,10 @@
     <meta name="viewport" content="width=device-width" />
     <title>Manage Inventory</title>
 </head>
-
 <body>
-
     <div style="width:90%; margin:0 auto" class="tablecontainer">
         <form id="myform" method="post">
-            <a class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;">Delete Selected</a>
+            <input id="deletebtn" type="submit" class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;" value="Delete Selected" /> 
 
             <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px; margin-left:480px">Generate Prices List</a>
 
@@ -30,9 +28,7 @@
                 </thead>
 
             </table>
-            <b>Data submitted to the server:</b><br>
-<pre id="example-console">
-</pre>
+
         </form>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -43,8 +39,19 @@
     <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
 
     <script>
-        var row_selected = [];
+
         $(document).ready(function () {
+
+
+            $('.tablecontainer #myform').on('click', '#deletebtn', function (e) {
+                var i;
+                for (i = 0; i < selected.length; i++) {
+                    console.log(selected[i]);
+                }
+                //alert(selected.length);
+            });
+            
+
             var oTable = $('#itemTable').DataTable({
                 sAjaxSource: "/api/manage/items",
                 sAjaxDataProp: "",
@@ -60,13 +67,7 @@
                 },
                 'order': [[1, 'asc']],
                 "columns": [
-                    //{ "defaultContent": "<input type='checkbox' name='check-select' value=''>"},
-                    {
-                        sortable: false,
-                        "render": function (data, type, full, meta) {
-                            return '<input type="checkbox">';
-                         }
-                    },
+                    { "defaultContent": "<input type='checkbox' id='mycheck' value=''>"},
                     { "data": "ItemCode", "autoWidth": true },
                     { "data": "ItemCategoryName", "autoWidth": true },
                     { "data": "Description", "autoWidth": true },
@@ -74,14 +75,54 @@
                     { "data": "ReorderQuantity", "autoWidth": true },
                     { "data": "Uom", "autoWidth": true },
                     { "data": "Quantity", "autoWidth": true },
-                    { "defaultContent": "<select><option value='makeStAdj'>Make Stock Adjustment</option><option value='editReorder'>Edit Reorder Level & Quantity</option><option value='viewItem'>View Item Details</option></select>"}
-
+                    { "defaultContent": "<select id='ddl'><option value='-1'>Action</option><option value='0'>Make Stock Adjustment</option><option value='1'>Edit Reorder Level & Quantity</option><option value='2'>View Item Details</option></select>" }
                 ]
-                
-            })
-            });
-        
 
+            });
+            //all about dropdownlist
+            $('#itemTable tbody').on('change', '#ddl', function (e) {
+                var value = Number($(this).val());
+                var rowSelected = JSON.stringify(oTable.row($(this).parents('tr')).data().ItemCode);
+                //alert(rowSelected);
+                switch (value) {
+                    case 0: gotoMakeStockAdjustment(rowSelected);
+                        break;
+                    case 1: gotoEditReorderLevelAndQuantity(rowSelected);
+                        break;
+                    case 2: gotoViewItemDetail(rowSelected);
+                    break;
+
+                default: console.log('default ddl')
+            }
+        })
+        function gotoMakeStockAdjustment(rs) {
+            alert('MakeStockAdjustment'+rs);
+            }
+        function gotoEditReorderLevelAndQuantity(rs) {
+            alert('EditReorderLevelAndQuantity'+rs);
+        }
+        function gotoViewItemDetail(rs) {
+            alert('gotoViewItemDetail'+rs);
+        }
+
+        var selected = [];
+        //all about checkbox
+        $('#itemTable tbody').on('change', '#mycheck', function (e) {
+            var rowSelected = JSON.stringify(oTable.row($(this).parents('tr')).data().ItemCode);
+            if (this.checked != true) {
+                var index = selected.indexOf(rowSelected);
+                if (index > -1) {
+                    selected.splice(index, 1);
+                }
+                //alert('you are unchecked this again!')
+            }
+            else {
+                selected.push(rowSelected);
+            }
+            //alert(selected.length);
+                
+        })
+        });
     </script>
 
 </body>
