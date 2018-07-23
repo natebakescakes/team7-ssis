@@ -124,18 +124,20 @@ namespace team7_ssis.Services
         }
 
 
-        public void SaveDOFileToDeliveryOrder(HttpPostedFileBase file)
-        {
-            // string targetpath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/DOFiles"), filename);
+        public int UploadDeliveryOrderFile(HttpPostedFileBase file)
+        { 
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = System.Web.HttpContext.Current.Server.MapPath("~/DOFiles");
 
-             throw new NotImplementedException();
-            //if (file != null && file.ContentLength > 0)
-            //{
-            //    var fileName = Path.GetFileName(file.FileName);
-            //    var path = System.Web.HttpContext.Current.Server.MapPath("~/DOFiles");
-
-            //    file.SaveAs(path + fileName);
-            //}
+                file.SaveAs(path + fileName);
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         public void SaveInvoiceFileToDeliveryOrder(string Filepath)
@@ -143,8 +145,6 @@ namespace team7_ssis.Services
             throw new NotImplementedException();
           //  deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
             //Need to send to Finance department
-        }
-
-        
+        } 
     }
 }

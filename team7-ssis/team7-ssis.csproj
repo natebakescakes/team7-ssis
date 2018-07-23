@@ -275,6 +275,7 @@
     <Compile Include="Models\StockMovement.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Title.cs" />
+    <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CollectionPointRepository.cs" />
@@ -403,6 +404,7 @@
     <Content Include="Views\Shared\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
     <Content Include="Views\Manage\EditProfile.cshtml" />
+    <Content Include="Views\DeliveryOrder\PurchaseOrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

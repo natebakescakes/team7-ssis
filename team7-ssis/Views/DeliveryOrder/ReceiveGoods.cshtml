@@ -11,44 +11,24 @@
     <html>
     <head>
         <meta name="viewport" content="width=device-width" />
-        <title>Receive Goods</title>
+        <title>View Delivery Orders</title>
     </head>
 
     <body>
-        <h1>Submit delivery order forms & invoices and update inventory</h1>
-        <div style="width:90%; margin:0 auto" class="container">
-            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">View Related Delivery Orders</a>
             <div>
-                <table id="poTable" class="hover">
+                <table id="myDOTable" class="hover">
                     <thead>
                         <tr>
-                            <td>Purchase Order #</td>
-                            <td> Supplier Name</td>
-                            <td>Order Date</td>
+                            <th>Delivery Order No</th>
+                            <th>Purchase Order No</th>
+                            <th>Supplier Name</th>
+                            <th>Order Date</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tr>
-                        <td>Purchase Order #</td>
-                        <td> Supplier Name</td>
-                        <td>Order Date</td>
-                    </tr>
-                    <tr>
-                        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">View</a>
-                    </tr>
                 </table>
             </div>
-            <table id="myTable" class="hover">
-                <thead>
-                    <tr>
-                        <th>Item Code</th>
-                        <th>Description</th>
-                        <th>Outstanding Qty</th>
-                        <th>Received Qty</th>
-                        <th>Remaining Qty</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
     </body>
 </html>
 

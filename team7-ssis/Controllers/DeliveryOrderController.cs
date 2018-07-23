@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Services;
 using team7_ssis.Models;
+using team7_ssis.ViewModels;
 
 namespace team7_ssis.Controllers
 {
@@ -14,12 +15,32 @@ namespace team7_ssis.Controllers
         DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
         PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
         PurchaseOrderService purchaseOrderDetailService = new PurchaseOrderService(context);
+      
 
-        // GET: DeliveryOrder
         public ActionResult Index()
         {
             return View("ReceiveGoods");
         }
+
+        [HttpGet]
+        //public ActionResult PurchaseOrderDetails(string ponum)
+        public ActionResult PurchaseOrderDetails()
+        {
+            DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
+            //PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
+            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
+
+            DOVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
+
+            DOVM.SupplierName = purchaseOrder.Supplier.Name;
+
+            DOVM.OrderDate = purchaseOrder.CreatedDateTime;
+
+            DOVM.Status = purchaseOrder.Status.Name;
+
+            return View(DOVM);
+        }
+        
 
         public ActionResult OutstandingItems()
         {
@@ -44,8 +65,9 @@ namespace team7_ssis.Controllers
 
                         OutstandingQty=x.Quantity
                     });
-            return View("OutstandingItems");
 
+            return View(v);
+            
             //  return Json(new { data = v }, JsonRequestBehavior.AllowGet);
         }
 

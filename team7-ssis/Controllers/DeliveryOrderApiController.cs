@@ -9,7 +9,6 @@ using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
 
-
 namespace team7_ssis.Controllers
 {
     public class DeliveryOrderApiController : ApiController
@@ -23,12 +22,16 @@ namespace team7_ssis.Controllers
         public List<DeliveryOrderViewModel> DeliveryOrders()
         {
             return deliveryOrderService.FindAllDeliveryOrders().Select(x => new DeliveryOrderViewModel()
-                {
+            {
                 DeliveryOrderNo = x.DeliveryOrderNo,
 
-                PurchaseOrder_PurchaseOrderNo = x.PurchaseOrder.PurchaseOrderNo,
+                PurchaseOrderNo = x.PurchaseOrder.PurchaseOrderNo,
 
-                 Supplier_SupplierCode = x.Supplier.SupplierCode,
+                SupplierName = x.Supplier.SupplierCode,
+
+                OrderDate = x.PurchaseOrder.CreatedDateTime,
+
+                Status = x.PurchaseOrder.Status.Name
                  
                 }).ToList();
          }
