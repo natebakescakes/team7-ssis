@@ -8,9 +8,17 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.19/pagination/simple_incremental_bootstrap.js"></script>
+
+    @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />*@
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
@@ -31,7 +39,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            @Html.ActionLink("Manage Requisitions", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item">@Html.ActionLink("View Catalogue", "Index", "Home", null, new { @class = "nav-link" })</li>
@@ -42,8 +50,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown02">
-                            @Html.ActionLink("Outstanding Requisitions", "Index", "Home", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Requisitions", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Outstanding Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -86,16 +94,12 @@
             </footer>
         </div>
     </main>
-
-    @Scripts.Render("~/bundles/jquery")
+    
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/Custom/Notification.js")
+
+    @*For jQuery Validation*@
     @RenderSection("scripts", required: false)
-
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
+    
 </body>
 </html>
