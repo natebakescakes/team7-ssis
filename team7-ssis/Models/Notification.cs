@@ -15,7 +15,7 @@ namespace team7_ssis.Models
         public virtual NotificationType NotificationType { get; set; }
         [MaxLength(200)]
         public String Contents { get; set; }
-        public Status Status { get; set; }
+        public virtual Status Status { get; set; }
         public virtual ApplicationUser CreatedFor { get; set; }
         public DateTime CreatedDateTime { get; set; }
     }
