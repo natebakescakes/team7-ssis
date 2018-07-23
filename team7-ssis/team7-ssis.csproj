@@ -469,7 +469,6 @@
     <Content Include="Views\StockAdjustment\Add.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
-    <Content Include="Views\Inventory\Manage.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
