@@ -465,12 +465,12 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Requisition\Index.cshtml" />
     <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
-    <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
     <Content Include="Views\StockAdjustment\Home.cshtml" />
     <Content Include="Views\StockAdjustment\Add.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
+    <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
