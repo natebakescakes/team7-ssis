@@ -27,6 +27,7 @@ namespace team7_ssis.Controllers
 
         public String CurrentUserName { get; set; }
 
+        [Authorize]
         [Route("api/notifications")]
         public IHttpActionResult GetNotificationsCurrentUser()
         {
