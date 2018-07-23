@@ -233,6 +233,7 @@
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\NotificationApiController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -332,6 +333,7 @@
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\DepartmentViewModel.cs" />
     <Compile Include="ViewModels\DeliveryOrderViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\ManageRequisitionsViewModel.cs" />
@@ -471,6 +473,9 @@
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
+    <Content Include="Views\Department\DepartmentOptions.cshtml" />
+    <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
+    <Content Include="Views\Supplier\_AddSupplier.cshtml" />
     <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\_AddSupplier.cshtml" />
