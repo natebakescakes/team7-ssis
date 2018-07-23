@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
+using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Services
 {
@@ -13,12 +14,19 @@ namespace team7_ssis.Tests.Services
         StockAdjustmentRepository stockAdjustmentRepository;
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         StatusRepository statusRepository;
+        ItemService itemService;
+        InventoryRepository inventoryRepository;
+        StockMovementRepository stockMovementRepository;
+
         public StockAdjustmentService(ApplicationDbContext context)
         {
             this.context = context;
             this.statusRepository = new StatusRepository(context);
             this.stockAdjustmentRepository = new StockAdjustmentRepository(context);
             this.stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
+            this.itemService = new ItemService(context);
+            this.inventoryRepository = new InventoryRepository(context);
+            this.stockMovementRepository = new StockMovementRepository(context);
         }
 
         //create new StockAdjustment with status: draft
@@ -132,6 +140,21 @@ namespace team7_ssis.Tests.Services
             {
                 stockadjustment.Status = statusRepository.FindById(6);
                 stockAdjustmentRepository.Save(stockadjustment);
+                //update item inventory
+                foreach (StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
+                {
+                   //save into inventory
+                    itemService.UpdateQuantity(sd.Item, sd.AfterQuantity);                   
+                }
+
+                foreach(StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
+                {
+                    //save into StockMovement
+                    SaveStockMovement(sd);
+                }
+
+
+
             }
             return stockadjustment;
         }
@@ -163,6 +186,25 @@ namespace team7_ssis.Tests.Services
             StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode);
             return s;
         }
+
+
+
+        public StockMovement SaveStockMovement(StockAdjustmentDetail sjd)
+        {
+            StockMovement sm = new StockMovement();
+            sm.StockMovementId = IdService.GetNewStockMovementId(context);
+            sm.StockAdjustmentId = sjd.StockAdjustmentId;
+            sm.Item = sjd.Item;           
+            sm.StockAdjustmentDetail = sjd;
+            sm.StockAdjustmentDetailItemCode = sjd.ItemCode;
+            sm.OriginalQuantity = sjd.OriginalQuantity;
+            sm.AfterQuantity = sjd.AfterQuantity;
+
+            sm.CreatedDateTime = DateTime.Now;
+            return stockMovementRepository.Save(sm);
+        }
+
+
 
     }
 }

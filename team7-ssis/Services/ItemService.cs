@@ -45,6 +45,11 @@ namespace team7_ssis.Services
             return result;
         }
 
+        public List<Item> FindItemQuantityLessThanReorderLevel()
+        {
+            return itemRepository.FindQuantity().ToList();
+        }
+
         public Inventory SaveInventory(Item item,int quantity)
         {
             Inventory iv = new Inventory();
@@ -60,6 +65,13 @@ namespace team7_ssis.Services
             return inventoryRepository.Save(iv);
         }
 
+        public Inventory AddQuantity(Item item,int quantity)
+        {
+            Inventory iv = inventoryRepository.FindById(item.ItemCode);
+            iv.Quantity = iv.Quantity + quantity;
+            return inventoryRepository.Save(iv);
+        }
+
         public Item DeleteItem(Item item)
         {
             Item a = itemRepository.FindById(item.ItemCode);
@@ -67,5 +79,26 @@ namespace team7_ssis.Services
             return itemRepository.Save(a);
         }
         
+        
+        
+
+        public int UploadItemImage(HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                string path = HttpContext.Current.Server.MapPath("~/Uploads/");
+                if (!System.IO.Directory.Exists(path))
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                }
+
+                file.SaveAs(path + System.IO.Path.GetFileName(file.FileName));
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Web;
 using System.Threading.Tasks;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
@@ -15,15 +17,27 @@ namespace team7_ssis.Tests.Services
     {
         ApplicationDbContext context;
         DeliveryOrderService deliveryOrderService;
-        DeliveryOrderRepository deliveryorderRepository;
-
+        DeliveryOrderRepository deliveryOrderRepository;
+        PurchaseOrderRepository purchaseOrderRepository;
+        StatusRepository statusRepository;
+        InventoryRepository inventoryRepository;
+        ItemRepository itemRepository;
+        DeliveryOrderDetailRepository deliveryOrderDetailRepository;
+        StockMovementRepository stockMovementRepository;
+       
         [TestInitialize]
         public void TestInitialize()
         {
 
             context = new ApplicationDbContext();
             deliveryOrderService = new DeliveryOrderService(context);
-            deliveryorderRepository = new DeliveryOrderRepository(context);
+            deliveryOrderRepository = new DeliveryOrderRepository(context);
+            purchaseOrderRepository = new PurchaseOrderRepository(context);
+            inventoryRepository = new InventoryRepository(context);
+            itemRepository = new ItemRepository(context);
+            deliveryOrderDetailRepository = new DeliveryOrderDetailRepository(context);
+            stockMovementRepository = new StockMovementRepository(context);
+            statusRepository = new StatusRepository(context);
         }
 
         [TestMethod]
@@ -84,7 +98,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        
+
         public void FindDeliveryOrderBySupplierValidTest()
         {
             //Arrange
@@ -110,16 +124,132 @@ namespace team7_ssis.Tests.Services
         [TestMethod]
         public void SaveTest()
         {
-            ////Arrange
-            //DeliveryOrder deliveryorder = new DeliveryOrder();
-            //deliveryorder.DeliveryOrderNo = "D002";
-            //deliveryorder.CreatedDateTime = DateTime.Now;
-            ////Act
-            //var result = deliveryOrderService.Save(deliveryorder);
-            ////Assert
-            //Assert.AreEqual("D002", result.DeliveryOrderNo);
-            //Assert.IsNotNull(context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "D002").First());
-            //deliveryorderRepository.Delete(result);
+            // Arrange
+           
+            PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
+            DeliveryOrder d1 = new DeliveryOrder
+            {
+                DeliveryOrderNo = "DDDD",
+                PurchaseOrder = po,
+                CreatedDateTime = DateTime.Now
+            };
+
+            DeliveryOrderDetail dod1 = new DeliveryOrderDetail
+            {
+                DeliveryOrderNo = "DDDD",
+                ItemCode = itemRepository.FindById("E030").ItemCode,
+                PlanQuantity = 100,
+                ActualQuantity = 50,
+                Status = statusRepository.FindById(0)
+            };
+
+            Item i = itemRepository.FindById("E030");
+
+            List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>
+            {
+                dod1
+            };
+            d1.DeliveryOrderDetails = list;
+
+            // Act
+            var result = deliveryOrderService.Save(d1);
+            var result1 = stockMovementRepository.FindById(2);
+
+            //Assert
+            Assert.AreEqual("DDDD", result.DeliveryOrderNo);
+            Assert.IsInstanceOfType(result, typeof(DeliveryOrder));
+
+            //clean
+           deliveryOrderRepository.Delete(d1);
+            po.Status = statusRepository.FindById(15);
+            purchaseOrderRepository.Save(po);
+            stockMovementRepository.Delete(result1);
         }
+
+        [TestMethod]
+        public void SaveInventoryTest()
+        {
+            //Arrange
+            Item i= itemRepository.FindById("E030");
+
+            //Act
+            var result = deliveryOrderService.SaveInventory(i, 50);
+            Inventory inv = inventoryRepository.FindById("E030");
+            inv.Quantity = 0;
+            inventoryRepository.Save(inv);
+
+            //Arrange
+            Assert.AreEqual("E030", result.ItemCode);
+        }
+
+        [TestMethod]
+        public void SaveStockMovementTest()
+        {
+            //Arrange
+            Item i = itemRepository.FindById("E030");
+
+            PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
+
+            DeliveryOrder d1 = new DeliveryOrder
+            {
+                DeliveryOrderNo = "DDDD",
+                PurchaseOrder = po,
+                CreatedDateTime = DateTime.Now
+            };
+
+            DeliveryOrderDetail dod1 = new DeliveryOrderDetail
+            {
+                DeliveryOrder = d1,
+                Item = i,
+                PlanQuantity = 100,
+                ActualQuantity = 50
+            };
+
+            List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>
+            {
+                dod1
+            };
+            d1.DeliveryOrderDetails = list;
+            new DeliveryOrderRepository(context).Save(d1);
+            new DeliveryOrderDetailRepository(context).Save(dod1);
+          
+
+            //Act
+            var result = deliveryOrderService.SaveStockMovement(dod1,i, 50);
+
+            //Arrange
+            Assert.AreEqual("E030",result.Item.ItemCode);
+
+            //Clean
+            
+             stockMovementRepository.Delete(result);
+             deliveryOrderDetailRepository.Delete(dod1);
+             deliveryOrderRepository.Delete(d1);
+        }
+
+        //public void TestClean()
+        //{
+
+        //}
+
+     //   [TestMethod]
+
+    //    public void SaveDOFileToDeliveryOrderTest()
+    //    {
+    //        // Arrange
+    //        string filename = @"C:\Valli\MyFirstProgram.txt";
+
+    //        //Act
+    //        String result = deliveryOrderService.SaveDOFileToDeliveryOrder(filename);
+
+    //        // define string expectedPath
+    //        //Path.GetFullPath(HttpContext.Current.Server.MapPath("/DOFiles"));
+    //        //Path.GetFullPath(HttpContext.Current.Server.MapPath(filelocation));
+
+    //        //Assert
+    //        //Assert.AreEqual(fileName, result);
+    //        bool fileExists = File.Exists(result);
+    //        Assert.IsTrue(fileExists);
+    //    }
     }
 }
