@@ -22,7 +22,7 @@
 
     }
 
-    var oTable = $('#myTable').DataTable({
+    var pTable = $('#myTable').DataTable({
         ajax: {
             url: "api/receivegoods/all",
             dataSrc: ""
@@ -53,5 +53,20 @@
             }
 
         }
+    });
+
+
+    var oTable = $('#myOutstandingTable').DataTable({
+        ajax: {
+            url: "api/outstandingpo/all",
+            dataSrc: ""
+        },
+        columns:
+            [
+                { data: "ItemCode" },
+                { data: "Description" },
+                { data: "QuantityOrdered" }
+            ],
+        select: "single"
     });
 });

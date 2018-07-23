@@ -63,5 +63,26 @@ namespace team7_ssis.Controllers
             }).ToList();
 
         }
+
+        [Route("api/outstandingpo/all")]
+        [HttpGet]
+        public List<PurchaseOrderViewModel> PurchaseOrders()
+        {
+            int[] myIntArray = { 11, 12 };
+
+            //List<PurchaseOrder> list = purchaseOrderService.FindPurchaseOrderByStatus(myIntArray);
+            //List<PurchaseOrderDetail> dlist = new List<PurchaseOrderDetail>();
+            return purchaseOrderService.FindPurchaseOrderByStatus(myIntArray).Select(x => new PurchaseOrderViewModel()
+            {
+                PNo = x.PurchaseOrderNo,
+
+                SupplierName = x.Supplier.Name,
+
+                CreatedDate = x.CreatedDateTime.ToShortDateString(),
+
+                Status = x.Status.Name
+
+            }).ToList();
+        }
     }
 }

@@ -78,35 +78,5 @@ namespace team7_ssis.Controllers
 
             return RedirectToAction("Index");
         }
-
-        public ActionResult OutstandingItems()
-        {
-            int[] myIntArray = { 11, 12 };
-
-            List<PurchaseOrder> list = purchaseOrderService.FindPurchaseOrderByStatus(myIntArray);
-            List<PurchaseOrderDetail> dlist = new List<PurchaseOrderDetail>();
-
-            foreach (PurchaseOrder po in list)
-            {
-                foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
-                {
-                    dlist.Add(pod);
-                }
-            }
-
-            var v = dlist.Select(x => new
-            {
-                ItemCode = x.ItemCode,
-
-                Description = x.Item.Description,
-
-                OutstandingQty = x.Quantity
-            });
-
-            return View(v);
-
-            //  return Json(new { data = v }, JsonRequestBehavior.AllowGet);
-        }
-
     }
 }
