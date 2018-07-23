@@ -1,0 +1,26 @@
+﻿@using team7_ssis.ViewModels
+@Model StockAdjustmentListViewModel
+
+@{
+    ViewBag.Title = "ShowAll";
+}
+
+<h2>ShowAll</h2>
+<body>
+     <div>
+        <table>
+           
+            <tr>
+            @foreach(StockAdjustmentViewModel s in Model.)
+                <th></th>
+              
+                <th></th>
+               
+            </tr>          
+        </table>
+       
+    </div>
+    
+</body>
+
+
