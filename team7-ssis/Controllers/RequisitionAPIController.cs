@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
@@ -14,6 +15,7 @@ namespace team7_ssis.Controllers
     {
         static ApplicationDbContext context = new ApplicationDbContext();
         RequisitionService requisitionService = new RequisitionService(context);
+        RequisitionRepository requisitionRepository = new RequisitionRepository(context); 
 
         [Route("api/reqdetail/all")]
         [HttpGet]
@@ -46,6 +48,24 @@ namespace team7_ssis.Controllers
 
             return viewModel;
         }
-
+        [Route("api/processrequisitions")]
+        [HttpPost]
+        public IHttpActionResult ProcessRequisitions(List<string> reqIdList)
+        {
+            List<Requisition> reqList = new List<Requisition>();
+            string message;
+            foreach (string s in reqIdList)
+            {
+                reqList.Add(requisitionRepository.FindById(s));
+            }
+            try
+            {
+                message = requisitionService.ProcessRequisitions(reqList);
+            } catch
+            {
+                message = "Please select Requisitions to be processed.";
+            }
+            return Ok( new { message = message });
+        }
     }
 }

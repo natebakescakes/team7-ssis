@@ -30,4 +30,28 @@
         });
     })
 
+    $('#myTable').click(function () {
+        var table = $('#myTable').DataTable();
+        console.log(table.rows({ selected: true }).data().toArray());
+    })
+
+    $('#createNewRequisitionButton').click(function () {
+        console.log("Create New Requisition clicked!");
+
+        //var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
+        var data = ["TEST"];
+
+        // call the appropriate controller with the data
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: "/api/processrequisitions",
+            data: JSON.stringify(myData),
+            dataType: "json",
+            success: function (message) {
+                window.location.href = "Requisition/StationeryDisbursement/" + message.message;
+            }
+        });
+    })
+
 </script>
