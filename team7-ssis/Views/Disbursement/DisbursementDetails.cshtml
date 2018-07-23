@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Disbursement Details";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="mb-3">Disbursement Form #DSB-201807-010</h2>
+    </div>
+    <div class="col-md-4">
+        <i class="fa fa-print pull-right" aria-hidden="true"></i>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div>Representative</div>
+        Jenny Wong Mei Lin
+    </div>
+    <div class="col-md-4">
+        <div>Department</div>
+        Computer Science
+    </div>
+    <div class="col-md-4">
+        <div>Order Time</div>
+        10/7/2018 00:00
+    </div>
+    <div class="col-md-12">
+        <div>Collection Point</div>
+        Stationery Store = Administration Building
+    </div>
+</div>
+
+@Html.Partial("_DisbursementDetailTable")
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <button class="btn btn-default">Back</button>
+    </div>
+</div>

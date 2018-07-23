@@ -66,6 +66,11 @@ namespace team7_ssis.Services
 
         public string ProcessRequisitions(List<Requisition> requestList)
         {
+            if (requestList.Count == 0)
+            {
+                throw new Exception("List of Requisitions cannot be null");
+            }
+            
             // create one Retrieval
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);

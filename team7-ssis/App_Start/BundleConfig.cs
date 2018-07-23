@@ -20,11 +20,12 @@ namespace team7_ssis
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                    "~/Scripts/umd/popper.js",
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/themes/base/jquery-ui.min.css",
+                      //"~/Content/themes/base/jquery-ui.min.css",
                       "~/Content/site.css",
                       "~/Content/font-awesome.css"));
         }

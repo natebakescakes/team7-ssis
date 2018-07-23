@@ -15,6 +15,8 @@ namespace team7_ssis.Tests.Services
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         StatusRepository statusRepository;
         ItemService itemService;
+        InventoryRepository inventoryRepository;
+        StockMovementRepository stockMovementRepository;
 
         public StockAdjustmentService(ApplicationDbContext context)
         {
@@ -23,6 +25,8 @@ namespace team7_ssis.Tests.Services
             this.stockAdjustmentRepository = new StockAdjustmentRepository(context);
             this.stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
             this.itemService = new ItemService(context);
+            this.inventoryRepository = new InventoryRepository(context);
+            this.stockMovementRepository = new StockMovementRepository(context);
         }
 
         //create new StockAdjustment with status: draft
@@ -139,9 +143,17 @@ namespace team7_ssis.Tests.Services
                 //update item inventory
                 foreach (StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
                 {
-                    // update each Item inventory = sd.AfterQuantity;
+                   //save into inventory
                     itemService.UpdateQuantity(sd.Item, sd.AfterQuantity);                   
                 }
+
+                foreach(StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
+                {
+                    //save into StockMovement
+                    SaveStockMovement(sd);
+                }
+
+
 
             }
             return stockadjustment;
@@ -174,6 +186,25 @@ namespace team7_ssis.Tests.Services
             StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode);
             return s;
         }
+
+
+
+        public StockMovement SaveStockMovement(StockAdjustmentDetail sjd)
+        {
+            StockMovement sm = new StockMovement();
+            sm.StockMovementId = IdService.GetNewStockMovementId(context);
+            sm.StockAdjustmentId = sjd.StockAdjustmentId;
+            sm.Item = sjd.Item;           
+            sm.StockAdjustmentDetail = sjd;
+            sm.StockAdjustmentDetailItemCode = sjd.ItemCode;
+            sm.OriginalQuantity = sjd.OriginalQuantity;
+            sm.AfterQuantity = sjd.AfterQuantity;
+
+            sm.CreatedDateTime = DateTime.Now;
+            return stockMovementRepository.Save(sm);
+        }
+
+
 
     }
 }

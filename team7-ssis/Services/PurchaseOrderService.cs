@@ -161,5 +161,52 @@ namespace team7_ssis.Services
             return false;
         }
 
+
+        public decimal FindUnitPriceByPurchaseOrderDetail(PurchaseOrderDetail pod)
+        {
+            List<ItemPrice> itemPriceList=itemPriceRepository.FindBySupplierCode(pod.PurchaseOrder.Supplier.SupplierCode).ToList();
+            return itemPriceList.Where(x => x.Item.ItemCode == pod.Item.ItemCode).First().Price;
+        }
+
+
+        public decimal FindTotalAmountByPurchaseOrderDetail(PurchaseOrderDetail pod)
+        {
+            decimal unitPrice = FindUnitPriceByPurchaseOrderDetail(pod);
+            return unitPrice * pod.Quantity;
+        }
+
+
+        public int FindReceivedQuantityByPurchaseOrderDetail(PurchaseOrderDetail pod)
+        {
+            int receivedQuantity = 0;
+
+            if (pod.PurchaseOrder.Status.StatusId != 11)
+            {
+                foreach (DeliveryOrder delOrder in pod.PurchaseOrder.DeliveryOrders)
+                {
+                    foreach (DeliveryOrderDetail delOrderDetail in delOrder.DeliveryOrderDetails)
+                    {
+                        if (delOrderDetail.Item.ItemCode == pod.ItemCode)
+                        {
+                            receivedQuantity = receivedQuantity + delOrderDetail.ActualQuantity;
+                        }
+                    }
+                }
+
+            }
+
+           return receivedQuantity;
+           
+        }
+
+        public int FindRemainingQuantity(PurchaseOrderDetail pod)
+        {
+            int receivedQuantity = FindReceivedQuantityByPurchaseOrderDetail(pod);
+            return pod.Quantity - receivedQuantity;
+        }
+
+        
+
+
     }
 }
