@@ -1,16 +1,57 @@
 ﻿$(document).ready(function () {
-    $('#mySATable').DataTable({
 
-        sAjaxSource: "/api/stockadjustment/all",
-        sAjaxDataProp: "",
+    var $table = $('#mySATable');
+    var datatb1 = $table.DataTable({
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search...",
+        },
+            ajax: {
+            url: "api/stockadjustment/all",
+            dataSrc: ""
+        },
         columns: [
-            { "data": "StockAdjustmentId", "autoWidth": true },
-            { "data": "CreatedBy", "autoWidth": true },
-            { "data": "ApprovedBySupervisor", "autoWidth": true },
-            { "data": "CreatedDateTime", "autoWidth": true },
-            { "data": "StatusName", "autoWidth": true },
+            {
+                data: "StockAdjustmentId"
+            },
+            {
+                data:
+                    "CreatedBy"
+            },
+            {
+                data:
+                    "ApprovedBySupervisor"
+            },
+            {
+                data:
+                    "CreatedDateTime"
+            },
+            {
+                data:
+                    "StatusName"
+            },
+            {
+                data:null,
+            }
+           
+        ],
+
+        "columnDefs": [
+
+            {
+                "targets": -1,
+
+                "render": function (data, type, full, meta) {
+
+                    return "<input type = 'button' id = 'testButton' value = 'View Detail'>"
+                }
+            }
 
         ],
+
+        "autoWidth": true,
+        select:"single",
+
         createdRow: function (row, data, dataIndex) {
             if (data.StatusName === "Approved") {
                 $('td', row).eq(4).addClass('delivered');
@@ -22,21 +63,26 @@
                 $('td', row).eq(4).addClass('awaiting-delivery');
             }
         },
+
     });
-    //Apply Customer Search on jquery Datatables here
-//    var oTable = $('#mySATable').dataTable();
-//    $('#btnSearch').click(function () {
-//        oTable.columns[4].search($('#addStatus').val().trim());
-//    oTable.draw();
-//});
+
+   $('#mySATable tbody').on("click", "#testButton", function () {
+
+        //获取行
+
+        var row = $("table#mySATable tr").index($(this).closest("tr"));
+
+        //获取某列（从0列开始计数）的值
+
+        var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
+
+       var status = $("table#mySATable").find("tr").eq(row).find("td").eq(4).text();
+
+
+       window.location.href = "/StockAdjustment/Details/" + Id;
+        
+
+       // alert(Id + "is" + status);
+
+    });   
 });
-
-
-
-
-
-
-
-
-
-

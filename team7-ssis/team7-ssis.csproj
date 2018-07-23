@@ -284,6 +284,7 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Title.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\StockAdjustmentDetailViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CollectionPointRepository.cs" />
@@ -337,7 +338,7 @@
     <Compile Include="ViewModels\ManageRequisitionsViewModel.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
-    <Compile Include="ViewModels\StockAdjustmentListViewModel.cs" />
+    <Compile Include="ViewModels\StockAdjustmentDetailListViewModel.cs" />
     <Compile Include="ViewModels\StockAdjustmentViewModel.cs" />
     <Compile Include="ViewModels\UrlTokenViewModel.cs" />
   </ItemGroup>
@@ -358,6 +359,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\CreateNewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
@@ -466,13 +468,14 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Requisition\Index.cshtml" />
     <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
-    <Content Include="Views\StockAdjustment\Home.cshtml" />
+    <Content Include="Views\StockAdjustment\New.cshtml" />
     <Content Include="Views\StockAdjustment\Add.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
     <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
+    <Content Include="Views\StockAdjustment\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

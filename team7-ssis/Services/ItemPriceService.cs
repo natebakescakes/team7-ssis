@@ -19,6 +19,11 @@ namespace team7_ssis.Services
             itemPriceRepository = new ItemPriceRepository(context);
             statusRepository = new StatusRepository(context);
         }
+        public string GetDefaultPrice(Item item ,int priority)
+        {
+            ItemPrice i=itemPriceRepository.FindByItemCode(item.ItemCode).Where(x => x.PrioritySequence == priority).First();
+            return i.Price.ToString();
+        }
 
         public List<ItemPrice> FindAllItemPrice()
         {

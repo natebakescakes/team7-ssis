@@ -19,14 +19,15 @@ namespace team7_ssis.Controllers
         StockAdjustmentService stockAdjustmentService = new StockAdjustmentService(context);
         UserService userService = new UserService(context);
         UserRepository userRepository = new UserRepository(context);
+        ItemPriceService itemPriceService = new ItemPriceService(context);
 
         // GET: StockAdjustment
         public ActionResult Index()
-         {
+        {
             return View();
-          }
-    
-        public ActionResult Home()
+        }
+
+        public ActionResult New()
         {
             List<ApplicationUser> supervisors = userService.FindSupervisorsByDepartment(
                 userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName()).Department);
@@ -37,12 +38,12 @@ namespace team7_ssis.Controllers
 
 
             List<SelectListItem> listItem_supervicor = new List<SelectListItem>();
-            foreach(ApplicationUser a in supervisors)
+            foreach (ApplicationUser a in supervisors)
             {
                 SelectListItem item1 = new SelectListItem()
                 {
-                    Value =a.Id,
-                    Text =a.FirstName.ToString()+" "+a.LastName.ToString()
+                    Value = a.Id,
+                    Text = a.FirstName.ToString() + " " + a.LastName.ToString()
                 };
                 listItem_supervicor.Add(item1);
             }
@@ -56,7 +57,7 @@ namespace team7_ssis.Controllers
                 SelectListItem item2 = new SelectListItem()
                 {
                     Value = a.Id,
-                    Text = a.FirstName.ToString()+" "+a.LastName.ToString()
+                    Text = a.FirstName.ToString() + " " + a.LastName.ToString()
                 };
                 listItem_managers.Add(item2);
             }
@@ -70,14 +71,47 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        public ActionResult Add()
+        public ActionResult Details(string id)
         {
-            return View();
+            //get the stockadjustment
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
+            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
+            sv.StockAdjustmentId = sa.StockAdjustmentId;
+            sv.CreatedBy = (sa.CreatedBy == null)? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
+            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
+                + sa.ApprovedBySupervisor.LastName;
+            sv.UpdateDateTime = (DateTime)sa.UpdatedDateTime;
+
+            //get the stockadjustment details
+            List<StockAdjustmentDetail> detail_list = sa.StockAdjustmentDetails;
+            List<StockAdjustmentDetailViewModel> ViewModel_list = new List<StockAdjustmentDetailViewModel>();
+            StockAdjustmentDetailListViewModel ResultListViewModel = new StockAdjustmentDetailListViewModel();
+
+
+            foreach (StockAdjustmentDetail sd in detail_list)
+            {
+                StockAdjustmentDetailViewModel sadv = new StockAdjustmentDetailViewModel();
+
+                sadv.ItemCode = sd.ItemCode;
+                sadv.Description = sd.Item.Description;
+                sadv.Reason = sd.Reason;
+                sadv.UnitPrice = itemPriceService.GetDefaultPrice(sd.Item,1);
+                sadv.Adjustment = (sd.AfterQuantity - sd.OriginalQuantity).ToString();
+                if(sadv.UnitPrice.CompareTo("250")==-1)
+                {
+                    sadv.PriceColor = "grey";
+                }
+                else
+                {
+                    sadv.PriceColor = "red";
+                }
+                ViewModel_list.Add(sadv);                
+                }
+
+            ResultListViewModel.StockAdjustmentDetailsModel = ViewModel_list;
+            ResultListViewModel.StockAdjustmentModel = sv;
+            return View("Details", ResultListViewModel);
         }
-
-
-      
-           
-
     }
 }

@@ -1,0 +1,68 @@
+﻿
+<h2>Make Stock Adjustment</h2>
+
+<div>
+    <table>
+        <tr>
+            <td width="400"> Possible cause:</td>
+            <td width="400"> Authorising Adjustments:</td>
+        </tr>
+        <tr>
+            <td width="400">1.items broken or expired</td>
+            <td width="400"> Minor:Anything under &250 per item adjustment can be</td>
+        </tr>
+        <tr>
+            <td width="400">2.adhoc(i.e.deteced when trying to issue the item(s))</td>
+            <td width="400">authorised by Supervisor</td>
+        </tr>
+
+        <tr>
+            <td width="400"> 3.when issue/receipt of them is not recorded(i.e oversight)</td>
+            <td width="400"> Major:Anything over &250 must be authorised by Manager</td>
+        </tr>
+    </table>
+    <br />
+</div>
+<div>
+        <a href="../ItemController/Index"><input type="button" value="Add Item" /></a>
+        <br />
+        <div>
+
+
+            @Html.Partial("Create_StockAdjustment")
+        </div>
+        <br />
+
+        <table>
+            <tr>
+                <td width="400"> Authorising Supervisor</td>
+                <td width="400"> Authorising Manager</td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.DropDownList("FirstName", ViewBag.select1 as SelectList, "pls select supervicor")
+                </td>
+
+                <td>
+
+                    @Html.DropDownList("FirstName", ViewBag.select2 as SelectList, "pls select managers")
+                </td>
+
+            </tr>
+        </table>
+        <br />
+
+        <a href="../StockAdjustment/Index"><input type="button" value="Cancel"></a>
+            <input type="button" value="Save as Draft" />
+            <input type="button" value="Submit">
+
+</div>
+
+
+
+
+
+
+
+
