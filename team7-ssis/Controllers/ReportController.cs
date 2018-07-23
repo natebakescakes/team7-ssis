@@ -24,7 +24,26 @@ namespace team7_ssis.Controllers
                 {"params", new {} }
             };
 
-            return View("DepartmentUsage", "_LayoutFluid", new DepartmentUsageViewModel()
+            return View("DepartmentUsage", "_LayoutFluid", new ReportViewModel()
+            {
+                DashboardConfig = new UrlTokenViewModel()
+                {
+                    Url = _url,
+                    Token = Jose.JWT.Encode(quantityByDepartmentAPayload, Encoding.ASCII.GetBytes(_secret), Jose.JwsAlgorithm.HS256)
+                }
+            });
+        }
+
+        // GET: Report/StoreOperations
+        public ActionResult StoreOperations()
+        {
+            var quantityByDepartmentAPayload = new Dictionary<string, object>
+            {
+                {"resource", new { dashboard = 3 } },
+                {"params", new {} }
+            };
+
+            return View("StoreOperations", "_LayoutFluid", new ReportViewModel()
             {
                 DashboardConfig = new UrlTokenViewModel()
                 {
