@@ -12,29 +12,18 @@
             { "data": "PhoneNumber", "autoWidth": true },
             { "data": "FaxNumber", "autoWidth": true },
             { "data": "Address", "autoWidth": true },
-
-
         ],
         select: {
             style: 'single'
         }
 
-
     });
 
-    table.on('deselect', function (e, dt, type, indexes) {
-
-        $('.collapse').collapse("hide");
-    });
-    table.on('select', function (e, dt, type, indexes) {
-
-        $('.collapse').collapse("show");
-    });
 
     $('#myTable tbody').on('click', 'tr', function () {
         var rowdata = table.row(this).data();
         var xid = rowdata.SupplierCode;
-
+        $('.collapse').collapse("show");
         $.ajax({
             type: 'GET',
             url: '/api/supplierapi/',

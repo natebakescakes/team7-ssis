@@ -1,8 +1,13 @@
-﻿<form id="supplier-form">
+﻿
+@{
+    ViewBag.Title = "SupplierDetails";
+}
+
+<form id="supplier-form">
 
     <div class="form-group">
         <label for="SupplierCode">Supplier Code</label><br />
-        <input type="text" class="form-control" id="SupplierCode">
+        <input type="text" class="form-control" id="SupplierCode" disabled>
     </div>
 
 
@@ -11,25 +16,25 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="CompanyName">Company Name</label><br />
-                <input type="text" class="form-control" id="Name">
+                <input type="text" class="form-control" id="Name" disabled>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="ContactName">Contact Name</label><br />
-                <input type="text" class="form-control" id="ContactName">
+                <input type="text" class="form-control" id="ContactName" disabled>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="phone">Phone Number</label><br />
-                <input type="text" class="form-control" id="PhoneNumber">
+                <input type="text" class="form-control" id="PhoneNumber"disabled>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="Fax">Fax Number</label><br />
-                <input type="text" class="form-control" id="FaxNumber">
+                <input type="text" class="form-control" id="FaxNumber" disabled>
             </div>
         </div>
 
@@ -38,19 +43,19 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="Address">Address</label><br />
-                <textarea class="form-control" rows="3" id="Address"></textarea>
+                <textarea class="form-control" rows="3" id="Address" disabled></textarea>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="Fax">GST Registration No.</label><br />
-                <input type="text" class="form-control" id="GSTNumber">
+                <input type="text" class="form-control" id="GSTNumber" disabled>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="Status">Status</label><br />
-                <select class="form-control" id="Status">
+                <select class="form-control" id="Status" disabled>
                     <option value="0">Disabled</option>
                     <option value="1">Enabled</option>
 
@@ -58,8 +63,8 @@
             </div>
         </div>
     </div>
-    <a href="#" class="btn btn-info" role="button">Edit Price List</a>
-    <input type="submit" class="btn btn-info fa-pull-right" value="Save">
+    <a href="#" class="btn btn-info" role="button"><i class="fa fa-list-alt" aria-hidden="true"></i> Edit Price List</a>
+    <button type="submit" class="btn btn-secondary pull-right"><i class="fa fa-edit" aria-hidden="true"></i> Edit Details</button>
 
 
 </form>
