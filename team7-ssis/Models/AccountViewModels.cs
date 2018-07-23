@@ -85,8 +85,6 @@ namespace team7_ssis.Models
         public IEnumerable<SelectListItem> Departments { get; set; }
         [Required]
         public string SupervisorEmail { get; set; }
-        [Display(Name = "Supervisor")]
-        public IEnumerable<SelectListItem> Supervisors { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

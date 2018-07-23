@@ -10,3 +10,8 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0037:Use inferred member name", Justification = "<Pending>", Scope = "member", Target = "~M:team7_ssis.Controllers.AccountController.Login(team7_ssis.Models.LoginViewModel,System.String)~System.Threading.Tasks.Task{System.Web.Mvc.ActionResult}")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0037:Use inferred member name", Justification = "<Pending>", Scope = "member", Target = "~M:team7_ssis.Controllers.AccountController.SendCode(team7_ssis.Models.SendCodeViewModel)~System.Threading.Tasks.Task{System.Web.Mvc.ActionResult}")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:team7_ssis.Controllers.AccountController.statusService")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:team7_ssis.Controllers.ManageController.context")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:team7_ssis.Controllers.ManageController.departmentService")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:team7_ssis.Controllers.DeliveryOrderApiController.context")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:team7_ssis.Controllers.DeliveryOrderApiController.itemService")]

@@ -42,9 +42,13 @@
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Supervisors, new { @class = "col-md-2 control-label" })
+        @Html.Label("Supervisor", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.SupervisorEmail, new SelectList(Model.Supervisors, "Value", "Text"), new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.SupervisorEmail, new SelectList(new[]
+            {
+                new { Value = "0", Name = "--- Please select supervisor ---" },
+            },
+            "Value", "Name", 1), new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
@@ -68,4 +72,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/Custom/Register.js")
 }
