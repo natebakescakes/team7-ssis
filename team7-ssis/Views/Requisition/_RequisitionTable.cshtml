@@ -30,23 +30,28 @@
         });
     })
 
-    $('#myTable').click(function () {
-        var table = $('#myTable').DataTable();
-        console.log(table.rows({ selected: true }).data().toArray());
-    })
+    // See if DataTable selection works
+    //$('#myTable').click(function () {
+    //    var table = $('#myTable').DataTable();
+    //    console.log(table.rows({ selected: true }).data().toArray());
+    //})
 
-    $('#createNewRequisitionButton').click(function () {
+    $('#processAllRequisitionButton').click(function () {
         console.log("Create New Requisition clicked!");
 
-        //var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
-        var data = ["TEST"];
+        var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
+        var reqIdArray = [];
+        for (i = 0; i < data.length; i++) {
+            reqIdArray[i] = data[i].Requisition;
+        }
+        //console.log(reqIdArray);
 
         // call the appropriate controller with the data
         $.ajax({
             type: "POST",
             contentType: 'application/json',
             url: "/api/processrequisitions",
-            data: JSON.stringify(myData),
+            data: JSON.stringify(reqIdArray),
             dataType: "json",
             success: function (message) {
                 window.location.href = "Requisition/StationeryDisbursement/" + message.message;
