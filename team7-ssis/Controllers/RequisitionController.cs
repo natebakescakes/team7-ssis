@@ -44,7 +44,6 @@ namespace team7_ssis.Controllers
             ViewBag.Retrieval = "RET-201807-001";
             return View();
         }
-        [Route("Requisition/RetrievalDetail/")]
         [HttpGet]
         public ActionResult RetrievalDetails(string retId, string itemId)
         {
@@ -57,6 +56,10 @@ namespace team7_ssis.Controllers
             ViewBag.RetrievalId = retId;
             ViewBag.Item = i;
 
+            return View();
+        }
+        public ActionResult CreateRequisition()
+        {
             return View();
         }
     }
