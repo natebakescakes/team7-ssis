@@ -78,10 +78,6 @@ namespace team7_ssis.Services
             a.Status= statusRepository.FindById(0);
             return itemRepository.Save(a);
         }
-        
-        
-        
-
         public int UploadItemImage(HttpPostedFileBase file)
         {
             if (file != null)

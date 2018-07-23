@@ -13,17 +13,19 @@ namespace team7_ssis.Controllers
     public class InventoryApiController : ApiController
     {
         private ApplicationDbContext context;
+        ItemService itemService;
 
         public InventoryApiController()
         {
             context = new ApplicationDbContext();
+            itemService = new ItemService(context);
         }
 
         [Route("api/manage/items")]
         [HttpGet]
         public IEnumerable<ItemViewModel> FindAllItems()
         {
-            List<Item> list = new ItemService(context).FindAllItems();
+            List<Item> list = itemService.FindAllItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
             foreach(Item i in list)
@@ -40,6 +42,28 @@ namespace team7_ssis.Controllers
                 });
             }
             return items;
+        }
+
+        [Route("api/delete/items")]
+        [HttpPost]
+        public HttpResponseMessage DeleteItems(string[] itemCodes)
+        {
+            List<Item> list = new List<Item>();
+            for (int i=0;i< itemCodes.Length; i++)
+            {
+                list.Add(itemService.FindItemByItemCode(itemCodes[i]));
+            }
+            Console.WriteLine("Number of Items to be deleted:" + list.Count);
+            try
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    itemService.DeleteItem(list[i]);
+                }
+            }catch(Exception e) {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK); ;
         }
     }
 }
