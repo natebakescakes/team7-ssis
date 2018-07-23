@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,12 +15,12 @@ namespace team7_ssis.Controllers
         public static ApplicationDbContext context = new ApplicationDbContext();
         DepartmentService departmentService = new DepartmentService(context);
         CollectionPointService collectionPointService = new CollectionPointService(context);
+        UserService userService = new UserService(context);
+        
         // GET: Department
         [HttpGet]
         public ActionResult DepartmentOptions()
         {
-            //get current user
-            //var user = User.Identity;
             //Department department = context.Department.Find(dptcode);
             //ViewBag.CollectionPointList = collectionPointService.FindAllCollectionPoints();
             //ApplicationUser user = new ApplicationUser(); //"current user"
@@ -27,7 +28,9 @@ namespace team7_ssis.Controllers
             //user.Department = department;
             //ViewBag.UsersInDepartmentList = departmentService.FindUsersByDepartment(user.Department);
             //return View(department);
+
             DepartmentViewModel dModel = new DepartmentViewModel();
+            ConfigureViewModel(dModel);
             return View(dModel);
         }
         [HttpPost]
@@ -54,6 +57,9 @@ namespace team7_ssis.Controllers
         {
             List<CollectionPoint> collectionPoints = collectionPointService.FindAllCollectionPoints();
             dModel.collectionPointList = new SelectList(collectionPoints,"CollectionPointId","Name");
+            //ApplicationUser user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            //List<ApplicationUser> usersByDepartment = departmentService.FindUsersByDepartment(user.Department);
+            //dModel.usersByDepartmentList = new SelectList(usersByDepartment, )
         }
 
     }

@@ -59,7 +59,7 @@
     {
         <div>
             @Html.LabelFor(m => m.SelectedCollectionPoint)
-            @Html.DropDownListFor(m => m.SelectedCollectionPoint, Model.collectionPointList, "Please select")
+            @Html.DropDownListFor(m => m.SelectedCollectionPoint, Model.collectionPointList)
             @Html.ValidationMessageFor(m => m.SelectedCollectionPoint)
         </div>
         

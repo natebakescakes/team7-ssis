@@ -13,6 +13,7 @@ namespace team7_ssis.ViewModels
         [Display(Name = "Collection Point")]
         public int? SelectedCollectionPoint { get; set; }
         public SelectList collectionPointList {get;set;}
+        public SelectList usersByDepartmentList { get; set; }
         
     }
 }
