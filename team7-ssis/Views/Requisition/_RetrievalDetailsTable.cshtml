@@ -13,10 +13,14 @@
 <script>
     $(document).ready(function() {
         var oTable = $('#myTable').DataTable({
-
-            // ajax POST form with parameters
-            sAjaxSource: "api/retrievaldetails",
-
+            ajax: {
+                url: "/api/retrievaldetails",
+                method: "POST",
+                data: {
+                    retId: "@ViewBag.RetrievalId",
+                    itemId: "@ViewBag.Item.ItemCode"
+                    }
+            },
             columns: [
                 { "data": "DeptId", "autoWidth": true },
                 { "data": "DeptName", "autoWidth": true },

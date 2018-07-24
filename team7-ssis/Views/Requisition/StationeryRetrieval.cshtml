@@ -85,7 +85,10 @@
 <script>
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
-            sAjaxSource: "api/stationeryretrieval/@ViewBag.Retrieval.RetrievalId",
+            ajax: {
+                url: "/api/stationeryretrieval/@ViewBag.Retrieval.RetrievalId",
+                dataSrc: ""
+            },
 
             columns: [
                 { "data": "ProductID", "autoWidth": true },

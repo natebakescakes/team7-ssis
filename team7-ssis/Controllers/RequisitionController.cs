@@ -27,13 +27,12 @@ namespace team7_ssis.Controllers
             return View();
         }
         // GET: /Requisiton/StationeryRetrieval
-        [Route("/Requisition/StationeryRetrieval/{id}")]
+        [Route("/Requisition/StationeryRetrieval")]
         [HttpGet]
-        public ActionResult StationeryRetrieval(string id)
+        public ActionResult StationeryRetrieval(string rid)
         {
-            // TODO: Remove hardcoded values
-            id = "RET-201807-001";
-            Retrieval r = retrievalService.FindRetrievalById(id);
+            rid = "RET-201807-001";
+            Retrieval r = retrievalService.FindRetrievalById(rid);
             ViewBag.Retrieval = r;
             return View();
         }
@@ -49,7 +48,7 @@ namespace team7_ssis.Controllers
         {
             // TODO: Remove hardcoded values
             retId = "RET-201807-001";
-            itemId = "C001";
+            itemId = "E032";
 
             Item i = itemService.FindItemByItemCode(itemId);
 

@@ -15,10 +15,10 @@
 <script>
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
-
-            sAjaxSource: "api/reqdetail/all",
-            sAjaxDataProp: "",
-
+            ajax: {
+                url: "api/reqdetail/all",
+                dataSrc: ""
+            },
             columns: [
                 { "data": "Requisition", "autoWidth": true },
                 { "data": "ItemCode", "autoWidth": true },
