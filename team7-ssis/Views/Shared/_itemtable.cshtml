@@ -40,15 +40,18 @@
                 for (i = 0; i < selected.length; i++) {
                     console.log(selected[i]);
                 }
+                var postData = { values: selected };
+
+                console.log(postData);
                 $.ajax({
                     type: "POST",
-                    url: 'api/delete/items',
-                    data: selected,
-                    success: function (data) {
-                        if (data.status) {
-                            alert(status)
-                        }
-                    }
+                    url: '/api/delete/items',
+                    contentType: "application/json",
+                    data: JSON.stringify(selected),
+                    success: function () { alert("it worked!"); },
+                    failure: function () { alert("not working..."); },
+                    dataType: "json",
+                    traditional: true
                 })
                 event.preventDefault();
             });
@@ -100,13 +103,14 @@
             alert('EditReorderLevelAndQuantity'+rs);
         }
         function gotoViewItemDetail(rs) {
+
             alert('gotoViewItemDetail'+rs);
         }
 
-        var selected = [];
+        var selected = new Array();
         //all about checkbox
         $('#itemTable tbody').on('change', '#mycheck', function (e) {
-            var rowSelected = JSON.stringify(oTable.row($(this).parents('tr')).data().ItemCode);
+            var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
             if (this.checked != true) {
                 var index = selected.indexOf(rowSelected);
                 if (index > -1) {

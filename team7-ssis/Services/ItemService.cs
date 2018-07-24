@@ -24,6 +24,8 @@ namespace team7_ssis.Services
 
         public Item FindItemByItemCode(string itemCode)
         {
+            Console.WriteLine("In findbyitemcode item" + itemCode.ToString());
+
             return itemRepository.FindById(itemCode);
         }
 
@@ -74,6 +76,7 @@ namespace team7_ssis.Services
 
         public Item DeleteItem(Item item)
         {
+            Console.WriteLine("In delete item" + item.ItemCode.ToString());
             Item a = itemRepository.FindById(item.ItemCode);
             a.Status= statusRepository.FindById(0);
             return itemRepository.Save(a);

@@ -25,6 +25,7 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<ItemViewModel> FindAllItems()
         {
+            Console.WriteLine("Find All Items API");
             List<Item> list = itemService.FindAllItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
@@ -46,12 +47,13 @@ namespace team7_ssis.Controllers
 
         [Route("api/delete/items")]
         [HttpPost]
-        public HttpResponseMessage DeleteItems(string[] itemCodes)
+        public HttpResponseMessage DeleteItems([FromBody]string[] itemCodes)
         {
+            Console.WriteLine("In API Controller" + itemCodes.Length);
             List<Item> list = new List<Item>();
-            for (int i=0;i< itemCodes.Length; i++)
+            foreach(string i in itemCodes)
             {
-                list.Add(itemService.FindItemByItemCode(itemCodes[i]));
+                list.Add(itemService.FindItemByItemCode(i));
             }
             Console.WriteLine("Number of Items to be deleted:" + list.Count);
             try
@@ -61,8 +63,11 @@ namespace team7_ssis.Controllers
                     itemService.DeleteItem(list[i]);
                 }
             }catch(Exception e) {
+                Console.WriteLine("In API Controller error"+e);
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
             }
+
+            Console.WriteLine("In API Controller OK");
             return Request.CreateResponse(HttpStatusCode.OK); ;
         }
     }
