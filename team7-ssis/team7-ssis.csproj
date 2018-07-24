@@ -380,6 +380,7 @@
     <Content Include="Scripts\Custom\Register.js" />
     <Content Include="Scripts\Custom\StockAdjustment.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
+    <Content Include="Scripts\Custom\SupplierPriceList.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -501,11 +502,13 @@
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
+    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\Supplier\_AddSupplier.cshtml" />
     <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
+    <Content Include="Views\Supplier\SupplierPriceList.cshtml" />
     <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
