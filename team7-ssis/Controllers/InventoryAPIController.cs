@@ -12,13 +12,20 @@ namespace team7_ssis.Controllers
 {
     public class InventoryApiController : ApiController
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        ItemService itemService = new ItemService(context);
+        private ApplicationDbContext context;
+        ItemService itemService;
+
+        public InventoryApiController()
+        {
+            context = new ApplicationDbContext();
+            itemService = new ItemService(context);
+        }
 
         [Route("api/manage/items")]
         [HttpGet]
         public IEnumerable<ItemViewModel> FindAllItems()
         {
+            Console.WriteLine("Find All Items API");
             List<Item> list = itemService.FindAllItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
@@ -36,6 +43,32 @@ namespace team7_ssis.Controllers
                 });
             }
             return items;
+        }
+
+        [Route("api/delete/items")]
+        [HttpPost]
+        public HttpResponseMessage DeleteItems([FromBody]string[] itemCodes)
+        {
+            Console.WriteLine("In API Controller" + itemCodes.Length);
+            List<Item> list = new List<Item>();
+            foreach(string i in itemCodes)
+            {
+                list.Add(itemService.FindItemByItemCode(i));
+            }
+            Console.WriteLine("Number of Items to be deleted:" + list.Count);
+            try
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    itemService.DeleteItem(list[i]);
+                }
+            }catch(Exception e) {
+                Console.WriteLine("In API Controller error"+e);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+
+            Console.WriteLine("In API Controller OK");
+            return Request.CreateResponse(HttpStatusCode.OK); ;
         }
     }
 }
