@@ -61,7 +61,7 @@
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
             ajax: {
-                url: "/api/stationerydisbursement/@ViewBag.Retrieval",
+                url: "/api/stationerydisbursement/@Request.QueryString["rid"]",
                 dataSrc: ""
             },
 

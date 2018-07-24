@@ -64,9 +64,7 @@ namespace team7_ssis.Controllers
         // GET: /Requisiton/StationeryDisbursement
         public ActionResult StationeryDisbursement(string rid)
         {
-            
-            // TODO: Remove hardcorded values
-            ViewBag.Retrieval = "RET-201807-001";
+            ViewBag.RetrievalID = rid;
             return View();
         }
         [HttpGet]
