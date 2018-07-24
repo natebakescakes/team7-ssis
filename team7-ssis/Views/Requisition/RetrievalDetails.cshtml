@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "RetrievalDetails";
+}
+
+<h2>Retrieval Form #@ViewBag.RetrievalId</h2>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <div>Product ID</div>
+        @ViewBag.Item.ItemCode
+    </div>
+    <div class="col-md-6">
+        <div>Name</div>
+        @ViewBag.Item.Name
+    </div>
+    <div class="col-md-3">
+        <div>Bin</div>
+        @ViewBag.Item.Bin
+    </div>
+</div>
+
+<h3>Breakdown by Department</h3>
+<p class="mb-3">Changing the Actual quantity collected will modify the affected Disbursement List.</p>
+
+@Html.Partial("_RetrievalDetailsTable")
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <button class="btn btn-default">Back</button>
+        <button class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+    </div>
+</div>
