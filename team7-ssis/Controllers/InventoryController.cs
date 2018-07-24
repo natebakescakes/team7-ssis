@@ -47,25 +47,5 @@ namespace team7_ssis.Controllers
             }
             return RedirectToAction("Manage");
         }
-
-        public ActionResult LoadItems()
-        {
-            List<Item> list = itemService.FindAllItems();
-
-            var data = list.Select(x => new {
-                ItemCode = x.ItemCode,
-                ItemCategoryName = x.ItemCategory.Name,
-                Description = x.Description,
-                ReorderLevel = x.ReorderLevel,
-                ReorderQuantity = x.ReorderQuantity,
-                Uom = x.Uom,
-                Quantity = x.Inventory.Quantity
-
-            });
-
-            return Json(new { data = data }, JsonRequestBehavior.AllowGet);
-        }
-
-        
     }
 }
