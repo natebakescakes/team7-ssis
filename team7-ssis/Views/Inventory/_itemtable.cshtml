@@ -4,6 +4,7 @@
     <title>Manage Inventory</title>
 </head>
 <body>
+    @Html.Hidden("myURL", Url.Action("Details", "Inventory"))
     <div style="width:90%; margin:0 auto" class="tablecontainer">
         <form id="myform" method="post">
             <input id="deletebtn" type="submit" class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;" value="Delete Selected" /> 
@@ -66,6 +67,7 @@
                         'selectRow': true
                     }
                 }],
+
                 'order': [[1, 'asc']],
                 "columns": [
                     { "defaultContent": "<input type='checkbox' id='mycheck' value=''>"},
@@ -83,7 +85,7 @@
             //all about dropdownlist
             $('#itemTable tbody').on('change', '#ddl', function (e) {
                 var value = Number($(this).val());
-                var rowSelected = JSON.stringify(oTable.row($(this).parents('tr')).data().ItemCode);
+                var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
                 //alert(rowSelected);
                 switch (value) {
                     case 0: gotoMakeStockAdjustment(rowSelected);
@@ -95,7 +97,7 @@
 
                 default: console.log('default ddl')
             }
-        })
+        }) 
         function gotoMakeStockAdjustment(rs) {
             alert('MakeStockAdjustment'+rs);
             }
@@ -103,7 +105,19 @@
             alert('EditReorderLevelAndQuantity'+rs);
         }
         function gotoViewItemDetail(rs) {
+            var url = $("#myURL").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+            element1.value = rs;
+            element1.name = "itemCode";
+            element1.type = "hidden";
+            form.appendChild(element1);
 
+            document.body.appendChild(form);
+
+            form.submit();
             alert('gotoViewItemDetail'+rs);
         }
 

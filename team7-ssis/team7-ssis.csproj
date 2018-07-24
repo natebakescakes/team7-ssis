@@ -295,6 +295,7 @@
     <Compile Include="ViewModels\StationeryDisbursementViewModel.cs" />
     <Compile Include="ViewModels\StationeryRetrievalViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\StockHistoryViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CollectionPointRepository.cs" />
@@ -367,6 +368,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\pencil1.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -467,7 +469,7 @@
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
     <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
-    <Content Include="Views\Shared\_itemtable.cshtml" />
+    <Content Include="Views\Inventory\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
     <Content Include="Views\Manage\EditProfile.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
@@ -503,6 +505,9 @@
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
+    <Content Include="Views\Inventory\Details.cshtml" />
+    <Content Include="Views\Inventory\_ItemDetail.cshtml" />
+    <Content Include="Views\Inventory\_StockHistoryTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

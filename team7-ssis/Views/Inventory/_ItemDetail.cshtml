@@ -1,0 +1,60 @@
+﻿<div style="border-color:black">
+    <form id="form1">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="ItemCode">Item Code</label><br />
+                    <input type="text" class="form-control" id="ItemCode">
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Description">Item Description</label><br />
+                    <input type="text" class="form-control" id="Description">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Category">Category</label><br />
+                    <input type="text" class="form-control" id="ContactName">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Category">Item Image</label><br />
+                    <img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="phone">Bin No</label><br />
+                    <input type="text" class="form-control" id="PhoneNumber">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Fax">Unit of Measure</label><br />
+                    <input type="text" class="form-control" id="FaxNumber">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Fax">In Stock</label><br />
+                    <input type="text" class="form-control" id="FaxNumber">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Fax">Status</label><br />
+                    <input type="text" class="form-control" id="FaxNumber">
+                </div>
+            </div>
+        </div>
+        @*@Html.Partial("_SupplierDetailByInventory")*@
+        <input type="submit" class="btn btn-info fa-pull-right" value="Edit Details">
+
+    </form>
+</div>

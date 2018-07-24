@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Item Details</h2>
+
+<br /><br />
+@Html.Partial("_ItemDetail")
+
+<br /><br />
+@Html.Partial("_StockHistoryTable")
+
+
+
+<script>
+    var itemCode = '@(ViewBag.VB)';
+    var oTable = $('#myTable').DataTable({
+        sAjaxSource: "/api/manage/stockhistory/"+itemCode,
+        sAjaxDataProp: "",
+        'order': [[1, 'asc']],
+        "columns": [
+            { "data": "theDate", "autoWidth": true },
+            { "data": "host", "autoWidth": true },
+            { "data": "qty", "autoWidth": true },
+            { "data": "balance", "autoWidth": true }
+        ]
+    });
+
+</script>

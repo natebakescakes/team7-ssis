@@ -11,12 +11,25 @@ namespace team7_ssis.Controllers
 {
     public class InventoryController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        ItemService itemService = new ItemService(context);
+        public ApplicationDbContext context;
+        ItemService itemService;
 
+        public InventoryController()
+        {
+            context = new ApplicationDbContext();
+            itemService = new ItemService(context);
+        }
         // GET: Inventory
         public ActionResult Index()
         {
+            return View();
+        }
+
+        //GET: Inventory Detail
+        public ActionResult Details(string itemCode)
+        {
+            ViewBag.VB = itemCode;
+            ViewData["ItemCode"] = itemCode;
             return View();
         }
 

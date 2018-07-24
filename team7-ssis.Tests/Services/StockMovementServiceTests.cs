@@ -41,14 +41,16 @@ namespace team7_ssis.Tests.Services
         public void FindStockMovementByItemCodeTest()
         {
             //Arrange
-            StockMovement a = context.StockMovement.First();
-            int expected = context.StockMovement.Where(x => x.Item.ItemCode == a.Item.ItemCode).ToList().Count;
+            //StockMovement a = context.StockMovement.First();
+            //int expected = context.StockMovement.Where(x => x.Item.ItemCode == a.Item.ItemCode).ToList().Count;
 
             //Act
-            var result = stockmovementService.FindStockMovementByItemCode(a.Item.ItemCode).Count;
+            var result = stockmovementService.FindStockMovementByItemCode("E030");
 
             //Assert
-            Assert.AreEqual(expected, result);
+            foreach(StockMovement i in result){
+                Assert.AreEqual("E030", i.Item.ItemCode);
+            }
         }
 
         [TestMethod]

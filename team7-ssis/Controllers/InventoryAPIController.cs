@@ -14,11 +14,34 @@ namespace team7_ssis.Controllers
     {
         private ApplicationDbContext context;
         ItemService itemService;
+        StockMovementService stkMovementService;
 
         public InventoryApiController()
         {
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
+            stkMovementService = new StockMovementService(context);
+        }
+
+        [Route("api/manage/stockhistory/{itemCode}")]
+        [HttpGet]
+        public IEnumerable<StockHistoryViewModel> FindStockHistoryByItem(string itemCode)
+        {
+            //System.Diagnostics.Debug.WriteLine("FindStockHistoryByItem",itemCode);
+            List<StockMovement> list = stkMovementService.FindStockMovementByItemCode(itemCode);
+            List<StockHistoryViewModel> items = new List<StockHistoryViewModel>();
+
+            foreach(StockMovement i in list)
+            {
+                items.Add(new StockHistoryViewModel
+                {
+                    theDate = i.CreatedDateTime,
+                    host=(i.DeliveryOrderDetailItemCode!=null?i.DeliveryOrderDetail.DeliveryOrder.Supplier.Name:i.DisbursementDetailItemCode!=null?i.DisbursementDetail.Disbursement.Department.Name:i.StockAdjustmentDetail.StockAdjustmentId),
+                    qty=i.AfterQuantity-i.OriginalQuantity,
+                    balance=i.AfterQuantity
+                });
+            }
+            return items;
         }
 
         [Route("api/manage/items")]
@@ -29,7 +52,7 @@ namespace team7_ssis.Controllers
             List<Item> list = itemService.FindAllItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
-            foreach(Item i in list)
+            foreach (Item i in list)
             {
                 items.Add(new ItemViewModel
                 {
@@ -39,7 +62,7 @@ namespace team7_ssis.Controllers
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,
                     Uom = i.Uom,
-                    Quantity= i.Inventory.Quantity
+                    Quantity = i.Inventory.Quantity
                 });
             }
             return items;
