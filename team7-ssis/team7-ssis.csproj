@@ -513,6 +513,7 @@
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
+    <Content Include="Views\Inventory\ItemCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

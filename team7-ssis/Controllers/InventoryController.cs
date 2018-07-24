@@ -47,5 +47,13 @@ namespace team7_ssis.Controllers
             }
             return RedirectToAction("Manage");
         }
+
+        public ActionResult ItemCategory()
+        {
+
+            return View();
+        }
     }
+
+  
 }
