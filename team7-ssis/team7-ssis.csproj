@@ -291,6 +291,7 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Title.cs" />
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
+    <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\StationeryDisbursementViewModel.cs" />
     <Compile Include="ViewModels\StationeryRetrievalViewModel.cs" />

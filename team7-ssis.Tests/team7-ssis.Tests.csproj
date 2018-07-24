@@ -181,6 +181,7 @@
     <Compile Include="Repositories\SupplierRepositoryTests.cs" />
     <Compile Include="Repositories\DelegationRepositoryTests.cs" />
     <Compile Include="Repositories\RetrievalRepositoryTests.cs" />
+    <Compile Include="Repositories\RoleRepositoryTests.cs" />
     <Compile Include="Repositories\TitleRepositoryTests.cs" />
     <Compile Include="Repositories\DeliveryOrderDetailRepositoryTests.cs" />
     <Compile Include="Repositories\DisbursementDetailRepositoryTests.cs" />
