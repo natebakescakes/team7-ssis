@@ -61,5 +61,12 @@ function GetDropDownData() {
     failure: function() {
       alert('Failed!');
     },
+    error: function(xhr, ajaxOptions, thrownError) {
+      if (xhr.status == 404) {
+        $('#notification-dropdown-items').append(
+          $('<span class="dropdown-item">No notifications</span>'),
+        );
+      }
+    },
   });
 }
