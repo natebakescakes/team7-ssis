@@ -475,9 +475,7 @@
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
-    <Content Include="Views\Supplier\_AddSupplier.cshtml" />
     <Content Include="Views\Shared\_LayoutFluid.cshtml" />
-    <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
     <Content Include="Views\Supplier\_AddSupplier.cshtml" />
   </ItemGroup>
   <ItemGroup>

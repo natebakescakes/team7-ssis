@@ -20,7 +20,7 @@
     });
 
 
-    $('#myTable tbody').on('click', 'tr', function () {
+    var single = $('#myTable tbody').on('click', 'tr', function () {
         var rowdata = table.row(this).data();
         var xid = rowdata.SupplierCode;
         $('.collapse').collapse("show");
@@ -32,10 +32,15 @@
             success: function (data) {
                 var i;
                 for (i in data) {
-                    $('#supplier-form').find('[id="' + i + '"]').val(data[i]);
+                    $('#supplierdetails').find('[id="' + i + '"]').val(data[i]);
                 }
             }
         });
+
+        $('#edit-btn').show();
+        $(".button-set").hide();
+        disableInput();
+
 
     });
 
@@ -55,6 +60,55 @@
         event.preventDefault();
     });
 
+    $('#supplierdetails').submit(function (event){
+        $.ajax({
+            type: "POST",
+            url: '/supplier/Save',
+            data: $('#supplierdetails').serialize(),
+            success: function (data) {
+                if (data.status) {
+                    
+                }
+            }
+        })
+        cancelbtn.click();
+        event.preventDefault();
+    });
 
+    $('#edit-btn').on('click', function () {
+        $('#edit-btn').hide();
+        $(".button-set").show();
+        enableInput();
+      
+    });
 
+   var cancelbtn= $('#cancel-btn').on('click', function(){
+        disableInput();
+        $('#edit-btn').show();
+        $(".button-set").hide();
+    });
+
+    function enableInput() {
+        $('#supplierdetails')
+            .find('input')
+            .prop('disabled', false);
+        $('#supplierdetails')
+            .find('textarea')
+            .prop('disabled', false);
+        $('#supplierdetails')
+            .find('select')
+            .prop('disabled', false);
+    }
+
+    function disableInput() {
+        $('#supplierdetails')
+            .find('input')
+            .prop('disabled', true);
+        $('#supplierdetails')
+            .find('textarea')
+            .prop('disabled', true);
+        $('#supplierdetails')
+            .find('select')
+            .prop('disabled', true);
+    }
 })
