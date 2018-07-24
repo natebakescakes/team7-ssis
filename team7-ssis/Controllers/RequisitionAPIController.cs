@@ -56,23 +56,23 @@ namespace team7_ssis.Controllers
         public IHttpActionResult ProcessRequisitions(List<string> reqIdList)
         {
             List<Requisition> reqList = new List<Requisition>();
-            string message;
+            string rid;
             foreach (string s in reqIdList)
             {
                 reqList.Add(requisitionRepository.FindById(s));
             }
             try
             {
-                message = requisitionService.ProcessRequisitions(reqList);
+                rid = requisitionService.ProcessRequisitions(reqList);
             } catch
             {
-                message = "Please select Requisitions to be processed.";
+                return BadRequest();
             }
-            return Ok( new { message = message });
+            return Ok(rid);
         }
         [Route("api/stationeryretrieval/{rId}")]
         [HttpGet]
-        public IEnumerable<StationeryRetrievalViewModel> StationeryRetrieval(string rId)
+        public IEnumerable<StationeryRetrievalTableViewModel> StationeryRetrieval(string rId)
         {
             List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
 
@@ -85,7 +85,7 @@ namespace team7_ssis.Controllers
                 dd.ItemCode,
                 dd.Bin
             });
-            List<StationeryRetrievalViewModel> viewModel = finalList.Select(y => new StationeryRetrievalViewModel
+            List<StationeryRetrievalTableViewModel> viewModel = finalList.Select(y => new StationeryRetrievalTableViewModel
             {
                 ProductID = y.Key.ItemCode,
                 //Bin = y.Key.Bin,

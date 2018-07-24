@@ -7,6 +7,14 @@ namespace team7_ssis.ViewModels
 {
     public class StationeryRetrievalViewModel
     {
+        public string RetrievalID { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedOn { get; set; }
+        public string UpdatedBy { get; set; }
+        public string UpdatedOn { get; set; }
+    }
+    public class StationeryRetrievalTableViewModel
+    {
         public string ProductID { get; set; }
         public string Bin { get; set; }
         public string Description { get; set; }

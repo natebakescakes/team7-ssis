@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.Services;
+using team7_ssis.ViewModels;
 
 namespace team7_ssis.Controllers
 {
@@ -16,7 +17,7 @@ namespace team7_ssis.Controllers
         ItemService itemService = new ItemService(context);
         
         // GET: /Requisition
-        public ActionResult Index()
+        public ActionResult ManageRequisitions()
         {
             return View();
         }
@@ -31,14 +32,39 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public ActionResult StationeryRetrieval(string rid)
         {
-            rid = "RET-201807-001";
+            if (rid == null)
+            {
+                return new HttpStatusCodeResult(400);
+            }
+
             Retrieval r = retrievalService.FindRetrievalById(rid);
-            ViewBag.Retrieval = r;
-            return View();
+            StationeryRetrievalViewModel viewModel = new StationeryRetrievalViewModel();
+            viewModel.RetrievalID = r.RetrievalId;
+
+            try { viewModel.CreatedBy = String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName); }
+            catch { viewModel.CreatedBy = ""; }
+            viewModel.CreatedOn = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
+            try
+            {
+                viewModel.UpdatedBy = String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
+            } catch
+            {
+                viewModel.UpdatedBy = "";
+            }
+            try
+            {
+                viewModel.UpdatedOn = String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
+            } catch
+            {
+                viewModel.UpdatedOn = "";
+            }
+
+            return View(viewModel);
         }
         // GET: /Requisiton/StationeryDisbursement
-        public ActionResult StationeryDisbursement()
+        public ActionResult StationeryDisbursement(string rid)
         {
+            
             // TODO: Remove hardcorded values
             ViewBag.Retrieval = "RET-201807-001";
             return View();

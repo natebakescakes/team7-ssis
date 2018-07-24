@@ -289,9 +289,9 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Title.cs" />
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
+    <Compile Include="ViewModels\RequisitionViewModels.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\StationeryDisbursementViewModel.cs" />
-    <Compile Include="ViewModels\StationeryRetrievalViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -370,6 +370,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
+    <Content Include="Scripts\Custom\ManageRequisitions.js" />
+    <Content Include="Scripts\Custom\RedirectPost.js" />
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
@@ -477,8 +479,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Requisition\Index.cshtml" />
-    <Content Include="Views\Requisition\_RequisitionTable.cshtml" />
+    <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
     <Content Include="Views\Requisition\RequisitionDetails.cshtml" />
     <Content Include="Views\Requisition\_RequisitionDetailTable.cshtml" />
     <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
