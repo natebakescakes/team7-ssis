@@ -60,6 +60,13 @@
         event.preventDefault();
     });
 
+    $('#pricelist-btn').on('click', function () {
+        var code = $('#SupplierCode').val();
+        $('#pricelist-btn').attr('href', '/supplier/supplierpricelist/' +code);
+       
+
+    });
+
     $('#supplierdetails').submit(function (event) {
         $.ajax({
             type: "POST",
@@ -75,6 +82,8 @@
 
         event.preventDefault();
     });
+
+
 
     $('#edit-btn').on('click', function () {
         $('#edit-btn').hide();

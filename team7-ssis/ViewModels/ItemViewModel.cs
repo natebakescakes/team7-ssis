@@ -16,4 +16,15 @@ namespace team7_ssis.ViewModels
         public string Uom { get; set; }
         public int Quantity { get; set; }
     }
+
+    public class ItemPriceViewModel
+    {
+        public string ItemCode { get; set; }
+        public string ItemCategoryName { get; set; }
+        public string Description { get; set; }
+        public string Uom { get; set; }
+
+        public decimal Price { get; set; }
+
+    }
 }

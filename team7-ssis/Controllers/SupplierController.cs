@@ -80,6 +80,19 @@ namespace team7_ssis.Controllers
             return new JsonResult { Data = new { status = status } };
         }
 
+        [HttpGet]
+        public ActionResult SupplierPriceList(string id)
+        {
+            Supplier supplier = supplierService.FindSupplierById(id);
+            //assemble view model
+
+            return View(new SupplierViewModel {
+                SupplierCode = supplier.SupplierCode,
+                Name = supplier.Name,
+                ContactName = supplier.ContactName
+
+            });
+        }
    
     }
 }

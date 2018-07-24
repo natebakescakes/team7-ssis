@@ -1,0 +1,31 @@
+﻿@model team7_ssis.ViewModels.SupplierViewModel
+
+@{
+    ViewBag.Title = "SupplierPriceList";
+}
+
+<h2>Price List for @Model.Name</h2>
+<br /><br />
+
+<div style="margin:0 auto" class="container">
+
+    <table id="myTable" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Item Code</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Unit of Measurement</th>
+                <th>Unit Price</th>
+                
+
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/Custom/SupplierPriceList.js")
+}

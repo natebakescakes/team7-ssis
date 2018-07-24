@@ -14,6 +14,7 @@ namespace team7_ssis.Controllers
     {
         static ApplicationDbContext context = new ApplicationDbContext();
         SupplierService supplierService = new SupplierService(context);
+        ItemPriceService itempriceService = new ItemPriceService(context);
 
         [Route("api/supplier/all")]
         [HttpGet]
@@ -45,6 +46,22 @@ namespace team7_ssis.Controllers
                 GSTNumber = supplier.GstRegistrationNo,
                 Status = supplier.Status.StatusId
             };
+            
+        }
+
+        [Route("api/supplier/pricelist/{Id}")]
+        [HttpGet]
+        public List<ItemPriceViewModel> GetPriceList(string Id)
+        {
+
+            return itempriceService.FindItemPriceBySupplierCode(Id).Select(item => new ItemPriceViewModel {
+                ItemCode = item.ItemCode,
+                ItemCategoryName = item.Item.ItemCategory.Name,
+                Description = item.Item.Description,
+                Uom = item.Item.Uom,
+                Price = item.Price
+
+            }).ToList();
             
         }
 
