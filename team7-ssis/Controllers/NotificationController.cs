@@ -21,7 +21,14 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult Read(int notificationId)
         {
-            var notification = new NotificationService(Context).ReadNotification(notificationId);
+            Notification notification;
+            try
+            {
+                notification = new NotificationService(Context).ReadNotification(notificationId);
+            } catch (ArgumentException)
+            {
+                notification = new NotificationService(Context).FindNotificationById(notificationId);
+            }
 
             switch (notification.NotificationType.NotificationTypeId) {
                 case 1:
