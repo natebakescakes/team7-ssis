@@ -30,24 +30,22 @@ namespace team7_ssis.Controllers
             }).ToList();
         }
 
-        [Route("api/purchaseOrder/{id}")]
-        [HttpPost]
-        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string poNum)
+        
+        
+        public List<PurchaseOrderDetailsViewModel> GetPurchaseOrder(string poNum)
         {
             PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+
             return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
                 ItemCode = pod.Item.ItemCode,
                 Description = pod.Item.Description,
                 QuantityOrdered = pod.Quantity,
-                UnitPrice = pod.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First().Price,
-                Amount = pod.Quantity * pod.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First().Price,
-                RemainingQuantity=0,
-               // ReceivedQuantity = po.DeliveryOrders.ForEach(x => x.DeliveryOrderDetails.Where(y=>y.Item.ItemCode==pod.Item.ItemCode).Select(z => z!=null?z.PlanQuantity:0),
-               // ReceivedQuantity = po.DeliveryOrders
+                UnitPrice = purchaseOrderService.FindUnitPriceByPurchaseOrderDetail(pod),
+                Amount = purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod),
+                ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
+                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod)
                 
-
-
             }).ToList();
 
         }

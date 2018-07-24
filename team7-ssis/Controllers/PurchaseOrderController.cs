@@ -32,8 +32,10 @@ namespace team7_ssis.Controllers
             podModel.SupplierName = po.Supplier.Name;
             podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
             podModel.Status = po.Status.Name;
-
+            //ViewBag.Id = poNum;
             return View(podModel);
+            //return View();
+
         }
 
 

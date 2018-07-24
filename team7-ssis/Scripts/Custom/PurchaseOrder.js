@@ -98,18 +98,32 @@ $(document).ready(function(){
 
     $('#poTable tbody').on('change', '.action', function (e) {
 
-        var poNum = JSON.stringify(datatbl.row($(this).parents('tr')).data().PNo);
+        var poNum = datatbl.row($(this).parents('tr')).data().PNo;
+        
         var value = Number($(this).val());
-        alert(value);
-        if (value == 0) { var u = 'PurchaseOrder/details'; }
-        else if (value == 1) { u = ''; }
-        else if (value == 2) { u = ''; }
-        else { u = ''; }
-        $.ajax({
-            type: 'POST',
-            data: { poNum: poNum},
-            url: u,
-        });
+        var url;
+
+        if (value == 0) { url = $("#detailsUrl").val(); }
+        else if (value == 1) { url = ''; }
+        else if (value == 2) { url = ''; }
+        else { url = ''; }
+        
+
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = url;
+
+        element1.value = poNum;
+        element1.name = "poNum";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+
     });
                        
    
