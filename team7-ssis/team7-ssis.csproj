@@ -235,6 +235,7 @@
     <Compile Include="Controllers\DisbursementController.cs" />
     <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\NotificationApiController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
@@ -374,6 +375,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\Notification.js" />
@@ -514,9 +516,12 @@
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
     <Content Include="Views\Inventory\ItemCategory.cshtml" />
+    <Content Include="Views\Inventory\_ItemCategoryTable.cshtml" />
+    <Content Include="Views\Inventory\ItemCategoryDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ItemCategory\" />
     <Folder Include="Views\Notification\" />
   </ItemGroup>
   <ItemGroup>
