@@ -26,5 +26,6 @@ namespace team7_ssis.ViewModels
 
         public decimal Price { get; set; }
 
+        public string SupplierCode { get; set; }
     }
 }

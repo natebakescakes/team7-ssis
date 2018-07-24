@@ -12,10 +12,16 @@ namespace team7_ssis.Controllers
 {
     public class SupplierAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        SupplierService supplierService = new SupplierService(context);
-        ItemPriceService itempriceService = new ItemPriceService(context);
+        ApplicationDbContext context;
+        SupplierService supplierService;
+        ItemPriceService itempriceService;
 
+        public SupplierAPIController()
+        {
+            context = new ApplicationDbContext();
+            supplierService = new SupplierService(context);
+            itempriceService = new ItemPriceService(context);
+        }
         [Route("api/supplier/all")]
         [HttpGet]
         public List<SupplierViewModel> Suppliers()

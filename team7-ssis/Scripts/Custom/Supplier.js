@@ -76,6 +76,7 @@
                 if (data.status) {
                     alert("Supplier information has been successfully updated");
                     cancelbtn.click();
+                    table.ajax.reload();
                 }
             }
         });
