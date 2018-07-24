@@ -24,8 +24,8 @@ namespace team7_ssis.Controllers
           }
         public ActionResult Home()
         {
-            ApplicationUser user = userRepository.FindById("166ad865 - 7f9a - 4673 - 8838 - 68e51e0fcd3e");
-            ViewBag.supervisors = userService.listSupervisorsByUser(user);
+            //ApplicationUser user = userRepository.FindById("166ad865 - 7f9a - 4673 - 8838 - 68e51e0fcd3e");
+            //ViewBag.supervisors = userService.listSupervisorsByUser(user);
             return View();
         }
 
