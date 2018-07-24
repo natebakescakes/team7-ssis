@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 
     var table = $('#myTable').DataTable({
-        select: true,
+
         sAjaxSource: "/api/supplier/all",
         sAjaxDataProp: "",
         pageLength: '5',
@@ -11,7 +11,7 @@
             { "data": "ContactName", "autoWidth": true },
             { "data": "PhoneNumber", "autoWidth": true },
             { "data": "FaxNumber", "autoWidth": true },
-            { "data": "Address", "autoWidth": true },
+            { "data": "Address", "autoWidth": true }
         ],
         select: {
             style: 'single'
@@ -55,23 +55,24 @@
                     table.ajax.reload();
                 }
             }
-        })
+        });
 
         event.preventDefault();
     });
 
-    $('#supplierdetails').submit(function (event){
+    $('#supplierdetails').submit(function (event) {
         $.ajax({
             type: "POST",
             url: '/supplier/Save',
             data: $('#supplierdetails').serialize(),
             success: function (data) {
                 if (data.status) {
-                    
+                    alert("Supplier information has been successfully updated");
+                    cancelbtn.click();
                 }
             }
-        })
-        cancelbtn.click();
+        });
+
         event.preventDefault();
     });
 
@@ -79,10 +80,10 @@
         $('#edit-btn').hide();
         $(".button-set").show();
         enableInput();
-      
+
     });
 
-   var cancelbtn= $('#cancel-btn').on('click', function(){
+    var cancelbtn = $('#cancel-btn').on('click', function () {
         disableInput();
         $('#edit-btn').show();
         $(".button-set").hide();
@@ -111,4 +112,4 @@
             .find('select')
             .prop('disabled', true);
     }
-})
+});
