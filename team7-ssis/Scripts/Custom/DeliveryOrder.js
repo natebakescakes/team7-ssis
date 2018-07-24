@@ -22,7 +22,7 @@
 
     }
 
-    var pTable = $('#myTable').DataTable({
+    var pTable = $('#myPOTable').DataTable({
         ajax: {
             url: "api/receivegoods/all",
             dataSrc: ""
@@ -31,7 +31,7 @@
             [
                 { defaultContent: '<input type="checkbox" class="checkbox" />' },
                 { data: "DeliveryOrderNo" },
-                { data: "PurchaseOrderNo" },
+                { data: "P  `No" },
                 { data: "SupplierName" },
                 { data: "OrderDate" },
                 { data: "Status" }
@@ -55,7 +55,38 @@
         }
     });
 
+    //for Index Page
+    var Table = $('#myTable').DataTable({
+        ajax: {
+            url: "api/outstandingpo/all",
+            dataSrc: ""
+        },
+        columns:
+            [
+                { defaultContent: '<input type="checkbox" class="checkbox" />' },
+                { data: "PNo" },
+                { data: "SupplierName" },
+                { data: "CreatedDate" },
+                { data: "Status" }
+            ],
+        select: "single",
 
+        createdRow: function (row, data, dataIndex) {
+
+            if (data.Status == "Partially Delivered") {
+
+                $('td', row).eq(5).addClass('partially-delivered');
+
+            }
+
+            if (data.Status == "Awaiting Delivery") {
+
+                $('td', row).eq(5).addClass('awaiting-delivery');
+            }
+        }
+    });
+
+    //for receivegoods-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
         ajax: {
             url: "api/outstandingpo/all",
@@ -69,4 +100,24 @@
             ],
         select: "single"
     });
+
+    //for DeliveryorderConfirmationpage
+    var doTable = $('#myDOTable').DataTable({
+        ajax: {
+            url: "api/outstandingpo/all",
+            dataSrc: ""
+        },
+        columns:
+            [
+                { data: "PurchaseOrder#" },
+                { data: "SupplierName" },
+                { data: "Status" },
+                { data: "DeliveryOrder#" },
+                { data: "CreatedBy" },
+                { data: "Invoice" },
+                { data: "CreatedDate" }
+            ],
+        select: "single"
+    });
+
 });

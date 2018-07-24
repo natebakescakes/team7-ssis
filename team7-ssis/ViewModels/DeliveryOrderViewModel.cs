@@ -12,6 +12,9 @@ namespace team7_ssis.ViewModels
         public string SupplierName { get; set; }
         public DateTime OrderDate { get; set; }
         public string Status { get; set; }
+        public string DeliverOrderFileName { get; set; }
+        public string CreatedBy { get; set; }
+        public string InvoiceFileName { get; set; }
     }
 
     public class DeliveryOrderDetailsViewModel

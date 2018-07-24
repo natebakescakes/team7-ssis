@@ -19,7 +19,7 @@ namespace team7_ssis.Controllers
 
         public ActionResult Index()
         {
-            return View("ReceiveGoods");
+            return View();
         }
 
         [HttpGet]
@@ -41,10 +41,10 @@ namespace team7_ssis.Controllers
             return View(DOVM);
         }
 
-        //public ActionResult ReceiveGoods()
-        //{
-        //    return View();
-        //}
+        public ActionResult ReceiveGoods()
+        {
+            return View();
+        }
 
 
         [HttpPost]
@@ -77,6 +77,23 @@ namespace team7_ssis.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult DOConfirmationPage()
+        {
+            DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
+            //PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
+            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
+
+            DOVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
+            DOVM.SupplierName = purchaseOrder.Supplier.Name;
+            DOVM.OrderDate = purchaseOrder.CreatedDateTime;
+            DOVM.Status = purchaseOrder.Status.Name;
+            //DOVM.InvoiceFileName=
+            //DOVM.DeliverOrderFileName=
+            //DOVM.CreatedBy=
+        
+            return View(DOVM);
         }
     }
 }

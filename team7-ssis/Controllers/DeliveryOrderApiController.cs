@@ -68,10 +68,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<PurchaseOrderViewModel> PurchaseOrders()
         {
-            int[] myIntArray = { 11, 12 };
+            int[] myIntArray = new int[] { 11, 12 };
 
-            //List<PurchaseOrder> list = purchaseOrderService.FindPurchaseOrderByStatus(myIntArray);
-            //List<PurchaseOrderDetail> dlist = new List<PurchaseOrderDetail>();
             return purchaseOrderService.FindPurchaseOrderByStatus(myIntArray).Select(x => new PurchaseOrderViewModel()
             {
                 PNo = x.PurchaseOrderNo,

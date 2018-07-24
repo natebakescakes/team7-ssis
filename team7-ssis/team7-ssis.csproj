@@ -500,6 +500,8 @@
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
     <Content Include="Views\DeliveryOrder\PurchaseOrderDetails.cshtml" />
+    <Content Include="Views\DeliveryOrder\DOConfirmationPage.cshtml" />
+    <Content Include="Views\DeliveryOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
