@@ -26,14 +26,16 @@
 
         ],
         columns: [
-            { data: "StockAdjustmentId", "autoWidth": true },
-            { data: "CreatedBy", "autoWidth": true },
-            { data: "ApprovedBySupervisor", "autoWidth": true },
-            { data: "CreatedDateTime", "autoWidth": true },
-            {data: "StatusName", "autoWidth": true },
+            { data: "StockAdjustmentId"},
+            { data: "CreatedBy" },
+            { data: "ApprovedBySupervisor" },
+            { data: "CreatedDateTime"},
+            {data: "StatusName" },
             {data:  null}
 
         ],
+        autowidth: true,
+        select: "single",
         createdRow: function (row, data, dataIndex) {
             if (data.StatusName == "Approved") {
                 $('td', row).eq(4).addClass('delivered');
@@ -46,10 +48,29 @@
             }
         },
 
-
-        
+        initComplete: function () {
+            var api = this.api();
+            api.columns().indexes().flatten().each(function (i) {
+                var column = api.column(i);
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo($(column.footer()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+                column.data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        }
 
     });
+
+  
 
 
    
@@ -63,9 +84,9 @@
 
         var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
 
-        //var job = $("table#mySATable").find("tr").eq(row).find("td").eq(4).text();
+        //var status = $("table#mySATable").find("tr").eq(row).find("td").eq(4).text();
 
-        //alert(Id + "是" + job);
+        //alert(Id + "是" + status;
        
         window.location.href = "StockAdjustment/Details/" + Id;
 
