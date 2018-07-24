@@ -20,4 +20,12 @@ namespace team7_ssis.ViewModels
         public string Description { get; set; }
         public int Qty { get; set; }
     }
+    public class StationeryDisbursementViewModel
+    {
+        public string DisbursementID { get; set; }
+        public string Department { get; set; }
+        public string CollectionPoint { get; set; }
+        public string DisbursedBy { get; set; }
+        public string Status { get; set; }
+    }
 }

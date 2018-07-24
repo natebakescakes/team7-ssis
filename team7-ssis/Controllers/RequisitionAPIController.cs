@@ -104,16 +104,16 @@ namespace team7_ssis.Controllers
         /// <returns></returns>
         [Route("api/retrievaldetails")]
         [HttpPost]
-        public IEnumerable<RetrievalDetail> RetrievalDetails(string retId, string itemId)
+        public IEnumerable<RetrievalDetailsTableViewModel> RetrievalDetails(RetrievalDetailsJSON json)
         {
-            List<RetrievalDetail> viewModel = new List<RetrievalDetail>();
+            List<RetrievalDetailsTableViewModel> viewModel = new List<RetrievalDetailsTableViewModel>();
 
-            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(retId);
-            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).Where(x => x.ItemCode == itemId).ToList();
+            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(json.retId);
+            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).Where(x => x.ItemCode == json.itemId).ToList();
 
             foreach(DisbursementDetail dd in ddList)
             {
-                viewModel.Add(new RetrievalDetail
+                viewModel.Add(new RetrievalDetailsTableViewModel
                 {
                     DeptId = dd.Disbursement.Department.DepartmentCode,
                     DeptName = dd.Disbursement.Department.Name,

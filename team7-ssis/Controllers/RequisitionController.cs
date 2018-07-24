@@ -49,7 +49,6 @@ namespace team7_ssis.Controllers
         }
         // GET: /Requisiton/StationeryRetrieval
         [Route("/Requisition/StationeryRetrieval")]
-        [HttpGet]
         public ActionResult StationeryRetrieval(string rid)
         {
             if (rid == null)
@@ -87,19 +86,21 @@ namespace team7_ssis.Controllers
             ViewBag.RetrievalID = rid;
             return View();
         }
-        [HttpGet]
         public ActionResult RetrievalDetails(string retId, string itemId)
         {
-            // TODO: Remove hardcoded values
-            retId = "RET-201807-001";
-            itemId = "E032";
+            if (retId == null || itemId == null)
+            {
+                return new HttpStatusCodeResult(400);
+            }
 
+            RetrievalDetailsViewModel viewModel = new RetrievalDetailsViewModel();
             Item i = itemService.FindItemByItemCode(itemId);
 
-            ViewBag.RetrievalId = retId;
-            ViewBag.Item = i;
+            viewModel.ProductID = i.ItemCode;
+            viewModel.Name = i.Name;
+            viewModel.Bin = i.Bin;
 
-            return View();
+            return View(viewModel);
         }
         public ActionResult CreateRequisition()
         {
