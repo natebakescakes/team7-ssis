@@ -6,22 +6,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
     @Scripts.Render("~/bundles/jquery")
 
 
 
+    @*DataTables*@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    @*DataTables plugins*@
     <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
-
     <script src="https://cdn.datatables.net/plug-ins/1.10.19/pagination/simple_incremental_bootstrap.js"></script>
 
+
+
     @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />*@
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.6/css/select.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.bootstrap4.min.css" />
 
 </head>
 <body>
@@ -89,8 +93,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Reports</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown06">
                             @Html.ActionLink("Department Usage Statistics", "DepartmentUsage", "Report", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Procurement Statistics", "Index", "Home", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Store Operation Statistics", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Store Operation Statistics", "StoreOperations", "Report", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                 }
