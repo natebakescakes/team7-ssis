@@ -497,7 +497,7 @@
     <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\Home.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
-    <Content Include="Views\StockAdjustment\Add.cshtml" />
+    <Content Include="Views\StockAdjustment\AddItem.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />

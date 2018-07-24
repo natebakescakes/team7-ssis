@@ -14,6 +14,7 @@ namespace team7_ssis.Controllers
     {
         public static ApplicationDbContext context = new ApplicationDbContext();
         ItemService itemService = new ItemService(context);
+        ItemPriceService itemPriceService = new ItemPriceService(context);
 
         [Route("api/manage/items")]
         [HttpGet]
@@ -32,8 +33,9 @@ namespace team7_ssis.Controllers
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,
                     Uom = i.Uom,
-                    Quantity= i.Inventory.Quantity
-                });
+                    Quantity= i.Inventory.Quantity,
+                    UnitPrice= itemPriceService.GetDefaultPrice(i, 1)
+            });
             }
             return items;
         }

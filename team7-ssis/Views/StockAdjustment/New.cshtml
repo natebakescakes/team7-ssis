@@ -24,18 +24,15 @@
     </table>
     <br />
 </div>
-<table>
-    <tr>
-        <td width="400" align="left"> <input type="button" value="Add Item" onclick="location.href='@Url.Action("list","ItemController")'"></td>
-        <td width="400" align="right"> <input type="button" value="Save as Draft"></td>
-    </tr>
-</table>
 <br />
 <div>
 
     <br />
     <div>
-        here is a datatables
+
+        <input type="button" value="Add Item" onclick="OpenWin(AddItem,300, 400)"/>
+
+
     </div>
     <br />
 
@@ -58,12 +55,27 @@
         </tr>
     </table>
     <br />
+    <input type="button" value="Save As  Draft" />
+ 
+    <input type="button" value="Cancel"/>
 
-    <input type="button" value="cancel">
-
-    <input type="button" value="Submit">
+    <input type="button" value="Submit"/>
 
 </div>
+
+
+
+
+<script type="text/javascript">
+    function OpenWin(src,width,height) {
+        var _doc_width = $(document).width();
+        var _doc_height = $(document).height();
+        var _html = "<div id='bg' style='position: absolute; z-index: 10000; display: block; left: 0px; top: 0px; opacity: 0.5; height: " + _doc_width + "px; width: " + _doc_width + "px; background-color:#CCC;'></div>";
+        _html += "<div id='ifdiv'style='z-index:10001;background-color:#FFF;border:solid 10px #cef;position: fixed; left:128px; top:32px;'>";
+        _html += "<iframe src='" + src + "' frameborder='0' style='width:" + width + "px;height:" + height + "px;overflow:visible;'></iframe></div>";
+        $('body').append(_html);
+    }
+</script>
 
 
 

@@ -113,5 +113,12 @@ namespace team7_ssis.Controllers
             ResultListViewModel.StockAdjustmentModel = sv;
             return View("Details", ResultListViewModel);
         }
+
+        public ActionResult AddItem()
+        {
+            return View();
+        }
+
+
     }
 }
