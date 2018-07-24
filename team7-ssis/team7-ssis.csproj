@@ -374,6 +374,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\CreateNewStockAdjustment.js" />
+    <Content Include="Scripts\Custom\DraftStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
@@ -495,7 +496,6 @@
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
     <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
-    <Content Include="Views\StockAdjustment\Home.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
     <Content Include="Views\StockAdjustment\AddItem.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
@@ -511,6 +511,7 @@
     <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
+    <Content Include="Views\StockAdjustment\DraftStockAdjustment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
