@@ -38,7 +38,7 @@ namespace team7_ssis.Controllers
                     ApprovedBySupervisor = (s.ApprovedBySupervisor == null) ? "" : s.ApprovedBySupervisor.FirstName,
                     CreatedDateTime = s.CreatedDateTime,
                     StatusName = (s.Status == null) ? "" : s.Status.Name,
-                    Link = "/StockAdjustment/"+s.StockAdjustmentId
+                    //Link = "/StockAdjustment/"+s.StockAdjustmentId
                 });
 
             }
@@ -48,19 +48,19 @@ namespace team7_ssis.Controllers
 
 
 
-        [Route("api/supervisor/all")]
-        [HttpGet]
+        //[Route("api/supervisor/all")]
+        //[HttpGet]
 
-        public IEnumerable<ApplicationUser>  AllSupervisors()
-        {
-            return null;
-        }
-        [Route("api/manager/all")]
-        [HttpGet]
-        public IEnumerable<ApplicationUser> AllManagers()
-        {
-            return null;
-        }
+        //public IEnumerable<ApplicationUser>  AllSupervisors()
+        //{
+        //    return null;
+        //}
+        //[Route("api/manager/all")]
+        //[HttpGet]
+        //public IEnumerable<ApplicationUser> AllManagers()
+        //{
+        //    return null;
+        //}
 
     }
 }
