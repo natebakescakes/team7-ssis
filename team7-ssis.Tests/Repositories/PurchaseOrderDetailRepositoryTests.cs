@@ -44,7 +44,7 @@ namespace team7_ssis.Tests.Repositories
         public void FindByIdTestNotNull()
         {
             // Act
-            var result = purchaseOrderDetailRepository.FindById("TEST", "E030");
+            var result = purchaseOrderDetailRepository.FindById("TEST", "E031");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(PurchaseOrderDetail));
@@ -54,7 +54,7 @@ namespace team7_ssis.Tests.Repositories
         public void ExistsByIdTestIsTrue()
         {
             // Act
-            var result = purchaseOrderDetailRepository.ExistsById("TEST", "E030");
+            var result = purchaseOrderDetailRepository.ExistsById("TEST", "E031");
 
             // Assert
             Assert.IsTrue(result);
@@ -64,7 +64,7 @@ namespace team7_ssis.Tests.Repositories
         public void SaveTestExistingChangeQuantity()
         {
             // Arrange
-            var purchaseOrderDetail = purchaseOrderDetailRepository.FindById("TEST", "E030");
+            var purchaseOrderDetail = purchaseOrderDetailRepository.FindById("TEST", "E031");
             var original = purchaseOrderDetail.Quantity;
             purchaseOrderDetail.Quantity = 999999;
 
