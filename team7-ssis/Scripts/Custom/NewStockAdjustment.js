@@ -4,7 +4,7 @@
     var datatb1 = $table.DataTable({
 
         ajax: {
-            url: "api/stockadjustment/draft",
+            url: "api/stockadjustment/New",
             dataSrc: ""
         },
 
@@ -36,13 +36,13 @@
         autowidth: true,
         select: "single",
         createdRow: function (row, data, dataIndex) {
-            if (data.StatusName == "Approved") {
+            if (data.StatusName === "Approved") {
                 $('td', row).eq(4).addClass('delivered');
             }
-            if (data.StatusName == "Pending Approval") {
+            if (data.StatusName === "Pending Approval") {
                 $('td', row).eq(4).addClass('partially-delivered');
             }
-            if (data.StatusName == "Rejected") {
+            if (data.StatusName === "Rejected") {
                 $('td', row).eq(4).addClass('awaiting-delivery');
             }
         },

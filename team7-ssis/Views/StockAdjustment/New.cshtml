@@ -29,12 +29,13 @@
 
     <br />
     <div >
-        <button class="popup btn btn-primary pull-right" value="Save" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
+        <button class="popup btn btn-primary pull-right" value="Save" data-toggle="modal" data-target="#myModal"
+                onclick="window.open('/StockAdjustment/AddItem','','height=200,width=550,fullscreen=no,resizable=yes,scrollbars=no,top=350,left=500')"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
     </div>
     <br />
 
     <div>
-        @Html.Partial("DraftStockAdjustment")
+        @Html.Partial("NewStockAdjustment")
     </div>
 
     <table class="table table-striped table-bordered">
@@ -69,7 +70,28 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+   @*<script type="text/javascript">
+    function OpenWin(width, height) {
+        var me;
+        // 把父页面窗口对象当作参数传递到对话框中，以便对话框操纵父页自动刷新。
+        me = window;
+        // 显示对话框。
+        var a = window.showModalDialog("AddItem.cshtml", me, 'dialogWidth=' + width + 'px;dialogHeight=' + height + 'px;help:no;status=no,toolbar=no,menubar=no,scrollbars=no,location=no');
+        if (typeof (a) != "undefined")
+            var str = new Array();
+        str = a.split("|");
+        var text = str[1];
+        var textv = str[0];
+        //返回值赋给TextBox
+
+        window.document.getElementById("tbMajor").value = text;
+
+        window.document.getElementById("hidV").value = textv;
+    }
+    </script>*@
 }
+
+
 
 
 
