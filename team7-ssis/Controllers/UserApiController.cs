@@ -50,9 +50,11 @@ namespace team7_ssis.Controllers
             }));
         }
 
-        public IHttpActionResult GetRoles(string email)
+        [HttpPost]
+        [Route("api/users/roles")]
+        public IHttpActionResult GetRoles([FromBody] EmailNameViewModel model)
         {
-            var roles = new UserService(context).FindRolesByEmail(email);
+            var roles = new UserService(context).FindRolesByEmail(model.Email);
 
             if (roles.Count == 0) return NotFound();
 

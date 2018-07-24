@@ -123,7 +123,10 @@ namespace team7_ssis.Tests.Controllers
             };
 
             // Act
-            IHttpActionResult actionResult = controller.GetRoles(email);
+            IHttpActionResult actionResult = controller.GetRoles(new EmailNameViewModel()
+            {
+                Email = email,
+            });
             var contentResult = actionResult as OkNegotiatedContentResult<RoleViewModel>;
 
             // Assert
@@ -136,6 +139,7 @@ namespace team7_ssis.Tests.Controllers
         public void GetRoles_ReturnsNotFound()
         {
             // Arrange
+            var email = "rooooooooooot@admin.com";
             var controller = new UserApiController()
             {
                 Request = new HttpRequestMessage(),
@@ -143,7 +147,10 @@ namespace team7_ssis.Tests.Controllers
             };
 
             // Act
-            IHttpActionResult actionResult = controller.GetRoles("roooooooooooooooot@admin.com");
+            IHttpActionResult actionResult = controller.GetRoles(new EmailNameViewModel()
+            {
+                Email = email,
+            });
 
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
