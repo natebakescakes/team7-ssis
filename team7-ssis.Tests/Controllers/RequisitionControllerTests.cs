@@ -18,7 +18,7 @@ namespace team7_ssis.Tests.Controllers
         }
 
         /// <summary>
-        /// Tests that View renders when a valid Retrieval ID is passed in
+        /// Tests that StationeryRetrieval view renders when a valid Retrieval ID is passed in
         /// </summary>
         [TestMethod]
         public void StationeryRetrievalTest()
@@ -31,6 +31,37 @@ namespace team7_ssis.Tests.Controllers
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             ViewResult viewResult = (ViewResult) result;
+        }
+
+        /// <summary>
+        /// Tests that StationeryDisbursement view renders when a valid Retrieval ID is passed in
+        /// </summary>
+        [TestMethod]
+        public void StationeryDisbursementTest()
+        {
+            // ARRANGE
+
+            // ACT
+            ActionResult result = requisitionController.StationeryDisbursement("TEST");
+
+            // ASSERT
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            ViewResult viewResult = (ViewResult)result;
+        }
+        /// <summary>
+        /// Tests that RequisitionDetails view renders when a valid Requisition ID is passed in
+        /// </summary>
+        [TestMethod]
+        public void RequisitionDetailsTest()
+        {
+            // ARRANGE
+
+            // ACT
+            ActionResult result = requisitionController.RequisitionDetails("TEST");
+
+            // ASSERT
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            ViewResult viewResult = (ViewResult)result;
         }
     }
 }
