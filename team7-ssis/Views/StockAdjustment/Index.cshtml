@@ -1,12 +1,34 @@
-﻿<head>
+﻿
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@section scripts {
+    <script src="~/Scripts/Custom/StockAdjustment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/Site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap-select.min.css">
+
 </head>
 
 <body>
     <h2>Manage Stock Adjustments</h2>
+
     <div style="width:90%; margin:0 auto" class="tablecontainer">
-      
+
         <table id="mySATable" class="hover">
             <thead>
                 <tr>
@@ -21,45 +43,6 @@
 
         </table>
     </div>
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            var oTable = $('#mySATable').DataTable({
-
-                sAjaxSource: "/api/stockadjustment/all",
-                sAjaxDataProp: "",
-
-                columns: [
-                    { data: "StockAdjustmentId", "autoWidth": true },
-                    { data: "CreatedBy", "autoWidth": true },
-                    { data: "ApprovedBySupervisor", "autoWidth": true },
-                    { data: "CreatedDateTime", "autoWidth": true },
-                    { data: "StatusName", "autoWidth": true },
-                    
-
-                ],
-                select: 'single',
-
-                //ColumnDefs: [{
-                //    "targets": 5,
-                //    "data": null,
-                //    "render": function (data, type, row) {
-                //        var id = '"' + row.id + '"';
-                //        var html = "<a href='javascript:void(0);'  class='delete btn btn-default btn-xs'>Details</a>"
-                //        return html;
-                //    }
-                //}],
-
-            });
-
-        })
-
-    </script>
 
 </body>
+</html>
