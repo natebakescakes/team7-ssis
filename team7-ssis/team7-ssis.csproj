@@ -465,7 +465,7 @@
     <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
-    <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
+    <Content Include="Views\DeliveryOrder\_OutstandingItemsTable.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
@@ -503,9 +503,10 @@
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
-    <Content Include="Views\DeliveryOrder\PurchaseOrderDetails.cshtml" />
-    <Content Include="Views\DeliveryOrder\DOConfirmationPage.cshtml" />
+    <Content Include="Views\DeliveryOrder\_DOConfirmationViewTable.cshtml" />
     <Content Include="Views\DeliveryOrder\Index.cshtml" />
+    <Content Include="Views\DeliveryOrder\ReceiveGoodsView.cshtml" />
+    <Content Include="Views\DeliveryOrder\DOConfirmationView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

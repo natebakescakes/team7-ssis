@@ -31,12 +31,12 @@ namespace team7_ssis.Controllers
 
                 SupplierName = x.Supplier.Name,
 
-                OrderDate = x.PurchaseOrder.CreatedDateTime,
+                CreatedDate = x.PurchaseOrder.CreatedDateTime,
 
                 Status = x.PurchaseOrder.Status.Name
 
             }).ToList();
-         }
+        }
 
 
         [Route("api/receivegoods/{id}")]
@@ -46,8 +46,10 @@ namespace team7_ssis.Controllers
         public List<DeliveryOrderDetailsViewModel> DeliveryOrderDetails(string poNum)
         {
 
-           DeliveryOrder deliveryOrder= deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(poNum);
-         
+           // DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(poNum);
+
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo("TEST");
+
             return deliveryOrder.DeliveryOrderDetails.Select(dod => new DeliveryOrderDetailsViewModel()
 
             {
@@ -72,7 +74,7 @@ namespace team7_ssis.Controllers
 
             return purchaseOrderService.FindPurchaseOrderByStatus(myIntArray).Select(x => new PurchaseOrderViewModel()
             {
-                PNo = x.PurchaseOrderNo,
+                PurchaseOrderNo = x.PurchaseOrderNo,
 
                 SupplierName = x.Supplier.Name,
 
@@ -80,6 +82,29 @@ namespace team7_ssis.Controllers
 
                 Status = x.Status.Name
 
+            }).ToList();
+        }
+
+        [Route("api/outstandingitems/all")]
+        [HttpGet]
+        public List<PurchaseOrderDetailsViewModel> OutstandingItems()
+        {
+            int[] myIntArray = new int[] { 11, 12 };
+            List<PurchaseOrder> list = purchaseOrderService.FindPurchaseOrderByStatus(myIntArray);
+            List<PurchaseOrderDetail> plist = new List<PurchaseOrderDetail>();
+            foreach (PurchaseOrder po in list)
+            {
+                foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
+                {
+                    plist.Add(pod);
+                }
+            }
+
+            return plist.Select(x => new PurchaseOrderDetailsViewModel()
+            {
+                ItemCode = x.ItemCode,
+                Description = x.Item.Description,
+                QuantityOrdered = x.Quantity
             }).ToList();
         }
     }

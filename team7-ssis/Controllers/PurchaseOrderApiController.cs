@@ -23,7 +23,7 @@ namespace team7_ssis.Controllers
         {
             return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
             {
-                PNo = po.PurchaseOrderNo,
+                PurchaseOrderNo = po.PurchaseOrderNo,
                 SupplierName=po.Supplier.Name,
                 CreatedDate=po.CreatedDateTime.ToShortDateString() + " "+ po.CreatedDateTime.ToShortTimeString(),
                 Status=po.Status.Name
@@ -45,15 +45,7 @@ namespace team7_ssis.Controllers
                 RemainingQuantity=0,
                // ReceivedQuantity = po.DeliveryOrders.ForEach(x => x.DeliveryOrderDetails.Where(y=>y.Item.ItemCode==pod.Item.ItemCode).Select(z => z!=null?z.PlanQuantity:0),
                // ReceivedQuantity = po.DeliveryOrders
-                
-
-
             }).ToList();
-
         }
-
-
-
-
     }
 }

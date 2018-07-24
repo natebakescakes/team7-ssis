@@ -40,32 +40,32 @@ namespace team7_ssis.Services
 
         public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
         {
-            // Exceptions
-            if (deliveryOrderRepository.FindById(deliveryOrderNo)==null)
-            {
-                throw new ArgumentException();
-            }
-             return deliveryOrderRepository.FindById(deliveryOrderNo);
+            //    // Exceptions
+            //    if (deliveryOrderRepository.FindById(deliveryOrderNo)==null)
+            //    {
+            //        throw new ArgumentException();
+            //    }
+            return deliveryOrderRepository.FindById(deliveryOrderNo);
         }
 
         
         public DeliveryOrder FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
-            // Exceptions
-            if (deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo) == null)
-            {
-                throw new ArgumentException();
-            }
+            //// Exceptions
+            //if (deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo) == null)
+            //{
+            //    throw new ArgumentException();
+            //}
             return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo);
         }
 
         public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
         {
-            // Exceptions
-            if (deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode) == null)
-            {
-                throw new ArgumentException();
-            }
+            //// Exceptions
+            //if (deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode) == null)
+            //{
+            //    throw new ArgumentException();
+            //}
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
         }
   

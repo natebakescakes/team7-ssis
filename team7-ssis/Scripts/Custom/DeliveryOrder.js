@@ -21,22 +21,22 @@
         }
 
     }
+    //Receive goods- View DeliveryOrders
 
     var pTable = $('#myPOTable').DataTable({
         ajax: {
-            url: "api/receivegoods/all",
+            url: "/api/receivegoods/all",
             dataSrc: ""
         },
         columns:
             [
                 { defaultContent: '<input type="checkbox" class="checkbox" />' },
                 { data: "DeliveryOrderNo" },
-                { data: "P  `No" },
+                { data: "PurchaseOrderNo" },
                 { data: "SupplierName" },
-                { data: "OrderDate" },
+                { data: "CreatedDate" },
                 { data: "Status" }
             ],
-        select: "single",
 
         createdRow: function (row, data, dataIndex) {
 
@@ -64,7 +64,7 @@
         columns:
             [
                 { defaultContent: '<input type="checkbox" class="checkbox" />' },
-                { data: "PNo" },
+                { data: "PurchaseOrderNo" },
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" }
@@ -86,38 +86,37 @@
         }
     });
 
-    //for receivegoods-outstanding items
+    //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
         ajax: {
-            url: "api/outstandingpo/all",
+            url: "/api/purchaseOrder/{ id }",
             dataSrc: ""
         },
+
+        columns:
+            [
+                {data: "ItemCode"},
+                {data: "Description"},
+                {data: "QuantityOrdered"},
+                { defaultContent: '<input type="textbox" class="textbox" />'},
+                {data: "RemainingQuantity"},
+                {defaultContent: '<input type="checkbox" class="checkbox" />' }
+            ]
+    });
+
+    //for DOConfirmationPage-outstanding items
+    var dTable = $('#myDOTable').DataTable({
+        ajax: {
+            url: "/api/outstandingitems/all",
+            dataSrc: ""
+        },
+
         columns:
             [
                 { data: "ItemCode" },
                 { data: "Description" },
-                { data: "QuantityOrdered" }
-            ],
-        select: "single"
+                { data: "QuantityOrdered" },
+                { data: "ReceivedQuantity" }
+            ]
     });
-
-    //for DeliveryorderConfirmationpage
-    var doTable = $('#myDOTable').DataTable({
-        ajax: {
-            url: "api/outstandingpo/all",
-            dataSrc: ""
-        },
-        columns:
-            [
-                { data: "PurchaseOrder#" },
-                { data: "SupplierName" },
-                { data: "Status" },
-                { data: "DeliveryOrder#" },
-                { data: "CreatedBy" },
-                { data: "Invoice" },
-                { data: "CreatedDate" }
-            ],
-        select: "single"
-    });
-
 });

@@ -1,0 +1,57 @@
+﻿@section scripts {
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    |}
+
+@model team7_ssis.ViewModels.DeliveryOrderViewModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delivery Order</title>
+</head>
+
+<body>
+    <div style="width:90%; margin:0 auto" class="container">
+        <table>
+            <thead>
+                <tr>
+                    <td>Purchase Order #</td>
+                    <td> Supplier Name</td>
+                    <td> Status</td>
+                    <td> Delivery Order</td>
+                    <td> Invoice</td>
+                    <td> Created By</td>
+                    <td>CreatedDate</td>
+
+                </tr>
+            </thead>
+            <tr>
+                <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
+                <td>@Html.DisplayFor(model => model.SupplierName)</td>
+                <td>@Html.DisplayFor(model => model.Status)</td>
+                <td>@Html.DisplayFor(model => model.DeliverOrderFileName)</td>
+                <td>@Html.DisplayFor(model => model.InvoiceFileName)</td>
+                <td>@Html.DisplayFor(model => model.CreatedBy)</td>
+                <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+            </tr>
+        </table>
+    </div>
+
+    <br /><br />
+    @Html.Partial("_DOConfirmationViewTable")
+
+    <div class="form-group">
+
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>Back</a>
+
+    </div>
+</body>
+    </html>

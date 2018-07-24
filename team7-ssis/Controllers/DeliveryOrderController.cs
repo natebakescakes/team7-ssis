@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using team7_ssis.Services;
 using team7_ssis.Models;
 using team7_ssis.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace team7_ssis.Controllers
 {
@@ -15,32 +16,34 @@ namespace team7_ssis.Controllers
         DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
         PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
         PurchaseOrderService purchaseOrderDetailService = new PurchaseOrderService(context);
+        UserService userService = new UserService(context);
+        StatusService statusService = new StatusService(context);
       
-
         public ActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        //public ActionResult PurchaseOrderDetails(string ponum)
-        public ActionResult PurchaseOrderDetails()
+        //public ActionResult ReceiveGoodsView(string ponum)
+        public ActionResult ReceiveGoodsView()
         {
             DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
-            //PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
+           // PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
             PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
 
             DOVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
 
             DOVM.SupplierName = purchaseOrder.Supplier.Name;
 
-            DOVM.OrderDate = purchaseOrder.CreatedDateTime;
+            DOVM.CreatedDate = purchaseOrder.CreatedDateTime;
 
             DOVM.Status = purchaseOrder.Status.Name;
 
             return View(DOVM);
         }
 
+        [HttpGet]
         public ActionResult ReceiveGoods()
         {
             return View();
@@ -76,24 +79,72 @@ namespace team7_ssis.Controllers
                 ViewBag.Message = "You have not specified a file.";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ReceiveGoodsView");
         }
 
-        public ActionResult DOConfirmationPage()
+        public ActionResult DOConfirmationView()
         {
             DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
             //PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
             PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById("TEST");
 
+           // DOVM.DeliveryOrderNo=
             DOVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
             DOVM.SupplierName = purchaseOrder.Supplier.Name;
-            DOVM.OrderDate = purchaseOrder.CreatedDateTime;
+            DOVM.CreatedDate = purchaseOrder.CreatedDateTime;
             DOVM.Status = purchaseOrder.Status.Name;
-            //DOVM.InvoiceFileName=
-            //DOVM.DeliverOrderFileName=
-            //DOVM.CreatedBy=
+            DOVM.InvoiceFileName = deliveryOrder.InvoiceFileName;
+            DOVM.DeliverOrderFileName = deliveryOrder.DeliveryOrderFileName;
+            DOVM.CreatedBy = deliveryOrder.CreatedBy.FirstName +" " + deliveryOrder.CreatedBy.LastName;
         
             return View(DOVM);
+        }
+
+        [HttpPost]
+
+        public ActionResult Submit(DeliveryOrderViewModel model)
+        {
+            bool status = false;
+
+            DeliveryOrder deliveryOrder = new DeliveryOrder();
+
+            if (deliveryOrderService.FindDeliveryOrderById(model.DeliveryOrderNo) == null)
+
+            {
+                deliveryOrder.DeliveryOrderNo = model.DeliveryOrderNo;
+
+                deliveryOrder.CreatedDateTime= DateTime.Now;
+
+                deliveryOrder.CreatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            }
+
+            else
+
+            {
+
+              deliveryOrder = deliveryOrderService.FindDeliveryOrderById(model.DeliveryOrderNo);
+
+              deliveryOrder.UpdatedDateTime = DateTime.Now;
+
+              deliveryOrder.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+            }
+
+            deliveryOrder.PurchaseOrder.PurchaseOrderNo = model.PurchaseOrderNo;
+
+            deliveryOrder.Supplier.SupplierCode = model.SupplierCode;
+
+            deliveryOrder.InvoiceFileName = model.InvoiceFileName;
+
+            deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
+
+            deliveryOrder.Status = statusService.FindStatusByStatusId(1);
+
+            if (deliveryOrderService.Save(deliveryOrder) != null) status = true;
+
+            return new JsonResult { Data = new { status = status } };
+
         }
     }
 }

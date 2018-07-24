@@ -28,7 +28,7 @@ namespace team7_ssis.Controllers
             PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
             PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
 
-            podModel.PNo = po.PurchaseOrderNo;
+            podModel.PurchaseOrderNo = po.PurchaseOrderNo;
             podModel.SupplierName = po.Supplier.Name;
             podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
             podModel.Status = po.Status.Name;

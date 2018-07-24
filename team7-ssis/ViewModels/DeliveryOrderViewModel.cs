@@ -9,12 +9,14 @@ namespace team7_ssis.ViewModels
     {
         public string DeliveryOrderNo { get; set; }
         public string PurchaseOrderNo { get; set; }
+        public string SupplierCode { get; set; }
         public string SupplierName { get; set; }
-        public DateTime OrderDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string Status { get; set; }
         public string DeliverOrderFileName { get; set; }
         public string CreatedBy { get; set; }
         public string InvoiceFileName { get; set; }
+        public string DeliveryOrderFileName { get; set; }
     }
 
     public class DeliveryOrderDetailsViewModel
