@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using team7_ssis.Models;
 
 namespace team7_ssis.ViewModels
 {
@@ -26,5 +27,9 @@ namespace team7_ssis.ViewModels
         public int Quantity { get; set; }
         public string Status { get; set; }
     }
-
+    public class CreateRequisitionsViewModel
+    {
+        public List<CollectionPoint> SelectCollectionPointList { get; set; }
+        public string Representative { get; set; }
+    }
 }

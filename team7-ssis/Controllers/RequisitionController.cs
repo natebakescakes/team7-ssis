@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,7 +19,10 @@ namespace team7_ssis.Controllers
         RequisitionRepository requisitionRepository = new RequisitionRepository(context);
         RetrievalService retrievalService = new RetrievalService(context);
         ItemService itemService = new ItemService(context);
-        
+        CollectionPointService collectionPointService = new CollectionPointService(context);
+        DepartmentService departmentService = new DepartmentService(context);
+        UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
         // GET: /Requisition
         public ActionResult ManageRequisitions()
         {
@@ -104,7 +109,16 @@ namespace team7_ssis.Controllers
         }
         public ActionResult CreateRequisition()
         {
-            return View();
+            CreateRequisitionsViewModel viewModel = new CreateRequisitionsViewModel();
+            try
+            {
+                viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
+            } catch
+            {
+                viewModel.Representative = "";
+            }
+            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
+            return View(viewModel);
         }
     }
 }

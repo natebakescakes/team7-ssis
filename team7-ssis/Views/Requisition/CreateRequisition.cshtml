@@ -1,4 +1,4 @@
-﻿
+﻿@model team7_ssis.ViewModels.CreateRequisitionsViewModel
 @{
     ViewBag.Title = "Create Requisition";
 }
@@ -18,15 +18,16 @@
     <div class="col-md-12">
         <h3>Select Collection Point</h3>
         @*Bind input to List<CollectionPoint>*@
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown button
-            </button>
-        </div>
+        <select class="custom-select">
+            @foreach (var collectionPoint in Model.SelectCollectionPointList)
+            {
+                <option value="@collectionPoint.CollectionPointId">@collectionPoint.Name</option>
+            }
+        </select>
 
         <p>Once requisition in processed, you will receive an email on the pickup date. This will be the following Monday if the requisition was created by Wednesday.</p>
         <h3>Representative</h3>
-        Jenny Wong Mei Lin
+        @Model.Representative
     </div>
 </div>
 
