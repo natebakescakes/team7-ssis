@@ -1,15 +1,48 @@
-﻿<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+﻿
 
+@{
+    ViewBag.Title = "StockAdjustment_List";
+}
+
+
+@section scripts {
+    <script src="~/Scripts/Custom/StockAdjustment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/Content/Site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap-select.min.css">
 
 </head>
 
 <body>
     <h2>Manage Stock Adjustments</h2>
 
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
 
-    @Html.Partial("StockAdjustment_List")
+        <table id="mySATable" class="hover">
+            <thead>
+                <tr>
+                    <th>StockAdjustmentId</th>
+                    <th>CreatedBy</th>
+                    <th> ApprovedBySupervisor</th>
+                    <th>CreatedDateTime</th>
+                    <th>StatusName</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
 
 </body>
+</html>
