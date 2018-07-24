@@ -1,0 +1,78 @@
+﻿<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddItems</title>
+</head>
+<body>
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <form id="myform" method="post">
+            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add To Stock Adjustment</a>
+
+            <table id="itemTable" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Item Number</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>In Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Reorder Quantity</th>
+                        <th>Unit of Measurement</th>
+                        <th>Unit Price</th>
+                    </tr>
+                </thead>
+
+            </table>
+
+        </form>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+            var oTable = $('#itemTable').DataTable({
+                sAjaxSource: "/api/StockAdjustment/items",
+                sAjaxDataProp: "",
+                'columnDefs': [{
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                }],
+                'order': [[1, 'asc']],
+                "columns": [
+                    { "defaultContent": "<input type='checkbox' id='mycheck' value=''>"},
+                    { "data": "ItemCode", "autoWidth": true },
+                    { "data": "ItemCategoryName", "autoWidth": true },
+                    { "data": "Description", "autoWidth": true },
+                    { "data": "Quantity", "autoWidth": true },
+                    { "data": "ReorderLevel", "autoWidth": true },
+                    { "data": "ReorderQuantity", "autoWidth": true },
+                    { "data": "Uom", "autoWidth": true },                 
+                    { "data": "UnitPrice","autoWidth":true }
+                ]
+
+            });
+        
+
+        var selected = new Array();
+        //all about checkbox
+        $('#itemTable tbody').on('change', '#mycheck', function (e) {
+            var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
+            if (this.checked != true) {
+                var index = selected.indexOf(rowSelected);
+                if (index > -1) {
+                    selected.splice(index, 1);
+                }
+                //alert('you are unchecked this again!')
+            }
+            else {
+                selected.push(rowSelected);
+            }
+            //alert(selected.length);
+
+        })
+        });
+    </script>
+
+</body>
