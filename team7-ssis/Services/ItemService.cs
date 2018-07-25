@@ -34,6 +34,11 @@ namespace team7_ssis.Services
             return itemRepository.FindAll().ToList();
         }
 
+        public List<Item> FindAllActiveItems()
+        {
+            return itemRepository.FindAllActive().ToList();
+        }
+
 
         public List<Item> FindItemsByCategory(ItemCategory itemCategory)
         {
