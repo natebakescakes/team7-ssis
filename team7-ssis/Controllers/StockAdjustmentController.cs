@@ -10,6 +10,8 @@ using team7_ssis.Tests.Services;
 using team7_ssis.ViewModels;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using System.Net.Http;
+using System.Net;
 
 namespace team7_ssis.Controllers
 {
@@ -83,10 +85,10 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        public ActionResult SaveAsDraft()
-        {
-            return View();
-        }
+        //public ActionResult SaveAsDraft()
+        //{
+        //    return View();
+        //}
 
         public ActionResult Details(string id)
         {
@@ -146,6 +148,18 @@ namespace team7_ssis.Controllers
 
             return View();
         }
+
+        //public ActionResult SaveInSession(List<String> itemCodes)
+        //{
+        //    string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
+        //    List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
+        //    foreach (string i in itemCodes)
+        //    {
+        //        itemcodes_list.Add(i);
+        //    }
+
+        //    return View("New");
+        //}
 
 
     }

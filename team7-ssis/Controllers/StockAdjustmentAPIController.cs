@@ -60,7 +60,7 @@ namespace team7_ssis.Controllers
 
         [Route("api/stockadjustment/items")]
         [HttpPost]
-        public HttpResponseMessage SaveInSession(string[] itemCodes)
+        public HttpResponseMessage SaveInSession(List<string> itemCodes)
         {
             string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
             List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
@@ -73,26 +73,26 @@ namespace team7_ssis.Controllers
         }
 
 
-        //[Route("api/stockadjustment/restoreitems")]
-        //[HttpGet]
-        //public IEnumerable<ItemViewModel> RestoreItemFromSession()
-        //{
-        //    string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
-        //    List<ItemViewModel> ViewModel_list = new List<ItemViewModel>();
-        //    List<Item> Item_list = new List<Item>();
+        [Route("api/stockadjustment/restoreitems")]
+        [HttpGet]
+        public IEnumerable<ItemViewModel> RestoreItemFromSession()
+        {
+            string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            List<ItemViewModel> ViewModel_list = new List<ItemViewModel>();
+            List<Item> Item_list = new List<Item>();
 
-        //    List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
-        //    foreach(string code in itemcodes_list)
-        //    {
-        //        Item i = itemService.FindItemByItemCode(code);
-        //        ItemViewModel iv = new ItemViewModel();
-        //        iv.ItemCode = i.ItemCode;
-        //        iv.Description = i.Description;
-        //        iv.UnitPrice = itemPriceService.GetDefaultPrice(i, 1);
-        //        ViewModel_list.Add(iv);
-        //    }
-        //    return ViewModel_list;
-        //}
+            List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
+            foreach (string code in itemcodes_list)
+            {
+                Item i = itemService.FindItemByItemCode(code);
+                ItemViewModel iv = new ItemViewModel();
+                iv.ItemCode = i.ItemCode;
+                iv.Description = i.Description;
+                iv.UnitPrice = itemPriceService.GetDefaultPrice(i, 1);
+                ViewModel_list.Add(iv);
+            }
+            return ViewModel_list;
+        }
 
         //[Route("api/supervisor/all")]
         //[HttpGet]
