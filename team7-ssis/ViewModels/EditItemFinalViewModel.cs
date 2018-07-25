@@ -14,7 +14,7 @@ namespace team7_ssis.ViewModels
         public string Bin { get; set; }
         public string Uom { get; set; }
         public int Quantity { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public IEnumerable<SelectListItem> Statuses { get; set; }
         public string SupplierName { get; set; }
         public double SupplierUnitPrice { get; set; }

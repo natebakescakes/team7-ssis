@@ -83,7 +83,7 @@ namespace team7_ssis.Controllers
                 Bin = item.Bin,
                 Uom = item.Uom,
                 Quantity = item.Inventory.Quantity,
-                Status = item.Status.Name
+                Status = item.Status.StatusId
             };
 
         }
