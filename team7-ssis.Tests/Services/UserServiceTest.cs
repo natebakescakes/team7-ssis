@@ -106,7 +106,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void FindRolesByEmail_Valid()
         {
             // Arrange

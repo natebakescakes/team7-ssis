@@ -25,7 +25,6 @@ namespace team7_ssis.Tests.Controllers
         }
 
         [TestMethod]
-        [Ignore]
         public void ReadNotification_Unread_ReadThenRedirect()
         {
             // Arrange
@@ -51,7 +50,6 @@ namespace team7_ssis.Tests.Controllers
         }
 
         [TestMethod]
-        [Ignore]
         public void ReadNotification_Read_Redirect()
         {
             // Arrange

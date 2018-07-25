@@ -22,6 +22,9 @@ namespace team7_ssis.Services
         {
             return context.Delegation
                 .OrderByDescending(x => x.DelegationId)
+                .FirstOrDefault() == null ? 1 :
+                context.Delegation
+                .OrderByDescending(x => x.DelegationId)
                 .FirstOrDefault()
                 .DelegationId + 1;
         }
@@ -79,6 +82,9 @@ namespace team7_ssis.Services
         public static int GetNewNotificationId(ApplicationDbContext context)
         {
             return context.Notification
+                .OrderByDescending(x => x.NotificationId)
+                .FirstOrDefault() == null ? 1 : 
+                context.Notification
                 .OrderByDescending(x => x.NotificationId)
                 .FirstOrDefault()
                 .NotificationId + 1;
@@ -159,6 +165,9 @@ namespace team7_ssis.Services
         public static int GetNewStockMovementId(ApplicationDbContext context)
         {
             return context.StockMovement
+                .OrderByDescending(x => x.StockMovementId)
+                .FirstOrDefault() == null ? 1 :
+                context.StockMovement
                 .OrderByDescending(x => x.StockMovementId)
                 .FirstOrDefault()
                 .StockMovementId + 1;
