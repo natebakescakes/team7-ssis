@@ -6,6 +6,9 @@ using team7_ssis.Models;
 
 namespace team7_ssis.ViewModels
 {
+
+
+
     public class StockAdjustmentViewModel
     {
         public string StockAdjustmentId { get; set; }  
@@ -15,6 +18,11 @@ namespace team7_ssis.ViewModels
         public DateTime CreatedDateTime { get; set; }
         public  string  StatusName { get; set; }
         public  string Link { get; set; }
+
+        public List<ApplicationUser> supervisors { get; set; }
+
+        public List<ApplicationUser> managers { get; set; }
+
 
 
     }
