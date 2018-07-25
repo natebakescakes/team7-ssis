@@ -46,15 +46,16 @@ namespace team7_ssis.Services
             return userRepository.Save(user);
         }
 
-        public List<ApplicationUser> listSupervisorsByUser(ApplicationUser user)
+        public List<string> FindRolesByEmail(string email)
         {
-            throw new NotImplementedException();
-        }
+            if (!userRepository.ExistsByEmail(email))
+                return new List<string>();
 
-        public List<ApplicationUser> listManagersByUser(ApplicationUser user)
-        {
-            throw new NotImplementedException();
-        }
+            var roleRepository = new RoleRepository(context);
 
+            return FindUserByEmail(email).Roles
+                .Select(role => roleRepository.FindById(role.RoleId).Name)
+                .ToList();
+        }
     }
 }

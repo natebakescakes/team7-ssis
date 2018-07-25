@@ -25,7 +25,7 @@ namespace team7_ssis.Tests.Controllers
         }
 
         [TestMethod]
-        public void ReadNotification()
+        public void ReadNotification_Unread_ReadThenRedirect()
         {
             // Arrange
             var controller = new NotificationController()
@@ -38,6 +38,31 @@ namespace team7_ssis.Tests.Controllers
                 NotificationId = notificationId,
                 NotificationType = new NotificationTypeRepository(context).FindById(1),
                 Status = new StatusService(context).FindStatusByStatusId(14),
+                CreatedDateTime = DateTime.Now
+            });
+
+            // Act
+            var result = controller.Read(notificationId);
+
+            // Assert
+            Assert.AreEqual(15, notificationService.FindNotificationById(notificationId).Status.StatusId);
+            result.AssertActionRedirect().ToAction("Index");
+        }
+
+        [TestMethod]
+        public void ReadNotification_Read_Redirect()
+        {
+            // Arrange
+            var controller = new NotificationController()
+            {
+                Context = context
+            };
+            var notificationId = IdService.GetNewNotificationId(context);
+            notificationService.Save(new Notification()
+            {
+                NotificationId = notificationId,
+                NotificationType = new NotificationTypeRepository(context).FindById(1),
+                Status = new StatusService(context).FindStatusByStatusId(15),
                 CreatedDateTime = DateTime.Now
             });
 

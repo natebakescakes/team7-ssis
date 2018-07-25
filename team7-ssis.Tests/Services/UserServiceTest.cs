@@ -4,6 +4,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace team7_ssis.Tests.Services
 {
@@ -99,6 +100,31 @@ namespace team7_ssis.Tests.Services
 
             // Act
             var result = userService.FindUsersByDepartment(null);
+
+            // Assert
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [TestMethod]
+        public void FindRolesByEmail_Valid()
+        {
+            // Arrange
+            var expected = "Admin";
+
+            // Act
+            var result = userService.FindRolesByEmail("root@admin.com");
+
+            // Assert
+            Assert.IsTrue(result.Contains(expected));
+        }
+
+        [TestMethod]
+        public void FindRolesByEmail_NoResult()
+        {
+            // Arrange
+
+            // Act
+            var result = userService.FindRolesByEmail("roooooooot@admin.com");
 
             // Assert
             Assert.IsTrue(result.Count == 0);
