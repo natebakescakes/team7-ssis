@@ -95,12 +95,12 @@
                         <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
                             <thead>
                                 <tr>
-
                                     <th>Item Code</th>
                                     <th>Category</th>
                                     <th>Description</th>
                                     <th>In Stock</th>
                                     <th>Unit of Measure</th>
+                                    <th>UnitPrice</th>
                                 </tr>
                             </thead>
                         </table>
@@ -108,13 +108,23 @@
 
                 </div>
             </div>
-            <div class="modal-footer">
 
+
+            <div class="col-md-1">
+                <label>Adjustment</label>
+
+                <input id="AdjustmentInput" type="number" />
+            </div>
+            @*<div class="col-md-1">
+                <label>Reason</label>
+                <input id="ReasonInput" type="text" />
+            </div>*@
+            <div class="modal-footer">
                 <button id="addToReq" type="button" class="btn btn-primary">Add to StockAdjustment</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
-    </div>
+            </div>
 </div>
 
 
@@ -129,38 +139,52 @@
                 { title: "ItemCode" },
                 { title: "Description" },
                 { title: "UnitPrice" },
-                { data: null },
-                { data: null },
-                { defaultContent: '<i class="fa fa-times pointer" aria-hidden="false"></i>' }
-            ],
-            "columnDefs": [
-
+                { title: "Reason" },
                 {
-
-                    "targets": -3,
-
-                    "render": function (data, type, full, meta) {
-
-                        return "<input type = 'textbox' id = 'Adjustment' value = 'input adjustment'>"
-
-                    }
-                },
-
-
+                    title: "Adjustment",
+                 render: function (data, type, row) {
+                     return '<input class="form-control"  style="border:none" id=Price" type="number"  min="-2500" step="1" max="2500" value = ' + row.Adjustment + '  >'
+                    }},          
                 {
-                    "targets": -2,
-
-                    "render": function (data, type, full, meta) {
-
-                        return "<input type = 'textbox' id = 'Reason' value = 'input Reason'>"
-
-                    }
-
+                    defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>'
                 }
+            ],
 
-            ]
+
+            columnDefs: [{
+                "targets": [3],
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).click(function () {
+                        $(this).html('<input type="text" size="16"/>');
+                        var aInput = $(this).find(":input");
+                        aInput.focus().val(cellData);
+                    });
+                    $(cell).on("blur", ":input", function () {
+                        var text = $(this).val();
+                        $(cell).html(text);
+                        editTableObj.table.cell(cell).data(text)
+                    })
+                }
+            }]
 
         });
+
+
+
+
+        //var rowedit = $('#myTable tbody').on('click', '#edit', function (e) {
+        //    var row = $("table#myTable tr").index($(this).closest("tr"));
+        //    var t1 = $("table#myTable ").find("tr").eq(row).find("td").eq(0).text();
+        //    var t2 = $("table#myTable ").find("tr").eq(row).find("td").eq(1).text();
+        //    var t3 = $("table#myTable ").find("tr").eq(row).find("td").eq(2).text();
+        //    var t4 = $("table#myTable ").find("tr").eq(row).find("td").eq(3).text();
+        //    var t5 = $("table#myTable ").find("tr").eq(row).find("td").eq(4).text();
+
+        //    alert(t1+t2+t3+t4+t5);
+
+        //});
+
+      
 
         var addItemTable = $('#addItemTable').DataTable({
             ajax: {
@@ -175,6 +199,7 @@
                 { "data": "Description", "autoWidth": true },
                 { "data": "Quantity", "autoWidth": true },
                 { "data": "Uom", "autoWidth": true },
+                { "data": "UnitPrice", "autoWidth": true}
             ],
 
             select: "single"
@@ -187,16 +212,20 @@
         })
 
 
-
+        
         $('#saveAsBtn').click(function () {
-           
+
+       
+
         })
 
         $('#cancelBtn').click(function () {
+            //direct to home page
             window.location.href = "/StockAdjustment";
         })
-        $('#confirmBtn').click(function () {
 
+        $('#confirmBtn').click(function () {
+            //save as pending and go to home page with message shows
            
 
         })
@@ -206,10 +235,11 @@
 
         $('#addToReq').click(function () {
             var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
-            //console.log(data);
-            //TODO: write some logic that will add quantity to the requisitionDetail
-            //var qty = parseInt($('#qtyInput').val());
-            myTable.row.add([data[0].ItemCode, data[0].Description, data[0].UnitPrice]).draw();
+            //var Reason = "";
+            //var Adjustment=0;
+            var Adjustment = parseInt($('#AdjustmentInput').val());
+            var Reason = "";
+            myTable.row.add([data[0].ItemCode, data[0].Description, data[0].UnitPrice,Reason,Adjustment]).draw();
             $('#myModal').modal('hide');
         })
 
