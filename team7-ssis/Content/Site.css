@@ -23,51 +23,6 @@ textarea {
     max-width: 280px;
 }
 
-/*.dataTables_wrapper .dataTables_length {
-    float: right; 
-}
-
-.dataTables_length label {
-    padding: 4px 4px;
-    margin: 8px 0;
-    display: inline-block;
-    font-weight: normal;
-    font-family: Arial;
-}
-
-
-
-
-
-
-.dataTables_filter input {
-    padding: 4px 4px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-weight:normal;
-    font-family:Arial;
-}
-
-
-.dataTables_length select {
-    padding: 4px 4px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-weight: normal;
-    font-family: Arial;
-}*/
-
-/*.dataTables_wrapper .dataTables_filter {
-    float: right;
-    text-align: left;
-}*/
-
 .delivered {
     background-color: MediumSeaGreen !important;
     text-align: center;
@@ -139,4 +94,38 @@ textarea {
 
 .pointer {
     cursor: pointer;
+}
+}
+
+/* Find out more about the below naming convention, BEM Block-Element-Modifier at http://getbem.com/introduction/; the first word acts as a namespace*/
+.step__icon {
+    float: left;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 999px;
+    height: 48px;
+    width: 48px;
+    text-align: center;
+    position: absolute;
+}
+
+.step__label {
+    margin-left: 60px;
+    display: inline-block;
+}
+
+.step__arrow {
+    left: 50%;
+    top: 50%;
+    position: absolute;
+}
+
+@media-desktop
+.step__arrow {
+    left: 50%;
+    top: 50%;
+    position: absolute;
+}
+
+.step__container {
+    position: relative;
 }

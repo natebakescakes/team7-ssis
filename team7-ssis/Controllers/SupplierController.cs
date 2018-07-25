@@ -13,11 +13,20 @@ namespace team7_ssis.Controllers
 {
     public class SupplierController : Controller
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        SupplierService supplierService = new SupplierService(context);
-        StatusService statusService = new StatusService(context);
-        UserService userService = new UserService(context);
+        ApplicationDbContext context;
+        SupplierService supplierService;
+        StatusService statusService;
+        UserService userService;
+        ItemPriceService itempriceService;
+        public SupplierController()
+        {
+            context = new ApplicationDbContext();
+            supplierService = new SupplierService(context);
+            statusService = new StatusService(context);
+            userService = new UserService(context);
+            itempriceService = new ItemPriceService(context);
 
+        }
         // GET: Supplier
         public ActionResult Index()
         {
@@ -80,6 +89,38 @@ namespace team7_ssis.Controllers
             return new JsonResult { Data = new { status = status } };
         }
 
+        
+        [HttpGet]
+        public ActionResult SupplierPriceList(string id)
+        {
+            Supplier supplier = supplierService.FindSupplierById(id);
+            //assemble view model
+
+            return View(new SupplierViewModel {
+                SupplierCode = supplier.SupplierCode,
+                Name = supplier.Name,
+                ContactName = supplier.ContactName
+
+            });
+        }
+
+        [HttpPost]
+        public ActionResult UpdateItemPrice(ItemPriceViewModel model)
+        {
+            bool status = false;
+
+            //find item price object and assign new price
+            ItemPrice itemPrice = itempriceService.FindItemPriceByItemCode(model.ItemCode).Where(x=>x.SupplierCode==model.SupplierCode).First();
+            itemPrice.Price = model.Price;
+
+            //assign user info into update fields
+            itemPrice.UpdatedDateTime = DateTime.Now;
+            itemPrice.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+            if (itempriceService.Save(itemPrice)!= null) status = true;
+
+            return new JsonResult { Data = new { status = status } };
+        }
    
     }
 }

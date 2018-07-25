@@ -25,6 +25,8 @@
 
 
 
+
+
     @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />*@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.bootstrap4.min.css" />
@@ -68,13 +70,13 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Inventory</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown03">
-                            @Html.ActionLink("Make Stock Adjustment", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Make Stock Adjustment", "New", "StockAdjustment", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("View Inventory Shortfall", "Index", "Home", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Receive Goods", "Index", "Home", null, new { @class = "dropdown-item" })
                             <hr />
                             @Html.ActionLink("Manage Inventory", "Index", "Inventory", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Manage Item Categories", "Index", "Home", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Stock Adjustments", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Stock Adjustments", "Index", "StockAdjustment", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item">@Html.ActionLink("Suppliers", "Index", "Supplier", null, new { @class = "nav-link" })</li>
@@ -96,8 +98,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Reports</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown06">
                             @Html.ActionLink("Department Usage Statistics", "DepartmentUsage", "Report", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Procurement Statistics", "Index", "Home", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Store Operation Statistics", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Store Operation Statistics", "StoreOperations", "Report", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                 }

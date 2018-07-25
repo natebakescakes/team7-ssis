@@ -20,5 +20,18 @@ namespace team7_ssis.Tests.Controllers
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void StoreOperationsTest()
+        {
+            // Arrange
+            var controller = new ReportController();
+
+            // Act
+            ViewResult result = controller.StoreOperations() as ViewResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
     }
 }

@@ -5,7 +5,7 @@
 function GetDropDownData() {
   $.ajax({
     type: 'GET',
-    url: 'http://' + location.host + '/api/notifications',
+    url: 'http://' + location.host + '/api/Notification/GetCurrentUser',
     contentType: 'application/json; charset=utf-8',
     dataType: 'json',
     success: function(data) {
@@ -60,6 +60,13 @@ function GetDropDownData() {
     },
     failure: function() {
       alert('Failed!');
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      if (xhr.status == 404) {
+        $('#notification-dropdown-items').append(
+          $('<span class="dropdown-item">No notifications</span>'),
+        );
+      }
     },
   });
 }
