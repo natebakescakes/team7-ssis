@@ -54,8 +54,8 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <button class="btn btn-default">Cancel</button>
-        <button class="btn btn-primary">Confirm</button>
+        <button class="btn btn-default" id="cancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="confirmBtn">Confirm</button>
     </div>
 </div>
 
@@ -109,22 +109,37 @@
                 { title: "ItemCode" },
                 { title: "Description" },
                 { title: "UnitPrice" },
-                { defaultContent: "" },
-                { defaultContent: "" },
+                { data: null },
+                { data: null },
                 { defaultContent: '<i class="fa fa-times pointer" aria-hidden="false"></i>' }
             ],
-            //"columnDefs":[
-            //    {
-            //        "targets": [2],
-            //        "title": "ItemCode",
-            //        "render": function (title, type, full) {
-            //            return "<a href='/update?id" = +title + "'>Update</a>";
-            //        }
-            //        }
-            //    ],
+            "columnDefs": [
 
-            select: true,
-          
+                {
+
+                    "targets": -3,
+
+                    "render": function (data, type, full, meta) {
+
+                        return "<input type = 'textbox' id = 'Adjustment' value = 'input adjustment'>"
+
+                    }
+                },
+
+
+                {
+                    "targets": -2,
+
+                    "render": function (data, type, full, meta) {
+
+                        return "<input type = 'textbox' id = 'Reason' value = 'input Reason'>"
+
+                    }
+
+                }
+
+            ]
+
         });
 
         var addItemTable = $('#addItemTable').DataTable({
@@ -141,7 +156,7 @@
                 { "data": "Quantity", "autoWidth": true },
                 { "data": "Uom", "autoWidth": true },
             ],
-          
+
             select: "single"
         });
 
@@ -151,9 +166,22 @@
             });
         })
 
+
+
         $('#saveAsBtn').click(function () {
-            myTable.row.add([2, 3, 4]).draw();
+            //myTable.row.add([2, 3, 4]).draw();
         })
+
+        $('#cancelBtn').click(function () {
+            window.location.href = "/StockAdjustment";
+        })
+        $('#confirmBtn').click(function () {
+
+
+        })
+
+
+
 
         $('#addToReq').click(function () {
             var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
