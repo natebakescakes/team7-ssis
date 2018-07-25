@@ -126,4 +126,9 @@ namespace team7_ssis.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+
+    public class RoleViewModel
+    {
+        public List<string> Roles { get; set; }
+    }
 }
