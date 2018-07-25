@@ -67,6 +67,10 @@ namespace team7_ssis.Controllers
             List<Status> list = new List<Status>();
             list.Add(statusService.FindStatusByStatusId(0));
             list.Add(statusService.FindStatusByStatusId(1));
+            List<ApplicationUser> departmentHeadList = departmentService.FindUsersByDepartment(user.Department);
+            List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
+
+
             return View(new DepartmentViewModel
             {
                 Statuses = new SelectList(
@@ -74,6 +78,16 @@ namespace team7_ssis.Controllers
                      "Value",
                     "Text"
 
+                ),
+                Users = new SelectList(
+                     departmentHeadList.Select(x => new { value = x.Id, text = x.FirstName+ " " +x.LastName}),
+                     "Value",
+                     "Text"
+                ),
+                CollectionPoints = new SelectList(
+                     collectionPointList.Select(x => new { value = x.CollectionPointId, text = x.Name }),
+                     "Value",
+                     "Text"
                 )
             });
           
@@ -106,6 +120,7 @@ namespace team7_ssis.Controllers
 
             
             dpt.Name = model.DepartmentName;
+            
             dpt.ContactName = model.ContactName;
             dpt.PhoneNumber = model.PhoneNumber;
             dpt.FaxNumber = model.PhoneNumber;

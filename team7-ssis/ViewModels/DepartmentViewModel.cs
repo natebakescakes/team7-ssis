@@ -24,11 +24,12 @@ namespace team7_ssis.ViewModels
         public string FaxNumber { get; set; }
         public int Status { get; set; }
         public IEnumerable<SelectListItem> Statuses { get; set; }
-        public string DptHead { get; set; }
-        public string Dptrep { get; set; }
-        public string CollectionPt { get; set; }
+        public string DepartmentHead { get; set; }
+        public string DepartmentRep { get; set; }
+        public string CollectionPoint { get; set; }
+        public IEnumerable<SelectListItem> Users { get; set; }
+        public IEnumerable<SelectListItem> CollectionPoints { get; set; }
 
-        
 
 
     }

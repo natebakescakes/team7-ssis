@@ -20,6 +20,24 @@
         </div>
         <div class="col-sm-3">
             <div class="form-group">
+                <label for="DepartmentHead">Department Head</label><br />
+                @Html.DropDownListFor(m => m.DepartmentHead, new SelectList(Model.Users, "Value", "Text"), new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="DepartmentRepresentative">Department Representative</label><br />
+                @Html.LabelFor(m => m.DepartmentRep, new { @id = "DepartmentRepresentative", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="CollectionPoint">CollectionPoint</label><br />
+                @Html.LabelFor(m => m.CollectionPoint, new { @id = "CollectionPoint", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
                 <label for="ContactName">Contact Name</label><br />
                 @Html.TextBoxFor(m => m.ContactName, new { @id = "ContactName", @class = "form-control" })
             </div>

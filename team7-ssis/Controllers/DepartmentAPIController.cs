@@ -24,11 +24,14 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<DepartmentViewModel> Departments()
         {
-            
+
             return departmentService.FindAllDepartments().Select(department => new DepartmentViewModel()
             {
                 DepartmentCode = department.DepartmentCode,
                 DepartmentName = department.Name,
+                DepartmentHead = department.Head.FirstName+ " " + department.Head.LastName,
+                DepartmentRep = department.Representative != null ? department.Representative.FirstName + " " + department.Representative.LastName : "",
+                CollectionPoint = department.CollectionPoint != null ? department.CollectionPoint.Name : "",
                 ContactName = department.ContactName,
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber
@@ -41,6 +44,9 @@ namespace team7_ssis.Controllers
             {
                 DepartmentCode = department.DepartmentCode,
                 DepartmentName = department.Name,
+                DepartmentHead = department.Head.FirstName + " " + department.Head.LastName,
+                DepartmentRep = department.Representative != null ? department.Representative.FirstName + " " + department.Representative.LastName : "",
+                CollectionPoint = department.CollectionPoint != null ? department.CollectionPoint.Name : "",
                 ContactName = department.ContactName,
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber,

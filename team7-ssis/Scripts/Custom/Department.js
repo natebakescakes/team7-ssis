@@ -9,6 +9,9 @@
         columns: [
             { "data": "DepartmentCode", "autowidth": true },
             { "data": "DepartmentName", "autowidth": true },
+            { "data": "DepartmentHead", "autowidth": true },
+            { "data": "DepartmentRep", "autowidth": true },
+            { "data": "CollectionPoint", "autowidth": true },
             { "data": "ContactName", "autowidth": true },
             { "data": "PhoneNumber", "autowidth": true },
             { "data": "FaxNumber", "autowidth": true }
