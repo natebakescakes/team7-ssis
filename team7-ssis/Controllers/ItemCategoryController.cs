@@ -30,8 +30,8 @@ namespace team7_ssis.Controllers
         public ActionResult Index()
         {
             List<Status> list = new List<Status>();
-            list.Add(statusService.FindStatusByStatusId(0));
-            list.Add(statusService.FindStatusByStatusId(1));
+            list.Add(statusService.FindStatusByStatusId(0)); //add disabled option
+            list.Add(statusService.FindStatusByStatusId(1)); //add enabled option
             return View(new ItemCategoryViewModel
             {
                 Statuses = new SelectList(
