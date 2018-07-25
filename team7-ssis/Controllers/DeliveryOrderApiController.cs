@@ -16,12 +16,14 @@ namespace team7_ssis.Controllers
         private ApplicationDbContext context;
         private DeliveryOrderService deliveryOrderService;
         private ItemService itemService;
+        private PurchaseOrderService purchaseOrderService;
 
         public DeliveryOrderApiController()
         {
             context = new ApplicationDbContext();
             deliveryOrderService = new DeliveryOrderService(context);
             itemService = new ItemService(context);
+            purchaseOrderService = new PurchaseOrderService(context);
         }
 
 
@@ -44,6 +46,7 @@ namespace team7_ssis.Controllers
             }).ToList();
         }
 
+
         // return all pending po - attributes
         [Route("api/outstandingpo/all")]
         [HttpGet]
@@ -65,32 +68,29 @@ namespace team7_ssis.Controllers
         }
 
 
-        //returns all outstanding items
-        [Route("api/outstandingitems/all")]
+        //returns all deliveryorderdetails
+        [Route("api/deliveryorderdetails/{deliveryorderno}")]
         [HttpGet]
-        public List<PurchaseOrderDetailsViewModel> OutstandingItems()
+        public List<DeliveryOrderDetailsViewModel> OutstandingItems(string donum)
         {
-            int[] myIntArray = new int[] { 11, 12 };
-            List<PurchaseOrder> list = purchaseOrderService.FindPurchaseOrderByStatus(myIntArray);
-            List<PurchaseOrderDetail> plist = new List<PurchaseOrderDetail>();
-            foreach (PurchaseOrder po in list)
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(donum);
+            List<DeliveryOrderDetail> dlist = new List<DeliveryOrderDetail>();
+            foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
             {
-                foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
-                {
-                    plist.Add(pod);
-                }
+                dlist.Add(dod);
             }
 
-            return plist.Select(x => new PurchaseOrderDetailsViewModel()
+            return dlist.Select(x => new DeliveryOrderDetailsViewModel()
             {
                 ItemCode = x.ItemCode,
                 Description = x.Item.Description,
-                QuantityOrdered = x.Quantity
+                QtyOrdered = x.PlanQuantity,
+                ReceivedQty = x.ActualQuantity
             }).ToList();
         }
 
 
-        [Route("api/purchaseOrder/details/{purchaseOrderNo}")]
+        [Route("api/purchaseorder/details/{purchaseorderno}")]
         [HttpGet]
 
         public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseOrderNo)

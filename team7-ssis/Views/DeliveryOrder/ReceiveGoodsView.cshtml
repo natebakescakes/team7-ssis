@@ -29,7 +29,7 @@
     <div style="width:90%; margin:0 auto" class="container">
 
         @using (Html.BeginForm("ReceiveGoods", "DeliveryOrder", FormMethod.Get, new { Id = "Form1" }))
-        {<button class="btn btn-primary">View Related Delivery Order</button>}
+        {<button class="btn btn-default pull-right">View Related Delivery Order</button>}
         <div>
             <table>
                 <thead>
@@ -45,7 +45,7 @@
                     <td>@Html.DisplayFor(model => model.CreatedDate)</td>
                 </tr>
             </table>
-            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">View</a>
+            <button id="viewBtn" class="btn btn-default mb-3">View</button>
         </div>
     </div>
 
@@ -84,3 +84,4 @@
     </div>
 </body>
 </html>
+

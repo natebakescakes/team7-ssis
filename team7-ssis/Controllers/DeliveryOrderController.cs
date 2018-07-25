@@ -12,22 +12,24 @@ namespace team7_ssis.Controllers
 {
     public class DeliveryOrderController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        DeliveryOrderService deliveryOrderService = new DeliveryOrderService(context);
-        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
-        PurchaseOrderService purchaseOrderDetailService = new PurchaseOrderService(context);
-        UserService userService = new UserService(context);
-        StatusService statusService = new StatusService(context);
-      
         private ApplicationDbContext context;
         private DeliveryOrderService deliveryOrderService;
         private PurchaseOrderService purchaseOrderService;
-
+        private PurchaseOrderService purchaseOrderDetailService;
+        private UserService userService;
+        private StatusService statusService;
+        private SupplierService supplierService;
+       
+       
         public DeliveryOrderController()
         {
             context = new ApplicationDbContext();
             deliveryOrderService = new DeliveryOrderService(context);
             purchaseOrderService = new PurchaseOrderService(context);
+            purchaseOrderDetailService = new PurchaseOrderService(context);
+            userService = new UserService(context);
+            statusService = new StatusService(context);
+            supplierService = new SupplierService(context);
         }
 
         // GET: DeliveryOrder
@@ -36,13 +38,11 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        [HttpGet]
-        //public ActionResult ReceiveGoodsView(string ponum)
-        public ActionResult ReceiveGoodsView()
+        [HttpPost]
+        public ActionResult ReceiveGoodsView(string ponum)
         {
             PurchaseOrderViewModel POVM = new PurchaseOrderViewModel();
-           // PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
-            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
+            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
 
             POVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
 
@@ -94,24 +94,6 @@ namespace team7_ssis.Controllers
             return RedirectToAction("ReceiveGoodsView");
         }
 
-        public ActionResult DOConfirmationView()
-        {
-            DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
-            //PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
-            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
-            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById("TEST");
-
-           // DOVM.DeliveryOrderNo=
-            DOVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
-            DOVM.SupplierName = purchaseOrder.Supplier.Name;
-            DOVM.CreatedDate = purchaseOrder.CreatedDateTime;
-            DOVM.Status = purchaseOrder.Status.Name;
-            DOVM.InvoiceFileName = deliveryOrder.InvoiceFileName;
-            DOVM.DeliverOrderFileName = deliveryOrder.DeliveryOrderFileName;
-            DOVM.CreatedBy = deliveryOrder.CreatedBy.FirstName +" " + deliveryOrder.CreatedBy.LastName;
-        
-            return View(DOVM);
-        }
 
         [HttpPost]
 
@@ -120,11 +102,15 @@ namespace team7_ssis.Controllers
             bool status = false;
 
             DeliveryOrder deliveryOrder = new DeliveryOrder();
+            PurchaseOrder purchaseOrder= purchaseOrderService.FindPurchaseOrderById(model.PurchaseOrderNo);
+            deliveryOrder.PurchaseOrder = purchaseOrder;
+            deliveryOrder.Supplier = supplierService.FindSupplierById(purchaseOrder.SupplierCode);
+            //deliveryOrder.DeliveryOrderDetails=
 
             if (deliveryOrderService.FindDeliveryOrderById(model.DeliveryOrderNo) == null)
 
             {
-                deliveryOrder.DeliveryOrderNo = model.DeliveryOrderNo;
+                deliveryOrder.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
 
                 deliveryOrder.CreatedDateTime= DateTime.Now;
 
@@ -143,10 +129,6 @@ namespace team7_ssis.Controllers
 
             }
 
-            deliveryOrder.PurchaseOrder.PurchaseOrderNo = model.PurchaseOrderNo;
-
-            deliveryOrder.Supplier.SupplierCode = model.SupplierCode;
-
             deliveryOrder.InvoiceFileName = model.InvoiceFileName;
 
             deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
@@ -157,6 +139,29 @@ namespace team7_ssis.Controllers
 
             return new JsonResult { Data = new { status = status } };
 
+        }
+
+        [HttpPost]
+        public ActionResult DOConfirmationView(string ponum)
+        {
+            DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(ponum);
+
+            DOVM.PurchaseOrderNo = deliveryOrder.PurchaseOrder.PurchaseOrderNo;
+
+            DOVM.SupplierName=deliveryOrder.Supplier.Name;
+
+            DOVM.Status = deliveryOrder.Status.Name;
+
+            DOVM.DeliverOrderFileName = deliveryOrder.DeliveryOrderFileName;
+
+            DOVM.InvoiceFileName = deliveryOrder.InvoiceFileName;
+
+            DOVM.CreatedBy = deliveryOrder.CreatedBy.FirstName + deliveryOrder.CreatedBy.LastName;
+
+            DOVM.CreatedDate = deliveryOrder.CreatedDateTime;
+
+            return View(DOVM);
         }
     }
 }

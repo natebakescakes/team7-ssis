@@ -21,8 +21,6 @@
         }
 
     }
-
-    var pon = $("#poNo").val();
     //Receive goods- View DeliveryOrders
 
     var pTable = $('#myPOTable').DataTable({
@@ -32,25 +30,25 @@
         },
         columns:
             [
-                { defaultContent: '<input type="checkbox" class="checkbox" />' },
                 { data: "DeliveryOrderNo" },
                 { data: "PurchaseOrderNo" },
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
-                { data: "Status" }
+                { data: "Status" },
+                { defaultContent: '<input type="button" value="i" id="infobutton" />' }
             ],
 
         createdRow: function (row, data, dataIndex) {
 
             if (data.Status == "Partially Delivered") {
 
-                $('td', row).eq(5).addClass('partially-delivered');
+                $('td', row).eq(4).addClass('partially-delivered');
 
             }
 
             if (data.Status == "Awaiting Delivery") {
 
-                $('td', row).eq(5).addClass('awaiting-delivery');
+                $('td', row).eq(4).addClass('awaiting-delivery');
 
             }
 
@@ -65,7 +63,6 @@
         },
         columns:
             [
-                { defaultContent: '<input type="checkbox" class="checkbox" />' },
                 { data: "PurchaseOrderNo" },
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
@@ -77,32 +74,35 @@
 
             if (data.Status == "Partially Delivered") {
 
-                $('td', row).eq(5).addClass('partially-delivered');
+                $('td', row).eq(3).addClass('partially-delivered');
 
             }
 
             if (data.Status == "Awaiting Delivery") {
 
-                $('td', row).eq(5).addClass('awaiting-delivery');
+                $('td', row).eq(3).addClass('awaiting-delivery');
             }
         }
     });
 
+    var pon = $("#poNo").val();
+    var don = $("#doNo").val();
+
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
         ajax: {
-            url: "/api/purchaseOrder/details/"+ pon,
+            url: "/api/purchaseorder/details/" + pon,
             dataSrc: ""
         },
 
         columns:
             [
-                {data: "ItemCode"},
-                {data: "Description"},
-                {data: "QuantityOrdered"},
-                { defaultContent: '<input type="textbox" class="textbox" />'},
-                {data: "RemainingQuantity"},
-                {defaultContent: '<input type="checkbox" class="checkbox" />' }
+                { data: "ItemCode" },
+                { data: "Description" },
+                { data: "QuantityOrdered" },
+                { defaultContent: '<input type="textbox" class="textbox" />' },
+                { data: "RemainingQuantity" },
+                { defaultContent: '<input type="checkbox" class="checkbox" />' }
             ],
         select: "single"
     });
@@ -110,7 +110,7 @@
     //for DOConfirmationPage-outstanding items
     var dTable = $('#myDOTable').DataTable({
         ajax: {
-            url: "/api/outstandingitems/all",
+            url: "api/deliveryorderdetails/"+don,
             dataSrc: ""
         },
 
@@ -123,16 +123,58 @@
             ]
     });
 
-    function Submit() {
+    $('#confirm').click(function () {
+        var mydata = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
+        alert(mydata[0].PurchaseOrderNo);
+        var ponum = mydata[0].PurchaseOrderNo;
 
-        var usr = document.getElementById('UserName').value;
+        var form = document.createElement("form");
 
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("ActionName2")',
-            data: "UserName=" + usr
-        });
+        var element1 = document.createElement("input");
 
-        return true;
-    }
+        form.method = "POST";
+
+        form.action = "/deliveryorder/receivegoodsview";
+
+        element1.value = ponum;
+
+        element1.name = "ponum";
+
+        element1.type = "hidden";
+
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    });
+
+    //$('#myTable tbody').on('click', '#edit', function (e) 
+    $('#infobutton').on('click', function (e) {
+        var mydata = $('#myDOTable').DataTable().rows({ selected: true }).data().toArray();
+        alert(mydata[0].DeliveryOrderNo);
+        var donum = mydata[0].DeliverOrderNo;
+
+        var form = document.createElement("form");
+
+        var element1 = document.createElement("input");
+
+        form.method = "POST";
+
+        form.action = "/deliveryorder/doconfirmationview";
+
+        element1.value = donum;
+
+        element1.name = "donum";
+
+        element1.type = "hidden";
+
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    });
 });

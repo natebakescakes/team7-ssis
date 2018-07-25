@@ -5,7 +5,7 @@
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>*@
     <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
 }
 
@@ -26,7 +26,6 @@
         <table id="myTable" class="hover">
             <thead>
                 <tr>
-                    <th></th>
                     <th>PurchaseOrderNo</th>
                     <th>Supplier Name</th>
                     <th>Order Date</th>
@@ -36,11 +35,10 @@
             </thead>
         </table>
     </div>
-    <div>
-        @using (Html.BeginForm("ReceiveGoodsView", "DeliveryOrder", FormMethod.Get, new { Id = "Form" }))
-        {
-        <input type="submit" name="Submit" value="Confirm" />
-        }
+    <div class="modal-footer">
+
+        <button id="confirm" type="button" class="btn btn-primary">Confirm</button>
+
     </div>
 </body>
 </html>
