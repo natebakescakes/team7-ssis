@@ -94,7 +94,7 @@ namespace team7_ssis.Controllers
         
         public ActionResult CreateRequisition()
         {
-            CreateRequisitionsViewModel viewModel = new CreateRequisitionsViewModel();
+            CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
             try
             {
                 viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;

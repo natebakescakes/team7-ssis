@@ -19,6 +19,7 @@ namespace team7_ssis.Controllers
         RetrievalService retrievalService = new RetrievalService(context);
         DisbursementService disbursementService = new DisbursementService(context);
         StatusService statusService = new StatusService(context);
+        ItemService itemService = new ItemService(context);
 
         [Route("api/reqdetail/all")]
         [HttpGet]
@@ -147,6 +148,35 @@ namespace team7_ssis.Controllers
             }
 
             return viewModel;
+        }
+        [Route("api/createrequisition")]
+        [HttpPost]
+        public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
+        {
+            Requisition r = new Requisition();
+            r.RequisitionId = IdService.GetNewRequisitionId(context);
+            r.RequisitionDetails = new List<RequisitionDetail>();
+            r.Status = statusService.FindStatusByStatusId(4);
+            r.CreatedDateTime = DateTime.Now;
+            foreach (CreateRequisitionJSONViewModel dd in itemList)
+            {
+                r.RequisitionDetails.Add(new RequisitionDetail
+                {
+                    ItemCode = dd.ItemCode,
+                    Item = itemService.FindItemByItemCode(dd.ItemCode),
+                    Quantity = dd.Qty,
+                    Status = statusService.FindStatusByStatusId(4)
+                });
+            }
+            try
+            {
+                requisitionService.Save(r);
+            } catch
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+            return Ok(r.RequisitionId);
+            
         }
     }
 }
