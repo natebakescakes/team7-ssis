@@ -62,19 +62,23 @@
                 {
                     "data": "SupplierName", "autoWidth": true,
                     render: function (data, type, row) {
-                        var $select = $("<select id='SupplierName'></select>", {
-                            "id": m => m.SupplierName,
-                            "value": data
+                        var $select = $("<select id='SupplierNameSelect' disabled></select>", {
+                            "id": row.Text,
+                            "value": row.Value
                         });
-                        $.each(test, function (key, value) {
-                            var $option = $("<option></option>", {
-                                "text": value.Text,
-                                "value": value.Value
-                            });
-                            if (data === value) {
+
+                        var optionhtml1 = '<option value="' +
+                            0 + '">' + row.SupplierName + '</option>';
+                        $select.append(optionhtml1);
+                         
+                        $.each(test, function (i) {
+                        var optionhtml = '<option value="' +
+                                test[i].Value + '">' + test[i].Text + '</option>';
+                            $select.append(optionhtml);
+
+                            if (data === test[i]) {
                                 $option.attr("selected", "selected")
                             }
-                            $select.append($option);
                         });
                         return $select.prop("outerHTML");
                     }
@@ -88,9 +92,24 @@
             ]
         })
 
+        $('#SupplierNameSelect').on('click',function () {
+            //var dummy1 = $("#SupplierNameSelect option:selected").val();
+            var dummy1 = $(this).find(':selected').val();
+            alert(dummy1);
+        })
+
+        $('#suppTable tbody').on('change', '#SupplierNameSelect', function (e) {
+            //var value = Number($(this).val());
+            //var rowSelected = pTable.row($(this).parents('tr')).data().SupplierName;
+            var dummy1 = $("#SupplierNameSelect option:selected").val();
+                alert(dummy1);
+        })
+
+
         $('#itemEdit').on('click', function () {
             $('#itemEdit').hide();
             $(".button-set").show();
+            
            enableInput();
         });
 
