@@ -13,12 +13,22 @@ namespace team7_ssis.Controllers
 {
     public class RequisitionAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        RequisitionService requisitionService = new RequisitionService(context);
-        RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-        RetrievalService retrievalService = new RetrievalService(context);
-        DisbursementService disbursementService = new DisbursementService(context);
-        StatusService statusService = new StatusService(context);
+        private ApplicationDbContext context;
+        private RequisitionService requisitionService;
+        private RequisitionRepository requisitionRepository;
+        private RetrievalService retrievalService;
+        private DisbursementService disbursementService;
+        private StatusService statusService;
+
+        public RequisitionAPIController()
+        {
+            context = new ApplicationDbContext();
+            requisitionService = new RequisitionService(context);
+            requisitionRepository = new RequisitionRepository(context);
+            retrievalService = new RetrievalService(context);
+            disbursementService = new DisbursementService(context);
+            statusService = new StatusService(context);
+        }
 
         [Route("api/reqdetail/all")]
         [HttpGet]
@@ -56,23 +66,23 @@ namespace team7_ssis.Controllers
         public IHttpActionResult ProcessRequisitions(List<string> reqIdList)
         {
             List<Requisition> reqList = new List<Requisition>();
-            string message;
+            string rid;
             foreach (string s in reqIdList)
             {
                 reqList.Add(requisitionRepository.FindById(s));
             }
             try
             {
-                message = requisitionService.ProcessRequisitions(reqList);
+                rid = requisitionService.ProcessRequisitions(reqList);
             } catch
             {
-                message = "Please select Requisitions to be processed.";
+                return BadRequest();
             }
-            return Ok( new { message = message });
+            return Ok(rid);
         }
         [Route("api/stationeryretrieval/{rId}")]
         [HttpGet]
-        public IEnumerable<StationeryRetrievalViewModel> StationeryRetrieval(string rId)
+        public IEnumerable<StationeryRetrievalTableViewModel> StationeryRetrieval(string rId)
         {
             List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
 
@@ -85,7 +95,7 @@ namespace team7_ssis.Controllers
                 dd.ItemCode,
                 dd.Bin
             });
-            List<StationeryRetrievalViewModel> viewModel = finalList.Select(y => new StationeryRetrievalViewModel
+            List<StationeryRetrievalTableViewModel> viewModel = finalList.Select(y => new StationeryRetrievalTableViewModel
             {
                 ProductID = y.Key.ItemCode,
                 //Bin = y.Key.Bin,
@@ -104,16 +114,16 @@ namespace team7_ssis.Controllers
         /// <returns></returns>
         [Route("api/retrievaldetails")]
         [HttpPost]
-        public IEnumerable<RetrievalDetail> RetrievalDetails(string retId, string itemId)
+        public IEnumerable<RetrievalDetailsTableViewModel> RetrievalDetails(RetrievalDetailsJSON json)
         {
-            List<RetrievalDetail> viewModel = new List<RetrievalDetail>();
+            List<RetrievalDetailsTableViewModel> viewModel = new List<RetrievalDetailsTableViewModel>();
 
-            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(retId);
-            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).Where(x => x.ItemCode == itemId).ToList();
+            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(json.retId);
+            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).Where(x => x.ItemCode == json.itemId).ToList();
 
             foreach(DisbursementDetail dd in ddList)
             {
-                viewModel.Add(new RetrievalDetail
+                viewModel.Add(new RetrievalDetailsTableViewModel
                 {
                     DeptId = dd.Disbursement.Department.DepartmentCode,
                     DeptName = dd.Disbursement.Department.Name,
@@ -127,6 +137,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<StationeryDisbursementViewModel> StationeryDisbursement(string rId)
         {
+            // TODO: Write Test
+
             List<StationeryDisbursementViewModel> viewModel = new List<StationeryDisbursementViewModel>();
             List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
             foreach (Disbursement d in dList)

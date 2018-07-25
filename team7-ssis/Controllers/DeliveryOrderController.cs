@@ -19,6 +19,18 @@ namespace team7_ssis.Controllers
         UserService userService = new UserService(context);
         StatusService statusService = new StatusService(context);
       
+        private ApplicationDbContext context;
+        private DeliveryOrderService deliveryOrderService;
+        private PurchaseOrderService purchaseOrderService;
+
+        public DeliveryOrderController()
+        {
+            context = new ApplicationDbContext();
+            deliveryOrderService = new DeliveryOrderService(context);
+            purchaseOrderService = new PurchaseOrderService(context);
+        }
+
+        // GET: DeliveryOrder
         public ActionResult Index()
         {
             return View();

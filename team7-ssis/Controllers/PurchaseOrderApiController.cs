@@ -13,9 +13,14 @@ namespace team7_ssis.Controllers
 {
     public class PurchaseOrderApiController : ApiController
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
-        
+        private ApplicationDbContext context;
+        private PurchaseOrderService purchaseOrderService;
+
+        public PurchaseOrderApiController()
+        {
+            context = new ApplicationDbContext();
+            purchaseOrderService = new PurchaseOrderService(context);
+        }
 
         [Route("api/purchaseOrder/all")]
         [HttpGet]
