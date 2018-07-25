@@ -90,6 +90,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void GetNewNotificationIdTest()
         {
             // Arrange
@@ -164,6 +165,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void GetNewStockMovementIdTest()
         {
             // Arrange

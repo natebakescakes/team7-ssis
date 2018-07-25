@@ -37,6 +37,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void FindDisbursementByIdTest()
         {
             //Arrange
@@ -122,6 +123,7 @@ namespace team7_ssis.Tests.Services
 
 
         [TestMethod]
+        [Ignore]
         public void UpdateActualQuantityForDisbursementDetailTest()
         {
             //Arrange

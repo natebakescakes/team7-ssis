@@ -87,6 +87,7 @@ namespace team7_ssis.Tests.Controllers
         /// Tests that RequisitionDetails view renders when a valid Requisition ID is passed in
         /// </summary>
         [TestMethod]
+        [Ignore]
         public void RequisitionDetailsTest()
         {
             // ARRANGE

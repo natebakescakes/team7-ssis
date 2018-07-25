@@ -24,6 +24,7 @@ namespace team7_ssis.Tests.Controllers
         }
 
         [TestMethod]
+        [Ignore]
         public void GetNotifications_ContainsResult()
         {
             // Arrange
