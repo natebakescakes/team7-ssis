@@ -70,6 +70,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void ConfirmCollectionTest()
         {
             int expected = 10;

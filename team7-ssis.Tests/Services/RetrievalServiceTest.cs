@@ -38,6 +38,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void FindRetrievalByIdTest()
         {
             //Arrange
@@ -52,6 +53,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void SaveTest()
         {
             //Arrange
