@@ -14,14 +14,26 @@ namespace team7_ssis.Controllers
 {
     public class RequisitionController : Controller
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        RequisitionService requisitionService = new RequisitionService(context);
-        RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-        RetrievalService retrievalService = new RetrievalService(context);
-        ItemService itemService = new ItemService(context);
-        CollectionPointService collectionPointService = new CollectionPointService(context);
-        DepartmentService departmentService = new DepartmentService(context);
-        UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+        private ApplicationDbContext context;
+        private RequisitionService requisitionService;
+        private RequisitionRepository requisitionRepository;
+        private RetrievalService retrievalService;
+        private ItemService itemService;
+        private CollectionPointService collectionPointService;
+        private DepartmentService departmentService;
+        private UserManager<ApplicationUser> userManager;
+
+        public RequisitionController()
+        {
+            context = new ApplicationDbContext();
+            requisitionService = new RequisitionService(context);
+            requisitionRepository = new RequisitionRepository(context);
+            retrievalService = new RetrievalService(context);
+            itemService = new ItemService(context);
+            collectionPointService = new CollectionPointService(context);
+            departmentService = new DepartmentService(context);
+            userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+        }
 
         // GET: /Requisition
         public ActionResult ManageRequisitions()

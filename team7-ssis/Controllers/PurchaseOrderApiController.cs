@@ -13,13 +13,14 @@ namespace team7_ssis.Controllers
 {
     public class PurchaseOrderApiController : ApiController
     {
-        public ApplicationDbContext context;
-        PurchaseOrderService purchaseOrderService;
+        private ApplicationDbContext context;
+        private PurchaseOrderService purchaseOrderService;
 
         public PurchaseOrderApiController()
         {
             context = new ApplicationDbContext();
             purchaseOrderService = new PurchaseOrderService(context);
+        }
 
         }
         

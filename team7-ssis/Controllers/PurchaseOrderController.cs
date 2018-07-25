@@ -12,8 +12,8 @@ namespace team7_ssis.Controllers
 { 
     public class PurchaseOrderController : Controller
     {
-        public ApplicationDbContext context;
-        PurchaseOrderService purchaseOrderService;
+        private ApplicationDbContext context;
+        private PurchaseOrderService purchaseOrderService;
         StatusService statusService;
 
         public PurchaseOrderController()
