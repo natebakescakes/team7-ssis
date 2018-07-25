@@ -77,7 +77,7 @@ namespace team7_ssis.Controllers
             s.Name = model.Name;
             s.ContactName = model.ContactName;
             s.PhoneNumber = model.PhoneNumber;
-            s.FaxNumber = model.PhoneNumber;
+            s.FaxNumber = model.FaxNumber;
             s.Address = model.Address;
             s.GstRegistrationNo = model.GSTNumber;
             s.Status = statusService.FindStatusByStatusId(model.Status);
