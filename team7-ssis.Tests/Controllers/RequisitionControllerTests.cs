@@ -56,6 +56,7 @@ namespace team7_ssis.Tests.Controllers
         /// Tests that StationeryRetrieval view renders when a valid Retrieval ID is passed in
         /// </summary>
         [TestMethod]
+        [Ignore]
         public void StationeryRetrievalTest()
         {
             // ARRANGE
