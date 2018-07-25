@@ -1,66 +1,76 @@
-﻿<form id="supplier-form">
+﻿@model team7_ssis.ViewModels.SupplierViewModel
+@{
+    ViewBag.Title = "SupplierDetails";
+}
 
-    <div class="form-group">
-        <label for="SupplierCode">Supplier Code</label><br />
-        <input type="text" class="form-control" id="SupplierCode">
-    </div>
+@using (Html.BeginForm("Save", "Supplier", FormMethod.Post, new { @id = "supplierdetails", role = "form" }))
+{
+<div class="form-group">
+    <label for="SupplierCode">Supplier Code</label><br />
+    @Html.TextBoxFor(m => m.SupplierCode, new { @id = "SupplierCode", @class = "form-control" })
+</div>
 
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="CompanyName">Company Name</label><br />
-                <input type="text" class="form-control" id="Name">
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="ContactName">Contact Name</label><br />
-                <input type="text" class="form-control" id="ContactName">
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="phone">Phone Number</label><br />
-                <input type="text" class="form-control" id="PhoneNumber">
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="Fax">Fax Number</label><br />
-                <input type="text" class="form-control" id="FaxNumber">
-            </div>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="Address">Address</label><br />
-                <textarea class="form-control" rows="3" id="Address"></textarea>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="Fax">GST Registration No.</label><br />
-                <input type="text" class="form-control" id="GSTNumber">
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="Status">Status</label><br />
-                <select class="form-control" id="Status">
-                    <option value="0">Disabled</option>
-                    <option value="1">Enabled</option>
-
-                </select>
-            </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="CompanyName">Company Name</label><br />
+            @Html.TextBoxFor(m => m.Name, new { @id = "Name", @class = "form-control" })
         </div>
     </div>
-    <a href="#" class="btn btn-info" role="button">Edit Price List</a>
-    <input type="submit" class="btn btn-info fa-pull-right" value="Save">
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="ContactName">Contact Name</label><br />
+            @Html.TextBoxFor(m => m.ContactName, new { @id = "ContactName", @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="phone">Phone Number</label><br />
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @id = "PhoneNumber", @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="Fax">Fax Number</label><br />
+            @Html.TextBoxFor(m => m.FaxNumber, new { @id = "FaxNumber", @class = "form-control" })
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="Address">Address</label><br />
+            @Html.TextAreaFor(m => m.Address, new { @id = "Address", @class = "form-control", @rows = "3" })
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="Fax">GST Registration No.</label><br />
+            @Html.TextBoxFor(m => m.GSTNumber, new { @id = "GSTNumber", @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="Status">Status</label><br />
+            @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+
+        </div>
+    </div>
+</div>
+<a id="pricelist-btn" href="#" class="btn btn-info" role="button"><i class="fa fa-list-alt" aria-hidden="true"></i> Edit Price List</a>
+<a id="edit-btn" class="btn btn-secondary pull-right"><i class="fa fa-edit" aria-hidden="true"></i> Edit Details</a>
+<br />
+<div class="button-set">
+    <div class="form-row pull-right">
+        <a id="cancel-btn" class="btn btn-danger"> Cancel</a>
+        <button id="submit" type="submit" class="btn btn-success"> Save</button>
 
 
-</form>
+    </div>
+</div>
+}
+
 

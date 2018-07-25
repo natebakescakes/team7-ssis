@@ -12,9 +12,16 @@ namespace team7_ssis.Controllers
 {
     public class SupplierAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        SupplierService supplierService = new SupplierService(context);
+        ApplicationDbContext context;
+        SupplierService supplierService;
+        ItemPriceService itempriceService;
 
+        public SupplierAPIController()
+        {
+            context = new ApplicationDbContext();
+            supplierService = new SupplierService(context);
+            itempriceService = new ItemPriceService(context);
+        }
         [Route("api/supplier/all")]
         [HttpGet]
         public List<SupplierViewModel> Suppliers()
@@ -45,6 +52,22 @@ namespace team7_ssis.Controllers
                 GSTNumber = supplier.GstRegistrationNo,
                 Status = supplier.Status.StatusId
             };
+            
+        }
+
+        [Route("api/supplier/pricelist/{Id}")]
+        [HttpGet]
+        public List<ItemPriceViewModel> GetPriceList(string Id)
+        {
+
+            return itempriceService.FindItemPriceBySupplierCode(Id).Select(item => new ItemPriceViewModel {
+                ItemCode = item.ItemCode,
+                ItemCategoryName = item.Item.ItemCategory.Name,
+                Description = item.Item.Description,
+                Uom = item.Item.Uom,
+                Price = item.Price
+
+            }).ToList();
             
         }
 
