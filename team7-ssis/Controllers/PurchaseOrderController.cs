@@ -93,6 +93,12 @@ namespace team7_ssis.Controllers
             return "Cancelled";
         }
 
+        public ActionResult Generate()
+        {
+            return View();
+        }
+
+
 
     }
 }

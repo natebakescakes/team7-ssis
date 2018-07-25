@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "Generate";
+}
+
+@section scripts {
+    <script src="~/Scripts/Custom/GeneratePurchaseOrder.js"></script>
+}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <h2>Generate Purchase Order Form(s)</h2>
+    </div>
+
+</div>
+
+<button id="addItemButton" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
+
+<table id="generatePoTable" class="table table-striped table-bordered" style="width: 100%">
+    <thead>
+        <tr>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Supplier</th>
+            <th>Amount</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+<div class="modal" id="generateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <table id="generateAddItem" class="table table.sm table-striped table-bordered" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Thumbnail</th>
+                                    <th>Item Code</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>In Stock</th>
+                                    <th>R/O Level</th>
+                                    <th>R/O Qty</th>
+                                    <th>Unit of Measure</th>
+                                    <th>Unit Price</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="thumbnail__regular"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="label">Item Number</div>
+                            ##
+                            <br />
+                            <div class="label">In Stock</div>
+                            ##
+                        </div>
+                        <div class="col-md-3">
+                            <div class="label">Description</div>
+                            ###
+                            <br />
+                            <div class="label">Reorder Level</div>
+                            ###
+                        </div>
+                        <div class="col-md-2">
+                            <div class="label">Reorder Quantity</div>
+                            ###
+                        </div>
+                        <div class="col-md-2">
+                            <div class="label">Category</div>
+                            ###
+                            <br />
+                            <div class="label">Unit of Measure</div>
+                            ###
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <label>Qty</label>
+                <input id="generateQty" type="number" />
+                <label>X</label>
+                <label>Unit Price</label>
+                <input id="generateUnitPrice" type="number" disabled value="###" />
+                <label>Amount</label>
+                <input id="generateAmount" type="number" disabled value="###" />
+                <button id="addToPOBtn" type="button" class="btn btn-primary">Add to Purchase Order</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

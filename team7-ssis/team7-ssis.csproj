@@ -375,6 +375,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\GeneratePurchaseOrder.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -517,6 +518,7 @@
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
     <Content Include="Views\PurchaseOrder\_PurchaseOrderDetailsTable.cshtml" />
     <Content Include="Views\PurchaseOrder\_PurchaseOrderDetailsAwaitingTable.cshtml" />
+    <Content Include="Views\PurchaseOrder\Generate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
