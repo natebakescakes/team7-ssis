@@ -364,6 +364,7 @@
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
+    <Content Include="Scripts\Custom\Supplier.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -474,6 +475,8 @@
     <Content Include="Views\StockAdjustment\SaveAsDraft.cshtml" />
     <Content Include="Views\StockAdjustment\ShowAll.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
+    <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
+    <Content Include="Views\Supplier\_AddSupplier.cshtml" />
     <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\Department\Index.cshtml" />
     <Content Include="Views\Department\_DepartmentTable.cshtml" />

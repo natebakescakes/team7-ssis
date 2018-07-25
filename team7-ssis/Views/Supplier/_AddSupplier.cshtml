@@ -1,0 +1,89 @@
+﻿@model team7_ssis.ViewModels.SupplierViewModel
+@{
+    ViewBag.Title = "AddSupplier";
+}
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Supplier</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                @using (Html.BeginForm("Save", "Supplier", FormMethod.Post, new { @class = "addsupplier-form", role = "form" }))
+                {
+                    <fieldset id="SubmitForm">
+                        <div class="form-group">
+                            <label for="SupplierCode">Supplier Code</label><br />
+                            @Html.TextBoxFor(m => m.SupplierCode, new { @id = "SupplierCode", @class = "form-control" })
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="Name">Company Name</label><br />
+                                    @Html.TextBoxFor(m => m.Name, new { @id = "Name", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="ContactName">Contact Name</label><br />
+                                    @Html.TextBoxFor(m => m.ContactName, new { @id = "ContactName", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label><br />
+                                    @Html.TextBoxFor(m => m.PhoneNumber, new { @id = "PhoneNumber", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="Fax">Fax Number</label><br />
+                                    @Html.TextBoxFor(m => m.FaxNumber, new { @id = "FaxNumber", @class = "form-control" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Address">Address</label><br />
+                                    @Html.TextAreaFor(m => m.Address, new { @id = "Address", @class = "form-control", @rows = "3" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="GSTNumber">GST Registration No.</label><br />
+                                    @Html.TextBoxFor(m => m.GSTNumber, new { @id = "GSTNumber", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="Status">Status</label><br />
+                                    @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div row>
+                            <input type="submit" class="btn btn-success btn-block" value="Save" />
+                            <button class="btn btn-primary btn-block" type="submit" data-dismiss="modal" value="Save" />
+                        </div>
+                    </fieldset>
+
+                }
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
