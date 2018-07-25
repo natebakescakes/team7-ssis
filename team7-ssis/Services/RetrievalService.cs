@@ -16,14 +16,11 @@ namespace team7_ssis.Services
         public RetrievalService(ApplicationDbContext context)
         {
             this.context = context;
-            retrievalRepository = new RetrievalRepository(context);
-            itemService = new ItemService(context);
-            stockmovementService = new StockMovementService(context);
         }
 
-        public List<Retrieval> FindAllRetrievals()
+        public Retrieval ShowRetrievalDetails(string id)
         {
-            return retrievalRepository.FindAll().ToList();
+            throw new NotImplementedException();
         }
 
         public Retrieval FindRetrievalById(string id)
@@ -33,35 +30,8 @@ namespace team7_ssis.Services
         public Retrieval Save(Retrieval retrieval)
         {
             //mapped to confirm retrieval, add and edit retrievals (if any) 
-            return retrievalRepository.Save(retrieval);
-
+            throw new NotImplementedException();
         }
-
-        public Retrieval RetrieveItems(Retrieval other)
-        {
-            // Get RetrieveByRetrievalId
-            Retrieval retrieval = this.FindRetrievalById(other.RetrievalId);
-
-            // Update Actual Quantity
-            retrieval.Disbursements = other.Disbursements;
-
-            // Save Retrieval
-            this.Save(retrieval);
-
-            // Update Item Quantity based on amount retrieved into Inventory
-            foreach(Disbursement d in retrieval.Disbursements)
-            {
-                foreach(DisbursementDetail detail in d.DisbursementDetails)
-                {
-                    //waiting for additional service method from susu
-                    //itemService.UpdateQuantity(detail.Item, detail.Item.Inventory.Quantity - detail.ActualQuantity);
-
-                }
-            }
-            //Create Stock Movement Transaction
-            
-
-            return retrieval;
 
         }
 
