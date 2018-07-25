@@ -1,0 +1,46 @@
+﻿
+
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+
+<body>
+    <div style="width:90%; margin:0 auto" class="container">
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Department</a>
+        <table id="dptTable" class="hover">
+            <thead>
+                <tr>
+                    <th>Department Code</th>
+                    <th>Department Name</th>
+                    <th>Contact Name</th>
+                    <th>Phone Number</th>
+                    <th>Fax Number</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#dptTable').DataTable({
+
+                sAjaxSource: "api/department/all",
+                sAjaxDataProp: "",
+
+                columns: [
+                    { "data": "DepartmentCode", "autowidth": true },
+                    { "data": "DepartmentName", "autowidth": true },
+                    { "data": "ContactName", "autowidth": true },
+                    { "data": "PhoneNumber", "autowidth": true },
+                    { "data": "FaxNumber", "autowidth": true }
+                ],
+                select: 'single'
+            });
+        })
+
+    </script>
+
+</body>
+

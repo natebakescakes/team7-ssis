@@ -60,9 +60,17 @@
         <div>
             @Html.LabelFor(m => m.SelectedCollectionPoint)
             @Html.DropDownListFor(m => m.SelectedCollectionPoint, Model.collectionPointList)
-            @Html.ValidationMessageFor(m => m.SelectedCollectionPoint)
         </div>
-        
+        <div>
+            @Html.LabelFor(m => m.SelectedRepresentative)
+            @Html.DropDownListFor(m => m.SelectedRepresentative, Model.usersByDepartmentList)
+        </div>
+        <div>
+            @Html.LabelFor(m => m.SelectedManager)
+            @Html.DropDownListFor(m => m.SelectedManager, Model.usersByDepartmentList)
+           
+        </div>
+
         <input type="submit" value="save" />
     }
 
@@ -75,7 +83,7 @@
     <script src="//ajax.aspnetcdn.com/ajax/mvc/4.0/jquery.validate.unobtrusive.min.js"></script>
 
     <script type="text/javascript">
-			
+
 
     </script>
 </body>
