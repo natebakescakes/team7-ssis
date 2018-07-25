@@ -11,8 +11,14 @@ namespace team7_ssis.Controllers
 {
     public class DisbursementController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        DisbursementService disbursementService = new DisbursementService(context);
+        private ApplicationDbContext context;
+        private DisbursementService disbursementService;
+
+        public DisbursementController()
+        {
+            context = new ApplicationDbContext();
+            disbursementService = new DisbursementService(context);
+        }
 
         // GET: Disbursement/DisbursementDetails
         public ActionResult DisbursementDetails(string did)
