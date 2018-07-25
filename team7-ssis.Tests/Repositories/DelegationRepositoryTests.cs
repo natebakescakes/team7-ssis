@@ -43,8 +43,17 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            delegationRepository.Save(new Delegation()
+            {
+                DelegationId = 999999,
+                CreatedDateTime = DateTime.Now,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            });
+
             // Act
-            var result = delegationRepository.FindById(1);
+            var result = delegationRepository.FindById(999999);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Delegation));
@@ -53,31 +62,44 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            delegationRepository.Save(new Delegation()
+            {
+                DelegationId = 999999,
+                CreatedDateTime = DateTime.Now,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            });
+
             // Act
-            var result = delegationRepository.ExistsById(1);
+            var result = delegationRepository.ExistsById(999999);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeReceipient()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var user = new UserRepository(context).FindByEmail("root@admin.com");
-            var delegation = delegationRepository.FindById(1);
-            var original = delegation.Receipient;
-            delegation.Receipient = user;
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            delegationRepository.Save(new Delegation()
+            {
+                DelegationId = 999999,
+                CreatedDateTime = DateTime.Now,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            });
+
+            // Arrange - Get Existing
+            var expected = delegationRepository.FindById(999999);
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = delegationRepository.Save(delegation);
+            var result = delegationRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(user, result.Receipient);
-
-            // Tear Down
-            delegation.Receipient = original;
-            delegationRepository.Save(delegation);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
@@ -88,9 +110,9 @@ namespace team7_ssis.Tests.Repositories
             var delegation = new Delegation
             {
                 DelegationId = 999999,
+                CreatedDateTime = DateTime.Now,
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now,
-                CreatedDateTime = DateTime.Now
             };
 
             // Act
@@ -105,6 +127,33 @@ namespace team7_ssis.Tests.Repositories
 
             // Assert
             Assert.IsNull(delegationRepository.FindById(999999));
+        }
+
+        [TestMethod]
+        public void FindByCreatedDateTimeTestNotNull()
+        {
+            // Arrange
+            delegationRepository.Save(new Delegation()
+            {
+                DelegationId = 999999,
+                CreatedDateTime = DateTime.Now,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            });
+
+            // Act
+            var result = delegationRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
+
+            // Assert
+            Assert.IsTrue(result.Count() >= 1);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (delegationRepository.ExistsById(999999))
+                delegationRepository.Delete(delegationRepository.FindById(999999));
+
         }
     }
 }
