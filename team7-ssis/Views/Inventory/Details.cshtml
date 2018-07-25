@@ -1,4 +1,6 @@
-﻿
+﻿@model team7_ssis.ViewModels.EditItemFinalViewModel
+
+@using Newtonsoft.Json
 @{
     ViewBag.Title = "Details";
 }
@@ -45,7 +47,9 @@
                 }
             }
         })
-
+        var mine = @Html.Raw(Json.Encode(this.Model));
+        var test = mine.SupplierName;
+        alert(test.length);
         var pTable = $('#suppTable').DataTable({
             "searching": false,
             "paging": false,
@@ -55,8 +59,32 @@
             sAjaxDataProp: "",
             'order': [[1, 'asc']],
             "columns": [
-                { "data": "SupplierName", "autoWidth": true },
-                { "data": "SupplierUnitPrice", "autoWidth": true }
+                {
+                    "data": "SupplierName", "autoWidth": true,
+                    render: function (data, type, row) {
+                        var $select = $("<select id='SupplierName'></select>", {
+                            "id": m => m.SupplierName,
+                            "value": data
+                        });
+                        $.each(test, function (key, value) {
+                            var $option = $("<option></option>", {
+                                "text": value.Text,
+                                "value": value.Value
+                            });
+                            if (data === value) {
+                                $option.attr("selected", "selected")
+                            }
+                            $select.append($option);
+                        });
+                        return $select.prop("outerHTML");
+                    }
+                },
+                {
+                    "data": "SupplierUnitPrice", "autoWidth": true,
+                    render: function (data, type, row) {
+                        return '<input class="form-control"  style="border:none" id=Price" type="number" disabled  min="0.01" step="0.01" max="2500" value = ' + row.SupplierUnitPrice + '  >';
+                    }
+                }
             ]
         })
 
@@ -87,6 +115,7 @@
             $('#itemdetails')
                 .find('select')
                 .prop('disabled', false);
+
         }
 
 </script>

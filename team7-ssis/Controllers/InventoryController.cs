@@ -15,12 +15,14 @@ namespace team7_ssis.Controllers
         public ApplicationDbContext context;
         ItemService itemService;
         StatusService statusService;
+        SupplierService supplierService;
 
         public InventoryController()
         {
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
             statusService = new StatusService(context);
+            supplierService = new SupplierService(context);
         }
         // GET: Inventory
         public ActionResult Index()
@@ -31,14 +33,30 @@ namespace team7_ssis.Controllers
         //GET: Inventory Detail
         public ActionResult Details(string itemCode)
         {
+            //get itemCode from findAll page
             ViewBag.VB = itemCode;
+            //get data for Status dropdownlist
             List<Status> list = new List<Status>();
             list.Add(statusService.FindStatusByStatusId(0));
             list.Add(statusService.FindStatusByStatusId(1));
-            return View(new EditItemFinalViewModel {
+            //get data for Supplier dropdownlist
+            List<Supplier> list2 = new List<Supplier>();
+            List<Supplier> sAllList = supplierService.FindAllSuppliers();
+            foreach(Supplier i in sAllList)
+            {
+                list2.Add(i);
+            }
+
+            return View(new EditItemFinalViewModel
+            {
                 Statuses = new SelectList(
                     list.Select(x => new { Value = x.StatusId, Text = x.Name }),
                      "Value",
+                    "Text"
+                ),
+                SupplierName=new SelectList(
+                    list2.Select(x=>new { Value= x.SupplierCode, Text= x.Name}),
+                    "Value",
                     "Text"
                 )
             });
