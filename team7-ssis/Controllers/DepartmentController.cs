@@ -31,13 +31,9 @@ namespace team7_ssis.Controllers
 
         }
 
-        // GET: Department
         [HttpGet]
         public ActionResult DepartmentOptions()
         {
-            //DepartmentViewModel dModel = new DepartmentViewModel();
-            //ConfigureViewModel(dModel);
-            //return View(dModel);
             List<ApplicationUser> userByDepartmentList = departmentService.FindUsersByDepartment(user.Department);
 
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
@@ -56,29 +52,7 @@ namespace team7_ssis.Controllers
                 )
             });
         }
-        //[HttpPost]
-        //public ActionResult DepartmentOptions(DepartmentViewModel dModel)
-        //{
-        //    //assign selected value to database
-        //    //collection point
-        //    user.Department.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(dModel.SelectedCollectionPoint.ToString()));
-        //    //representative
-        //    List<ApplicationUser> usersByDepartment = departmentService.FindUsersByDepartment(user.Department);
-        //    user.Department.Representative = usersByDepartment[Convert.ToInt32(dModel.SelectedRepresentative)];//is it in the same order
-        //    //user.Department.Representative = dModel.usersByDepartmentList.ElementAt(Convert.ToInt32(dModel.SelectedRepresentative));
-        //    //manager
-        //    //usersByDepartment[Convert.ToInt32(dModel.SelectedManager)].
-        //    return View(dModel);
-        //}
-
-        //private void ConfigureViewModel(DepartmentViewModel dModel)
-        //{
-        //    //populating lists
-        //    List<CollectionPoint> collectionPoints = collectionPointService.FindAllCollectionPoints();
-        //    dModel.collectionPointList = new SelectList(collectionPoints,"CollectionPointId","Name");
-        //    List<ApplicationUser> usersByDepartment = departmentService.FindUsersByDepartment(user.Department);
-        //    dModel.usersByDepartmentList = new SelectList(usersByDepartment, "Id", "FullName");
-        //}
+    
         public ActionResult Index()
         {
             List<Status> list = new List<Status>();
@@ -111,6 +85,7 @@ namespace team7_ssis.Controllers
           
 
         }
+        [HttpPost]
         public ActionResult SaveOptions(DepartmentViewModel model)
         {
             bool status = false;
@@ -132,6 +107,7 @@ namespace team7_ssis.Controllers
 
 
         }
+        [HttpPost]
         public ActionResult Save(DepartmentViewModel model)
         {
             bool status = false;
@@ -143,6 +119,7 @@ namespace team7_ssis.Controllers
                 dpt.DepartmentCode = model.DepartmentCode;
                 dpt.CreatedDateTime = DateTime.Now;
                 dpt.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                dpt.Representative = userService.FindUserByEmail(model.DepartmentRep);
 
             }
 
@@ -159,7 +136,9 @@ namespace team7_ssis.Controllers
 
             
             dpt.Name = model.DepartmentName;
-            dpt.Head = userService.FindUserByEmail(model.DepartmentHead);
+            dpt.Head = userService.FindUserByEmail(model.EmailHead);
+            
+            dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPoint));
             dpt.ContactName = model.ContactName;
             dpt.PhoneNumber = model.PhoneNumber;
             dpt.FaxNumber = model.PhoneNumber;

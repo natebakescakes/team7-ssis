@@ -31,7 +31,8 @@ namespace team7_ssis.ViewModels
         public IEnumerable<SelectListItem> UsersByDepartment { get; set; }
         public IEnumerable<SelectListItem> AllUsers { get; set; }
         public IEnumerable<SelectListItem> CollectionPoints { get; set; }
-        public string Email { get; set; }
+        public string EmailHead { get; set; }
+        public string EmailRep { get; set; }
 
 
 

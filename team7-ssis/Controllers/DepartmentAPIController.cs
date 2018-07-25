@@ -35,7 +35,7 @@ namespace team7_ssis.Controllers
                 ContactName = department.ContactName,
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber,
-                Email = department.Head.Email
+                EmailHead = department.Head.Email
             }).ToList();
         }
         public DepartmentViewModel GetDepartment(string id)
@@ -52,7 +52,7 @@ namespace team7_ssis.Controllers
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber,
                 Status = department.Status.StatusId,
-                Email = department.Head.Email
+                EmailHead = department.Head.Email
             };
         }
     }

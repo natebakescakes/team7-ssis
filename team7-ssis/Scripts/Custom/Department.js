@@ -34,6 +34,7 @@
                 for (i in data) {
                     $('#departmentdetails').find('[id="' + i + '"]').val(data[i]);
                 }
+                document.getElementById('DepartmentRepresentative').innerText = xid;
             }
             
         });
@@ -52,23 +53,23 @@
             success: function (data) {
                 if (data.status) {
                     $('#myModal').modal('hide');
-                    table.ajax.reload();
+                    oTable.ajax.reload();
                 }
             }
         });
 
         event.preventDefault();
     });
-    $('#supplierdetails').submit(function (event) {
+    $('#departmentdetails').submit(function (event) {
         $.ajax({
             type: "POST",
-            url: '/supplier/Save',
-            data: $('#supplierdetails').serialize(),
+            url: '/department/Save',
+            data: $('#departmentdetails').serialize(),
             success: function (data) {
                 if (data.status) {
-                    alert("Supplier information has been successfully updated");
+                    alert("Department information has been successfully updated");
                     cancelbtn.click();
-                    table.ajax.reload();
+                    oTable.ajax.reload();
                 }
             }
         });

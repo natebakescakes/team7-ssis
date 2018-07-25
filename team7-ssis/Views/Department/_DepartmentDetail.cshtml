@@ -21,12 +21,13 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="DepartmentHead">Department Head</label><br />
-                @Html.DropDownListFor(m => m.Email, new SelectList(Model.AllUsers, "Value", "Text"), new { @class = "form-control" })
+                @Html.DropDownListFor(m => m.EmailHead, new SelectList(Model.AllUsers, "Value", "Text"), new { @class = "form-control" })
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="DepartmentRepresentative">Department Representative</label><br />
+               
                 @Html.LabelFor(m => m.DepartmentRep, new { @id = "DepartmentRepresentative", @class = "form-control" })
             </div>
         </div>
