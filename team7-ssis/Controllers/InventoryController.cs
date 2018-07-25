@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Services;
 using team7_ssis.Models;
+using team7_ssis.ViewModels;
 
 namespace team7_ssis.Controllers
 {
@@ -13,11 +14,13 @@ namespace team7_ssis.Controllers
     {
         public ApplicationDbContext context;
         ItemService itemService;
+        StatusService statusService;
 
         public InventoryController()
         {
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
+            statusService = new StatusService(context);
         }
         // GET: Inventory
         public ActionResult Index()
@@ -29,9 +32,19 @@ namespace team7_ssis.Controllers
         public ActionResult Details(string itemCode)
         {
             ViewBag.VB = itemCode;
-            ViewData["ItemCode"] = itemCode;
-            return View();
+            List<Status> list = new List<Status>();
+            list.Add(statusService.FindStatusByStatusId(0));
+            list.Add(statusService.FindStatusByStatusId(1));
+            return View(new EditItemFinalViewModel {
+                Statuses = new SelectList(
+                    list.Select(x => new { Value = x.StatusId, Text = x.Name }),
+                     "Value",
+                    "Text"
+                )
+            });
         }
+
+
 
         [HttpPost]
         public ActionResult ImageUpload(HttpPostedFileBase file)

@@ -14,31 +14,79 @@
 
 
 <script>
-    var itemCode = '@(ViewBag.VB)';
-    var oTable = $('#myTable').DataTable({
-        sAjaxSource: "/api/manage/stockhistory/"+itemCode,
-        sAjaxDataProp: "",
-        'order': [[1, 'asc']],
-        "columns": [
-            { "data": "theDate", "autoWidth": true },
-            { "data": "host", "autoWidth": true },
-            { "data": "qty", "autoWidth": true },
-            { "data": "balance", "autoWidth": true }
-        ]
-    });
+    function firstLoad() {
+        $('#itemEdit').show();
+        $(".button-set").hide();
+        disableInput();
+    }
+    window.onload = firstLoad;
 
-    $.ajax({
-        type: 'GET',
-        url: '/api/manage/singleitem/' + itemCode,
-        dataType: 'json',
-        success: function (data) {
-            var i;
-            for (i in data) {
-                $('#form1').find('[id="' + i + '"]').val(data[i]);
+        var itemCode = '@(ViewBag.VB)';
+        var oTable = $('#myTable').DataTable({
+            sAjaxSource: "/api/manage/stockhistory/" + itemCode,
+            sAjaxDataProp: "",
+            'order': [[1, 'asc']],
+            "columns": [
+                { "data": "theDate", "autoWidth": true },
+                { "data": "host", "autoWidth": true },
+                { "data": "qty", "autoWidth": true },
+                { "data": "balance", "autoWidth": true }
+            ]
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/manage/singleitem/' + itemCode,
+            dataType: 'json',
+            success: function (data) {
+                var i;
+                for (i in data) {
+                    $('#itemdetails').find('[id="' + i + '"]').val(data[i]);
+                }
             }
+        })
+
+        var pTable = $('#suppTable').DataTable({
+            "searching": false,
+            "paging": false,
+            "info": false,
+            "lengthChange": false,
+            sAjaxSource: "/api/manage/supplierInfo/" + itemCode,
+            sAjaxDataProp: "",
+            'order': [[1, 'asc']],
+            "columns": [
+                { "data": "SupplierName", "autoWidth": true },
+                { "data": "SupplierUnitPrice", "autoWidth": true }
+            ]
+        })
+
+        $('#itemEdit').on('click', function () {
+            $('#itemEdit').hide();
+            $(".button-set").show();
+           enableInput();
+        });
+
+        function disableInput() {
+            $('#itemdetails')
+                .find('input')
+                .prop('disabled', true);
+            $('#itemdetails')
+                .find('textarea')
+                .prop('disabled', true);
+            $('#itemdetails')
+                .find('select')
+                .prop('disabled', true);
         }
-    })
-
-
+        function enableInput() {
+            $('#itemdetails')
+                .find('input')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('textarea')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('select')
+                .prop('disabled', false);
+        }
 
 </script>

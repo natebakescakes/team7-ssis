@@ -29,9 +29,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<StockHistoryViewModel> FindStockHistoryByItem(string itemCode)
         {
-            //System.Diagnostics.Debug.WriteLine("FindStockHistoryByItem",itemCode);
-            List<StockMovement> list = stkMovementService.FindStockMovementByItemCode(itemCode);
-            List<StockHistoryViewModel> items = new List<StockHistoryViewModel>();
+           List<StockMovement> list = stkMovementService.FindStockMovementByItemCode(itemCode);
+           List<StockHistoryViewModel> items = new List<StockHistoryViewModel>();
 
             foreach (StockMovement i in list)
             {
@@ -76,17 +75,6 @@ namespace team7_ssis.Controllers
         public ItemDetailModel FindItemSingle(string itemCode)
         {
             Item item = itemService.FindItemByItemCode(itemCode);
-            List<ItemPrice> itemPrice = itemPriceService.FindItemPriceByItemCode(itemCode);
-            List<ItemDetailsSupplierInfoViewModel> idSupp = new List<ItemDetailsSupplierInfoViewModel>();
-            foreach(ItemPrice i in itemPrice)
-            {
-                idSupp.Add(new ItemDetailsSupplierInfoViewModel()
-                {
-                    SupplierName = i.Supplier.Name,
-                    SupplierUnitPrice = (double)i.Price
-                });
-            }
-
             return new ItemDetailModel()
             {
                 ItemCode = item.ItemCode,
@@ -95,10 +83,26 @@ namespace team7_ssis.Controllers
                 Bin = item.Bin,
                 Uom = item.Uom,
                 Quantity = item.Inventory.Quantity,
-                Status = item.Status.Name,
-                SupplierInfo = idSupp
+                Status = item.Status.Name
             };
 
+        }
+
+        [Route("api/manage/supplierInfo/{itemCode}")]
+        [HttpGet]
+        public List<ItemDetailsSupplierInfoViewModel> FindSupplierInfo(string itemCode)
+        {
+            List<ItemPrice> itemPrices = itemPriceService.FindItemPriceByItemCode(itemCode);
+            List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
+            foreach(ItemPrice i in itemPrices)
+            {
+                list.Add(new ItemDetailsSupplierInfoViewModel()
+                {
+                    SupplierName = i.Supplier.Name,
+                    SupplierUnitPrice = (double)i.Price
+                });
+            }
+            return list;
         }
 
         [Route("api/delete/items")]

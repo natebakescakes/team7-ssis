@@ -293,6 +293,7 @@
     <Compile Include="Models\Title.cs" />
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="ViewModels\EditItemFinalViewModel.cs" />
     <Compile Include="ViewModels\ItemDetailModel.cs" />
     <Compile Include="ViewModels\ItemDetailsSupplierInfoViewModel.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
