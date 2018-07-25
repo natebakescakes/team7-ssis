@@ -18,4 +18,31 @@ namespace team7_ssis.ViewModels
 
 
     }
+    public class StockAdjustmentListViewModel
+    {
+        public List<StockAdjustmentViewModel> StockAdjustments { get; set; }
+        // public string UserName { get; set; } //current login user name
+    }
+
+    public class StockAdjustmentDetailViewModel
+    {
+        public string ItemCode { get; set; }
+        public string Description { get; set; }
+        public string Reason { get; set; }
+
+        public string PriceColor { get; set; }
+        public string UnitPrice { get; set; }
+        public string Adjustment { get; set; }
+
+    }
+
+    public class StockAdjustmentDetailListViewModel
+    {
+        public StockAdjustmentViewModel StockAdjustmentModel { get; set; }
+        public List<StockAdjustmentDetailViewModel> StockAdjustmentDetailsModel { get; set; }
+
+    }
+
+
+
 }

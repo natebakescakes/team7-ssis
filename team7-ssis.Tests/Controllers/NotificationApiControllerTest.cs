@@ -36,7 +36,7 @@ namespace team7_ssis.Tests.Controllers
             };
 
             // Act
-            IHttpActionResult actionResult = controller.GetNotificationsCurrentUser();
+            IHttpActionResult actionResult = controller.GetCurrentUser();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<NotificationViewModel>>;
 
             // Assert
@@ -57,7 +57,7 @@ namespace team7_ssis.Tests.Controllers
             };
 
             // Act
-            IHttpActionResult actionResult = controller.GetNotificationsCurrentUser();
+            IHttpActionResult actionResult = controller.GetCurrentUser();
 
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
