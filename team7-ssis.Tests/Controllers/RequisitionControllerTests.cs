@@ -13,6 +13,7 @@ namespace team7_ssis.Tests.Controllers
     {
         static ApplicationDbContext context;
         static RequisitionController requisitionController;
+        static RetrievalController retrievalController;
         static DisbursementService disbursementService;
         static RetrievalService retrievalService;
 
@@ -107,7 +108,7 @@ namespace team7_ssis.Tests.Controllers
             // ARRANGE
 
             // ACT
-            ActionResult result = requisitionController.RetrievalDetails("TEST2", "E032");
+            ActionResult result = retrievalController.RetrievalDetails("TEST2", "E032");
 
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));

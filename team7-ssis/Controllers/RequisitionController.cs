@@ -91,22 +91,7 @@ namespace team7_ssis.Controllers
             ViewBag.RetrievalID = rid;
             return View();
         }
-        public ActionResult RetrievalDetails(string retId, string itemId)
-        {
-            if (retId == null || itemId == null)
-            {
-                return new HttpStatusCodeResult(400);
-            }
-
-            RetrievalDetailsViewModel viewModel = new RetrievalDetailsViewModel();
-            Item i = itemService.FindItemByItemCode(itemId);
-
-            viewModel.ProductID = i.ItemCode;
-            viewModel.Name = i.Name;
-            viewModel.Bin = i.Bin;
-
-            return View(viewModel);
-        }
+        
         public ActionResult CreateRequisition()
         {
             CreateRequisitionsViewModel viewModel = new CreateRequisitionsViewModel();
