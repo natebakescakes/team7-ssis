@@ -1,1 +1,51 @@
-﻿Add Item Category
+﻿@model team7_ssis.ViewModels.ItemCategoryViewModel
+@{
+    ViewBag.Title = "AddItemCategory";
+}
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Item Category</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                @using (Html.BeginForm("Save", "ItemCategory", FormMethod.Post, new { @class = "additemcategory-form", role = "form" }))
+                {
+                    <div class="row">
+                   
+                        <div class="form-group col-sm-6">
+                            <label for="Name">Item Category Name</label><br />
+                            @Html.TextBoxFor(m => m.Name, new { @id = "Name", @class = "form-control" })
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="Status">Status</label><br />
+                            @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-9">
+                            <label for="Name">Item Category Description</label><br />
+                            @Html.TextBoxFor(m => m.Description, new { @id = "Name", @class = "form-control" })
+
+                        </div>
+
+                     </div>
+                    <div row>
+                        <button type="submit" class="btn btn-success btn-block" value="Save">Save</button>
+
+                    </div>
+                   
+                }
+                </div>
+            </div>
+    </div>
+</div>
+
