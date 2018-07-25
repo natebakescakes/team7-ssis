@@ -15,11 +15,20 @@ namespace team7_ssis.Controllers
 {
     public class StockAdjustmentController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        StockAdjustmentService stockAdjustmentService = new StockAdjustmentService(context);
-        UserService userService = new UserService(context);
-        UserRepository userRepository = new UserRepository(context);
-        ItemPriceService itemPriceService = new ItemPriceService(context);
+        ApplicationDbContext context;
+        StockAdjustmentService stockAdjustmentService;
+        UserService userService;
+        UserRepository userRepository;
+        ItemPriceService itemPriceService;
+        public StockAdjustmentController()
+        {
+            context =new ApplicationDbContext();
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
+            userRepository = new UserRepository(context);
+            itemPriceService = new ItemPriceService(context);
+        }
+       
 
         // GET: StockAdjustment
         public ActionResult Index()
@@ -27,17 +36,25 @@ namespace team7_ssis.Controllers
             return View();
         }
 
+   
+
         public ActionResult New()
         {
-            List<ApplicationUser> supervisors = userService.FindSupervisorsByDepartment(
-                userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName()).Department);
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            Department d = userService.FindUserByEmail(UserName).Department;
 
-            List<ApplicationUser> managers = new List<ApplicationUser>() {
-                userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName()).Department.Head
-            };
+            List<ApplicationUser> supervisors=new List<ApplicationUser>();
+
+            List<ApplicationUser> managers =new List<ApplicationUser>();
+
+            if (d != null)
+            {
+                supervisors = userService.FindSupervisorsByDepartment(d);
+                managers = new List<ApplicationUser>() { d.Head };
+            }
 
 
-            List<SelectListItem> listItem_supervicor = new List<SelectListItem>();
+                List<SelectListItem> listItem_supervicor = new List<SelectListItem>();
             foreach (ApplicationUser a in supervisors)
             {
                 SelectListItem item1 = new SelectListItem()
@@ -81,7 +98,7 @@ namespace team7_ssis.Controllers
             sv.CreatedDateTime = sa.CreatedDateTime;
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-            sv.UpdateDateTime = (DateTime)sa.UpdatedDateTime;
+            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
 
             //get the stockadjustment details
             List<StockAdjustmentDetail> detail_list = sa.StockAdjustmentDetails;
@@ -116,6 +133,17 @@ namespace team7_ssis.Controllers
 
         public ActionResult AddItem()
         {
+            string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            List<string> Session_list = new List<string>();
+            if (System.Web.HttpContext.Current.Session[user+"stock"] != null) //already has sessionID 
+            {
+                Session_list = (List<string>)System.Web.HttpContext.Current.Session[user+"stock"];
+            }
+            else
+            {
+                System.Web.HttpContext.Current.Session[user+"stock"] = Session_list;
+            }
+
             return View();
         }
 

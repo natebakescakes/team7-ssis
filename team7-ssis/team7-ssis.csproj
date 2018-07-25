@@ -505,7 +505,6 @@
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
-    <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
