@@ -21,6 +21,8 @@
         }
 
     }
+
+    var pon = $("#poNo").val();
     //Receive goods- View DeliveryOrders
 
     var pTable = $('#myPOTable').DataTable({
@@ -89,7 +91,7 @@
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
         ajax: {
-            url: "/api/purchaseOrder/{ id }",
+            url: "/api/purchaseOrder/details/"+ pon,
             dataSrc: ""
         },
 
@@ -101,7 +103,8 @@
                 { defaultContent: '<input type="textbox" class="textbox" />'},
                 {data: "RemainingQuantity"},
                 {defaultContent: '<input type="checkbox" class="checkbox" />' }
-            ]
+            ],
+        select: "single"
     });
 
     //for DOConfirmationPage-outstanding items
@@ -119,4 +122,17 @@
                 { data: "ReceivedQuantity" }
             ]
     });
+
+    function Submit() {
+
+        var usr = document.getElementById('UserName').value;
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ActionName2")',
+            data: "UserName=" + usr
+        });
+
+        return true;
+    }
 });

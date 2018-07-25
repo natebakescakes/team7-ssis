@@ -37,7 +37,10 @@
         </table>
     </div>
     <div>
-        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>Confirm</a>
+        @using (Html.BeginForm("ReceiveGoodsView", "DeliveryOrder", FormMethod.Get, new { Id = "Form" }))
+        {
+        <input type="submit" name="Submit" value="Confirm" />
+        }
     </div>
 </body>
 </html>

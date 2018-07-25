@@ -1,12 +1,12 @@
 ﻿@section scripts {
 
-        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-        <script src="~/Scripts/jquery.validate.min.js"></script>
-        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-        <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-        <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
-        |}
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    |}
 
 @model team7_ssis.ViewModels.PurchaseOrderViewModel
 
@@ -19,10 +19,17 @@
 </head>
 
 <body>
+    <div class="col-md-8">
+
+        <h2>Receive Goods</h2>
+        @Html.Hidden("poNo",Model.PurchaseOrderNo)
+
+    </div>
     <h1>Submit delivery order forms & invoices and update inventory</h1>
     <div style="width:90%; margin:0 auto" class="container">
 
-        <a runat="server" class="popup btn btn-primary" href="~/Views/DeliveryOrder/ReceiveGoods" style="margin-bottom:20px; margin-top:20px;">View Related Delivery Orders</a>
+        @using (Html.BeginForm("ReceiveGoods", "DeliveryOrder", FormMethod.Get, new { Id = "Form1" }))
+        {<button class="btn btn-primary">View Related Delivery Order</button>}
         <div>
             <table>
                 <thead>
@@ -57,7 +64,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                @using (Html.BeginForm("ImageUpload", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
+                @using (Html.BeginForm("ImageUpload", "DeliveryOrder", FormMethod.Post, new { Id = "Form" }))
                 {
                     <input type="submit" name="Submit" value="AddFile" />
                 }
@@ -66,12 +73,14 @@
     </table>
     <div class="row mt-3">
         <div class="col-md-12">
-            @using (Html.BeginForm("Submit", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
-             { <button class="btn btn-primary">Confirm</button>}
+            @using (Html.BeginForm("Save", "DeliveryOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
+            {
+                @Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type="hidden"})
+                <input type="submit" name="Submit" value="Submit" />}
+            }
             @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
-             {<button class="btn btn-primary">Cancel</button>}
+            {<button class="btn btn-primary">Cancel</button>}
         </div>
     </div>
 </body>
 </html>
-

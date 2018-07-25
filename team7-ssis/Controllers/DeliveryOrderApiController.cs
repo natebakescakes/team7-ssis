@@ -38,34 +38,7 @@ namespace team7_ssis.Controllers
             }).ToList();
         }
 
-
-        [Route("api/receivegoods/{id}")]
-
-        [HttpPost]
-
-        public List<DeliveryOrderDetailsViewModel> DeliveryOrderDetails(string poNum)
-        {
-
-           // DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(poNum);
-
-            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo("TEST");
-
-            return deliveryOrder.DeliveryOrderDetails.Select(dod => new DeliveryOrderDetailsViewModel()
-
-            {
-
-                ItemCode = dod.Item.ItemCode,
-
-                Description = dod.Item.Description,
-
-                QtyOrdered = dod.PlanQuantity,
-
-                ReceivedQty = 0
-
-            }).ToList();
-
-        }
-
+        // return all pending po - attributes
         [Route("api/outstandingpo/all")]
         [HttpGet]
         public List<PurchaseOrderViewModel> PurchaseOrders()
@@ -85,6 +58,8 @@ namespace team7_ssis.Controllers
             }).ToList();
         }
 
+
+        //returns all outstanding items
         [Route("api/outstandingitems/all")]
         [HttpGet]
         public List<PurchaseOrderDetailsViewModel> OutstandingItems()
@@ -105,6 +80,30 @@ namespace team7_ssis.Controllers
                 ItemCode = x.ItemCode,
                 Description = x.Item.Description,
                 QuantityOrdered = x.Quantity
+            }).ToList();
+        }
+
+
+        [Route("api/purchaseOrder/details/{purchaseOrderNo}")]
+        [HttpGet]
+
+        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseOrderNo)
+        {
+            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNo);
+
+            return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
+
+            {
+                ItemCode = pod.Item.ItemCode,
+
+                Description = pod.Item.Description,
+
+                QuantityOrdered = pod.Quantity,
+
+                ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
+
+                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod)
+
             }).ToList();
         }
     }

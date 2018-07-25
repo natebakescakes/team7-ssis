@@ -48,10 +48,11 @@
     <br /><br />
     @Html.Partial("_DOConfirmationViewTable")
 
-    <div class="form-group">
-
-        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>Back</a>
-
+    <div class="row mt-3">
+        <div class="col-md-12">
+            @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
+            {<button class="btn btn-primary">Back</button>}
+        </div>
     </div>
 </body>
     </html>

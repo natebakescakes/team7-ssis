@@ -28,25 +28,25 @@ namespace team7_ssis.Controllers
         //public ActionResult ReceiveGoodsView(string ponum)
         public ActionResult ReceiveGoodsView()
         {
-            DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
+            PurchaseOrderViewModel POVM = new PurchaseOrderViewModel();
            // PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
             PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById("TEST");
 
-            DOVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
+            POVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
 
-            DOVM.SupplierName = purchaseOrder.Supplier.Name;
+            POVM.SupplierName = purchaseOrder.Supplier.Name;
 
-            DOVM.CreatedDate = purchaseOrder.CreatedDateTime;
+            POVM.CreatedDate = purchaseOrder.CreatedDateTime.ToShortDateString();
 
-            DOVM.Status = purchaseOrder.Status.Name;
+            POVM.Status = purchaseOrder.Status.Name;
 
-            return View(DOVM);
+            return View(POVM);
         }
 
         [HttpGet]
         public ActionResult ReceiveGoods()
         {
-            return View();
+           return View();
         }
 
 
@@ -103,7 +103,7 @@ namespace team7_ssis.Controllers
 
         [HttpPost]
 
-        public ActionResult Submit(DeliveryOrderViewModel model)
+        public ActionResult Save(DeliveryOrderViewModel model)
         {
             bool status = false;
 
