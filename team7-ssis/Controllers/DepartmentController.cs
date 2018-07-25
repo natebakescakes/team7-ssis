@@ -49,7 +49,8 @@ namespace team7_ssis.Controllers
                      collectionPointList.Select(x => new { value = x.CollectionPointId, text = x.Name }),
                      "Value",
                      "Text"
-                )
+                ),
+                //SelectedCollectionPoint = 2
             });
         }
     
@@ -89,7 +90,7 @@ namespace team7_ssis.Controllers
         public ActionResult SaveOptions(DepartmentViewModel model)
         {
             bool status = false;
-            Department dpt = departmentService.FindDepartmentByDepartmentCode(model.DepartmentCode);
+            Department dpt = departmentService.FindDepartmentByUser(user);
           
             dpt.UpdatedDateTime = DateTime.Now;
             dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
@@ -102,7 +103,7 @@ namespace team7_ssis.Controllers
              if (departmentService.Save(dpt) != null) status = true;
 
             
-            return new JsonResult { Data = new { status = status } };
+            return RedirectToAction("DepartmentOptions");
 
 
 

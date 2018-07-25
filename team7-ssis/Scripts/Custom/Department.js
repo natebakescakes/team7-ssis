@@ -45,6 +45,7 @@
 
 
     });
+
     $(".adddepartment-form").submit(function (event) {
         $.ajax({
             type: "POST",
@@ -77,6 +78,22 @@
         event.preventDefault();
     });
 
+    $('#departmentoptions').submit(function (event) {
+        $.ajax({
+            type: "POST",
+            url: '/department/SaveOptions',
+            data: $('#departmentoptions').serialize(),
+            success: function (data) {
+                if (data.status) {
+                    alert("Department information has been successfully updated");
+                    cancelbtn.click();
+                    oTable.ajax.reload();
+                }
+            }
+        });
+
+        event.preventDefault();
+    });
 
 
     $('#edit-btn').on('click', function () {

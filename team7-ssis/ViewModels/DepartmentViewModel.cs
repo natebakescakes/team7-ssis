@@ -10,7 +10,7 @@ namespace team7_ssis.ViewModels
     public class DepartmentViewModel
     {
         //[Display(Name = "Collection Point")]
-        //public int? SelectedCollectionPoint { get; set; }
+        public int SelectedCollectionPoint { get; set; }
         //[Display(Name = "Representative")]
         //public int? SelectedRepresentative { get; set; }
         //[Display(Name = "Manager Role")]
