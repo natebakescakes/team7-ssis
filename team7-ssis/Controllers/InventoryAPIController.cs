@@ -36,7 +36,7 @@ namespace team7_ssis.Controllers
                 items.Add(new ItemViewModel
                 {
                     ItemCode = i.ItemCode,
-                    ItemCategoryName = i.ItemCategory.Name,
+                    ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name: "",
                     Description = i.Description,
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,

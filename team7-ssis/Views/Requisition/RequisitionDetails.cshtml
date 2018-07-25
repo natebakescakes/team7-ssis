@@ -1,4 +1,5 @@
-﻿
+﻿@model team7_ssis.ViewModels.RequisitionDetailViewModel
+
 @{
     ViewBag.Title = "RequisitionDetails";
 }
@@ -6,37 +7,55 @@
 <h2 class="mb-3">Requisition Details</h2>
 <div class="row mb-3">
     <div class="col-md-4">
-        <h6>Requisition</h6>
-        DDS/111/99
+        <div class="label">Requisition</div>
+        @Model.RequisitionID
     </div>
     <div class="col-md-8">
-        <h6>Department</h6>
-        Computer Science
+        <div class="label">Department</div>
+        @Model.Department
     </div>
     <div class="col-md-12">
-        <h6>Collection Point</h6>
-        Stationery Store = Administration Building
+        <div class="label">Collection Point</div>
+        @Model.CollectionPoint
     </div>
     <div class="col-md-4">
-        <h6>Created By</h6>
-        Jenny Wong Mei Lin
+        <div class="label">Created By</div>
+        @Model.CreatedBy
     </div>
     <div class="col-md-4">
-        <h6>Updated By</h6>
+        <div class="label">Updated By</div>
+        @Model.UpdatedBy
     </div>
     <div class="col-md-4">
-        <h6>Approved By</h6>
+        <div class="label">Approved By</div>
+        @Model.ApprovedBy
     </div>
     <div class="col-md-4">
-        <h6>Created Time</h6>
-        Jenny Wong Mei Lin
+        <div class="label">Created Time</div>
+        @Model.CreatedTime
     </div>
     <div class="col-md-4">
-        <h6>Updated Time</h6>
+        <div class="label">Updated Time</div>
+        @Model.UpdatedTime
     </div>
     <div class="col-md-4">
-        <h6>Approved Time</h6>
+        <div class="label">Approved Time</div>
+        @Model.UpdatedTime
     </div>
 </div>
 
-@Html.Partial("_RequisitionDetailTable")
+<table id="myTable" class="table table-striped table-bordered" style="width: 100%">
+    <thead>
+        <tr>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+</table>
+
+@section Scripts {
+    <script src="~/Scripts/Custom/RequisitionDetail.js"></script>
+}
