@@ -12,11 +12,19 @@ namespace team7_ssis.Controllers
 {
     public class DepartmentController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        DepartmentService departmentService = new DepartmentService(context);
-        CollectionPointService collectionPointService = new CollectionPointService(context);
-        UserService userService = new UserService(context);
-        
+        private ApplicationDbContext context;
+        private DepartmentService departmentService;
+        private CollectionPointService collectionPointService;
+        private UserService userService;
+
+        public DepartmentController()
+        {
+            context = new ApplicationDbContext();
+            departmentService = new DepartmentService(context);
+            collectionPointService = new CollectionPointService(context);
+            userService = new UserService(context);
+        }
+
         // GET: Department
         [HttpGet]
         public ActionResult DepartmentOptions()

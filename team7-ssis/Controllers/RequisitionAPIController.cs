@@ -13,12 +13,22 @@ namespace team7_ssis.Controllers
 {
     public class RequisitionAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        RequisitionService requisitionService = new RequisitionService(context);
-        RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-        RetrievalService retrievalService = new RetrievalService(context);
-        DisbursementService disbursementService = new DisbursementService(context);
-        StatusService statusService = new StatusService(context);
+        private ApplicationDbContext context;
+        private RequisitionService requisitionService;
+        private RequisitionRepository requisitionRepository;
+        private RetrievalService retrievalService;
+        private DisbursementService disbursementService;
+        private StatusService statusService;
+
+        public RequisitionAPIController()
+        {
+            context = new ApplicationDbContext();
+            requisitionService = new RequisitionService(context);
+            requisitionRepository = new RequisitionRepository(context);
+            retrievalService = new RetrievalService(context);
+            disbursementService = new DisbursementService(context);
+            statusService = new StatusService(context);
+        }
 
         [Route("api/reqdetail/all")]
         [HttpGet]

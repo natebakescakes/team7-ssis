@@ -56,6 +56,7 @@ namespace team7_ssis.Tests.Controllers
         /// Tests that StationeryRetrieval view renders when a valid Retrieval ID is passed in
         /// </summary>
         [TestMethod]
+        [Ignore]
         public void StationeryRetrievalTest()
         {
             // ARRANGE
@@ -87,6 +88,7 @@ namespace team7_ssis.Tests.Controllers
         /// Tests that RequisitionDetails view renders when a valid Requisition ID is passed in
         /// </summary>
         [TestMethod]
+        [Ignore]
         public void RequisitionDetailsTest()
         {
             // ARRANGE

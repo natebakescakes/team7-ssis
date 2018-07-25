@@ -43,18 +43,32 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            stockMovementRepository.Save(new StockMovement()
+            {
+                StockMovementId = 999999,
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = stockMovementRepository.FindById(1);
+            var result = stockMovementRepository.FindById(999999);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(StockMovement));
+            Assert.AreEqual(999999, result.StockMovementId);
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            stockMovementRepository.Save(new StockMovement()
+            {
+                StockMovementId = 999999,
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = stockMovementRepository.ExistsById(1);
+            var result = stockMovementRepository.ExistsById(999999);
 
             // Assert
             Assert.IsTrue(result);
@@ -64,19 +78,20 @@ namespace team7_ssis.Tests.Repositories
         public void SaveTestExistingChangeOriginalQuantity()
         {
             // Arrange
-            var stockMovement = stockMovementRepository.FindById(1);
-            var original = stockMovement.OriginalQuantity;
-            stockMovement.OriginalQuantity = 999999;
+            stockMovementRepository.Save(new StockMovement()
+            {
+                StockMovementId = 999999,
+                CreatedDateTime = DateTime.Now,
+                OriginalQuantity = 999999,
+            });
 
             // Act
-            var result = stockMovementRepository.Save(stockMovement);
+            var expected = stockMovementRepository.FindById(999999);
+            expected.OriginalQuantity = 1;
+            var result = stockMovementRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(999999, result.OriginalQuantity);
-
-            // Tear Down
-            stockMovement.OriginalQuantity = original;
-            stockMovementRepository.Save(stockMovement);
+            Assert.AreEqual(1, result.OriginalQuantity);
         }
 
         [TestMethod]
@@ -102,6 +117,13 @@ namespace team7_ssis.Tests.Repositories
 
             // Assert
             Assert.IsNull(stockMovementRepository.FindById(999999));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (stockMovementRepository.ExistsById(999999))
+                stockMovementRepository.Delete(stockMovementRepository.FindById(999999));
         }
     }
 }
