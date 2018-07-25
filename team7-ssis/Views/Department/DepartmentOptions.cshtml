@@ -15,7 +15,7 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label for="DepartmentRepresentative">Department Representative</label><br />
-            @Html.DropDownListFor(m => m.DepartmentRep, new SelectList(Model.Users, "Value", "Text"), new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.DepartmentRep, new SelectList(Model.UsersByDepartment, "Value", "Text"), new { @class = "form-control" })
         </div>
     </div>
     <div class="row button-set " >

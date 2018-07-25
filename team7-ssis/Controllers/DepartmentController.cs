@@ -39,12 +39,13 @@ namespace team7_ssis.Controllers
             //ConfigureViewModel(dModel);
             //return View(dModel);
             List<ApplicationUser> userByDepartmentList = departmentService.FindUsersByDepartment(user.Department);
+
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
 
             return View(new DepartmentViewModel
             {
-                Users = new SelectList(
-                     userByDepartmentList.Select(x => new { value = x.Id, text = x.FirstName + " " + x.LastName }),
+                UsersByDepartment = new SelectList(
+                     userByDepartmentList.Select(x => new { value = x.Email, text = x.FirstName + " " + x.LastName }),
                      "Value",
                      "Text"
                 ),
@@ -83,7 +84,7 @@ namespace team7_ssis.Controllers
             List<Status> list = new List<Status>();
             list.Add(statusService.FindStatusByStatusId(0));
             list.Add(statusService.FindStatusByStatusId(1));
-            List<ApplicationUser> userByDepartmentList = departmentService.FindUsersByDepartment(user.Department);
+            List<ApplicationUser> allUsersList = userService.FindAllUsers();
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
 
 
@@ -96,8 +97,8 @@ namespace team7_ssis.Controllers
 
                 ),
                 
-                Users = new SelectList(
-                     userByDepartmentList.Select(x => new { value = x.Email, text = x.FirstName+ " " +x.LastName}),
+                AllUsers = new SelectList(
+                     allUsersList.Select(x => new { value = x.Email, text = x.FirstName+ " " +x.LastName}),
                      "Value",
                      "Text"
                 ),
@@ -163,6 +164,7 @@ namespace team7_ssis.Controllers
             dpt.PhoneNumber = model.PhoneNumber;
             dpt.FaxNumber = model.PhoneNumber;
             dpt.Status = statusService.FindStatusByStatusId(model.Status);
+            
             
 
             //save info to database

@@ -34,7 +34,8 @@ namespace team7_ssis.Controllers
                 CollectionPoint = department.CollectionPoint != null ? department.CollectionPoint.Name : "",
                 ContactName = department.ContactName,
                 PhoneNumber = department.PhoneNumber,
-                FaxNumber = department.FaxNumber
+                FaxNumber = department.FaxNumber,
+                Email = department.Head.Email
             }).ToList();
         }
         public DepartmentViewModel GetDepartment(string id)
@@ -50,7 +51,8 @@ namespace team7_ssis.Controllers
                 ContactName = department.ContactName,
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber,
-                Status = department.Status.StatusId
+                Status = department.Status.StatusId,
+                Email = department.Head.Email
             };
         }
     }

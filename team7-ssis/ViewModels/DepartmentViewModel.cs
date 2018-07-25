@@ -28,8 +28,10 @@ namespace team7_ssis.ViewModels
         public string DepartmentRep { get; set; }
         public string CollectionPoint { get; set; }
         public string DelegateManager { get; set; }
-        public IEnumerable<SelectListItem> Users { get; set; }
+        public IEnumerable<SelectListItem> UsersByDepartment { get; set; }
+        public IEnumerable<SelectListItem> AllUsers { get; set; }
         public IEnumerable<SelectListItem> CollectionPoints { get; set; }
+        public string Email { get; set; }
 
 
 
