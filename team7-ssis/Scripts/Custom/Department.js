@@ -44,4 +44,74 @@
 
 
     });
+    $(".adddepartment-form").submit(function (event) {
+        $.ajax({
+            type: "POST",
+            url: '/department/Save',
+            data: $('.adddepartment-form').serialize(),
+            success: function (data) {
+                if (data.status) {
+                    $('#myModal').modal('hide');
+                    table.ajax.reload();
+                }
+            }
+        });
+
+        event.preventDefault();
+    });
+    $('#supplierdetails').submit(function (event) {
+        $.ajax({
+            type: "POST",
+            url: '/supplier/Save',
+            data: $('#supplierdetails').serialize(),
+            success: function (data) {
+                if (data.status) {
+                    alert("Supplier information has been successfully updated");
+                    cancelbtn.click();
+                    table.ajax.reload();
+                }
+            }
+        });
+
+        event.preventDefault();
+    });
+
+
+
+    $('#edit-btn').on('click', function () {
+        $('#edit-btn').hide();
+        $(".button-set").show();
+        enableInput();
+
+    });
+
+    var cancelbtn = $('#cancel-btn').on('click', function () {
+        disableInput();
+        $('#edit-btn').show();
+        $(".button-set").hide();
+    });
+
+    function enableInput() {
+        $('#departmentdetails')
+            .find('input')
+            .prop('disabled', false);
+        $('#departmentdetails')
+            .find('textarea')
+            .prop('disabled', false);
+        $('#departmentdetails')
+            .find('select')
+            .prop('disabled', false);
+    }
+
+    function disableInput() {
+        $('#departmentdetails')
+            .find('input')
+            .prop('disabled', true);
+        $('#departmentdetails')
+            .find('textarea')
+            .prop('disabled', true);
+        $('#departmentdetails')
+            .find('select')
+            .prop('disabled', true);
+    }
 })

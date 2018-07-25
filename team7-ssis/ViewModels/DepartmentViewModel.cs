@@ -9,14 +9,14 @@ namespace team7_ssis.ViewModels
 {
     public class DepartmentViewModel
     {
-        [Display(Name = "Collection Point")]
-        public int? SelectedCollectionPoint { get; set; }
-        [Display(Name = "Representative")]
-        public int? SelectedRepresentative { get; set; }
-        [Display(Name = "Manager Role")]
-        public int? SelectedManager { get; set; }
-        public SelectList collectionPointList {get;set;}
-        public SelectList usersByDepartmentList { get; set; }
+        //[Display(Name = "Collection Point")]
+        //public int? SelectedCollectionPoint { get; set; }
+        //[Display(Name = "Representative")]
+        //public int? SelectedRepresentative { get; set; }
+        //[Display(Name = "Manager Role")]
+        //public int? SelectedManager { get; set; }
+        //public SelectList collectionPointList {get;set;}
+        //public SelectList usersByDepartmentList { get; set; }
         public string DepartmentCode { get; set; }
         public string DepartmentName { get; set; }
         public string ContactName { get; set; }
@@ -27,6 +27,7 @@ namespace team7_ssis.ViewModels
         public string DepartmentHead { get; set; }
         public string DepartmentRep { get; set; }
         public string CollectionPoint { get; set; }
+        public string DelegateManager { get; set; }
         public IEnumerable<SelectListItem> Users { get; set; }
         public IEnumerable<SelectListItem> CollectionPoints { get; set; }
 
