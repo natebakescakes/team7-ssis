@@ -15,13 +15,14 @@ namespace team7_ssis.Controllers
         private ApplicationDbContext context;
         private PurchaseOrderService purchaseOrderService;
         StatusService statusService;
+        SupplierService supplierService;
 
         public PurchaseOrderController()
         {
             context = new ApplicationDbContext();
             purchaseOrderService = new PurchaseOrderService(context);
             statusService = new StatusService(context);
-
+            supplierService = new SupplierService(context);
         }
 
         public ActionResult Index()
@@ -97,6 +98,33 @@ namespace team7_ssis.Controllers
         {
             return View();
         }
+
+        //[HttpPost]
+        //public List<Supplier> GetItemSupplier(string itemCode)
+        //{
+        //    List<Supplier> suppliers = new List<Supplier>();
+
+        //    if (itemCode != null)
+        //    {
+        //        Supplier s1 = new Supplier();
+        //        s1.SupplierCode = "OMEG";
+        //        s1.Name = "OMEGA SUPPLIERS";
+
+        //        Supplier s2 = new Supplier();
+        //        s2.SupplierCode = "BANE";
+        //        s2.Name = "BANE SUPPLIERS";
+
+        //        suppliers.Add(s1);
+        //        suppliers.Add(s2);
+
+
+        //    }
+
+
+        //    supplierService.FindSupplierByItemCode();
+        //    return suppliers;
+
+        //}
 
 
 

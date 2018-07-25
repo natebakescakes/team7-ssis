@@ -260,7 +260,7 @@ $(document).ready(function(){
             data: JSON.stringify({ purchaseOrderNum: pNum }),
             contentType: "application/json",
             cache: true,
-            success: function (result) {
+            success: function () {
                 if (result == "Cancelled") {
                     ajax.reload();
                 }

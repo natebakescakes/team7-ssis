@@ -9,7 +9,13 @@
             { title: "Amount" },
             { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
         ],
-        select: "api"
+        select: "api",
+        dom: "t",
+        scrollY: "200px",
+        scrollCollapse: true,
+        autoWidth: true
+       
+
     });
 
     var addItemTable = $('#generateAddItem').DataTable({
@@ -29,10 +35,16 @@
             { data: "Uom" },
             { data: "UnitPrice"}
         ],
-        select: "single"
+        select: "single",
+        dom: "tp"
     });
 
     $('#addItemButton').click(function () {
+
+        document.getElementById("generateAmount").value = 0;
+        document.getElementById("generateUnitPrice").value = 0;
+        document.getElementById("generateQty").value = 0;
+
         $('#generateModal').modal({
             backdrop: 'static',
         });
@@ -44,10 +56,31 @@
 
     $('#addToPOBtn').click(function () {
         var data = $('#generateAddItem').DataTable().rows({ selected: true }).data().toArray();
+        var itemNo = data[0].ItemCode;
+
+        //$.ajax({
+
+        //    type: "POST",
+        //    url: "/PurchaseOrder/getitemsupplier",
+        //    dataType: "json",
+        //    data: JSON.stringify({ itemCode: itemNo }),
+        //    contentType: "application/json",
+        //    cache: true,
+        //    success: function (data) {
+
+        //        if (data.Count() != null) {
+        //            alert("Success");
+        //        }
+        //    }
+        //});
+
         
         var qty = parseInt($('#generateQty').val());
         var amount = parseInt($('#generateAmount').val());
-        generatePOTbl.row.add([data[0].ItemCode, data[0].Description, '<input type="text" value="'+qty+'"/>',data[0].UnitPrice,'<select><option>HELLO</option></select>',amount]).draw();
+        generatePOTbl.row.add([data[0].ItemCode, data[0].Description, '<input id="editTextBox" type="text" value="' + qty + '" />', data[0].UnitPrice, '<select id="supervisorDropBox"><option>HELLO</option></select>', amount]).draw();
+        document.getElementById("generateAmount").value = 0;
+        document.getElementById("generateUnitPrice").value = 0;
+        document.getElementById("generateQty").value = 0;
         $('#generateModal').modal('hide');
     })
 
@@ -57,4 +90,24 @@
             .remove()
             .draw();
     });
+    
+
+    $('#generateAddItem tbody').on('click', 'tr', function () {
+        var unitPrice = addItemTable.row(this).data().UnitPrice;
+        
+        document.getElementById("generateUnitPrice").value = unitPrice;
+        document.getElementById("generateQty").value = 0;
+        
+    });
+
+    $("#generateQty").change(function () {
+        
+        document.getElementById("generateAmount").value = document.getElementById("generateUnitPrice").value * document.getElementById("generateQty").value;
+    });
+
+    $("#generateUnitPrice").change(function () {
+        
+        document.getElementById("generateAmount").value = document.getElementById("generateUnitPrice").value * document.getElementById("generateQty").value;
+    });
+
 });
