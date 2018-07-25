@@ -14,13 +14,17 @@ namespace team7_ssis.Controllers
     
     public class StockAdjustmentAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        StockAdjustmentService stockAdjustmentService = new StockAdjustmentService(context);
-        StockAdjustmentRepository stockAdjustmentRepository = new StockAdjustmentRepository(context); 
+        private ApplicationDbContext context;
+        private StockAdjustmentService stockAdjustmentService;
+        private StockAdjustmentRepository stockAdjustmentRepository;
 
+        public StockAdjustmentAPIController()
+        {
+            context = new ApplicationDbContext();
+            stockAdjustmentService = new StockAdjustmentService(context);
+            stockAdjustmentRepository = new StockAdjustmentRepository(context);
+        }
 
-
-    
         [Route("api/stockadjustment/all")]
         [HttpGet]
         public IEnumerable<StockAdjustmentViewModel> stockadjustments()

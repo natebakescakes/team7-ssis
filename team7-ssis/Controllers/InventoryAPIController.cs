@@ -13,8 +13,8 @@ namespace team7_ssis.Controllers
     public class InventoryApiController : ApiController
     {
         private ApplicationDbContext context;
-        ItemService itemService;
-        ItemPriceService itemPriceService;
+        private ItemService itemService;
+        private ItemPriceService itemPriceService;
 
         public InventoryApiController()
         {
