@@ -15,12 +15,14 @@ namespace team7_ssis.Controllers
         private ApplicationDbContext context;
         ItemService itemService;
         StockMovementService stkMovementService;
+        ItemPriceService itemPriceService;
 
         public InventoryApiController()
         {
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
             stkMovementService = new StockMovementService(context);
+            itemPriceService = new ItemPriceService(context);
         }
 
         [Route("api/manage/stockhistory/{itemCode}")]
@@ -31,14 +33,14 @@ namespace team7_ssis.Controllers
             List<StockMovement> list = stkMovementService.FindStockMovementByItemCode(itemCode);
             List<StockHistoryViewModel> items = new List<StockHistoryViewModel>();
 
-            foreach(StockMovement i in list)
+            foreach (StockMovement i in list)
             {
                 items.Add(new StockHistoryViewModel
                 {
                     theDate = i.CreatedDateTime,
-                    host=(i.DeliveryOrderDetailItemCode!=null?i.DeliveryOrderDetail.DeliveryOrder.Supplier.Name:i.DisbursementDetailItemCode!=null?i.DisbursementDetail.Disbursement.Department.Name:i.StockAdjustmentDetail.StockAdjustmentId),
-                    qty=i.AfterQuantity-i.OriginalQuantity,
-                    balance=i.AfterQuantity
+                    host = (i.DeliveryOrderDetailItemCode != null ? i.DeliveryOrderDetail.DeliveryOrder.Supplier.Name : i.DisbursementDetailItemCode != null ? i.DisbursementDetail.Disbursement.Department.Name : i.StockAdjustmentDetail.StockAdjustmentId),
+                    qty = i.AfterQuantity - i.OriginalQuantity,
+                    balance = i.AfterQuantity
                 });
             }
             return items;
@@ -69,13 +71,43 @@ namespace team7_ssis.Controllers
             return items;
         }
 
+        [Route("api/manage/singleitem/{itemCode}")]
+        [HttpGet]
+        public ItemDetailModel FindItemSingle(string itemCode)
+        {
+            Item item = itemService.FindItemByItemCode(itemCode);
+            List<ItemPrice> itemPrice = itemPriceService.FindItemPriceByItemCode(itemCode);
+            List<ItemDetailsSupplierInfoViewModel> idSupp = new List<ItemDetailsSupplierInfoViewModel>();
+            foreach(ItemPrice i in itemPrice)
+            {
+                idSupp.Add(new ItemDetailsSupplierInfoViewModel()
+                {
+                    SupplierName = i.Supplier.Name,
+                    SupplierUnitPrice = (double)i.Price
+                });
+            }
+
+            return new ItemDetailModel()
+            {
+                ItemCode = item.ItemCode,
+                Description = item.Description,
+                ItemCategoryName = item.ItemCategory.Name,
+                Bin = item.Bin,
+                Uom = item.Uom,
+                Quantity = item.Inventory.Quantity,
+                Status = item.Status.Name,
+                SupplierInfo = idSupp
+            };
+
+        }
+
         [Route("api/delete/items")]
         [HttpPost]
-        public HttpResponseMessage DeleteItems([FromBody]string[] itemCodes)
+        public IHttpActionResult DeleteItems([FromBody]string[] itemCodes)
         {
             Console.WriteLine("In API Controller" + itemCodes.Length);
             List<Item> list = new List<Item>();
-            foreach(string i in itemCodes)
+            foreach (string i in itemCodes)
             {
                 list.Add(itemService.FindItemByItemCode(i));
             }
@@ -86,13 +118,15 @@ namespace team7_ssis.Controllers
                 {
                     itemService.DeleteItem(list[i]);
                 }
-            }catch(Exception e) {
-                Console.WriteLine("In API Controller error"+e);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            } catch (Exception e) {
+                Console.WriteLine("In API Controller error" + e);
+                return BadRequest();
+
             }
 
             Console.WriteLine("In API Controller OK");
-            return Request.CreateResponse(HttpStatusCode.OK); ;
+            return Ok();
+
         }
     }
 }

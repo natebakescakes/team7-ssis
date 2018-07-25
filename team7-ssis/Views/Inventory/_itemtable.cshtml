@@ -49,8 +49,9 @@
                     url: '/api/delete/items',
                     contentType: "application/json",
                     data: JSON.stringify(selected),
-                    success: function () { alert("it worked!"); },
-                    failure: function () { alert("not working..."); },
+                    success: function (response) {
+                        table.ajax.reload();
+                    },
                     dataType: "json",
                     traditional: true
                 })

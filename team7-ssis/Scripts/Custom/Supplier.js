@@ -62,8 +62,7 @@
                 }
             }
         })
-
-        event.preventDefault();
+     event.preventDefault();
     });
 
 

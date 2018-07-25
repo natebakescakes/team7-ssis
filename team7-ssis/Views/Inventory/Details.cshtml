@@ -27,4 +27,18 @@
         ]
     });
 
+    $.ajax({
+        type: 'GET',
+        url: '/api/manage/singleitem/' + itemCode,
+        dataType: 'json',
+        success: function (data) {
+            var i;
+            for (i in data) {
+                $('#form1').find('[id="' + i + '"]').val(data[i]);
+            }
+        }
+    })
+
+
+
 </script>
