@@ -22,8 +22,7 @@ namespace team7_ssis.Controllers
             purchaseOrderService = new PurchaseOrderService(context);
         }
 
-        }
-        
+      
 
         [Route("api/purchaseOrder/all")]
         [HttpGet]
