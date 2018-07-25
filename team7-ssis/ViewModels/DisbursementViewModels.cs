@@ -35,6 +35,7 @@ namespace team7_ssis.ViewModels
         public string Department { get; set; }
         public string CollectionPoint { get; set; }
         public string Status { get; set; }
+        public string CreatedDate { get; set; }
         public List<DisbursementFormTableViewModel> DisbursementDetails { get; set; }
     }
 }
