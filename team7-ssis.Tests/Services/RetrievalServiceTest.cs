@@ -21,6 +21,18 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             retrievalRepository = new RetrievalRepository(context);
             retrievalService = new RetrievalService(context);
+
+            Retrieval retrieval = new Retrieval();
+            if (retrievalRepository.FindById("TEST") == null)
+            {
+                //save retrieval object into db
+
+                retrieval.RetrievalId = "TEST";
+                retrieval.CreatedDateTime = DateTime.Now;
+                retrievalRepository.Save(retrieval);
+            }
+            else retrieval = retrievalRepository.FindById("TEST");
+
         }
 
         [TestMethod]
@@ -38,7 +50,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void FindRetrievalByIdTest()
         {
             //Arrange
@@ -53,7 +64,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void SaveTest()
         {
             //Arrange
@@ -74,7 +84,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void SaveEditTest()
         {
             //Arrange
@@ -89,5 +98,18 @@ namespace team7_ssis.Tests.Services
             Assert.AreEqual(status.Name, result.Status.Name);
         }
 
+        [TestMethod]
+        [Ignore]
+        public void RetrieveItemsTest()
+        {
+
+        }
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
+            //delete retrieval objects
+            retrievalRepository.Delete(retrieval);
+        }
     }
 }

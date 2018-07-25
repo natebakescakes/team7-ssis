@@ -13,14 +13,19 @@ namespace team7_ssis.Services
         RetrievalRepository retrievalRepository;
         ItemService itemService;
         StockMovementService stockmovementService;
+
         public RetrievalService(ApplicationDbContext context)
         {
             this.context = context;
+            retrievalRepository = new RetrievalRepository(context);
+            itemService = new ItemService(context);
+            stockmovementService = new StockMovementService(context);
+
         }
 
-        public Retrieval ShowRetrievalDetails(string id)
+        public List<Retrieval> FindAllRetrievals()
         {
-            throw new NotImplementedException();
+            return retrievalRepository.FindAll().ToList();
         }
 
         public Retrieval FindRetrievalById(string id)
@@ -30,10 +35,41 @@ namespace team7_ssis.Services
         public Retrieval Save(Retrieval retrieval)
         {
             //mapped to confirm retrieval, add and edit retrievals (if any) 
-            throw new NotImplementedException();
-        }
+            return retrievalRepository.Save(retrieval);
 
         }
+
+        public Retrieval RetrieveItems(Retrieval other)
+        {
+            // Get RetrieveByRetrievalId
+            Retrieval retrieval = this.FindRetrievalById(other.RetrievalId);
+
+            // Update Actual Quantity
+            retrieval.Disbursements = other.Disbursements;
+
+            // Save Retrieval
+            this.Save(retrieval);
+
+            // Update Item Quantity based on amount retrieved into Inventory
+            foreach (Disbursement d in retrieval.Disbursements)
+            {
+                foreach (DisbursementDetail detail in d.DisbursementDetails)
+                {
+                    //minus off the quantity from inventory
+                    itemService.AddQuantity(detail.Item, -(detail.ActualQuantity));
+
+                    //Create Stock Movement Transaction
+                    stockmovementService.CreateStockMovement(detail);
+                }
+            }
+
+
+
+            return retrieval;
+
+        }
+
+
 
     }
 }
