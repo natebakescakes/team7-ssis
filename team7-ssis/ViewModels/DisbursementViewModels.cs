@@ -28,4 +28,13 @@ namespace team7_ssis.ViewModels
         public string DisbursedBy { get; set; }
         public string Status { get; set; }
     }
+
+    public class DisbursementMobileViewModel
+    {
+        public string DisbursementId { get; set; }
+        public string Department { get; set; }
+        public string CollectionPoint { get; set; }
+        public string Status { get; set; }
+        public List<DisbursementFormTableViewModel> DisbursementDetails { get; set; }
+    }
 }
