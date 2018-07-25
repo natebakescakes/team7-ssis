@@ -1,5 +1,9 @@
 ﻿@model team7_ssis.ViewModels.StationeryRetrievalViewModel
 
+@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+}
+
 @{
     ViewBag.Title = "StationeryRetrieval";
 }
@@ -91,7 +95,7 @@
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="pull-right">
-            <button class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
+            <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
             <button class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Update Retrieval Form</button>
         </div>
         
@@ -99,6 +103,8 @@
 </div>
 
 <script>
+
+    // load script
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
             ajax: {
@@ -107,15 +113,24 @@
             },
 
             columns: [
-                { "defaultContent": "<input type='checkbox' />"},
+                { "defaultContent": "<input type='checkbox' />" },
                 { "data": "ProductID", "autoWidth": true },
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
                 { "data": "QtyOrdered", "autoWidth": true },
-                { "defaultContent": "<button class='btn btn-default'><i class='fa fa-pencil' aria-hidden='true'></i></button>" },
+                { "defaultContent": "<button class='btn btn-primary editbutton'><i class='fa fa-pencil' aria-hidden='true'></i></button>" },
             ],
-            select: 'single'
+            select: 'api'
         });
-    })
 
+        // click edit button
+        $(document).on("click", ".editbutton", function () {
+            //console.log('clicked');
+            var itemcode = $(this).parent().siblings('td:nth-of-type(2)').html();
+            var redirectURL = "/Retrieval/RetrievalDetails?retId=@Request.QueryString["rid"]&itemId=" + itemcode;
+            window.location.href = redirectURL;
+        });
+    });
+
+    
 </script>
