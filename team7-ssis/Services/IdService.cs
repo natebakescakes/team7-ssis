@@ -22,6 +22,9 @@ namespace team7_ssis.Services
         {
             return context.Delegation
                 .OrderByDescending(x => x.DelegationId)
+                .FirstOrDefault() == null ? 1 :
+                context.Delegation
+                .OrderByDescending(x => x.DelegationId)
                 .FirstOrDefault()
                 .DelegationId + 1;
         }
@@ -35,6 +38,7 @@ namespace team7_ssis.Services
                 .Count() > 0 ?
                 new DeliveryOrderRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.DeliveryOrderNo.Length == 13)
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.DeliveryOrderNo.Substring(x.DeliveryOrderNo.Length - 3)))
                     .OrderByDescending(x => x)
@@ -52,6 +56,7 @@ namespace team7_ssis.Services
                 .Count() > 0 ?
                 new DisbursementRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.DisbursementId.Length == 14)
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.DisbursementId.Substring(x.DisbursementId.Length - 3)))
                     .OrderByDescending(x => x)
@@ -78,6 +83,9 @@ namespace team7_ssis.Services
         {
             return context.Notification
                 .OrderByDescending(x => x.NotificationId)
+                .FirstOrDefault() == null ? 1 : 
+                context.Notification
+                .OrderByDescending(x => x.NotificationId)
                 .FirstOrDefault()
                 .NotificationId + 1;
         } 
@@ -91,6 +99,7 @@ namespace team7_ssis.Services
                 .Count() > 0 ?
                 new PurchaseOrderRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.PurchaseOrderNo.Length == 13)
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.PurchaseOrderNo.Substring(x.PurchaseOrderNo.Length - 3)))
                     .OrderByDescending(x => x)
@@ -108,6 +117,7 @@ namespace team7_ssis.Services
                 .Count() > 0 ?
                 new RequisitionRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.RequisitionId.Length == 14)
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.RequisitionId.Substring(x.RequisitionId.Length - 3)))
                     .OrderByDescending(x => x)
@@ -125,6 +135,7 @@ namespace team7_ssis.Services
                 .Count() > 0 ?
                 new RetrievalRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.RetrievalId.Length == 14)
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.RetrievalId.Substring(x.RetrievalId.Length - 3)))
                     .OrderByDescending(x => x)
@@ -142,6 +153,7 @@ namespace team7_ssis.Services
                 .Count() > 0 ?
                 new StockAdjustmentRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date, DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.StockAdjustmentId.Length == 14)
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.StockAdjustmentId.Substring(x.StockAdjustmentId.Length - 3)))
                     .OrderByDescending(x => x)
@@ -153,6 +165,9 @@ namespace team7_ssis.Services
         public static int GetNewStockMovementId(ApplicationDbContext context)
         {
             return context.StockMovement
+                .OrderByDescending(x => x.StockMovementId)
+                .FirstOrDefault() == null ? 1 :
+                context.StockMovement
                 .OrderByDescending(x => x.StockMovementId)
                 .FirstOrDefault()
                 .StockMovementId + 1;

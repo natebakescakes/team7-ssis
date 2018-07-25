@@ -6,7 +6,7 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
+    [TestClass]
     public class DisbursementRepositoryTests
     {
         ApplicationDbContext context;
@@ -43,8 +43,15 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = disbursementRepository.FindById("TEST");
+            var result = disbursementRepository.FindById("DOREPOTEST");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Disbursement));
@@ -53,31 +60,40 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = disbursementRepository.ExistsById("TEST");
+            var result = disbursementRepository.ExistsById("DOREPOTEST");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeDepartment()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var department = new DepartmentRepository(context).FindById("ZOOL");
-            var disbursement = disbursementRepository.FindById("TEST");
-            var original = disbursement.Department;
-            disbursement.Department = department;
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Arrange - Get Existing
+            var expected = disbursementRepository.FindById("DOREPOTEST");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = disbursementRepository.Save(disbursement);
+            var result = disbursementRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(department, result.Department);
-
-            // Tear Down
-            disbursement.Department = original;
-            disbursementRepository.Save(disbursement);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
@@ -87,7 +103,7 @@ namespace team7_ssis.Tests.Repositories
             // Arrange
             var disbursement = new Disbursement
             {
-                DisbursementId = "UNIT TEST",
+                DisbursementId = "DOREPOTEST",
                 CreatedDateTime = DateTime.Now
             };
 
@@ -102,19 +118,32 @@ namespace team7_ssis.Tests.Repositories
             disbursementRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(disbursementRepository.FindById("UNIT TEST"));
+            Assert.IsNull(disbursementRepository.FindById("DOREPOTEST"));
         }
 
         [TestMethod]
         public void FindByCreatedDateTimeTestNotNull()
         {
             // Arrange
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var result = disbursementRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
 
             // Assert
             Assert.IsTrue(result.Count() >= 1);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (disbursementRepository.ExistsById("DOREPOTEST"))
+                disbursementRepository.Delete(disbursementRepository.FindById("DOREPOTEST"));
+
         }
     }
 }

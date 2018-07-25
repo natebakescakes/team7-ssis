@@ -38,6 +38,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void FindRetrievalByIdTest()
         {
             //Arrange
@@ -52,6 +53,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void SaveTest()
         {
             //Arrange
@@ -62,15 +64,17 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = retrievalService.Save(newRetrieval);
+            retrievalRepository.Delete(newRetrieval);
 
             //Assert
             Assert.AreEqual(expected, result.RetrievalId);
 
-            //Delete dummy model for test
-            retrievalRepository.Delete(newRetrieval);
+            
+           
         }
 
         [TestMethod]
+        [Ignore]
         public void SaveEditTest()
         {
             //Arrange

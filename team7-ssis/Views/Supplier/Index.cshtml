@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Manage Suppliers</h2>
+    </div>
+    <div class="col-md-4">
+        <button class="popup btn btn-primary pull-right" value="Save" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i> Create New Supplier</button>
+    </div>
+</div>
+<br /><br />
+@Html.Partial("_SupplierTable")
+
+
+
+<br />
+<div class="collapse">
+
+    @Html.Partial("_SupplierDetail")
+
+</div>
+
+
+    @Html.Partial("_AddSupplier")
+    <br />
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/Custom/Supplier.js")
+}
