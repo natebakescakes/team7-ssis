@@ -14,12 +14,17 @@ namespace team7_ssis.Controllers
     {
         public ApplicationDbContext context = new ApplicationDbContext();
         DepartmentService departmentService;
+
+        public DepartmentAPIController()
+        {
+            departmentService = new DepartmentService(context);
+        }
         
         [Route("api/department/all")] 
         [HttpGet]
         public List<DepartmentViewModel> Departments()
         {
-            departmentService = new DepartmentService(context);
+            
             return departmentService.FindAllDepartments().Select(department => new DepartmentViewModel()
             {
                 DepartmentCode = department.DepartmentCode,
@@ -28,6 +33,19 @@ namespace team7_ssis.Controllers
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber
             }).ToList();
+        }
+        public DepartmentViewModel GetDepartment(string id)
+        {
+            Department department = departmentService.FindDepartmentByDepartmentCode(id);
+            return new DepartmentViewModel()
+            {
+                DepartmentCode = department.DepartmentCode,
+                DepartmentName = department.Name,
+                ContactName = department.ContactName,
+                PhoneNumber = department.PhoneNumber,
+                FaxNumber = department.FaxNumber,
+                Status = department.Status.StatusId
+            };
         }
     }
 }

@@ -13,11 +13,24 @@ namespace team7_ssis.Controllers
 {
     public class DepartmentController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        DepartmentService departmentService = new DepartmentService(context);
-        CollectionPointService collectionPointService = new CollectionPointService(context);
-        UserService userService = new UserService(context);
+        public ApplicationDbContext context;
+        DepartmentService departmentService;
+        CollectionPointService collectionPointService;
+        UserService userService;
+        ApplicationUser user;
+        StatusService statusService;
         
+        public DepartmentController()
+        {
+            context = new ApplicationDbContext();
+            departmentService = new DepartmentService(context);
+            collectionPointService = new CollectionPointService(context);
+            userService = new UserService(context);
+            user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            statusService = new StatusService(context);
+
+        }
+
         // GET: Department
         [HttpGet]
         public ActionResult DepartmentOptions()
@@ -30,7 +43,6 @@ namespace team7_ssis.Controllers
         public ActionResult DepartmentOptions(DepartmentViewModel dModel)
         {
             //assign selected value to database
-            ApplicationUser user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             //collection point
             user.Department.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(dModel.SelectedCollectionPoint.ToString()));
             //representative
@@ -47,13 +59,65 @@ namespace team7_ssis.Controllers
             //populating lists
             List<CollectionPoint> collectionPoints = collectionPointService.FindAllCollectionPoints();
             dModel.collectionPointList = new SelectList(collectionPoints,"CollectionPointId","Name");
-            ApplicationUser user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             List<ApplicationUser> usersByDepartment = departmentService.FindUsersByDepartment(user.Department);
             dModel.usersByDepartmentList = new SelectList(usersByDepartment, "Id", "FullName");
         }
         public ActionResult Index()
         {
-            return View();
+            List<Status> list = new List<Status>();
+            list.Add(statusService.FindStatusByStatusId(0));
+            list.Add(statusService.FindStatusByStatusId(1));
+            return View(new DepartmentViewModel
+            {
+                Statuses = new SelectList(
+                    list.Select(x => new { Value = x.StatusId, Text = x.Name }),
+                     "Value",
+                    "Text"
+
+                )
+            });
+          
+
         }
+        public ActionResult Save(DepartmentViewModel model)
+        {
+            bool status = false;
+            Department dpt = new Department();
+
+            if (departmentService.FindDepartmentByDepartmentCode(model.DepartmentCode) == null)
+            {
+                //new dpt
+                dpt.DepartmentCode = model.DepartmentCode;
+                dpt.CreatedDateTime = DateTime.Now;
+                dpt.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+            }
+
+            else
+            {
+                //edit dpt
+                dpt = departmentService.FindDepartmentByDepartmentCode(model.DepartmentCode);
+
+                //assign user info into update fields
+                dpt.UpdatedDateTime = DateTime.Now;
+                dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+            }
+
+            
+            dpt.Name = model.DepartmentName;
+            dpt.ContactName = model.ContactName;
+            dpt.PhoneNumber = model.PhoneNumber;
+            dpt.FaxNumber = model.PhoneNumber;
+            dpt.Status = statusService.FindStatusByStatusId(model.Status);
+            
+
+            //save info to database
+            if (departmentService.Save(dpt) != null) status = true;
+
+            
+            return new JsonResult { Data = new { status = status } };
+        }
+
     }
 }

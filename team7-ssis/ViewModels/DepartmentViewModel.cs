@@ -22,9 +22,14 @@ namespace team7_ssis.ViewModels
         public string ContactName { get; set; }
         public string PhoneNumber { get; set; }
         public string FaxNumber { get; set; }
-        
-        //dpthead, representative, cp
+        public int Status { get; set; }
+        public IEnumerable<SelectListItem> Statuses { get; set; }
+        public string DptHead { get; set; }
+        public string Dptrep { get; set; }
+        public string CollectionPt { get; set; }
 
         
+
+
     }
 }

@@ -1,0 +1,57 @@
+﻿@model team7_ssis.ViewModels.DepartmentViewModel
+@{
+    ViewBag.Title = "DepartmentDetails";
+}
+
+@using (Html.BeginForm("Save", "Department", FormMethod.Post, new { @id = "departmentdetails", role = "form" }))
+{
+    <div class="form-group">
+        <label for="DepartmentCode">Department Code</label><br />
+        @Html.TextBoxFor(m => m.DepartmentCode, new { @id = "DepartmentCode", @class = "form-control" })
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="DepartmentName">Department Name</label><br />
+                @Html.TextAreaFor(m => m.DepartmentName, new { @id = "DepartmentName", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="ContactName">Contact Name</label><br />
+                @Html.TextBoxFor(m => m.ContactName, new { @id = "ContactName", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="phone">Phone Number</label><br />
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @id = "PhoneNumber", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="Fax">Fax Number</label><br />
+                @Html.TextBoxFor(m => m.FaxNumber, new { @id = "FaxNumber", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="Status">Status</label><br />
+                @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+
+            </div>
+        </div>
+    </div>
+    <a id="edit-btn" class="btn btn-secondary pull-right"><i class="fa fa-edit" aria-hidden="true"></i> Edit Details</a>
+    <br />
+    <div class="button-set">
+        <div class="form-row pull-right">
+            <a id="cancel-btn" class="btn btn-danger"> Cancel</a>
+            <button id="submit" type="submit" class="btn btn-success"> Save</button>
+
+
+        </div>
+    </div>
+}

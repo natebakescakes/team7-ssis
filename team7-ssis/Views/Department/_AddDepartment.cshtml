@@ -1,0 +1,65 @@
+﻿@model team7_ssis.ViewModels.DepartmentViewModel
+@{
+    ViewBag.Title = "AddDepartment";
+}
+
+<div class="modal" id="myModal">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">Add New Department</h4>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            @using (Html.BeginForm("Save", "Department", FormMethod.Post, new { @class = "adddepartment-form", role = "form" }))
+            {
+            <fieldset id="SubmitForm">
+                <div class="form-group">
+                    <label for="DepartmentCode">Department Code</label><br />
+                    @Html.TextBoxFor(m => m.DepartmentCode, new { @id = "DepartmentCode", @class = "form-control" })
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="DepartmentName">Department Name</label><br />
+                            @Html.TextBoxFor(m => m.DepartmentName, new { @id = "DepartmentName", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="ContactName">Contact Name</label><br />
+                            @Html.TextBoxFor(m => m.ContactName, new { @id = "ContactName", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="PhoneNumber">PhoneNumber</label><br />
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @id = "PhoneNumber", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="FaxNumber">Fax Number</label><br />
+                            @Html.TextBoxFor(m => m.FaxNumber, new { @id = "FaxNumber", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div row>
+                    <button type="submit" class="btn btn-success btn-block" value="Save">Save</button>
+
+                </div>
+            </fieldset>
+
+            }
+
+        </div>
+    </div>
+</div>
+</div>
+

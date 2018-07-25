@@ -375,6 +375,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\Notification.js" />
@@ -516,6 +517,8 @@
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
     <Content Include="Views\Department\Index.cshtml" />
     <Content Include="Views\Department\_DepartmentTable.cshtml" />
+    <Content Include="Views\Department\_AddDepartment.cshtml" />
+    <Content Include="Views\Department\_DepartmentDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
