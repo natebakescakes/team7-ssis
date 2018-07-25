@@ -353,7 +353,6 @@
     <Compile Include="ViewModels\StockAdjustmentViewModel.cs" />
     <Compile Include="ViewModels\ReportViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
-    
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -504,6 +503,8 @@
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PurchaseOrderDetailsTable.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PurchaseOrderDetailsAwaitingTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -13,8 +13,15 @@ namespace team7_ssis.Controllers
 {
     public class PurchaseOrderApiController : ApiController
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
+        public ApplicationDbContext context;
+        PurchaseOrderService purchaseOrderService;
+
+        public PurchaseOrderApiController()
+        {
+            context = new ApplicationDbContext();
+            purchaseOrderService = new PurchaseOrderService(context);
+
+        }
         
 
         [Route("api/purchaseOrder/all")]
@@ -30,11 +37,12 @@ namespace team7_ssis.Controllers
             }).ToList();
         }
 
-        
-        
-        public List<PurchaseOrderDetailsViewModel> GetPurchaseOrder(string poNum)
+
+        [Route("api/purchaseOrder/details/{purchaseOrderNo}")]
+        [HttpGet]
+        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseOrderNo)
         {
-            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNo);
 
             return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
@@ -49,6 +57,8 @@ namespace team7_ssis.Controllers
             }).ToList();
 
         }
+
+
 
 
 

@@ -107,7 +107,8 @@ $(document).ready(function(){
         else if (value == 1) { url = ''; }
         else if (value == 2) { url = ''; }
         else { url = ''; }
-        
+
+      
 
         var form = document.createElement("form");
         var element1 = document.createElement("input");
@@ -125,6 +126,182 @@ $(document).ready(function(){
 
 
     });
-                       
+
+
+
    
+
+    var podUrl = $("#purchaseOrderNo").val();
+
+   
+    //purchase order details table
+    var $podtable = $('#poDetailTable');
+    var poddatatbl = $podtable.DataTable(
+        {
+            dom: "t",
+            ajax: {
+
+                url: '/api/purchaseOrder/details/' + podUrl,
+                dataSrc: ''
+            },
+
+            columns: [
+                { data: "ItemCode" },
+                {
+                    data: "Description",
+                    defaultContent: "<i>Not available</i>"
+                },
+                {
+                    data: "QuantityOrdered",
+                    defaultContent: "<i>Not available</i>"
+                },
+                {
+                    data: "UnitPrice",
+                    defaultContent: "<i>Not available</i>"
+                },
+                {
+                    data: "Amount"
+                },
+                {
+                    data: "ReceivedQuantity"
+                },
+                {
+                    data: "RemainingQuantity"
+                }
+
+            ],
+            autowidth: true,
+            select: "single"
+
+        });
+
+
+
+    //purchase order detail awaiting table
+
+    var simple_textbox = function (data, type, row, meta) {
+        if (data) {
+            return '<input  type="text" class="qty" value="'+ data + '"/>';
+        }
+        
+        return '';
+       
+    }
+
+    var $podAwaitingtable = $('#poDetailAwaitingTable');
+    var podAwaitingdatatbl = $podAwaitingtable.DataTable(
+        {
+            dom:"t",
+
+            ajax: {
+
+                url: '/api/purchaseOrder/details/' + podUrl,
+                dataSrc: ''
+            },
+
+            columns: [
+                { data: "ItemCode" },
+                {
+                    data: "Description",
+                    defaultContent: "<i>Not available</i>"
+                },
+                {
+                    data: "QuantityOrdered",
+                    render: simple_textbox,
+                    defaultContent: "<i>Not available</i>"
+                },
+                {
+                    data: "UnitPrice"
+                    
+                },
+                {
+                    data: "Amount"
+                },
+                {
+                    defaultContent: '<a class="deletebtn btn-default btn " href="#" ><i class="fa fa-close"></i></a>'  
+                }
+                
+            ],
+            autowidth: true,
+            select: "single"
+
+        });
+
+    $('#poDetailAwaitingTable tbody').on('click', '.deletebtn', function (e){
+
+        var itemCode = podAwaitingdatatbl.row($(this).parents('tr')).data().ItemCode;
+        var pNum = $("#purchaseOrderNo").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/PurchaseOrder/delete",
+            dataType: "json",
+            data: JSON.stringify({ purchaseOrderNum: pNum, itemCode: itemCode}),
+            contentType: "application/json",
+            cache: true,
+            success: function (result){
+                alert(result);
+                ajax.reload(); }
+    });
+        
+        
+    });
+
+
+    $('#cancel').on('click', function (e) {
+        var pNum = $("#purchaseOrderNo").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/PurchaseOrder/cancel",
+            dataType: "json",
+            data: JSON.stringify({ purchaseOrderNum: pNum }),
+            contentType: "application/json",
+            cache: true,
+            success: function (result) {
+                if (result == "Cancelled") {
+                    ajax.reload();
+                }
+                
+            }
+        });
+
+
+    });
+
+
+    $('.savebutton').on('click', function (e) {
+
+        alert("in save");
+
+        var item = podAwaitingdatatbl.rows().data().toArray();
+        alert(item);
+        // alert(item);
+
+        //alert(quantity);
+
+        //$.ajax({
+
+        //    type: "POST",
+        //    url: "/PurchaseOrder/save",
+        //    dataType: "json",
+        //    data: JSON.stringify({ PurchaseOrderNum: pNum, ItemCode: itemCode, Quantity: quantity }),
+        //    contentType: "application/json",
+        //    cache: true,
+        //    success: function (result) {
+        //        alert(result);
+        //        ajax.reload();
+        //    }
+        //});
+
+    });
+   
+
+      
+   
+   
+    
+                       
 });

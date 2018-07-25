@@ -12,10 +12,18 @@ namespace team7_ssis.Controllers
 { 
     public class PurchaseOrderController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
+        public ApplicationDbContext context;
+        PurchaseOrderService purchaseOrderService;
+        StatusService statusService;
 
-     
+        public PurchaseOrderController()
+        {
+            context = new ApplicationDbContext();
+            purchaseOrderService = new PurchaseOrderService(context);
+            statusService = new StatusService(context);
+
+        }
+
         public ActionResult Index()
         {
             return View("Manage");
@@ -27,18 +35,63 @@ namespace team7_ssis.Controllers
         {
             PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
             PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
+            decimal totalAmount = 0;
 
             podModel.PNo = po.PurchaseOrderNo;
             podModel.SupplierName = po.Supplier.Name;
             podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
             podModel.Status = po.Status.Name;
-            //ViewBag.Id = poNum;
+
+            foreach(PurchaseOrderDetail pod in po.PurchaseOrderDetails)
+            {
+                totalAmount = totalAmount + purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod);
+            }
+            ViewBag.Amount = totalAmount;
             return View(podModel);
-            //return View();
 
         }
 
+        [HttpPost]
+        public string Save(string purchaseOrderNum, string itemCode, int quantity)
+        {
+            PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
+            foreach(PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
+            {
+                if (itemCode == pod.ItemCode)
+                {
+                    pod.Quantity = quantity;
+                    purchaseOrderService.Save(purchaseOrder);
+                    break;
+                }
+            }
 
+            return "Updated";
+        }
+
+
+        [HttpPost]
+        public string Delete(string purchaseOrderNum, string itemCode)
+        {
+            
+            string[] itemCodeArray = new string[] { itemCode };
+
+            PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
+
+            purchaseOrderService.DeleteItemFromPurchaseOrder(purchaseOrder,itemCodeArray);
+
+            return "Deleted";
+        }
+
+
+        [HttpPost]
+        public string Cancel(string purchaseOrderNum)
+        {
+            PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
+            purchaseOrder.Status = statusService.FindStatusByStatusId(2);
+            purchaseOrderService.Save(purchaseOrder);
+
+            return "Cancelled";
+        }
 
 
     }
