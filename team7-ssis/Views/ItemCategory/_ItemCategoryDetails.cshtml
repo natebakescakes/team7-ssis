@@ -1,0 +1,16 @@
+﻿@model team7_ssis.ViewModels.ItemCategoryViewModel
+
+@{
+                /**/
+
+                ViewBag.Title = "ItemCategoryDetails";
+}
+
+@using (Html.BeginForm("Save", "ItemCategory", FormMethod.Post, new { @id = "itemcategorydetails", role = "form" }))
+{
+    <div class="form-group">
+        <label for="ItemCategoryId">Item Category ID</label><br />
+        @Html.TextBoxFor(m => m.SupplierCode, new { @id = "SupplierCode", @class = "form-control" })
+    </div>
+}
+

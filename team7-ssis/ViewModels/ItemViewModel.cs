@@ -39,6 +39,8 @@ namespace team7_ssis.ViewModels
 
         public int Status { get; set; }
 
+        public string StatusName { get; set; }
+
         public IEnumerable<SelectListItem> Statuses { get; set; }
 
     }

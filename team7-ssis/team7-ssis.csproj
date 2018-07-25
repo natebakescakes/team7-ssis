@@ -235,6 +235,7 @@
     <Compile Include="Controllers\DisbursementController.cs" />
     <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\ItemCategoryAPIController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\NotificationApiController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
@@ -515,13 +516,13 @@
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
-    <Content Include="Views\Inventory\ItemCategory.cshtml" />
-    <Content Include="Views\Inventory\_ItemCategoryTable.cshtml" />
-    <Content Include="Views\Inventory\ItemCategoryDetails.cshtml" />
+    <Content Include="Views\ItemCategory\Index.cshtml" />
+    <Content Include="Views\ItemCategory\_ItemCategoryTable.cshtml" />
+    <Content Include="Views\ItemCategory\_ItemCategoryDetails.cshtml" />
+    <Content Include="Views\ItemCategory\_AddItemCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ItemCategory\" />
     <Folder Include="Views\Notification\" />
   </ItemGroup>
   <ItemGroup>
