@@ -1,4 +1,7 @@
 ﻿@model team7_ssis.ViewModels.CreateRequisitionViewModel
+@section Scripts {
+    <script src="~/Scripts/Custom/CreateRequisition.js"></script>
+}
 @{
     ViewBag.Title = "Create Requisition";
 }
@@ -11,6 +14,8 @@
         <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
     </div>
 </div>
+
+<div id="errorAlert" class="alert alert-danger" role="alert" hidden></div>
 
 <button id="addItemBtn" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 
@@ -44,8 +49,8 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <button class="btn btn-default">Cancel</button>
-        <button class="btn btn-primary">Confirm</button>
+        <button id="cancelBtn" class="btn btn-default">Cancel</button>
+        <button id="confirmBtn" class="btn btn-primary">Confirm</button>
     </div>
 </div>
 
@@ -100,6 +105,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <div id="modalMsg"></div>
                 <label>Qty</label>
                 <input id="qtyInput" type="number" />
                 <button id="addToReq" type="button" class="btn btn-primary">Add to Requisition</button>
@@ -108,63 +114,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-
-        var myTable = $('#myTable').DataTable({
-            columns: [
-                { title: "ItemCode" },
-                { title: "Description" },
-                { title: "Quantity" },
-                { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
-            ],
-            select: "api"
-        });
-
-        var addItemTable = $('#addItemTable').DataTable({
-            ajax: {
-                url: "/api/manage/items",
-                dataSrc: ""
-            },
-            pageLength: 5,
-            columns: [
-                { "defaultContent": '<div class="thumbnail__small"></div>'},
-                { "data": "ItemCode", "autoWidth": true },
-                { "data": "ItemCategoryName", "autoWidth": true },
-                { "data": "Description", "autoWidth": true },
-                { "data": "Quantity", "autoWidth": true },
-                { "data": "Uom", "autoWidth": true },
-            ],
-            select: "single"
-        });
-
-        $('#addItemBtn').click(function () {
-            $('#myModal').modal({
-                backdrop: 'static',
-            });
-        })
-
-        $('#saveAsBtn').click(function () {
-            myTable.row.add([2, 3, 4]).draw();
-        })
-
-        $('#addToReq').click(function () {
-            var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
-            //console.log(data);
-            //TODO: write some logic that will add quantity to the requisitionDetail
-            var qty = parseInt($('#qtyInput').val());
-            myTable.row.add([data[0].ItemCode, data[0].Description, qty]).draw();
-            $('#myModal').modal('hide');
-        })
-
-        $('#myTable tbody').on('click', 'i.fa.fa-times', function () {
-            myTable
-                .row($(this).parents('tr'))
-                .remove()
-                .draw();
-        });
-    })
-
-    
-</script>

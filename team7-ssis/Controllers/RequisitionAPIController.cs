@@ -153,6 +153,11 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
         {
+            if (itemList.Count < 1)
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+
             Requisition r = new Requisition();
             r.RequisitionId = IdService.GetNewRequisitionId(context);
             r.RequisitionDetails = new List<RequisitionDetail>();

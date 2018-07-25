@@ -29,24 +29,29 @@ namespace team7_ssis.Controllers
         {
             Console.WriteLine("Find All Items API");
             List<Item> list = itemService.FindAllItems();
-            List<ItemViewModel> items = new List<ItemViewModel>();
+            List<ItemViewModel> viewModel = new List<ItemViewModel>();
 
             foreach(Item i in list)
             {
-                items.Add(new ItemViewModel
+                ItemViewModel ivm = new ItemViewModel();
+                ivm.ItemCode = i.ItemCode;
+                ivm.ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name : "";
+                ivm.Description = i.Description;
+                ivm.ReorderLevel = i.ReorderLevel;
+                ivm.ReorderQuantity = i.ReorderQuantity;
+                ivm.Uom = i.Uom;
+                ivm.Quantity = i.Inventory.Quantity;
+                try
                 {
-                    ItemCode = i.ItemCode,
-                    ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name: "",
-                    Description = i.Description,
-                    ReorderLevel = i.ReorderLevel,
-                    ReorderQuantity = i.ReorderQuantity,
-                    Uom = i.Uom,
-                    Quantity= i.Inventory.Quantity,
-                    UnitPrice=itemPriceService.GetDefaultPrice(i,1)
-                    
-            });
+                    ivm.UnitPrice = itemPriceService.GetDefaultPrice(i, 1);
+                } catch
+                {
+                    ivm.UnitPrice = "";
+                }
+
+                viewModel.Add(ivm);
             }
-            return items;
+            return viewModel;
         }
 
         [Route("api/delete/items")]

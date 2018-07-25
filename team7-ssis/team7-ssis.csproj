@@ -376,6 +376,8 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\CreateRequisition.js" />
+    <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -516,6 +518,7 @@
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
+    <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
