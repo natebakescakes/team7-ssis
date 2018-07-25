@@ -49,7 +49,8 @@ namespace team7_ssis.Controllers
         public IEnumerable<ItemViewModel> FindAllItems()
         {
             Console.WriteLine("Find All Items API");
-            List<Item> list = itemService.FindAllItems();
+            //List<Item> list = itemService.FindAllItems();
+            List<Item> list = itemService.FindAllActiveItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
             foreach (Item i in list)
