@@ -236,6 +236,8 @@
     <Compile Include="Controllers\DisbursementController.cs" />
     <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\ItemCategoryAPIController.cs" />
+    <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\NotificationApiController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
@@ -380,6 +382,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -520,6 +523,10 @@
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
+    <Content Include="Views\ItemCategory\Index.cshtml" />
+    <Content Include="Views\ItemCategory\_ItemCategoryTable.cshtml" />
+    <Content Include="Views\ItemCategory\_ItemCategoryDetails.cshtml" />
+    <Content Include="Views\ItemCategory\_AddItemCategory.cshtml" />
     <Content Include="Views\Inventory\Details.cshtml" />
     <Content Include="Views\Inventory\_ItemDetail.cshtml" />
     <Content Include="Views\Inventory\_StockHistoryTable.cshtml" />
