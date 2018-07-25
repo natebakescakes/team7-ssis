@@ -55,7 +55,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Fax">Status</label><br />
-                        @Html.DropDownListFor(m => m.Statuses, new SelectList(Model.Statuses, "Value", "Text"), new {@id="Status", @class = "form-control" })
+                        @Html.DropDownListFor(m => m.Statuses, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
                     </div>
                 </div>
             </div>
