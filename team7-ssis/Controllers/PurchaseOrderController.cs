@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.ViewModels;
 using team7_ssis.Services;
+using Microsoft.AspNet.Identity;
 
 
 namespace team7_ssis.Controllers
@@ -15,14 +16,17 @@ namespace team7_ssis.Controllers
         private ApplicationDbContext context;
         private PurchaseOrderService purchaseOrderService;
         StatusService statusService;
-        SupplierService supplierService;
+        ItemService itemService;
+        UserService userService;
+        ItemPriceService itemPriceService;
+        PurchaseOrderService purchaseOrderDetail;
 
         public PurchaseOrderController()
         {
             context = new ApplicationDbContext();
             purchaseOrderService = new PurchaseOrderService(context);
             statusService = new StatusService(context);
-            supplierService = new SupplierService(context);
+            itemPriceService = new ItemPriceService(context);
         }
 
         public ActionResult Index()
@@ -99,34 +103,69 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public List<Supplier> GetItemSupplier(string itemCode)
-        //{
-        //    List<Supplier> suppliers = new List<Supplier>();
-
-        //    if (itemCode != null)
-        //    {
-        //        Supplier s1 = new Supplier();
-        //        s1.SupplierCode = "OMEG";
-        //        s1.Name = "OMEGA SUPPLIERS";
-
-        //        Supplier s2 = new Supplier();
-        //        s2.SupplierCode = "BANE";
-        //        s2.Name = "BANE SUPPLIERS";
-
-        //        suppliers.Add(s1);
-        //        suppliers.Add(s2);
 
 
-        //    }
+
+        [HttpPost]
+        public ActionResult Save(PurchaseOrderDetailsListViewModel purchaseOrderDetailList)
+        {
+            List<Supplier> supList = new List<Supplier>();
+            foreach(PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList.Purchaseorders)
+            {
+                Item item=itemService.FindItemByItemCode(pod.ItemCode);
+                ItemPrice itemPrice= itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
+
+                if (!supList.Contains(itemPrice.Supplier))
+                {
+                    supList.Add(itemPrice.Supplier);
+                }  
+            }
 
 
-        //    supplierService.FindSupplierByItemCode();
-        //    return suppliers;
-
-        //}
+            List<PurchaseOrder> poList = purchaseOrderService.CreatePOForEachSupplier(supList);
 
 
+            List<string> purchaseOrderIds = new List<string>();
+            foreach(PurchaseOrder pOrder in poList)
+            {
+                purchaseOrderIds.Add(pOrder.PurchaseOrderNo);
+            }
+
+
+
+            
+            foreach (PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList.Purchaseorders)
+            {
+                PurchaseOrderDetail poDetail = new PurchaseOrderDetail();
+                poDetail.ItemCode = pod.ItemCode;
+                poDetail.Quantity = pod.QuantityOrdered;
+                poDetail.Status = statusService.FindStatusByStatusId(11);
+                poDetail.Status.StatusId = 11;
+                poDetail.UpdatedDateTime = DateTime.Now;
+                poDetail.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                
+                foreach(PurchaseOrder po in poList)
+                {
+                    Item item = itemService.FindItemByItemCode(pod.ItemCode);
+                    ItemPrice itemPrice = itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
+                    if (itemPrice.SupplierCode == po.SupplierCode)
+                    {
+                        poDetail.PurchaseOrder = po; 
+                        po.PurchaseOrderDetails.Add(poDetail);
+
+                        purchaseOrderService.Save(po);
+                        break;
+                    }
+                }
+
+                purchaseOrderDetail.SavePurchaseOrderDetail(poDetail);
+                
+            }
+
+            return View("Success",purchaseOrderIds);
+            
+
+        }
 
     }
 }

@@ -25,6 +25,7 @@ namespace team7_ssis.Services
             purchaseOrderDetailRepository = new PurchaseOrderDetailRepository(context);
             statusRepository = new StatusRepository(context);
             itemPriceRepository = new ItemPriceRepository(context);
+
         }
 
         public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
@@ -72,42 +73,43 @@ namespace team7_ssis.Services
 
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
         {
-            if (purchaseOrderRepository.FindById(purchaseOrder.PurchaseOrderNo)==null)
-            {
-                purchaseOrder.Status = statusRepository.FindById(11);
                 return purchaseOrderRepository.Save(purchaseOrder);
-            }
-
-            else
-            {
-                return purchaseOrderRepository.Save(purchaseOrder);
-            }
             
         }
 
 
-        public List<PurchaseOrder> CreatePOForEachSupplier(List<Item> items)
+        public List<PurchaseOrder> CreatePOForEachSupplier(List<Supplier> suppliers)
         {
-            List<Supplier> supList = new List<Supplier>();
+            //List<Supplier> supList = new List<Supplier>();
             List<PurchaseOrder> poList = new List<PurchaseOrder>();
 
-            foreach (Item i in items)
+            //foreach (Item i in items)
+            //{
+            //    ItemPrice ip = i.ItemPrices.Where(x => x.PrioritySequence == 1).First();
+            //    int num = 1;
+
+            //    if (!supList.Contains(ip.Supplier))
+            //    {
+            //        supList.Add(ip.Supplier);
+
+            //        PurchaseOrder p = new PurchaseOrder();
+            //        p.PurchaseOrderNo = "PONO" + num;
+            //        p.Supplier = ip.Supplier;
+            //        p.CreatedDateTime = DateTime.Now;
+
+            //        poList.Add(p);
+
+            //    } 
+            //}
+
+            foreach(Supplier supplier in suppliers)
             {
-                ItemPrice ip = i.ItemPrices.Where(x => x.PrioritySequence == 1).First();
-                int num = 1;
+                PurchaseOrder p = new PurchaseOrder();
+                p.PurchaseOrderNo = IdService.GetNewPurchaseOrderNo(context);
+                p.Supplier = supplier;
+                p.CreatedDateTime = DateTime.Now;
 
-                if (!supList.Contains(ip.Supplier))
-                {
-                    supList.Add(ip.Supplier);
-
-                    PurchaseOrder p = new PurchaseOrder();
-                    p.PurchaseOrderNo = "PONO" + num;
-                    p.Supplier = ip.Supplier;
-                    p.CreatedDateTime = DateTime.Now;
-
-                    poList.Add(p);
-
-                } 
+                poList.Add(p);
             }
 
             return poList;
@@ -205,7 +207,12 @@ namespace team7_ssis.Services
             return pod.Quantity - receivedQuantity;
         }
 
-        
+        public PurchaseOrderDetail SavePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail)
+        {
+            return purchaseOrderDetailRepository.Save(purchaseOrderDetail);
+        }
+
+
 
 
     }

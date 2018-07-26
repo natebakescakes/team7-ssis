@@ -60,5 +60,11 @@ namespace team7_ssis.Services
             }
             return q;
         }
+
+        public ItemPrice FindSingleItemPriceByPriority(Item item, int priority)
+        {
+            ItemPrice i = itemPriceRepository.FindByItemCode(item.ItemCode).Where(x => x.PrioritySequence == priority).First();
+            return i;
+        }
     }
 }

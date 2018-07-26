@@ -15,14 +15,17 @@ namespace team7_ssis.Controllers
     {
         private ApplicationDbContext context;
         private PurchaseOrderService purchaseOrderService;
+        private ItemPriceService itemPriceService;
 
         public PurchaseOrderApiController()
         {
             context = new ApplicationDbContext();
             purchaseOrderService = new PurchaseOrderService(context);
+            itemPriceService = new ItemPriceService(context);
+
         }
 
-      
+
 
         [Route("api/purchaseOrder/all")]
         [HttpGet]
@@ -55,6 +58,22 @@ namespace team7_ssis.Controllers
                 RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod)
                 
             }).ToList();
+
+        }
+
+        [Route("api/purchaseOrder/getsupplier")]
+        [HttpPost]
+        public List<SupplierViewModel> GetItemSupplier([FromBody]string itemCode)
+        {
+            List<SupplierViewModel> suppliers = new List<SupplierViewModel>();
+            List<ItemPrice> itemPriceList = itemPriceService.FindItemPriceByItemCode(itemCode);
+
+            foreach (ItemPrice i in itemPriceList)
+            {
+                suppliers.Add(new SupplierViewModel {Name=i.Supplier.Name, Priority=i.PrioritySequence });
+            }
+            
+            return suppliers;
 
         }
 

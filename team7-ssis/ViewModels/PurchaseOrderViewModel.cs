@@ -15,6 +15,7 @@ namespace team7_ssis.ViewModels
 
     public class PurchaseOrderDetailsViewModel
     {
+        
         public string ItemCode { get; set; }
         public string Description { get; set; }
         public int QuantityOrdered { get; set; }
@@ -22,7 +23,13 @@ namespace team7_ssis.ViewModels
         public decimal Amount { get; set; }
         public int ReceivedQuantity { get; set; }
         public int RemainingQuantity { get; set; }
+        public int SupplierPriority { get; set; }
 
 
+    }
+
+    public class PurchaseOrderDetailsListViewModel
+    {
+        public List<PurchaseOrderDetailsViewModel> Purchaseorders{ get; set; }
     }
 }
