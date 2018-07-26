@@ -67,8 +67,10 @@ namespace team7_ssis.Tests.Services
                 s1.StockAdjustmentDetails.Remove(s);
                 //delete one stockadjustmentdetail
                 stockAdjustmentDetailRepository.Delete(s);
+                stockAdjustmentRepository.Save(s1);
             }
             return itemcode;
+            
 
         }
 
@@ -85,11 +87,12 @@ namespace team7_ssis.Tests.Services
             if (stockAdjustment.Status.StatusId == 3 || stockAdjustment.Status.StatusId==4)
             {
                 stockAdjustment.Status = statusRepository.FindById(2);
-                if(statusRepository.FindById(2)==null)
-                {
-                    throw new Exception("can't find such status");
-                }
-
+                //if(statusRepository.FindById(2)==null)
+                //{
+                //    throw new Exception("can't find such status");
+                //}
+                stockAdjustmentRepository.Save(stockAdjustment);
+                
             }
             return stockAdjustment;
         }

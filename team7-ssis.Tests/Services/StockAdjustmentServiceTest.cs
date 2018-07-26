@@ -19,6 +19,7 @@ namespace team7_ssis.Tests.Services
         InventoryRepository inventoryRepository;
         ItemService itemService;
         StockMovementRepository stockMovementRepository;
+        
 
         [TestInitialize]
         public void TestInitialize()
@@ -277,17 +278,13 @@ namespace team7_ssis.Tests.Services
                 StockMovement sm = stockMovementRepository.FindById(latest_id);
               
 
-                Assert.IsTrue(expect.Status.StatusId == 6);
+               Assert.IsTrue(expect.Status.StatusId == 6);
                 Assert.IsTrue(item.Inventory.Quantity == 20);
                 Assert.IsTrue(sm.AfterQuantity == 20);
-
-
-
-                stockMovementRepository.Delete(sm);
-                stockAdjustmentRepository.Delete(expect);
+               stockMovementRepository.Delete(sm);
+               stockAdjustmentRepository.Delete(expect);
                 itemRepository.Delete(item);
-            
-
+           
 
             }
             catch (Exception e)
@@ -396,7 +393,7 @@ namespace team7_ssis.Tests.Services
         public void CleanAllObjectCreated()
         {
             string[] ids = new string[]
-            { "he01","he02","he03","he04","he05","he06","he07","he08","he09" };
+            { "he01","he02","he03","he04","he05","he07","he08","he09" };
 
             foreach(string id in ids)
             {
@@ -404,7 +401,17 @@ namespace team7_ssis.Tests.Services
                 if (sa != null)
                     stockAdjustmentRepository.Delete(sa);
             }
-            
+           
+            if(itemRepository.FindById("he06") != null)              
+            {
+                itemRepository.Delete(itemRepository.FindById("he06"));
+            }
+
+            if (inventoryRepository.FindById("he06") != null)
+            {
+                inventoryRepository.Delete(inventoryRepository.FindById("he06"));
+            }
+
 
         }
     }

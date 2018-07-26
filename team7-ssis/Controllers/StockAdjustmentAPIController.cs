@@ -119,10 +119,11 @@ namespace team7_ssis.Controllers
         }
 
         [Route("api/stockadjustment/delete")]
-        [HttpPost]
+        [HttpGet]
         public void DeleteDraftStockAdjustment(string id)
         {
             stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
+
 
         }
 

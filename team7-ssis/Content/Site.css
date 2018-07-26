@@ -45,6 +45,12 @@ textarea {
     text-align: center;
     color: white;
 }
+.cancel {
+    background-color:limegreen !important;
+    text-align: center;
+    color: white;
+}
+
 
 /* Find out more about the below naming convention, BEM Block-Element-Modifier at http://getbem.com/introduction/; the first word acts as a namespace*/
 .step__icon {

@@ -385,7 +385,6 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
     <Content Include="Scripts\Custom\RedirectPost.js" />
