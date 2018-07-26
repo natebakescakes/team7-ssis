@@ -52,5 +52,43 @@ namespace team7_ssis.Controllers
                 }
             });
         }
+
+        // GET: Report/DepartmentUsageMobile
+        public ActionResult DepartmentUsageMobile()
+        {
+            var quantityByDepartmentAPayload = new Dictionary<string, object>
+            {
+                {"resource", new { dashboard = 1 } },
+                {"params", new {} }
+            };
+
+            return View("DepartmentUsageMobile", "_LayoutMobile", new ReportViewModel()
+            {
+                DashboardConfig = new UrlTokenViewModel()
+                {
+                    Url = _url,
+                    Token = Jose.JWT.Encode(quantityByDepartmentAPayload, Encoding.ASCII.GetBytes(_secret), Jose.JwsAlgorithm.HS256)
+                }
+            });
+        }
+
+        // GET: Report/StoreOperationsMobile
+        public ActionResult StoreOperationsMobile()
+        {
+            var quantityByDepartmentAPayload = new Dictionary<string, object>
+            {
+                {"resource", new { dashboard = 3 } },
+                {"params", new {} }
+            };
+
+            return View("StoreOperationsMobile", "_LayoutMobile", new ReportViewModel()
+            {
+                DashboardConfig = new UrlTokenViewModel()
+                {
+                    Url = _url,
+                    Token = Jose.JWT.Encode(quantityByDepartmentAPayload, Encoding.ASCII.GetBytes(_secret), Jose.JwsAlgorithm.HS256)
+                }
+            });
+        }
     }
 }

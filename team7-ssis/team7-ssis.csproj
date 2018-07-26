@@ -522,9 +522,7 @@
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
-    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\Supplier\_AddSupplier.cshtml" />
-    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
@@ -544,6 +542,10 @@
     <Content Include="Views\Department\_DepartmentTable.cshtml" />
     <Content Include="Views\Department\_AddDepartment.cshtml" />
     <Content Include="Views\Department\_DepartmentDetail.cshtml" />
+    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
+    <Content Include="Views\Shared\_LayoutMobile.cshtml" />
+    <Content Include="Views\Report\DepartmentUsageMobile.cshtml" />
+    <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
   </ItemGroup>
   <ItemGroup>
