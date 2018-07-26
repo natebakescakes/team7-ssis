@@ -27,5 +27,10 @@ namespace team7_ssis.Repositories
             return context.Item
                 .Where(x => x.Inventory.Quantity < x.ReorderLevel);
         }
+
+        public IQueryable<Item> FindAllActive()
+        {
+            return context.Item.Where(x => x.Status.StatusId != 0);
+        }
     }
 }

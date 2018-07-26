@@ -13,12 +13,14 @@ namespace team7_ssis.Services
         RetrievalRepository retrievalRepository;
         ItemService itemService;
         StockMovementService stockmovementService;
+
         public RetrievalService(ApplicationDbContext context)
         {
             this.context = context;
             retrievalRepository = new RetrievalRepository(context);
             itemService = new ItemService(context);
             stockmovementService = new StockMovementService(context);
+
         }
 
         public List<Retrieval> FindAllRetrievals()
@@ -49,21 +51,23 @@ namespace team7_ssis.Services
             this.Save(retrieval);
 
             // Update Item Quantity based on amount retrieved into Inventory
-            foreach(Disbursement d in retrieval.Disbursements)
+            foreach (Disbursement d in retrieval.Disbursements)
             {
-                foreach(DisbursementDetail detail in d.DisbursementDetails)
+                foreach (DisbursementDetail detail in d.DisbursementDetails)
                 {
-                    //waiting for additional service method from susu
-                    //itemService.UpdateQuantity(detail.Item, detail.Item.Inventory.Quantity - detail.ActualQuantity);
-
+                   
+                    //Create Stock Movement Transaction
+                    stockmovementService.CreateStockMovement(detail);
                 }
             }
-            //Create Stock Movement Transaction
-            
+
+
 
             return retrieval;
 
         }
+
+
 
     }
 }
