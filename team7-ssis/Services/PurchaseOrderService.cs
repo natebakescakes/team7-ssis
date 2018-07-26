@@ -108,6 +108,7 @@ namespace team7_ssis.Services
                 p.PurchaseOrderNo = IdService.GetNewPurchaseOrderNo(context);
                 p.Supplier = supplier;
                 p.CreatedDateTime = DateTime.Now;
+                purchaseOrderRepository.Save(p);
 
                 poList.Add(p);
             }
@@ -145,13 +146,10 @@ namespace team7_ssis.Services
 
         public bool IsPurchaseOrderCreated(Item item, List<PurchaseOrder> poList)
         {
-            //if(poList!=null && poList.Where(x => x.PurchaseOrderDetails.ForEach(y=>y.)!=null))
-            //{ 
-
-            //}
+           
             foreach(PurchaseOrder po in poList)
             {
-               //bool result=purchaseOrderDetailRepository.ExistsById(po.PurchaseOrderNo, item.ItemCode);
+               
                bool result2 = po.PurchaseOrderDetails.Count(x => x.Item.ItemCode == item.ItemCode) > 0;
                     
                     if (result2)

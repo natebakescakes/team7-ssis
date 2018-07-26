@@ -26,6 +26,7 @@ namespace team7_ssis.Controllers
             context = new ApplicationDbContext();
             purchaseOrderService = new PurchaseOrderService(context);
             statusService = new StatusService(context);
+            itemService = new ItemService(context);
             itemPriceService = new ItemPriceService(context);
         }
 
@@ -57,7 +58,7 @@ namespace team7_ssis.Controllers
         }
 
         [HttpPost]
-        public string Save(string purchaseOrderNum, string itemCode, int quantity)
+        public string Update(string purchaseOrderNum, string itemCode, int quantity)
         {
             PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
             foreach(PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
@@ -107,10 +108,10 @@ namespace team7_ssis.Controllers
 
 
         [HttpPost]
-        public ActionResult Save(PurchaseOrderDetailsListViewModel purchaseOrderDetailList)
+        public ActionResult Save(List<PurchaseOrderDetailsViewModel> purchaseOrderDetailList)
         {
             List<Supplier> supList = new List<Supplier>();
-            foreach(PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList.Purchaseorders)
+            foreach(PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList)
             {
                 Item item=itemService.FindItemByItemCode(pod.ItemCode);
                 ItemPrice itemPrice= itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
@@ -130,11 +131,8 @@ namespace team7_ssis.Controllers
             {
                 purchaseOrderIds.Add(pOrder.PurchaseOrderNo);
             }
-
-
-
             
-            foreach (PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList.Purchaseorders)
+            foreach (PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList)
             {
                 PurchaseOrderDetail poDetail = new PurchaseOrderDetail();
                 poDetail.ItemCode = pod.ItemCode;

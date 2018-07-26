@@ -25,11 +25,10 @@ namespace team7_ssis.ViewModels
         public int RemainingQuantity { get; set; }
         public int SupplierPriority { get; set; }
 
+        public string SupplierName { get; set; }
+
 
     }
 
-    public class PurchaseOrderDetailsListViewModel
-    {
-        public List<PurchaseOrderDetailsViewModel> Purchaseorders{ get; set; }
-    }
+    
 }

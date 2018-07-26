@@ -25,9 +25,9 @@
                 var s = supplierList[supplier];
                 var x = document.getElementById(id);
                 var option = document.createElement("option");
-                alert(s.Name);
+                //alert(s.Name);
                 option.text = s.Name;
-                alert(s.Priority);
+                //alert(s.Priority);
                 option.value = s.Priority;
                     x.add(option);
             }
@@ -141,25 +141,26 @@
     $("#generateforms").click(function () {
 
         var datatableData = generatePOTbl.rows().data().toArray();
-        alert(datatableData);
-        alert(datatableData.length);
+
+        //alert(datatableData);
+        //alert(datatableData.length);
         var details = new Array();
 
         for (var i = 0; i < datatableData.length; i++) {
 
-            alert(i);
             var id = "#supervisor" + (i + 1).toString();
-            alert($(id).children("option").filter(":selected").text());
+           
 
             var o = {
                 "ItemCode": datatableData[i][0],
                 "Description": datatableData[i][1],
-                "Quantity": 15,
+                "QuantityOrdered": 15,
                 "UnitPrice": datatableData[i][3],
-                "Supplier": $(id).children("option").filter(":selected").text(),
+                "SupplierName": $(id).children("option").filter(":selected").text(),
+                "SupplierPriority": $(id).children("option").filter(":selected").val(),
                 "Amount": datatableData[i][5]
             };  
-
+            
             details.push(o);
         }
 
@@ -180,39 +181,7 @@
         
     });
         
-        //alert(datatableData[0][2]);
-        //html = $.parseHTML(datatableData[0][2]);
-        //alert(JSON.stringify(html));
-
-        //generatePOTbl.rows().each(function () {
-        //    var data1 = this.data().toArray();
-        //    alert(data1.length);
-            
-    //    });
-    //});
-
-        //foreach(DataRow row in generatePOTbl.Rows){
-        //    if ($(this).children().hasClass("supervisor1")) {
-        //        alert("insidxe");
-        //        var hell = generatePOTbl.cell($(this)).data().draw();
-        //        alert(hell);
-        //    }
-
-        //    else {
-        //        alert("Hello");
-        //}
-        //$.each(generatePOTbl.Rows, function (i) {
-           
-        //    }
-
-        //});
-        
-
-        //var data = generatePOTbl.rows().data(text).toArray();
-
-        //alert(data[0][2]);
-
-
+      
     
 
     var successPOTable = $('#successPoTable').DataTable({
