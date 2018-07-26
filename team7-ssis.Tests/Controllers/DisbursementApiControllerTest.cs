@@ -136,7 +136,7 @@ namespace team7_ssis.Tests.Controllers
             // Assert
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(contentResult.Content.Message, "Success");
+            Assert.AreEqual(contentResult.Content.Message, "Collection confirmed");
             var result = new DisbursementRepository(context).FindById("DAPICONTROLTEST");
             Assert.AreEqual(expected.Name, result.Status.Name);
         }
