@@ -19,8 +19,10 @@ namespace team7_ssis.Controllers
         ApplicationDbContext context;
         StockAdjustmentService stockAdjustmentService;
         StockAdjustmentRepository stockAdjustmentRepository;
+        StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         ItemService itemService;
         ItemPriceService itemPriceService;
+        UserService userService;
         public StockAdjustmentAPIController()
         {
             context=new ApplicationDbContext();
@@ -28,7 +30,8 @@ namespace team7_ssis.Controllers
              stockAdjustmentRepository = new StockAdjustmentRepository(context);
              itemService = new ItemService(context);
              itemPriceService = new ItemPriceService(context);
-
+            userService = new UserService(context);
+            stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
         }
 
 
@@ -57,56 +60,75 @@ namespace team7_ssis.Controllers
 
             return sadj;
         }
-
-        [Route("api/stockadjustment/items")]
+        [Route("api/stockadjustment/save")]
         [HttpPost]
-        public HttpResponseMessage SaveInSession(List<string> itemCodes)
+        public void SaveStockAdjustmentAsDraft(List<ViewModelOfDetail> list)
         {
-            string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
-            foreach (string i in itemCodes)
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            StockAdjustment s = new StockAdjustment();
+            s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            s.CreatedBy = userService.FindUserByEmail(UserName);
+            s.CreatedDateTime = DateTime.Now;
+
+            foreach (ViewModelOfDetail v in list )
             {
-                itemcodes_list.Add(i);
+                StockAdjustmentDetail sd = new StockAdjustmentDetail();
+                string itemcode = v.Itemcode;
+                Item item = itemService.FindItemByItemCode(itemcode);
+                sd.ItemCode = itemcode;
+                sd.Reason = (v.Reason==null)?"":v.Reason;
+                sd.StockAdjustmentId = s.StockAdjustmentId;
+                sd.OriginalQuantity =item.Inventory.Quantity;
+                sd.AfterQuantity = v.Adjustment + sd.OriginalQuantity;
+                detaillist.Add(sd);
+             //  stockAdjustmentDetailRepository.Save(sd);
+            }
+            s.StockAdjustmentDetails = detaillist;           
+            stockAdjustmentService.CreateDraftStockAdjustment(s);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+
+
+        [Route("api/stockadjustment/confirm")]
+        [HttpPost]
+        public void CreatePendingStockAdjustmentPending(List<ViewModelOfDetail> list)
+        {
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            StockAdjustment s = new StockAdjustment();
+            s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            s.CreatedBy = userService.FindUserByEmail(UserName);
+            s.CreatedDateTime = DateTime.Now;
+
+            foreach (ViewModelOfDetail v in list)
+            {
+                StockAdjustmentDetail sd = new StockAdjustmentDetail();
+                string itemcode = v.Itemcode;
+                Item item = itemService.FindItemByItemCode(itemcode);
+                sd.ItemCode = itemcode;
+                sd.Reason = (v.Reason == null) ? "" : v.Reason;
+                sd.StockAdjustmentId = s.StockAdjustmentId;
+                sd.OriginalQuantity = item.Inventory.Quantity;
+                sd.AfterQuantity = v.Adjustment + sd.OriginalQuantity;
+                detaillist.Add(sd);
+                //  stockAdjustmentDetailRepository.Save(sd);
+            }
+            s.StockAdjustmentDetails = detaillist;
+            stockAdjustmentService.CreatePendingStockAdjustment(s);
+        }
+
+        [Route("api/stockadjustment/delete")]
+        [HttpPost]
+        public void DeleteDraftStockAdjustment(string id)
+        {
+            stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
+
         }
 
 
-        [Route("api/stockadjustment/restoreitems")]
-        [HttpGet]
-        public IEnumerable<ItemViewModel> RestoreItemFromSession()
-        {
-            string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            List<ItemViewModel> ViewModel_list = new List<ItemViewModel>();
-            List<Item> Item_list = new List<Item>();
 
-            List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
-            foreach (string code in itemcodes_list)
-            {
-                Item i = itemService.FindItemByItemCode(code);
-                ItemViewModel iv = new ItemViewModel();
-                iv.ItemCode = i.ItemCode;
-                iv.Description = i.Description;
-                iv.UnitPrice = itemPriceService.GetDefaultPrice(i, 1);
-                ViewModel_list.Add(iv);
-            }
-            return ViewModel_list;
-        }
 
-        //[Route("api/supervisor/all")]
-        //[HttpGet]
-
-        //public IEnumerable<ApplicationUser>  AllSupervisors()
-        //{
-        //    return null;
-        //}
-        //[Route("api/manager/all")]
-        //[HttpGet]
-        //public IEnumerable<ApplicationUser> AllManagers()
-        //{
-        //    return null;
-        //}
 
     }
 }

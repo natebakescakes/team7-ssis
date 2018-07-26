@@ -14,14 +14,24 @@
 
             {
 
+                "targets": 5,
+
+                "render": function (data, type, full, meta) {
+
+                    return "<input type = 'button' id = 'testButton' value = 'View'>";
+
+                }
+
+            },
+            {
+
                 "targets": -1,
 
                 "render": function (data, type, full, meta) {
 
-                    return "<input type = 'button' id = 'testButton' value = 'View'>"
+                    return "<input type = 'button' id = 'testButton2' value = 'delete'>";
 
                 }
-
             }
 
         ],
@@ -30,48 +40,30 @@
             { data: "CreatedBy" },
             { data: "ApprovedBySupervisor" },
             { data: "CreatedDateTime"},
-            {data: "StatusName" },
-            {data:  null}
-
+            { data: "StatusName" },
+            { data: null },
+            {
+                defaultContent: null
+            }
         ],
         autowidth: true,
         select: "single",
         createdRow: function (row, data, dataIndex) {
-            if (data.StatusName == "Approved") {
+            if (data.status.StatusName == "Approved") {
                 $('td', row).eq(4).addClass('delivered');
             }
-            if (data.StatusName == "Pending Approval") {
+            if (data.status.StatusName == "Pending Approval") {
                 $('td', row).eq(4).addClass('partially-delivered');
             }
-            if (data.StatusName == "Rejected") {
+            if (data.status.StatusName == "Rejected") {
                 $('td', row).eq(4).addClass('awaiting-delivery');
             }
-        },
-
-        initComplete: function () {
-            var api = this.api();
-            api.columns().indexes().flatten().each(function (i) {
-                var column = api.column(i);
-                var select = $('<select><option value=""></option></select>')
-                    .appendTo($(column.footer()).empty())
-                    .on('change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        column
-                            .search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
-                    });
-                column.data().unique().sort().each(function (d, j) {
-                    select.append('<option value="' + d + '">' + d + '</option>')
-                });
-            });
+            if (data.status.StatusName == "Draft") {
+                $('td', row).eq(4).addClass('awaiting-delivery');
+            }
         }
 
     });
-
-  
-
 
    
     $('#mySATable tbody').on("click", "#testButton", function () {
@@ -89,6 +81,31 @@
         //alert(Id + "是" + status;
        
         window.location.href = "StockAdjustment/Details/" + Id;
+
+    });
+
+    $('#mySATable tbody').on("click", "#testButton2", function () {
+
+        ////获取行
+
+        var row = $("table#mySATable tr").index($(this).closest("tr"));
+
+        ////获取某列（从0列开始计数）的值
+
+        var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
+        //delete this one and refresh page
+
+        $.ajax({
+            type: "POST",
+            url: '/api/stockadjustment/delete',
+            data: JSON.stringify(Id),
+            success: function (data) {
+                if (data.status) {
+                    alert("Item Price information has been successfully updated");
+                    table.ajax.reload();
+                }
+            }
+        });
 
     });
 

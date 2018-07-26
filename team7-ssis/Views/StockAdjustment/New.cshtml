@@ -27,7 +27,7 @@
             <th>Unit Price</th>
             <th>Reason</th>
             <th>Adjustment</th>
-            <th></th>
+            <th>delete</th>
         </tr>
     </thead>
 
@@ -115,10 +115,10 @@
 
                 <input id="AdjustmentInput" type="number" />
             </div>
-            @*<div class="col-md-1">
+            <div class="col-md-1">
                 <label>Reason</label>
                 <input id="ReasonInput" type="text" />
-            </div>*@
+            </div>
             <div class="modal-footer">
                 <button id="addToReq" type="button" class="btn btn-primary">Add to StockAdjustment</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -133,7 +133,7 @@
 
 
         var myTable = $('#myTable').DataTable({
-
+            "stateSave": true,
             "bDeferRender": true,
             columns: [
                 { title: "ItemCode" },
@@ -141,50 +141,34 @@
                 { title: "UnitPrice" },
                 { title: "Reason" },
                 {
-                    title: "Adjustment",
-                 render: function (data, type, row) {
-                     return '<input class="form-control"  style="border:none" id=Price" type="number"  min="-2500" step="1" max="2500" value = ' + row.Adjustment + '  >'
-                    }},          
+                    title: "Adjustment"
+                    //render: function (data, type, row) {
+                    //    return '<input class="form-control"  style="border:none" id=Price" type="number"  min="-2500" step="1" max="2500" value = ' + row.Adjustment + '  >'
+                    //}
+                },
                 {
                     defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>'
                 }
             ],
 
 
-            columnDefs: [{
-                "targets": [3],
-                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
-                    $(cell).click(function () {
-                        $(this).html('<input type="text" size="16"/>');
-                        var aInput = $(this).find(":input");
-                        aInput.focus().val(cellData);
-                    });
-                    $(cell).on("blur", ":input", function () {
-                        var text = $(this).val();
-                        $(cell).html(text);
-                        editTableObj.table.cell(cell).data(text)
-                    })
-                }
-            }]
+            //columnDefs: [{
+            //    "targets": [3],
+            //    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+            //        $(cell).click(function () {
+            //            $(this).html('<input type="text" size="16"/>');
+            //            var aInput = $(this).find(":input");
+            //            aInput.focus().val(cellData);
+            //        });
+            //        $(cell).on("blur", ":input", function () {
+            //            var text = $(this).val();
+            //            $(cell).html(text);
+            //            editTableObj.table.cell(cell).data(text)
+            //        })
+            //    }
+            //}]
 
         });
-
-
-
-
-        //var rowedit = $('#myTable tbody').on('click', '#edit', function (e) {
-        //    var row = $("table#myTable tr").index($(this).closest("tr"));
-        //    var t1 = $("table#myTable ").find("tr").eq(row).find("td").eq(0).text();
-        //    var t2 = $("table#myTable ").find("tr").eq(row).find("td").eq(1).text();
-        //    var t3 = $("table#myTable ").find("tr").eq(row).find("td").eq(2).text();
-        //    var t4 = $("table#myTable ").find("tr").eq(row).find("td").eq(3).text();
-        //    var t5 = $("table#myTable ").find("tr").eq(row).find("td").eq(4).text();
-
-        //    alert(t1+t2+t3+t4+t5);
-
-        //});
-
-      
 
         var addItemTable = $('#addItemTable').DataTable({
             ajax: {
@@ -199,7 +183,7 @@
                 { "data": "Description", "autoWidth": true },
                 { "data": "Quantity", "autoWidth": true },
                 { "data": "Uom", "autoWidth": true },
-                { "data": "UnitPrice", "autoWidth": true}
+                { "data": "UnitPrice", "autoWidth": true }
             ],
 
             select: "single"
@@ -209,47 +193,85 @@
             $('#myModal').modal({
                 backdrop: 'static',
             });
-        })
-
-
-        
-        $('#saveAsBtn').click(function () {
-
-       
-
-        })
-
-        $('#cancelBtn').click(function () {
-            //direct to home page
-            window.location.href = "/StockAdjustment";
-        })
-
-        $('#confirmBtn').click(function () {
-            //save as pending and go to home page with message shows
-           
-
-        })
-
-
-
-
-        $('#addToReq').click(function () {
-            var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
-            //var Reason = "";
-            //var Adjustment=0;
-            var Adjustment = parseInt($('#AdjustmentInput').val());
-            var Reason = "";
-            myTable.row.add([data[0].ItemCode, data[0].Description, data[0].UnitPrice,Reason,Adjustment]).draw();
-            $('#myModal').modal('hide');
-        })
-
-        $('#myTable tbody').on('click', 'i.fa.fa-times', function () {
-            myTable
-                .row($(this).parents('tr'))
-                .remove()
-                .draw();
         });
-    })
+
+
+          $('#saveAsBtn').click(function () {
+
+            var data = $('#myTable').dataTable().fnGetData();
+            var reqIdArray = [];
+            for (i = 0; i < data.length; i++) {
+                var obj = { Itemcode: data[i][0], Reason: data[i][3],Adjustment:data[i][4] };
+                reqIdArray[i] = obj;
+
+            }
+
+            $.ajax({
+                url: '/api/stockadjustment/save',
+                contentType: 'application/json',
+                data: JSON.stringify(reqIdArray),
+                dataType: "json",
+                type: "POST",
+                traditional: true,
+                success: function (responseJSON) {
+
+                    window.location.replace("/StockAdjustment");
+                }
+            });
+
+            
+        });
+
+$('#cancelBtn').click(function () {
+//direct to home page
+window.location.href = "/StockAdjustment";
+});
+
+$('#confirmBtn').click(function () {
+//save as pending and go to home page with message shows
+    var data = $('#myTable').dataTable().fnGetData();
+    var reqIdArray = [];
+    for (i = 0; i < data.length; i++) {
+        var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
+        reqIdArray[i] = obj;
+
+    }
+
+    $.ajax({
+        url: '/api/stockadjustment/confirm',
+        contentType: 'application/json',
+        data: JSON.stringify(reqIdArray),
+        dataType: "json",
+        type: "POST",
+        traditional: true,
+        success: function (responseJSON) {
+
+            window.location.replace("/StockAdjustment");
+        }
+    });
+
+});
+
+
+
+
+$('#addToReq').click(function () {
+var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
+//var Reason = "";
+//var Adjustment=0;
+var Adjustment = parseInt($('#AdjustmentInput').val());
+    var Reason = $('#ReasonInput').val();
+myTable.row.add([data[0].ItemCode, data[0].Description, data[0].UnitPrice, Reason, Adjustment]).draw();
+$('#myModal').modal('hide');
+});
+
+$('#myTable tbody').on('click', 'i.fa.fa-times', function () {
+myTable
+    .row($(this).parents('tr'))
+    .remove()
+    .draw();
+});
+})
 
 
 </script>
