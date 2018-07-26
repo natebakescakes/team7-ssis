@@ -41,8 +41,7 @@ namespace team7_ssis.Controllers
             {
                 AllRetrieved = (y.Sum(dd => dd.PlanQuantity)) == (y.Sum(dd => dd.ActualQuantity)) ? true : false,
                 ProductID = y.Key.ItemCode,
-                //Bin = y.Key.Bin,
-                Bin = "",
+                Bin = y.Key.Bin,
                 QtyOrdered = y.Sum(dd => dd.PlanQuantity),
                 Description = context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description
             }).ToList();
@@ -51,7 +50,7 @@ namespace team7_ssis.Controllers
         }
         [Route("api/stationeryretrieval")]
         [HttpPost]
-        public IHttpActionResult StationeryRetrieval(StationeryRetrievalTableJSONViewModel viewModel)
+        public IHttpActionResult StationeryRetrieval(StationeryRetrievalJSONViewModel viewModel)
         {
             try
             {
@@ -80,7 +79,7 @@ namespace team7_ssis.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(viewModel.RetrievalID);
         }
 
         /// <summary>

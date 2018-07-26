@@ -106,11 +106,11 @@ namespace team7_ssis.Tests.Controllers
 
             // ACT
             // create mock data from DataTables
-            StationeryRetrievalTableJSONViewModel viewModel = new StationeryRetrievalTableJSONViewModel();
+            StationeryRetrievalJSONViewModel viewModel = new StationeryRetrievalJSONViewModel();
 
             viewModel.RetrievalID = "RETRIEVAL";
-            viewModel.Data = new List<StationeryRetrievalTableRowJSONViewModel>();
-            StationeryRetrievalTableRowJSONViewModel d1 = new StationeryRetrievalTableRowJSONViewModel
+            viewModel.Data = new List<StationeryRetrievalJSONViewModel>();
+            StationeryRetrievalJSONViewModel d1 = new StationeryRetrievalJSONViewModel
             {
                 AllRetrieved = true,
                 ProductID = "C001"

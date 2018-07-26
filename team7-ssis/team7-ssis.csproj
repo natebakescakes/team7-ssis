@@ -246,6 +246,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RequisitionAPIController.cs" />
     <Compile Include="Controllers\RequisitionController.cs" />
+    <Compile Include="Controllers\RetrievalAPIController.cs" />
     <Compile Include="Controllers\RetrievalController.cs" />
     <Compile Include="Controllers\SupplierAPIController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
