@@ -249,6 +249,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RequisitionAPIController.cs" />
     <Compile Include="Controllers\RequisitionController.cs" />
+    <Compile Include="Controllers\RetrievalAPIController.cs" />
+    <Compile Include="Controllers\RetrievalController.cs" />
     <Compile Include="Controllers\SupplierAPIController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
@@ -388,6 +390,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
+    <Content Include="Scripts\Custom\CreateRequisition.js" />
+    <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -507,8 +511,8 @@
     <Content Include="Views\Requisition\_RequisitionDetailTable.cshtml" />
     <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
     <Content Include="Views\Requisition\StationeryDisbursement.cshtml" />
-    <Content Include="Views\Requisition\RetrievalDetails.cshtml" />
-    <Content Include="Views\Requisition\_RetrievalDetailsTable.cshtml" />
+    <Content Include="Views\Retrieval\RetrievalDetails.cshtml" />
+    <Content Include="Views\Retrieval\_RetrievalDetailsTable.cshtml" />
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
@@ -540,6 +544,7 @@
     <Content Include="Views\Department\_DepartmentTable.cshtml" />
     <Content Include="Views\Department\_AddDepartment.cshtml" />
     <Content Include="Views\Department\_DepartmentDetail.cshtml" />
+    <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
