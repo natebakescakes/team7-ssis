@@ -47,5 +47,6 @@ namespace team7_ssis.ViewModels
         public string DeptId { get; set; }
         public string DeptName { get; set; }
         public int Needed { get; set; }
+        public int Actual { get; set; }
     }
 }
