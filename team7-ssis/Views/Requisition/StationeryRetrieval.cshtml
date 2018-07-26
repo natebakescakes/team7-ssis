@@ -1,5 +1,9 @@
 ﻿@model team7_ssis.ViewModels.StationeryRetrievalViewModel
 
+@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+}
+
 @{
     ViewBag.Title = "StationeryRetrieval";
 }
@@ -10,6 +14,8 @@
     <i class="fa fa-exclamation-circle" aria-hidden="true"></i> @Request.QueryString["msg"]
 </div>
 }
+
+<div id="alert"></div>
 
 <div class="row mb-3 step__container">
     <div class="step__arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
@@ -91,31 +97,97 @@
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="pull-right">
-            <button class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
-            <button class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Update Retrieval Form</button>
+            <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
+            <button id="updateRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Update Retrieval Form</button>
         </div>
         
     </div>
 </div>
 
 <script>
+
+    // icons representing checked/unchecked
+    var checked = '<i class="fa fa-check-square-o" aria-hidden="true"></i>';
+    var unchecked = '<i class="fa fa-square-o" aria-hidden="true"></i>';
+
+    // load script
     $(document).ready(function () {
-        var oTable = $('#myTable').DataTable({
+        var table = $('#myTable').DataTable({
             ajax: {
                 url: "/api/stationeryretrieval/@Model.RetrievalID",
                 dataSrc: ""
             },
 
             columns: [
-                { "defaultContent": "<input type='checkbox' />"},
+                //{ "defaultContent": '<i class="fa fa-square-o" aria-hidden="true"></i>', className : "checkmark" },
+                {
+                    "data": "AllRetrieved",
+                    "className": "checkmark pointer",
+                    "render": function (data, type, row, meta) {
+                        return data ? checked : unchecked;
+                    }
+                },
                 { "data": "ProductID", "autoWidth": true },
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
                 { "data": "QtyOrdered", "autoWidth": true },
-                { "defaultContent": "<button class='btn btn-default'><i class='fa fa-pencil' aria-hidden='true'></i></button>" },
+                { "defaultContent": "<button class='btn btn-primary editbutton'><i class='fa fa-pencil' aria-hidden='true'></i></button>" },
             ],
-            select: 'single'
+            select: 'api'
         });
-    })
 
+        // click edit button
+        $(document).on("click", ".editbutton", function () {
+            //console.log('clicked');
+            var itemcode = $(this).parent().siblings('td:nth-of-type(2)').html();
+            var redirectURL = "/Retrieval/RetrievalDetails?retId=@Request.QueryString["rid"]&itemId=" + itemcode;
+            window.location.href = redirectURL;
+        });
+
+        // toggle checkboxes
+        $('#myTable tbody').on('click', '.checkmark', function () {
+            console.log('clicked');
+            var cell = table.cell(this);
+            if (cell.data() == true) {
+                cell.data(false).draw();
+            } else if (cell.data() == false) {
+                cell.data(true).draw();
+            }
+        });
+
+        $(document).on('click', '#updateRetrievalBtn', function () {
+            var rowData = table.rows().data().toArray();
+            //var data = [];
+            //for (i = 0; i < data.length; i++) {
+            //    data[i] = { AllRetrieved: , ProductID: }
+            //};
+
+            var json = {
+                RetrievalID: "@Request.QueryString["rid"]",
+                Data: rowData
+            };
+
+            console.log(json);
+
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json',
+                url: "/api/stationeryretrieval",
+                data: JSON.stringify(json),
+                success: function (message) {
+                    // create info DOM object
+                    console.log(message);
+                    $('#alert').html('<div class="alert alert-info" role="alert">Disbursement information updated.</div >');
+                },
+                error: function (message) {
+                    // show error message
+                    console.log(message.statusText);
+                    $('#alert').html('<div class="alert alert-danger" role="alert">An unexpected error occured.</div >');
+                }
+            })
+        });
+
+    });
+
+    
 </script>

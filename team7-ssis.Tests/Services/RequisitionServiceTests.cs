@@ -43,6 +43,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void FindRequisitionsByStatusTest()
         {
             // Arrange
@@ -61,6 +62,7 @@ namespace team7_ssis.Tests.Services
             }
         }
         [TestMethod]
+        [Ignore]
         public void GetRequisitionDetailsTest()
         {
             // Arrange
@@ -77,6 +79,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod()]
+        [Ignore]
         public void ProcessRequisitionsTest_CreatesRetrieval()
         {
             // Arrange
@@ -101,6 +104,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void ProcessRequisitionsTest_AddQuantity()
         {
             // ARRANGE
@@ -127,7 +131,7 @@ namespace team7_ssis.Tests.Services
 
             //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 30 items.
             var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
-     
+
             Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
             var dd = query.First().DisbursementDetails.First();
             Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
@@ -145,6 +149,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod()]
+        [Ignore]
         public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
         {
             // Arrange
@@ -165,6 +170,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod()]
+        [Ignore]
         public void CreateDisbursementForEachDepartmentTest()
         {
             // Arrange
