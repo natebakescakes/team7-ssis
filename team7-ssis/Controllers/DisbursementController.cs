@@ -23,13 +23,19 @@ namespace team7_ssis.Controllers
         // GET: Disbursement/DisbursementDetails
         public ActionResult DisbursementDetails(string did)
         {
-            Disbursement d = disbursementService.FindDisbursementById(did);
             DisbursementFormViewModel viewModel = new DisbursementFormViewModel();
-            viewModel.DisbursementId = d.DisbursementId;
-            viewModel.Representative = d.CollectedBy == null ? "" : String.Format("{0} {1}", d.CollectedBy.FirstName, d.CollectedBy.LastName);
-            viewModel.Department = d.Department.Name;
-            viewModel.OrderTime = String.Format("{0} {1}", d.CreatedDateTime.ToShortDateString(), d.CreatedDateTime.ToShortTimeString());
-            viewModel.CollectionPoint = d.Department.CollectionPoint.Name;
+            try
+            {
+                Disbursement d = disbursementService.FindDisbursementById(did);
+                viewModel.DisbursementId = d.DisbursementId;
+                viewModel.Representative = d.CollectedBy == null ? "" : String.Format("{0} {1}", d.CollectedBy.FirstName, d.CollectedBy.LastName);
+                viewModel.Department = d.Department.Name;
+                viewModel.OrderTime = String.Format("{0} {1}", d.CreatedDateTime.ToShortDateString(), d.CreatedDateTime.ToShortTimeString());
+                viewModel.CollectionPoint = d.Department.CollectionPoint.Name;
+            } catch
+            {
+                return new HttpStatusCodeResult(400);
+            }
             return View(viewModel);
         }
     }
