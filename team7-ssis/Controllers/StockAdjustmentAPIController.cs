@@ -132,8 +132,9 @@ namespace team7_ssis.Controllers
             foreach (ViewModelFromEditDetail v in list)
             {
                 StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
-                sd.Reason = v.Reason;
+                int d = v.Adjustment;
                 sd.AfterQuantity = sd.OriginalQuantity + v.Adjustment;
+                sd.Reason = v.Reason;             
                 stockAdjustmentService.updateStockAdjustmentDetail(sd);
             }
         }

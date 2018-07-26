@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    var $table = $('#mySATable');
+    var $table = $('#ClerkTable');
 
     var datatb1=$table.DataTable({
 
@@ -12,7 +12,7 @@
 
             {
 
-                "targets": -2,
+                "targets": 5,
 
                 "render": function (data, type, full, meta) {
 
@@ -23,7 +23,7 @@
             },
             {
 
-                "targets": -1,
+                "targets": 6,
 
                 "render": function (data, type, full, meta) {
 
@@ -65,19 +65,19 @@
     });
 
    
-    $('#mySATable tbody').on("click", "#viewBtn", function () {
+    $('#ClerkTable tbody').on("click", "#viewBtn", function () {
 
-      var row = $("table#mySATable tr").index($(this).closest("tr"));
-        var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
+      var row = $("table#ClerkTable tr").index($(this).closest("tr"));
+        var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
         window.location.href = "StockAdjustment/Details/" + Id;
 
     });
 
-    $('#mySATable tbody').on("click", "#cancelBtn", function () {
+    $('#ClerkTable tbody').on("click", "#cancelBtn", function () {
 
-        var row = $("table#mySATable tr").index($(this).closest("tr"));
+        var row = $("table#ClerkTable tr").index($(this).closest("tr"));
 
-        var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
+        var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
 
         $.ajax({
             type: "GET",

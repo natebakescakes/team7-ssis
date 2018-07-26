@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     var saUrl = $("#StockAdjustmentId").val();
 
-    var table = $('#myTable').DataTable({
+    var oTable = $('#myTable').DataTable({
 
             ajax: {
                 url: "/api/stockadjustment/detail/"+saUrl,
@@ -19,7 +19,7 @@
             "data": "Reason",
             "render": function (data, type, row, meta) {
                 var html = '<input class="actual_1" type="textbox" ' +
-                    'value="' + data + '" min="0"/>';
+                    'value="' + data + '"/>';
                 return html;
             }
         },
@@ -47,13 +47,13 @@
 
     $(document).on("blur", ".actual", function () {
         // grab the cell that the td refers to, which is the parent of the <input> element
-        var cell = table.cell(this.parentElement);
+        var cell = oTable.cell(this.parentElement);
         // assign the cell with the value from the <input> element
         cell.data($(this).val()).draw();
     });
     $(document).on("blur", ".actual_1", function () {
         // grab the cell that the td refers to, which is the parent of the <input> element
-        var cell = table.cell(this.parentElement);
+        var cell = oTable.cell(this.parentElement);
         // assign the cell with the value from the <input> element
         cell.data($(this).val()).draw();
     });
@@ -65,14 +65,13 @@
     });
 
     $('#saveBtn').click(function () {
-        var data = $('#myTable').dataTable().fnGetData();
+        var data = oTable.rows().data().toArray();
         var reqIdArray = [];
         for (i = 0; i < data.length; i++) {
-            var obj = { StockAdjustmentId:saUrl,ItemCode:data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
+            var obj = { StockAdjustmentId:saUrl,ItemCode:data[i][0], Reason: data[i][2], Adjustment: data[i][4] };
             reqIdArray[i] = obj;
-
         }
-        alert(data);
+        alert(data[0][0]);
         $.ajax({
             url: '/api/stockadjustment/update',
             contentType: 'application/json',

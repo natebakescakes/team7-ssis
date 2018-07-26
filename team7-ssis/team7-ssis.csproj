@@ -407,9 +407,10 @@
     <Content Include="Scripts\Custom\RedirectPost.js" />
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
-    <Content Include="Scripts\Custom\StockAdjustment.js" />
+    <Content Include="Scripts\Custom\StockAdjustment_Clerk.js" />
     <Content Include="Scripts\Custom\RequisitionDetail.js" />
     <Content Include="Scripts\Custom\StockAdjustmentDetail.js" />
+    <Content Include="Scripts\Custom\StockAdjustment_ManagerProcess.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
     <Content Include="Scripts\Custom\SupplierPriceList.js" />
     <Content Include="Scripts\editor\dataTables.editor.js" />
@@ -569,6 +570,8 @@
     <Content Include="Views\Report\DepartmentUsageMobile.cshtml" />
     <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
+    <Content Include="Views\StockAdjustment\StoreManagerView.cshtml" />
+    <Content Include="Views\StockAdjustment\StoreClerkView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -67,7 +67,7 @@ namespace team7_ssis.Controllers
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
             sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
-            return View(sv);
+            return View(sv);    
         }
 
         public ActionResult AddItem()

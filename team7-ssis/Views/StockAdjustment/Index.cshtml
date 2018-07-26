@@ -4,9 +4,9 @@
     ViewBag.Title = "Index";
 }
 
-
 @section scripts {
-    <script src="~/Scripts/Custom/StockAdjustment.js"></script>
+    <script src="~/Scripts/Custom/StockAdjustment_Clerk.js"></script>
+    <script src="~/Scripts/Custom/StockAdjustment_ManagerProcess.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
 
 }
@@ -26,24 +26,10 @@
 
 <body>
     <h2>Manage Stock Adjustments</h2>
+    @*@Html.Partial("StoreManagerView")*@
 
-    <div style="width:90%; margin:0 auto" class="tablecontainer">
+    @Html.Partial("StoreClerkView")
 
-        <table id="mySATable" class="hover">
-            <thead>
-                <tr>
-                    <th>StockAdjustmentId</th>
-                    <th>CreatedBy</th>
-                    <th> ApprovedBySupervisor</th>
-                    <th>CreatedDateTime</th>
-                    <th>StatusName</th>
-                    <th>View</th>
-                    <th>Cancel</th>
-                </tr>
-            </thead>
-
-        </table>
-    </div>
 
 </body>
 </html>
