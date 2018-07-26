@@ -205,7 +205,7 @@ namespace team7_ssis.Controllers
 
             return Ok(new MessageViewModel()
             {
-                Message = "Successfully approved"
+                Message = "Successfully rejected"
             });
         }
     }
