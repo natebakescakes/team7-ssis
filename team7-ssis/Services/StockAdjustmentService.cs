@@ -17,6 +17,7 @@ namespace team7_ssis.Tests.Services
         ItemService itemService;
         InventoryRepository inventoryRepository;
         StockMovementRepository stockMovementRepository;
+        StockMovementService stockMovementService;
 
         public StockAdjustmentService(ApplicationDbContext context)
         {
@@ -27,6 +28,7 @@ namespace team7_ssis.Tests.Services
             this.itemService = new ItemService(context);
             this.inventoryRepository = new InventoryRepository(context);
             this.stockMovementRepository = new StockMovementRepository(context);
+            this.stockMovementService = new StockMovementService(context);
         }
 
         //create new StockAdjustment with status: draft
@@ -143,17 +145,8 @@ namespace team7_ssis.Tests.Services
                 //update item inventory
                 foreach (StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
                 {
-                   //save into inventory
-                    itemService.UpdateQuantity(sd.Item, sd.AfterQuantity);                   
+                    stockMovementService.CreateStockMovement(sd);
                 }
-
-                foreach(StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
-                {
-                    //save into StockMovement
-                    SaveStockMovement(sd);
-                }
-
-
 
             }
             return stockadjustment;
@@ -186,25 +179,6 @@ namespace team7_ssis.Tests.Services
             StockAdjustmentDetail s = stockAdjustmentDetailRepository.FindById(stockadjustment_id, itemcode);
             return s;
         }
-
-
-
-        public StockMovement SaveStockMovement(StockAdjustmentDetail sjd)
-        {
-            StockMovement sm = new StockMovement();
-            sm.StockMovementId = IdService.GetNewStockMovementId(context);
-            sm.StockAdjustmentId = sjd.StockAdjustmentId;
-            sm.Item = sjd.Item;           
-            sm.StockAdjustmentDetail = sjd;
-            sm.StockAdjustmentDetailItemCode = sjd.ItemCode;
-            sm.OriginalQuantity = sjd.OriginalQuantity;
-            sm.AfterQuantity = sjd.AfterQuantity;
-
-            sm.CreatedDateTime = DateTime.Now;
-            return stockMovementRepository.Save(sm);
-        }
-
-
 
     }
 }

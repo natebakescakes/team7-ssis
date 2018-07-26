@@ -28,6 +28,7 @@ namespace team7_ssis.Services
             return retrievalRepository.FindAll().ToList();
         }
 
+
         public Retrieval FindRetrievalById(string id)
         {
             return retrievalRepository.FindById(id);
