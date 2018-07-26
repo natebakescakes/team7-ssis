@@ -207,7 +207,7 @@ namespace team7_ssis.Tests.Controllers
             // Assert
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(contentResult.Content.Message, "Successfully approved");
+            Assert.AreEqual(contentResult.Content.Message, "Successfully rejected");
             var result = new RequisitionRepository(context).FindById("RAPICONTROLTEST");
             Assert.AreEqual(expected.Name, result.Status.Name);
         }
