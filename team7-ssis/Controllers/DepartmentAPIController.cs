@@ -64,8 +64,8 @@ namespace team7_ssis.Controllers
             return delegationService.FindAllDelegations().Select(delegation => new DelegationViewModel()
             {
                 Recipient = delegation.Receipient.FirstName + " " + delegation.Receipient.LastName,
-                StartTime = delegation.StartDate.ToShortDateString(),
-                EndTime = delegation.EndDate.ToShortDateString()
+                StartDate = delegation.StartDate.ToShortDateString(),
+                EndDate = delegation.EndDate.ToShortDateString()
             }).ToList();
         }
     }

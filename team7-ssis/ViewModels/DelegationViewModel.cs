@@ -8,7 +8,7 @@ namespace team7_ssis.ViewModels
     public class DelegationViewModel
     {
         public string Recipient { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
     }
 }
