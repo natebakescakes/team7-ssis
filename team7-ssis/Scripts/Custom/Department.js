@@ -19,7 +19,7 @@
         select: 'single'
     });
 
-    var delegationTable = $('#delegationTable').DataTable({
+    var delegationTable = $('#delgTable').DataTable({
 
         sAjaxSource: "api/delegation/all",
         sAjaxDataProp: "",
