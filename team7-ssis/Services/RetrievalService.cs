@@ -55,9 +55,7 @@ namespace team7_ssis.Services
             {
                 foreach (DisbursementDetail detail in d.DisbursementDetails)
                 {
-                    //minus off the quantity from inventory
-                    itemService.AddQuantity(detail.Item, -(detail.ActualQuantity));
-
+                   
                     //Create Stock Movement Transaction
                     stockmovementService.CreateStockMovement(detail);
                 }

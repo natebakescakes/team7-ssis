@@ -58,12 +58,11 @@ namespace team7_ssis.Services
         {
             StockMovement sm = this.InstantiateStockMovement();
             sm.DisbursementDetail = detail;
+            sm.DisbursementId = detail.DisbursementId;
             sm.Item = detail.Item;
-            sm.OriginalQuantity = detail.Item.Inventory.Quantity;
-            sm.AfterQuantity =sm.OriginalQuantity - detail.ActualQuantity;
-
+           
             //Update inventory quantity
-            itemService.UpdateQuantity(sm.Item, sm.AfterQuantity);
+            itemService.AddQuantity(sm.Item, -sm.DisbursementDetail.ActualQuantity);
 
             return this.Save(sm);
         }
@@ -72,12 +71,12 @@ namespace team7_ssis.Services
         {
             StockMovement sm = this.InstantiateStockMovement();
             sm.DeliveryOrderDetail = detail;
+            sm.DeliveryOrderNo = detail.DeliveryOrderNo;
             sm.Item = detail.Item;
-            sm.OriginalQuantity = detail.Item.Inventory.Quantity;
-            sm.AfterQuantity = sm.OriginalQuantity + detail.ActualQuantity;
+          
 
             //Update inventory quantity
-            itemService.UpdateQuantity(sm.Item, sm.AfterQuantity);
+            itemService.AddQuantity(sm.Item, detail.ActualQuantity);
 
             return this.Save(sm);
         }
@@ -86,6 +85,7 @@ namespace team7_ssis.Services
         {
             StockMovement sm = this.InstantiateStockMovement();
             sm.StockAdjustmentDetail = detail;
+            sm.StockAdjustmentId = detail.StockAdjustmentId;
             sm.Item = detail.Item;
             sm.OriginalQuantity = detail.Item.Inventory.Quantity; //should be same as detail.OriginalQuantity
             sm.AfterQuantity = detail.AfterQuantity;

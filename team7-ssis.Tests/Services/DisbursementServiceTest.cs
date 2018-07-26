@@ -62,7 +62,7 @@ namespace team7_ssis.Tests.Services
                 Disbursement = disbursement,
                 Item = context.Item.First(),
                 PlanQuantity = 1,
-                ActualQuantity = 0,
+                ActualQuantity = 0
 
             };
             disbursementdetailRepository.Save(detail);
