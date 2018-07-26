@@ -148,10 +148,11 @@ namespace team7_ssis.Controllers
         }
 
         [HttpPost]
-        public ActionResult DOConfirmationView(string DeliveryOrderNo)
+        public ActionResult DOConfirmationView(string dno)
         {
             DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
-            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(DeliveryOrderNo);
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(dno);
+            DOVM.DeliveryOrderNo = dno;
 
             DOVM.PurchaseOrderNo = deliveryOrder.PurchaseOrder.PurchaseOrderNo;
 

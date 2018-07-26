@@ -18,7 +18,6 @@
 }
 
 <link rel="stylesheet" href="~/Content/Site.css">
-@model team7_ssis.ViewModels.DeliveryOrderViewModel
 
 <!DOCTYPE html>
 <html>
@@ -27,7 +26,6 @@
     <div class="col-md-8">
 
         <h2>View Delivery Orders</h2>
-        @Html.Hidden("doNo", Model.DeliveryOrderNo)
 
     </div>
     <div style="width:90%; margin:0 auto" class="tablecontainer">
@@ -37,7 +35,7 @@
             <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>Download Selected</a>
 
         </div>
-        <table id="myRGTable" class="hover">
+        <table id="myRGTable" class="table table-striped table-bordered" style="width: 100%">
             <thead>
                 <tr>
                     <th>DO Number</th>

@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿
+
+$(document).ready(function () {
 
     var action_dropbox = function (data, type, row, meta) {
 
@@ -62,7 +64,7 @@
 
     var rgTable = $('#myRGTable').DataTable({
         ajax: {
-            url: "api/receivegoods/"+pon,
+            url: "/api/receivegoods/"+ pon,
             dataSrc: ""
         },
         columns:
@@ -103,7 +105,8 @@
                 { data: "PurchaseOrderNo" },
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
-                { data: "Status" }
+                { data: "Status" },
+                {defaultContent: '<input type="button" value="i" id="infobtn" />'}
             ],
         select: "single",
 
@@ -122,6 +125,7 @@
         }
     });
 
+
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
         ajax: {
@@ -136,15 +140,16 @@
                 { data: "QuantityOrdered" },
                 { defaultContent: '<input type="textbox" class="textbox" />' },
                 { data: "RemainingQuantity" },
-                { defaultContent: '<input type="checkbox" class="checkbox" />' }
+                { defaultContent: '<input type="checkbox" class="checkbox" id="vcheck"/>' }
             ],
         select: "single"
     });
 
+   
     //for DOConfirmationPage-outstanding items
     var dTable = $('#myDOTable').DataTable({
         ajax: {
-            url: "api/deliveryorderdetails/"+don,
+            url: "/api/deliveryorderdetails/"+ don,
             dataSrc: ""
         },
 
@@ -152,10 +157,17 @@
             [
                 { data: "ItemCode" },
                 { data: "Description" },
-                { data: "QuantityOrdered" },
-                { data: "ReceivedQuantity" }
+                { data: "QtyOrdered" },
+                { data: "ReceivedQty" }
             ]
     });
+
+    //checkbox 
+    $('#myOutstandingTable tbody').on('change', '#vcheck', function (e) {
+        var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
+        alert(rowSelected);
+    });
+
 
     $('#confirm').click(function () {
         var mydata = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
@@ -184,6 +196,7 @@
 
     });
 
+    // clicks i button from view delivery orders
     $('#myPOTable tbody').on('click', '#infobtn', function (e) {
       
         var dno = pTable.row($(this).parents('tr')).data().DeliveryOrderNo;
@@ -212,36 +225,61 @@
     });
       
 
-
+    // clicks i button from view delivery orders when purchase order no given
     $('#myRGTable tbody').on('click', '#infobtn', function (e) {
 
         var dno = rgtable.row($(this).parents('tr')).data().DeliveryOrderNo;
         alert(dno);
 
 
-        $.ajax({
+        var form = document.createElement("form");
 
-            type: "POST",
+        var element1 = document.createElement("input");
 
-            url: '/deliveryorder/doconfirmationview',
+        form.method = "POST";
 
-            data: dno,
+        form.action = "/deliveryorder/doconfirmationview";
 
-            success: function (data) {
+        element1.value = dno;
 
-                if (data.status) {
+        element1.name = "dno";
 
-                    alert("Information has been successfully updated");
+        element1.type = "hidden";
 
-                    table.ajax.reload();
+        form.appendChild(element1);
 
-                }
+        document.body.appendChild(form);
 
-            }
+        form.submit();
 
-        });
+    });
 
-        e.preventDefault();
+    // clicks i button from view delivery orders when purchase order no given
+    $('#myTable tbody').on('click', '#infobtn', function (e) {
+
+        var pno = Table.row($(this).parents('tr')).data().PurchaseOrderNo;
+        alert(pno);
+
+
+        var form = document.createElement("form");
+
+        var element1 = document.createElement("input");
+
+        form.method = "POST";
+
+        form.action = "/deliveryorder/doconfirmationview";
+
+        element1.value = pno;
+
+        element1.name = "pno";
+
+        element1.type = "hidden";
+
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
 
     });
 });

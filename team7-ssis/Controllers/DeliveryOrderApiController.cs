@@ -71,9 +71,9 @@ namespace team7_ssis.Controllers
         //returns all deliveryorderdetails
         [Route("api/deliveryorderdetails/{deliveryorderno}")]
         [HttpGet]
-        public List<DeliveryOrderDetailsViewModel> OutstandingItems(string donum)
+        public List<DeliveryOrderDetailsViewModel> OutstandingItems(string deliveryorderno)
         {
-            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(donum);
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(deliveryorderno);
             List<DeliveryOrderDetail> dlist = new List<DeliveryOrderDetail>();
             foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
             {
@@ -93,9 +93,9 @@ namespace team7_ssis.Controllers
         [Route("api/purchaseorder/details/{purchaseorderno}")]
         [HttpGet]
 
-        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseOrderNo)
+        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseorderNo)
         {
-            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNo);
+            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseorderNo);
 
             return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
 
