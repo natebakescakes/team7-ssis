@@ -10,6 +10,7 @@ namespace team7_ssis.Tests.Repositories
     public class DeliveryOrderDetailRepositoryTests
     {
         ApplicationDbContext context;
+        DeliveryOrderRepository deliveryOrderRepository;
         DeliveryOrderDetailRepository deliveryOrderDetailRepository;
 
         [TestInitialize]
@@ -17,6 +18,7 @@ namespace team7_ssis.Tests.Repositories
         {
             // Arrange
             context = new ApplicationDbContext();
+            deliveryOrderRepository = new DeliveryOrderRepository(context);
             deliveryOrderDetailRepository = new DeliveryOrderDetailRepository(context);
         }
 
@@ -43,8 +45,21 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            var expected = new DeliveryOrderDetail()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                ItemCode = "E030",
+            };
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            deliveryOrderDetailRepository.Save(expected);
+
             // Act
-            var result = deliveryOrderDetailRepository.FindById("TEST", "E030");
+            var result = deliveryOrderDetailRepository.FindById("DODREPOTEST", "E030");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(DeliveryOrderDetail));
@@ -53,56 +68,109 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            var expected = new DeliveryOrderDetail()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                ItemCode = "E030",
+            };
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            deliveryOrderDetailRepository.Save(expected);
+
             // Act
-            var result = deliveryOrderDetailRepository.ExistsById("TEST", "E030");
+            var result = deliveryOrderDetailRepository.ExistsById("DODREPOTEST", "E030");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeStatus()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
+            // Arrange - Initialize
             var status = new StatusRepository(context).FindById(14);
-            var deliveryOrderDetail = deliveryOrderDetailRepository.FindById("TEST", "E030");
-            var original = deliveryOrderDetail.Status;
-            deliveryOrderDetail.Status = status;
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            deliveryOrderDetailRepository.Save(new DeliveryOrderDetail()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                Status = status,
+                ItemCode = "E030",
+            });
+
+            // Arrange - Get Existing
+            var expected = deliveryOrderDetailRepository.FindById("DODREPOTEST", "E030");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = deliveryOrderDetailRepository.Save(deliveryOrderDetail);
+            var result = deliveryOrderDetailRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(status, result.Status);
-
-            // Tear Down
-            deliveryOrderDetail.Status = original;
-            deliveryOrderDetailRepository.Save(deliveryOrderDetail);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
-        public void SaveAndDeleteTestNew()
+        public void Save_InstanceOfType()
         {
-            // Save new object into DB
             // Arrange
             var deliveryOrderDetail = new DeliveryOrderDetail
             {
-                DeliveryOrderNo = "TEST",
+                DeliveryOrderNo = "DODREPOTEST",
                 ItemCode = "P030"
             };
-
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            
             // Act
             var saveResult = deliveryOrderDetailRepository.Save(deliveryOrderDetail);
 
             // Assert
             Assert.IsInstanceOfType(saveResult, typeof(DeliveryOrderDetail));
+        }
 
-            // Delete saved object from DB
+        [TestMethod]
+        public void Delete_CannotFind()
+        {
+            // Arrange
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            var saveResult = deliveryOrderDetailRepository.Save(new DeliveryOrderDetail()
+            {
+                DeliveryOrderNo = "DODREPOTEST",
+                ItemCode = "E030",
+            });
+
             // Act
             deliveryOrderDetailRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(deliveryOrderDetailRepository.FindById("TEST", "P030"));
+            Assert.IsNull(deliveryOrderDetailRepository.FindById("DODREPOTEST", "E030"));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (deliveryOrderDetailRepository.ExistsById("DODREPOTEST", "E030"))
+                deliveryOrderDetailRepository.Delete(deliveryOrderDetailRepository.FindById("DODREPOTEST", "E030"));
+
+            if (deliveryOrderDetailRepository.ExistsById("DODREPOTEST", "P030"))
+                deliveryOrderDetailRepository.Delete(deliveryOrderDetailRepository.FindById("DODREPOTEST", "P030"));
+
+            if (deliveryOrderRepository.ExistsById("DODREPOTEST"))
+                deliveryOrderRepository.Delete(deliveryOrderRepository.FindById("DODREPOTEST"));
+
         }
     }
 }

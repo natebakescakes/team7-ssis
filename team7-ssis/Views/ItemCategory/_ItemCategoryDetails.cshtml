@@ -1,0 +1,55 @@
+﻿@model team7_ssis.ViewModels.ItemCategoryViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = "ItemCategoryDetails";
+}
+
+@using (Html.BeginForm("Save", "ItemCategory", FormMethod.Post, new { @id = "itemcategorydetails", role = "form" }))
+{
+    <div class="row">
+        <div class=" form-group col-sm-3">
+            <label for="ItemCategoryId">Item Category ID</label><br />
+            <label id="ItemCategoryId"></label>
+            @Html.TextBoxFor(m => m.ItemCategoryId, new { @id = "ItemCategoryId", @class = "form-control",type="hidden"})
+
+        </div>
+
+        <div class="form-group col-sm-6">
+            <label for="Name">Item Category Name</label><br />
+            @Html.TextBoxFor(m => m.Name, new { @id = "Name", @class = "form-control" })
+        </div>
+
+        <div class="form-group col-sm-3">
+            <label for="Status">Status</label><br />
+            @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+
+        </div>
+    </div>
+        <div class="row">
+            <div class="form-group col-sm-3">
+                <label for="Name">Item Category Description</label><br />
+                @Html.TextBoxFor(m => m.Description, new { @id = "Description", @class = "form-control" })
+
+            </div>
+
+            <div class="form-group col-sm-9"></div>
+
+        </div>
+
+
+            <a id="edit-btn" class="btn btn-secondary pull-right"><i class="fa fa-edit" aria-hidden="true"></i> Edit Details</a>
+            <br />
+            <div class="button-set">
+                <div class="form-row pull-right">
+                    <a id="cancel-btn" class="btn btn-danger"> Cancel</a>
+                    <button id="submit" type="submit" class="btn btn-success"> Save</button>
+
+
+                </div>
+            </div>
+
+
+ }
+
