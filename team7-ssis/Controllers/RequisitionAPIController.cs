@@ -32,7 +32,7 @@ namespace team7_ssis.Controllers
             itemService = new ItemService(context);
         }
 
-        public ApplicationDbContext Context { get { return context; } set { Context = value; } }
+        public ApplicationDbContext Context { get { return context; } set { context = value; } }
 
         [Route("api/reqdetail/all")]
         [HttpGet]

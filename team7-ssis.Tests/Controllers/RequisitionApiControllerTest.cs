@@ -48,6 +48,7 @@ namespace team7_ssis.Tests.Controllers
                         Quantity = 1,
                     }
                 },
+                Status = new StatusService(context).FindStatusByStatusId(4),
                 CreatedBy = new UserRepository(context).FindByEmail("EnglishEmp@email.com"),
                 CreatedDateTime = DateTime.Now,
             });
@@ -101,6 +102,114 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsNotNull(contentResult.Content);
             Assert.IsTrue(contentResult.Content.Select(d => d.RequisitionId).Contains(expectedId));
             Assert.IsTrue(contentResult.Content.Select(d => d.RequisitionDetails.Select(dd => dd.Qty)).FirstOrDefault().Contains(expectedQuantity));
+        }
+
+        [TestMethod]
+        public void ApproveRequisition_BadRequest()
+        {
+            // Arrange
+            var controller = new RequisitionAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+            var requisition = requisitionRepository.FindById("RAPICONTROLTEST");
+            requisition.Status = new StatusService(context).FindStatusByStatusId(6);
+            requisitionRepository.Save(requisition);
+
+            // Act
+            IHttpActionResult actionResult = controller.ApproveRequisition(new RequisitionIdViewModel()
+            {
+                RequisitionId = "RAPICONTROLTEST",
+                Email = "root@admin.com",
+            });
+
+            // Assert
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+        }
+
+        [TestMethod]
+        public void ApproveRequisition_Valid()
+        {
+            // Arrange
+            var expected = new StatusService(context).FindStatusByStatusId(6);
+            var controller = new RequisitionAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.ApproveRequisition(new RequisitionIdViewModel()
+            {
+                RequisitionId = "RAPICONTROLTEST",
+                Email = "root@admin.com",
+            });
+            var contentResult = actionResult as OkNegotiatedContentResult<MessageViewModel>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(contentResult.Content.Message, "Successfully approved");
+            var result = new RequisitionRepository(context).FindById("RAPICONTROLTEST");
+            Assert.AreEqual(expected.Name, result.Status.Name);
+        }
+
+        [TestMethod]
+        public void RejectRequisition_BadRequest()
+        {
+            // Arrange
+            var controller = new RequisitionAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+            var requisition = requisitionRepository.FindById("RAPICONTROLTEST");
+            requisition.Status = new StatusService(context).FindStatusByStatusId(5);
+            requisitionRepository.Save(requisition);
+
+            // Act
+            IHttpActionResult actionResult = controller.RejectRequisition(new RequisitionIdViewModel()
+            {
+                RequisitionId = "RAPICONTROLTEST",
+                Email = "root@admin.com",
+            });
+
+            // Assert
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+        }
+
+        [TestMethod]
+        public void RejectRequisition_Valid()
+        {
+            // Arrange
+            var expected = new StatusService(context).FindStatusByStatusId(5);
+            var controller = new RequisitionAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.RejectRequisition(new RequisitionIdViewModel()
+            {
+                RequisitionId = "RAPICONTROLTEST",
+                Email = "root@admin.com",
+            });
+            var contentResult = actionResult as OkNegotiatedContentResult<MessageViewModel>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(contentResult.Content.Message, "Successfully approved");
+            var result = new RequisitionRepository(context).FindById("RAPICONTROLTEST");
+            Assert.AreEqual(expected.Name, result.Status.Name);
         }
 
         [TestCleanup]
