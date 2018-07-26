@@ -1,12 +1,4 @@
-﻿@section scripts {
-
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
-    |}
+﻿
 
 @model team7_ssis.ViewModels.PurchaseOrderViewModel
 
@@ -22,7 +14,7 @@
     <div class="col-md-8">
 
         <h2>Receive Goods</h2>
-        @Html.Hidden("poNo",Model.PurchaseOrderNo)
+        @Html.Hidden("poNo", Model.PurchaseOrderNo)
 
     </div>
     <h1>Submit delivery order forms & invoices and update inventory</h1>
@@ -30,23 +22,26 @@
 
         @using (Html.BeginForm("ReceivedGoodsPurchaseOrderView", "DeliveryOrder", FormMethod.Get, new { Id = "Form1" }))
         {<button class="btn btn-default pull-right">View Related Delivery Order</button>}
-        <div>
-            <table  class="table table-striped table-bordered" style="width: 100%">
-                <thead>
-                    <tr>
-                        <td>Purchase Order #</td>
-                        <td> Supplier Name</td>
-                        <td>Order Date</td>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
-                    <td>@Html.DisplayFor(model => model.SupplierName)</td>
-                    <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-                </tr>
-            </table>
-            <button id="viewBtn" class="btn btn-default mb-3">View</button>
-        </div>
+         <div>
+             <table class="table table-striped table-bordered" style="width: 100%">
+                 <thead>
+                     <tr>
+                         <td>Purchase Order #</td>
+                         <td> Supplier Name</td>
+                         <td>Order Date</td>
+                     </tr>
+                 </thead>
+                 <tr>
+                     <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
+                     <td>@Html.DisplayFor(model => model.SupplierName)</td>
+                     <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+                 </tr>
+             </table>
+             @*<button id="viewBtn" class="btn btn-default mb-3">View</button>*@
+             @using (Html.BeginForm("####", "PurchaseOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
+             {@Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type = "hidden" })
+         <input type="submit" name="viewbtn" value="View" />}
+         </div>
     </div>
 
     <br /><br />
@@ -57,29 +52,33 @@
 
     <table>
         <tr>
-            <td>File:</td>
+            <td>Upload Delivery Order</td>
             <td>
-                <input type="file" name="UploadedFile" />
+                <input type="file" name="DeliveryOrderFile" />
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-                @using (Html.BeginForm("ImageUpload", "DeliveryOrder", FormMethod.Post, new { Id = "Form" }))
-                {
-                    <input type="submit" name="Submit" value="AddFile" />
-                }
+            <td>Upload Invoice</td>
+            <td>
+                <input type="file" name="InvoiceFileName" />
             </td>
         </tr>
     </table>
     <div class="row mt-3">
         <div class="col-md-12">
-            @using (Html.BeginForm("Save", "DeliveryOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
-            {
-                @Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type="hidden"})
-                <input type="submit" name="Submit" value="Submit" />
-            }
-            @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
-            {<button class="btn btn-primary">Cancel</button>}
+            <table>
+                <tr>
+                    <td>
+                        @using (Html.BeginForm("Save", "DeliveryOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
+                        {@Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type = "hidden" })
+                        <input type="submit" name="Submit" value="Submit" />}
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
+                        {<button class="btn btn-primary">Cancel</button>}
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>

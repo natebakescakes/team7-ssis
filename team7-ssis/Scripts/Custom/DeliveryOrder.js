@@ -1,5 +1,4 @@
 ﻿
-
 $(document).ready(function () {
 
     var action_dropbox = function (data, type, row, meta) {
@@ -53,7 +52,38 @@ $(document).ready(function () {
                 $('td', row).eq(4).addClass('awaiting-delivery');
 
             }
+        },
 
+        initComplete: function () { // After DataTable initialized
+
+            this.api().columns([4]).every(function () {
+
+                var column = this;
+
+                var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
+
+                    .prependTo($('.dataTables_filter'))
+
+                var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
+
+                var select = $('#sel1').on('change', function () {
+
+                    var val = $(this).val() + '';
+
+                    column.search(val != '' ? '^' + val.split(',').join('$|^') + '$' : '', true, false).draw();
+
+                });
+
+
+                column.data().unique().sort().each(function (d, j) {
+
+                    select.append('<option value="' + d + '">' + d + '</option>')
+
+                });
+
+                $('.selectpicker').selectpicker();
+
+            }); // this.api function
         }
     });
 
@@ -91,6 +121,38 @@ $(document).ready(function () {
 
             }
 
+        },
+
+        initComplete: function () { // After DataTable initialized
+
+            this.api().columns([3]).every(function () {
+
+                var column = this;
+
+                var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
+
+                    .prependTo($('.dataTables_filter'))
+
+                var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
+
+                var select = $('#sel1').on('change', function () {
+
+                    var val = $(this).val() + '';
+
+                    column.search(val != '' ? '^' + val.split(',').join('$|^') + '$' : '', true, false).draw();
+
+                });
+
+
+                column.data().unique().sort().each(function (d, j) {
+
+                    select.append('<option value="' + d + '">' + d + '</option>')
+
+                });
+
+                $('.selectpicker').selectpicker();
+
+            }); // this.api function
         }
     });
 
