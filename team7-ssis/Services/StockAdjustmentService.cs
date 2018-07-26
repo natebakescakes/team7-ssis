@@ -207,6 +207,24 @@ namespace team7_ssis.Tests.Services
             return stockMovementRepository.Save(sm);
         }
 
+        public StockAdjustment updateStockAdjustment(StockAdjustment sa)
+        {
+            stockAdjustmentRepository.Save(sa);
+            return sa;
+
+        }
+
+        public StockAdjustmentDetail updateStockAdjustmentDetail(StockAdjustmentDetail sd)
+        {
+            stockAdjustmentDetailRepository.Save(sd);
+            return sd;
+        }
+
+        public StockAdjustmentDetail findStockAdjustmentDetailById(string id,string itemcode)
+        {
+            return stockAdjustmentDetailRepository.FindById(id, itemcode);
+        }
+
 
 
     }

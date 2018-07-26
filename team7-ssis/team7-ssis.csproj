@@ -402,7 +402,6 @@
     <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\CreateRequisition.js" />
     <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
-    <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
     <Content Include="Scripts\Custom\RedirectPost.js" />

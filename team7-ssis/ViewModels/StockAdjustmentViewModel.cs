@@ -7,8 +7,16 @@ using team7_ssis.Models;
 namespace team7_ssis.ViewModels
 {
 
-    public class ViewModelOfDetail
+    public class ViewModelFromNew
+    {       
+        public string Itemcode;
+        public string Reason;
+        public int Adjustment;
+    }
+
+    public class ViewModelFromEditDetail
     {
+        public string StockAdjustmentID;
         public string Itemcode;
         public string Reason;
         public int Adjustment;

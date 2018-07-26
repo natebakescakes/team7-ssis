@@ -18,9 +18,7 @@ namespace team7_ssis.Controllers
     {
         ApplicationDbContext context;
         StockAdjustmentService stockAdjustmentService;
-        //StockAdjustmentRepository stockAdjustmentRepository;
-        //StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
-        ItemService itemService;
+      ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
         public StockAdjustmentAPIController()
@@ -62,16 +60,16 @@ namespace team7_ssis.Controllers
         }
         [Route("api/stockadjustment/save")]
         [HttpPost]
-        public void SaveStockAdjustmentAsDraft(List<ViewModelOfDetail> list)
+        public void SaveStockAdjustmentAsDraft(List<ViewModelFromNew> list)
         {
+           
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
             s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);
             string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
             s.CreatedBy = userService.FindUserByEmail(UserName);
             s.CreatedDateTime = DateTime.Now;
-
-            foreach (ViewModelOfDetail v in list )
+            foreach (ViewModelFromNew v in list )
             {
                 StockAdjustmentDetail sd = new StockAdjustmentDetail();
                 string itemcode = v.Itemcode;
@@ -92,7 +90,7 @@ namespace team7_ssis.Controllers
 
         [Route("api/stockadjustment/confirm")]
         [HttpPost]
-        public void CreatePendingStockAdjustmentPending(List<ViewModelOfDetail> list)
+        public void CreatePendingStockAdjustmentPending(List<ViewModelFromNew> list)
         {
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
@@ -100,8 +98,8 @@ namespace team7_ssis.Controllers
             string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
             s.CreatedBy = userService.FindUserByEmail(UserName);
             s.CreatedDateTime = DateTime.Now;
-
-            foreach (ViewModelOfDetail v in list)
+        
+            foreach (ViewModelFromNew v in list)
             {
                 StockAdjustmentDetail sd = new StockAdjustmentDetail();
                 string itemcode = v.Itemcode;
@@ -126,23 +124,26 @@ namespace team7_ssis.Controllers
 
 
         }
+        [Route("api/stockadjustment/update")]
+        [HttpPost]
+        public void UpdateStockAdjustment(List<ViewModelFromEditDetail> list)
+        {
+        
+            foreach (ViewModelFromEditDetail v in list)
+            {
+                StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
+                sd.Reason = v.Reason;
+                sd.AfterQuantity = sd.OriginalQuantity + v.Adjustment;
+                stockAdjustmentService.updateStockAdjustmentDetail(sd);
+            }
+        }
 
 
         [Route("api/stockadjustment/detail/{StockAdjustmentId}")]
         [HttpGet]
         public IEnumerable<StockAdjustmentDetailViewModel>  GetStockAdjustmentDetail(string StockAdjustmentId)
         {
-            // StockAdjustmentDetailListViewModel viewModel = new StockAdjustmentDetailListViewModel();
-
-            // StockAdjustmentViewModel stockAdjustmentViewModel = new StockAdjustmentViewModel();
-
-            //stockAdjustmentViewModel.StockAdjustmentId = sd.StockAdjustmentId;
-            //stockAdjustmentViewModel.CreatedBy = sd.CreatedBy == null ? "" : sd.CreatedBy.FirstName + " " + sd.CreatedBy.LastName;
-            //stockAdjustmentViewModel.CreatedDateTime = sd.CreatedDateTime;
-            //stockAdjustmentViewModel.ApprovedBySupervisor = sd.ApprovedBySupervisor == null ? "" : sd.ApprovedBySupervisor.FirstName + " " + sd.ApprovedBySupervisor.LastName;
-            //stockAdjustmentViewModel.UpdateDateTime = sd.UpdatedDateTime == null ? DateTime.Now :(DateTime)sd.UpdatedDateTime;
-
-        
+   
 
             List<StockAdjustmentDetailViewModel> detailListViewModel = new List<StockAdjustmentDetailViewModel>();
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(StockAdjustmentId);

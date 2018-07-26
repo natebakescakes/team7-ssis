@@ -16,7 +16,7 @@
 
                 "render": function (data, type, full, meta) {
 
-                    return "<button class='btn btn-safe' id='viewBtn' style='font-size: 12px'><i class='fa fa-view'>View</i></button>";
+                    return "<button class='btn btn-safe' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
 
                 }
 
@@ -27,7 +27,7 @@
 
                 "render": function (data, type, full, meta) {
 
-                    return "<button class='btn btn-danger' id='cancelBtn' style='font-size: 12px'><i class='fa fa-delete'>Cancel</i></button>";
+                    return "<button class='btn btn-danger' id='cancelBtn' ><i class='fa fa-delete'>Cancel</i></button>";
 
                 }
             }
@@ -40,24 +40,24 @@
             { data: "CreatedDateTime"},
             { data: "StatusName" },
             { data: null },
-            { data: null },
+            { data: null }
         ],
         autowidth: true,
         select: "single",
         createdRow: function (row, data, dataIndex) {
-            if (data.StatusName == "Approved") {
+            if (data.StatusName === "Approved") {
                 $('td', row).eq(4).addClass('delivered');
             }
-            if (data.StatusName == "Pending Approval") {
+            if (data.StatusName === "Pending Approval") {
                 $('td', row).eq(4).addClass('partially-delivered');
             }
-            if (data.StatusName == "Rejected") {
+            if (data.StatusName === "Rejected") {
                 $('td', row).eq(4).addClass('awaiting-delivery');
             }
-            if (data.StatusName == "Draft") {
+            if (data.StatusName === "Draft") {
                 $('td', row).eq(4).addClass('draft');
             }
-            if (data.StatusName == "Cancelled") {
+            if (data.StatusName === "Cancelled") {
                 $('td', row).eq(4).addClass('cancel');
             }
         }
