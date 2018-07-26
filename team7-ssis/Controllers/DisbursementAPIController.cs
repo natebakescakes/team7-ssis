@@ -12,21 +12,22 @@ namespace team7_ssis.Controllers
 {
     public class DisbursementAPIController : ApiController
     {
-        ApplicationDbContext context;
         DisbursementService disbursementService;
 
         public DisbursementAPIController()
         {
-            context = new ApplicationDbContext();
-            disbursementService = new DisbursementService(context);
+            Context = new ApplicationDbContext();
+            disbursementService = new DisbursementService(Context);
         }
+
+        public ApplicationDbContext Context { get; set; }
 
         /// <summary>
         /// Retrieves all Disbursement Details for the Disbursement
         /// </summary>
         [Route("api/disbursement/{did}")]
         [HttpGet]
-        public IEnumerable<DisbursementFormTableViewModel> FindDisbursementDetailsByDisbursement (string did)
+        public IEnumerable<DisbursementFormTableViewModel> FindDisbursementDetailsByDisbursement(string did)
         {
             Disbursement d = disbursementService.FindDisbursementById(did);
             List<DisbursementFormTableViewModel> viewModel = new List<DisbursementFormTableViewModel>();
@@ -68,6 +69,21 @@ namespace team7_ssis.Controllers
                     Uom = d.Item.Uom,
                 }).ToList()
             }));
+        }
+
+        [Route("api/disbursement/collect")]
+        public IHttpActionResult ConfirmCollection([FromBody] String disbursementId)
+        {
+            try
+            {
+                new DisbursementService(Context).ConfirmCollection(disbursementId);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Disbursement already collected!");
+            }
+
+            return Ok("Success");
         }
     }
 }

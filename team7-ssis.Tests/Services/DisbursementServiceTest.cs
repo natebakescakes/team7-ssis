@@ -92,6 +92,24 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ConfirmCollection_ThrowsError()
+        {
+            // Arrange
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "COLLECTIONTEST",
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(10),
+            });
+
+            // Act
+            disbursementService.ConfirmCollection("COLLECTIONTEST");
+
+            // Assert
+        }
+
+        [TestMethod]
         public void FindDisbursementsByRetrievalIdTest()
         {
             //Arrange
@@ -158,6 +176,9 @@ namespace team7_ssis.Tests.Services
             //    disbursementRepository.Delete(d);
 
             //}
+
+            if (disbursementRepository.ExistsById("COLLECTIONTEST"))
+                disbursementRepository.Delete(disbursementRepository.FindById("COLLECTIONTEST"));
         }
 
     }

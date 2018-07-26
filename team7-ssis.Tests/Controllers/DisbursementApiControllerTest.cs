@@ -16,22 +16,30 @@ namespace team7_ssis.Tests.Controllers
     [TestClass]
     public class DisbursementApiControllerTest
     {
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
-        {
-            ApplicationDbContext context = new ApplicationDbContext();
-            RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-            RetrievalRepository retrievalRepository = new RetrievalRepository(context);
-            DisbursementRepository disbursementRepository = new DisbursementRepository(context);
-            DepartmentRepository departmentRepository = new DepartmentRepository(context);
+        private ApplicationDbContext context;
+        private RequisitionRepository requisitionRepository;
+        private RetrievalRepository retrievalRepository;
+        private DisbursementRepository disbursementRepository;
+        private DepartmentRepository departmentRepository;
 
+        public DisbursementApiControllerTest()
+        {
+            context = new ApplicationDbContext();
+            requisitionRepository = new RequisitionRepository(context);
+            retrievalRepository = new RetrievalRepository(context);
+            disbursementRepository = new DisbursementRepository(context);
+            departmentRepository = new DepartmentRepository(context);
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
             var requisition = requisitionRepository.Save(new Requisition()
             {
                 RequisitionId = "DAPICONTROLTEST",
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
-
             });
             var retrieval = retrievalRepository.Save(new Retrieval()
             {
@@ -81,19 +89,59 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsTrue(contentResult.Content.Select(d => d.DisbursementDetails.Select(dd => dd.Qty)).FirstOrDefault().Contains(expectedQuantity));
         }
 
-        [ClassCleanup]
-        public static void ClassCleanup()
+        [TestMethod]
+        public void ConfirmCollect_BadRequest()
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-            RetrievalRepository retrievalRepository = new RetrievalRepository(context);
-            DisbursementRepository disbursementRepository = new DisbursementRepository(context);
-            DepartmentRepository departmentRepository = new DepartmentRepository(context);
+            // Arrange
+            var controller = new DisbursementAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+            var disbursement = disbursementRepository.FindById("DAPICONTROLTEST");
+            disbursement.Status = new StatusService(context).FindStatusByStatusId(10);
+            disbursementRepository.Save(disbursement);
 
-            if (requisitionRepository.ExistsById("DAPICONTROLTEST"))
-                requisitionRepository.Delete(requisitionRepository.FindById("DAPICONTROLTEST"));
+            // Act
+            IHttpActionResult actionResult = controller.ConfirmCollection("DAPICONTROLTEST");
+
+            // Assert
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+        }
+
+        [TestMethod]
+        public void ConfirmCollect_Valid()
+        {
+            // Arrange
+            var expected = new StatusService(context).FindStatusByStatusId(10);
+            var controller = new DisbursementAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.ConfirmCollection("DAPICONTROLTEST");
+            var contentResult = actionResult as OkNegotiatedContentResult<String>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(contentResult.Content, "Success");
+            var result = new DisbursementRepository(context).FindById("DAPICONTROLTEST");
+            Assert.AreEqual(expected.Name, result.Status.Name);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
             if (disbursementRepository.ExistsById("DAPICONTROLTEST"))
                 disbursementRepository.Delete(disbursementRepository.FindById("DAPICONTROLTEST"));
+            if (requisitionRepository.ExistsById("DAPICONTROLTEST"))
+                requisitionRepository.Delete(requisitionRepository.FindById("DAPICONTROLTEST"));
             if (retrievalRepository.ExistsById("DAPICONTROLTEST"))
                 retrievalRepository.Delete(retrievalRepository.FindById("DAPICONTROLTEST"));
         }

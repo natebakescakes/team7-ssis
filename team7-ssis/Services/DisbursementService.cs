@@ -58,7 +58,10 @@ namespace team7_ssis.Services
 
         public Disbursement ConfirmCollection(string DisbursementId)
         {
-                      
+            // Throw error if Disbursement already collected
+            if (disbursementRepository.FindById(DisbursementId).Status == new StatusService(context).FindStatusByStatusId(10))
+                throw new ArgumentException("Items already collected!");
+
             //get the disbursement object
             Disbursement disbursement = this.FindDisbursementById(DisbursementId);
 
