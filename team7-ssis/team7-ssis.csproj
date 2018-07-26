@@ -297,6 +297,7 @@
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="ViewModels\DelegationViewModel.cs" />
+    <Compile Include="ViewModels\DepartmentDelegationViewModel.cs" />
     <Compile Include="ViewModels\EditItemFinalViewModel.cs" />
     <Compile Include="ViewModels\ItemDetailModel.cs" />
     <Compile Include="ViewModels\ItemDetailsSupplierInfoViewModel.cs" />

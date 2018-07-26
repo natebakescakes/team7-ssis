@@ -40,6 +40,11 @@ namespace team7_ssis.Services
 
             return userRepository.FindSupervisorByDepartment(department).ToList();
         }
+        
+        public ApplicationUser FindRepresentativeByDepartment(Department department)
+        {
+            return userRepository.FindRepByDepartment(department).FirstOrDefault();
+        }
 
         public ApplicationUser Save(ApplicationUser user)
         {

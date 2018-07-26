@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -20,6 +21,7 @@ namespace team7_ssis.Controllers
         ApplicationUser user;
         StatusService statusService;
         DelegationService delegationService;
+        UserRepository userRepository;
         
         public DepartmentController()
         {
@@ -30,7 +32,7 @@ namespace team7_ssis.Controllers
             user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             statusService = new StatusService(context);
             delegationService = new DelegationService(context);
-
+            userRepository = new UserRepository(context);
         }
 
         [HttpGet]
@@ -39,7 +41,8 @@ namespace team7_ssis.Controllers
             List<ApplicationUser> userByDepartmentList = departmentService.FindUsersByDepartment(user.Department);
 
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
-
+            CollectionPoint collectionPoint = collectionPointService.FindCollectionPointByDepartment(user.Department);
+            ApplicationUser departmentRep = userService.FindRepresentativeByDepartment(user.Department);
             return View(new DepartmentViewModel
             {
                 UsersByDepartment = new SelectList(
@@ -52,7 +55,9 @@ namespace team7_ssis.Controllers
                      "Value",
                      "Text"
                 ),
-                //SelectedCollectionPoint = 2
+                CollectionPoint = collectionPoint.Name, //sets current value as default value on dropdownlist
+                DepartmentRep = departmentRep.FirstName + " " + departmentRep.LastName
+             
             });
         }
     
@@ -63,17 +68,14 @@ namespace team7_ssis.Controllers
             list.Add(statusService.FindStatusByStatusId(1));
             List<ApplicationUser> allUsersList = userService.FindAllUsers();
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
-
-
+            
             return View(new DepartmentViewModel
             {
                 Statuses = new SelectList(
                     list.Select(x => new { Value = x.StatusId, Text = x.Name }),
                      "Value",
                     "Text"
-
                 ),
-                
                 AllUsers = new SelectList(
                      allUsersList.Select(x => new { value = x.Email, text = x.FirstName+ " " +x.LastName}),
                      "Value",
@@ -85,8 +87,6 @@ namespace team7_ssis.Controllers
                      "Text"
                 )
             });
-          
-
         }
         [HttpPost]
         public ActionResult SaveOptions(DepartmentViewModel model)
@@ -95,24 +95,30 @@ namespace team7_ssis.Controllers
             Department dpt = departmentService.FindDepartmentByUser(user);
             Delegation delegation = new Delegation();
             
-          
+            
             dpt.UpdatedDateTime = DateTime.Now;
             dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
-
             dpt.Representative = userService.FindUserByEmail(model.DepartmentRep);
             dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPoint));
 
+            if (departmentService.Save(dpt) != null) status = true;
+
             delegation.Receipient = userService.FindUserByEmail(model.DelegationRecipient);
 
-             if (departmentService.Save(dpt) != null) status = true;
-
-             
-            
-            return RedirectToAction("DepartmentOptions");
-
-
-
+            if (delegation.Receipient != null)
+            {
+                delegation.DelegationId = IdService.GetNewDelegationId(context);
+                delegation.StartDate = DateTime.Parse(model.StartDate, new CultureInfo("fr-FR", false));
+                delegation.EndDate = DateTime.Parse(model.EndDate, new CultureInfo("fr-FR", false));
+                delegation.CreatedDateTime = DateTime.Now;
+                delegation.CreatedBy = user;
+                delegation.Status = statusService.FindStatusByStatusId(1);
+                delegationService.DelegateManager(delegation);
+            }
+            return new JsonResult { Data = new { status = status } };
+           
         }
+
         [HttpPost]
         public ActionResult Save(DepartmentViewModel model)
         {
@@ -126,7 +132,6 @@ namespace team7_ssis.Controllers
                 dpt.CreatedDateTime = DateTime.Now;
                 dpt.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
                 dpt.Representative = userService.FindUserByEmail(model.DepartmentRep);
-
             }
 
             else
@@ -139,7 +144,6 @@ namespace team7_ssis.Controllers
                 dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
 
             }
-
             
             dpt.Name = model.DepartmentName;
             dpt.Head = userService.FindUserByEmail(model.EmailHead);
@@ -148,16 +152,12 @@ namespace team7_ssis.Controllers
             dpt.ContactName = model.ContactName;
             dpt.PhoneNumber = model.PhoneNumber;
             dpt.FaxNumber = model.PhoneNumber;
-            dpt.Status = statusService.FindStatusByStatusId(model.Status);
+            dpt.Status = statusService.FindStatusByStatusId(1);
             
-            
-
             //save info to database
             if (departmentService.Save(dpt) != null) status = true;
-
             
             return new JsonResult { Data = new { status = status } };
         }
-
     }
 }

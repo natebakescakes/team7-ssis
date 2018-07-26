@@ -1,11 +1,11 @@
 ﻿$(document).ready(function () {
 
-    
+
     var oTable = $('#dptTable').DataTable({
-
-        sAjaxSource: "api/department/all",
-        sAjaxDataProp: "",
-
+        ajax: {
+            url: "/api/department/all",
+            dataSrc: ""
+        },
         columns: [
             { "data": "DepartmentCode", "autowidth": true },
             { "data": "DepartmentName", "autowidth": true },
@@ -20,10 +20,10 @@
     });
 
     var delegationTable = $('#delgTable').DataTable({
-
-        sAjaxSource: "api/delegation/all",
-        sAjaxDataProp: "",
-
+        ajax: {
+            url: "/api/delegation/all",
+            dataSrc: ""
+        },
         columns: [
             { "data": "Recipient", "autowidth": true },
             { "data": "StartDate", "autowidth": true },
@@ -49,7 +49,7 @@
                 }
                 document.getElementById('DepartmentRepresentative').innerText = xid;
             }
-            
+
         });
 
         $('#edit-btn').show();
@@ -92,19 +92,21 @@
     });
 
     $('#departmentoptions').submit(function (event) {
+
         $.ajax({
             type: "POST",
             url: '/department/SaveOptions',
             data: $('#departmentoptions').serialize(),
             success: function (data) {
-                if (data.status) {
+                if (data.status) {  
                     alert("Department information has been successfully updated");
-                    cancelbtn.click();
-                    oTable.ajax.reload();
+                    
+                    delegationTable.ajax.reload();
                 }
             }
-        });
 
+        });
+     
         event.preventDefault();
     });
 
@@ -145,4 +147,11 @@
             .find('select')
             .prop('disabled', true);
     }
-})
+
+    $(".date-picker").datepicker({
+        todayHighlight: true,
+        format: 'dd/mm/yyyy',
+        startDate: "0d"
+    });
+
+});
