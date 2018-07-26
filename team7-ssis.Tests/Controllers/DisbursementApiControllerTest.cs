@@ -104,7 +104,10 @@ namespace team7_ssis.Tests.Controllers
             disbursementRepository.Save(disbursement);
 
             // Act
-            IHttpActionResult actionResult = controller.ConfirmCollection("DAPICONTROLTEST");
+            IHttpActionResult actionResult = controller.ConfirmCollection(new DisbursementIdViewModel()
+            {
+                DisbursementId = "DAPICONTROLTEST",
+            });
 
             // Assert
             // Assert
@@ -124,7 +127,10 @@ namespace team7_ssis.Tests.Controllers
             };
 
             // Act
-            IHttpActionResult actionResult = controller.ConfirmCollection("DAPICONTROLTEST");
+            IHttpActionResult actionResult = controller.ConfirmCollection(new DisbursementIdViewModel()
+            {
+                DisbursementId = "DAPICONTROLTEST",
+            });
             var contentResult = actionResult as OkNegotiatedContentResult<String>;
 
             // Assert

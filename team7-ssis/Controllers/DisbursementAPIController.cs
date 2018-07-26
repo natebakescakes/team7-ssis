@@ -72,11 +72,11 @@ namespace team7_ssis.Controllers
         }
 
         [Route("api/disbursement/collect")]
-        public IHttpActionResult ConfirmCollection([FromBody] String disbursementId)
+        public IHttpActionResult ConfirmCollection([FromBody] DisbursementIdViewModel disbursementId)
         {
             try
             {
-                new DisbursementService(Context).ConfirmCollection(disbursementId);
+                new DisbursementService(Context).ConfirmCollection(disbursementId.DisbursementId);
             }
             catch (ArgumentException)
             {

@@ -39,4 +39,9 @@ namespace team7_ssis.ViewModels
         public string CreatedDate { get; set; }
         public List<DisbursementFormTableViewModel> DisbursementDetails { get; set; }
     }
+
+    public class DisbursementIdViewModel
+    {
+        public string DisbursementId { get; set; }
+    }
 }
