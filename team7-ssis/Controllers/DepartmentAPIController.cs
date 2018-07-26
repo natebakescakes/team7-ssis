@@ -14,10 +14,12 @@ namespace team7_ssis.Controllers
     {
         public ApplicationDbContext context = new ApplicationDbContext();
         DepartmentService departmentService;
+        DelegationService delegationService;
 
         public DepartmentAPIController()
         {
             departmentService = new DepartmentService(context);
+            delegationService = new DelegationService(context);
         }
         
         [Route("api/department/all")] 
@@ -54,6 +56,17 @@ namespace team7_ssis.Controllers
                 Status = department.Status.StatusId,
                 EmailHead = department.Head.Email
             };
+        }
+        [Route("api/delegation/all")]
+        [HttpGet]
+        public List<DelegationViewModel> Delegations()
+        {
+            return delegationService.FindAllDelegations().Select(delegation => new DelegationViewModel()
+            {
+                Recipient = delegation.Receipient.FirstName + " " + delegation.Receipient.LastName,
+                StartTime = delegation.StartDate.ToShortDateString(),
+                EndTime = delegation.EndDate.ToShortDateString()
+            }).ToList();
         }
     }
 }

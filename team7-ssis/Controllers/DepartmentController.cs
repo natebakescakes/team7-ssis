@@ -19,6 +19,7 @@ namespace team7_ssis.Controllers
         UserService userService;
         ApplicationUser user;
         StatusService statusService;
+        DelegationService delegationService;
         
         public DepartmentController()
         {
@@ -28,6 +29,7 @@ namespace team7_ssis.Controllers
             userService = new UserService(context);
             user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             statusService = new StatusService(context);
+            delegationService = new DelegationService(context);
 
         }
 
@@ -91,17 +93,20 @@ namespace team7_ssis.Controllers
         {
             bool status = false;
             Department dpt = departmentService.FindDepartmentByUser(user);
+            Delegation delegation = new Delegation();
+            
           
             dpt.UpdatedDateTime = DateTime.Now;
             dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
 
             dpt.Representative = userService.FindUserByEmail(model.DepartmentRep);
             dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPoint));
-         
-            
+
+            delegation.Receipient = userService.FindUserByEmail(model.DelegationRecipient);
 
              if (departmentService.Save(dpt) != null) status = true;
 
+             
             
             return RedirectToAction("DepartmentOptions");
 

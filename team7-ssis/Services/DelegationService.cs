@@ -20,5 +20,9 @@ namespace team7_ssis.Services
         {
             return delegationRepository.Save(delegation);
         }
+        public List<Delegation> FindAllDelegations()
+        {
+            return delegationRepository.FindAll().ToList();
+        }
     }
 }

@@ -19,6 +19,19 @@
         select: 'single'
     });
 
+    var delegationTable = $('#delegationTable').DataTable({
+
+        sAjaxSource: "api/delegation/all",
+        sAjaxDataProp: "",
+
+        columns: [
+            { "data": "Recipient", "autowidth": true },
+            { "data": "StartDate", "autowidth": true },
+            { "data": "EndDate", "autowidth": true }
+        ],
+        select: 'single'
+    });
+
 
     var single = $('#dptTable tbody').on('click', 'tr', function () {
         var rowdata = oTable.row(this).data();
