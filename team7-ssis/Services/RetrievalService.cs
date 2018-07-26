@@ -28,10 +28,6 @@ namespace team7_ssis.Services
             return retrievalRepository.FindAll().ToList();
         }
 
-        public List<Retrieval> FindAllRetrievals()
-        {
-            return retrievalRepository.FindAll().ToList();
-        }
 
         public Retrieval FindRetrievalById(string id)
         {
