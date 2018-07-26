@@ -249,6 +249,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RequisitionAPIController.cs" />
     <Compile Include="Controllers\RequisitionController.cs" />
+    <Compile Include="Controllers\RetrievalAPIController.cs" />
+    <Compile Include="Controllers\RetrievalController.cs" />
     <Compile Include="Controllers\SupplierAPIController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
@@ -301,6 +303,7 @@
     <Compile Include="ViewModels\ItemDetailModel.cs" />
     <Compile Include="ViewModels\ItemDetailsSupplierInfoViewModel.cs" />
     <Compile Include="Services\DelegationService.cs" />
+    <Compile Include="ViewModels\MiscViewModel.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
     <Compile Include="ViewModels\RequisitionViewModels.cs" />
@@ -397,6 +400,9 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
+    <Content Include="Scripts\Custom\CreateRequisition.js" />
+    <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
+    <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
     <Content Include="Scripts\Custom\RedirectPost.js" />
@@ -445,17 +451,7 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\bubble.scss" />
-    <Content Include="Content\datatable.scss" />
-    <Content Include="Content\datetime.scss" />
-    <Content Include="Content\envelope.scss" />
-    <Content Include="Content\fields.scss" />
-    <Content Include="Content\inline.scss" />
-    <Content Include="Content\lightbox.scss" />
-    <Content Include="Content\main.scss" />
-    <Content Include="Content\mixins.scss" />
-    <Content Include="Content\processing.scss" />
-    <Content Include="Content\upload.scss" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\StationeryShopDebug - Web Deploy.pubxml" />
     <Content Include="Scripts\esm\popper.min.js.map" />
     <Content Include="Scripts\esm\popper.js.map" />
@@ -538,8 +534,8 @@
     <Content Include="Views\Requisition\_RequisitionDetailTable.cshtml" />
     <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
     <Content Include="Views\Requisition\StationeryDisbursement.cshtml" />
-    <Content Include="Views\Requisition\RetrievalDetails.cshtml" />
-    <Content Include="Views\Requisition\_RetrievalDetailsTable.cshtml" />
+    <Content Include="Views\Retrieval\RetrievalDetails.cshtml" />
+    <Content Include="Views\Retrieval\_RetrievalDetailsTable.cshtml" />
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
@@ -549,9 +545,7 @@
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
-    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\Supplier\_AddSupplier.cshtml" />
-    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
@@ -571,6 +565,11 @@
     <Content Include="Views\Department\_DepartmentTable.cshtml" />
     <Content Include="Views\Department\_AddDepartment.cshtml" />
     <Content Include="Views\Department\_DepartmentDetail.cshtml" />
+    <Content Include="Views\Shared\_LayoutFluid.cshtml" />
+    <Content Include="Views\Shared\_LayoutMobile.cshtml" />
+    <Content Include="Views\Report\DepartmentUsageMobile.cshtml" />
+    <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
+    <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

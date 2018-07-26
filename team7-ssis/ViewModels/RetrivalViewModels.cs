@@ -15,10 +15,21 @@ namespace team7_ssis.ViewModels
     }
     public class StationeryRetrievalTableViewModel
     {
+        public bool AllRetrieved { get; set; }
         public string ProductID { get; set; }
         public string Bin { get; set; }
         public string Description { get; set; }
         public int QtyOrdered { get; set; }
+    }
+    public class StationeryRetrievalJSONViewModel
+    {
+        public string RetrievalID { get; set; }
+        public List<StationeryRetrievalTableRowJSONViewModel> Data { get; set; }
+    }
+    public class StationeryRetrievalTableRowJSONViewModel
+    {
+        public bool AllRetrieved { get; set; }
+        public string ProductID { get; set; }
     }
     public class RetrievalDetailsJSON
     {
@@ -36,5 +47,6 @@ namespace team7_ssis.ViewModels
         public string DeptId { get; set; }
         public string DeptName { get; set; }
         public int Needed { get; set; }
+        public int Actual { get; set; }
     }
 }

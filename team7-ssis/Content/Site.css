@@ -140,3 +140,7 @@ textarea {
 .step__container {
     position: relative;
 }
+
+#modalMsg {
+    color: red;
+}
