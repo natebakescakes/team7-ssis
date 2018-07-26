@@ -50,6 +50,7 @@
         var mine = @Html.Raw(Json.Encode(this.Model));
         var test = mine.SupplierName;
         alert(test.length);
+
         var pTable = $('#suppTable').DataTable({
             "searching": false,
             "paging": false,
@@ -60,24 +61,20 @@
             'order': [[1, 'asc']],
             "columns": [
                 {
+                    "data": "Number", "autoWidth": true,},
+                {
                     "data": "SupplierName", "autoWidth": true,
                     render: function (data, type, row) {
-                        var $select = $("<select id='SupplierNameSelect' disabled></select>", {
-                            "id": row.Text,
-                            "value": row.Value
-                        });
-
-                        var optionhtml1 = '<option value="' +
-                            0 + '">' + row.SupplierName + '</option>';
-                        $select.append(optionhtml1);
-                         
+                        var $select = $("<select id='SupplierNameSelect' disabled></select>");
                         $.each(test, function (i) {
-                        var optionhtml = '<option value="' +
-                                test[i].Value + '">' + test[i].Text + '</option>';
-                            $select.append(optionhtml);
+                        var $option = $("<option></option>", {
+                            "text": test[i].Text,
+                            "value": test[i].Value
+                        });
+                        $select.append($option);
 
-                            if (data === test[i]) {
-                                $option.attr("selected", "selected")
+                        if (row.SupplierName === test[i].Text) {
+                            $option.attr("selected", "selected")
                             }
                         });
                         return $select.prop("outerHTML");
@@ -92,24 +89,19 @@
             ]
         })
 
-        $('#SupplierNameSelect').on('click',function () {
-            //var dummy1 = $("#SupplierNameSelect option:selected").val();
-            var dummy1 = $(this).find(':selected').val();
-            alert(dummy1);
-        })
+
 
         $('#suppTable tbody').on('change', '#SupplierNameSelect', function (e) {
-            //var value = Number($(this).val());
-            //var rowSelected = pTable.row($(this).parents('tr')).data().SupplierName;
+            //var value = Number($(this).val();
+            var rowSelected = pTable.row($(this).parents('tr')).data().Number;
             var dummy1 = $("#SupplierNameSelect option:selected").val();
-                alert(dummy1);
+            alert(rowSelected);
         })
 
 
         $('#itemEdit').on('click', function () {
             $('#itemEdit').hide();
             $(".button-set").show();
-            
            enableInput();
         });
 

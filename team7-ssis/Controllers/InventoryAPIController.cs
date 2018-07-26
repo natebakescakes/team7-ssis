@@ -92,12 +92,19 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<ItemDetailsSupplierInfoViewModel> FindSupplierInfo(string itemCode)
         {
+            List<int> arr = new List<int>();
+            arr.Add(1);
+            arr.Add(2);
+            arr.Add(3);
+            int count = 0;
             List<ItemPrice> itemPrices = itemPriceService.FindItemPriceByItemCode(itemCode);
             List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
             foreach(ItemPrice i in itemPrices)
             {
+                count++;
                 list.Add(new ItemDetailsSupplierInfoViewModel()
                 {
+                    Number= count,
                     SupplierName = i.Supplier.Name,
                     SupplierUnitPrice = (double)i.Price
                 });
