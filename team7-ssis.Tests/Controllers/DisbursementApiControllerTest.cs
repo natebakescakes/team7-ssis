@@ -131,12 +131,12 @@ namespace team7_ssis.Tests.Controllers
             {
                 DisbursementId = "DAPICONTROLTEST",
             });
-            var contentResult = actionResult as OkNegotiatedContentResult<String>;
+            var contentResult = actionResult as OkNegotiatedContentResult<MessageViewModel>;
 
             // Assert
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(contentResult.Content, "Success");
+            Assert.AreEqual(contentResult.Content.Message, "Success");
             var result = new DisbursementRepository(context).FindById("DAPICONTROLTEST");
             Assert.AreEqual(expected.Name, result.Status.Name);
         }

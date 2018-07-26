@@ -293,6 +293,7 @@
     <Compile Include="Models\Title.cs" />
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="ViewModels\MiscViewModel.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
     <Compile Include="ViewModels\RequisitionViewModels.cs" />
@@ -411,6 +412,7 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\StationeryShopDebug - Web Deploy.pubxml" />
     <Content Include="Scripts\esm\popper.min.js.map" />
     <Content Include="Scripts\esm\popper.js.map" />

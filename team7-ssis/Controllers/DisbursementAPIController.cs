@@ -83,7 +83,10 @@ namespace team7_ssis.Controllers
                 return BadRequest("Disbursement already collected!");
             }
 
-            return Ok("Success");
+            return Ok(new MessageViewModel()
+            {
+                Message = "Success"
+            });
         }
     }
 }
