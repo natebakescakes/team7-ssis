@@ -32,6 +32,8 @@ namespace team7_ssis.Controllers
             itemService = new ItemService(context);
         }
 
+        public ApplicationDbContext Context { get { return context; } set { Context = value; } }
+
         [Route("api/reqdetail/all")]
         [HttpGet]
         public IEnumerable<ManageRequisitionsViewModel> Requisitions()
@@ -169,6 +171,42 @@ namespace team7_ssis.Controllers
                     Uom = d.Item.Uom,
                 }).ToList()
             }));
+        }
+
+        [Route("api/requisition/approve")]
+        public IHttpActionResult ApproveRequisition([FromBody] RequisitionIdViewModel model)
+        {
+            try
+            {
+                new RequisitionService(Context).ApproveRequisition(model.RequisitionId, model.Email);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Requisition already approved!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully approved"
+            });
+        }
+
+        [Route("api/requisition/reject")]
+        public IHttpActionResult RejectRequisition([FromBody] RequisitionIdViewModel model)
+        {
+            try
+            {
+                new RequisitionService(Context).RejectRequisition(model.RequisitionId, model.Email);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Requisition already approved!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully approved"
+            });
         }
     }
 }

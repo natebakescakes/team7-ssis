@@ -54,4 +54,10 @@ namespace team7_ssis.ViewModels
         public int Qty { get; set; }
         public string Uom { get; set; }
     }
+
+    public class RequisitionIdViewModel
+    {
+        public string RequisitionId { get; set; }
+        public string Email { get; set; }
+    }
 }

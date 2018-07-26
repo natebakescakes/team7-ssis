@@ -16,13 +16,17 @@ namespace team7_ssis.Tests.Services
     {
         static ApplicationDbContext context;
         static RequisitionService requisitionService;
+        static StatusService statusService;
+        static RequisitionRepository requisitionRepository;
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        [TestInitialize]
+        public void TestInitialize()
         {
             // Arrange
             context = new ApplicationDbContext();
             requisitionService = new RequisitionService(context);
+            statusService = new StatusService(context);
+            requisitionRepository = new RequisitionRepository(context);
 
             //// Populate Data (if necessary)
             populateRequisitions();
@@ -46,24 +50,22 @@ namespace team7_ssis.Tests.Services
             result.ToList().ForEach(r => Assert.AreEqual("ENGL", r.Department.DepartmentCode));
         }
 
-        [ClassCleanup]
-        public static void TestCleanup()
+        [TestCleanup]
+        public void TestCleanup()
         {
-            // Clean up Requisitions
-
-            Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First();
-            Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First();
-            Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First();
-            Requisition r4 = context.Requisition.Where(x => x.RequisitionId == "RQSERVTEST").ToList().First();
-            context.Requisition.Remove(r1);
-            context.Requisition.Remove(r2);
-            context.Requisition.Remove(r3);
-            context.Requisition.Remove(r4);
-            context.SaveChanges();
+            if (requisitionRepository.ExistsById("REQ-201807-001"))
+                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-001"));
+            if (requisitionRepository.ExistsById("REQ-201807-002"))
+                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-002"));
+            if (requisitionRepository.ExistsById("REQ-201807-003"))
+                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-003"));
+            if (requisitionRepository.ExistsById("RQSERVTEST"))
+                requisitionRepository.Delete(requisitionRepository.FindById("RQSERVTEST"));
+            if (requisitionRepository.ExistsById("APPROVETEST"))
+                requisitionRepository.Delete(requisitionRepository.FindById("APPROVETEST"));
         }
 
         [TestMethod]
-        [Ignore]
         public void FindRequisitionsByStatusTest()
         {
             // Arrange
@@ -82,7 +84,6 @@ namespace team7_ssis.Tests.Services
             }
         }
         [TestMethod]
-        [Ignore]
         public void GetRequisitionDetailsTest()
         {
             // Arrange
@@ -99,7 +100,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod()]
-        [Ignore]
         public void ProcessRequisitionsTest_CreatesRetrieval()
         {
             // Arrange
@@ -124,7 +124,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void ProcessRequisitionsTest_AddQuantity()
         {
             // ARRANGE
@@ -169,7 +168,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod()]
-        [Ignore]
         public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
         {
             // Arrange
@@ -190,7 +188,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod()]
-        [Ignore]
         public void CreateDisbursementForEachDepartmentTest()
         {
             // Arrange
@@ -216,7 +213,97 @@ namespace team7_ssis.Tests.Services
             Assert.IsTrue(depts.SetEquals(expected));
         }
 
-        private static void populateRequisitions()
+        [TestMethod]
+        public void ApproveRequisition_Valid()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(4),
+                CreatedDateTime = DateTime.Now,
+            });
+            var expected = statusService.FindStatusByStatusId(6);
+
+            // Act
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com");
+
+            // Assert
+            Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ApproveRequisition_AlreadyApproved_ThrowsException()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(6),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ApproveRequisition_Invalid_ThrowException()
+        {
+            // Arrange
+
+            // Act
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com");
+        }
+
+        [TestMethod]
+        public void RejectRequisition_Valid()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(4),
+                CreatedDateTime = DateTime.Now,
+            });
+            var expected = statusService.FindStatusByStatusId(5);
+
+            // Act
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com");
+
+            // Assert
+            Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RejectRequisition_AlreadyRejected_ThrowsException()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(6),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RejectRequisition_Invalid_ThrowException()
+        {
+            // Arrange
+
+            // Act
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com");
+        }
+
+        private void populateRequisitions()
         {
             //// Create Requisition Details
 
