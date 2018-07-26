@@ -18,8 +18,8 @@ namespace team7_ssis.Controllers
     {
         ApplicationDbContext context;
         StockAdjustmentService stockAdjustmentService;
-        StockAdjustmentRepository stockAdjustmentRepository;
-        StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
+        //StockAdjustmentRepository stockAdjustmentRepository;
+        //StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
         ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
@@ -27,11 +27,11 @@ namespace team7_ssis.Controllers
         {
             context=new ApplicationDbContext();
             stockAdjustmentService = new StockAdjustmentService(context);
-             stockAdjustmentRepository = new StockAdjustmentRepository(context);
+            // stockAdjustmentRepository = new StockAdjustmentRepository(context);
              itemService = new ItemService(context);
              itemPriceService = new ItemPriceService(context);
             userService = new UserService(context);
-            stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
+           // stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
         }
 
 
@@ -128,8 +128,54 @@ namespace team7_ssis.Controllers
         }
 
 
+        [Route("api/stockadjustment/detail/{StockAdjustmentId}")]
+        [HttpGet]
+        public IEnumerable<StockAdjustmentDetailViewModel>  GetStockAdjustmentDetail(string StockAdjustmentId)
+        {
+            // StockAdjustmentDetailListViewModel viewModel = new StockAdjustmentDetailListViewModel();
+
+            // StockAdjustmentViewModel stockAdjustmentViewModel = new StockAdjustmentViewModel();
+
+            //stockAdjustmentViewModel.StockAdjustmentId = sd.StockAdjustmentId;
+            //stockAdjustmentViewModel.CreatedBy = sd.CreatedBy == null ? "" : sd.CreatedBy.FirstName + " " + sd.CreatedBy.LastName;
+            //stockAdjustmentViewModel.CreatedDateTime = sd.CreatedDateTime;
+            //stockAdjustmentViewModel.ApprovedBySupervisor = sd.ApprovedBySupervisor == null ? "" : sd.ApprovedBySupervisor.FirstName + " " + sd.ApprovedBySupervisor.LastName;
+            //stockAdjustmentViewModel.UpdateDateTime = sd.UpdatedDateTime == null ? DateTime.Now :(DateTime)sd.UpdatedDateTime;
+
+        
+
+            List<StockAdjustmentDetailViewModel> detailListViewModel = new List<StockAdjustmentDetailViewModel>();
+            StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(StockAdjustmentId);
+            List<StockAdjustmentDetail> detaillist = sd.StockAdjustmentDetails;
+
+            foreach (StockAdjustmentDetail sad in detaillist)
+            {
+                StockAdjustmentDetailViewModel sadv = new StockAdjustmentDetailViewModel();
+                string itemcode = sad.ItemCode;
+                sadv.ItemCode = itemcode;
+                Item item = itemService.FindItemByItemCode(itemcode);
+                sadv.Description = item.Description == null ? "" : item.Description;
+                sadv.Reason = sad.Reason == null ? "" : sad.Reason;
+
+                sadv.UnitPrice = itemPriceService.GetDefaultPrice(item, 1);
+                if (sadv.UnitPrice.CompareTo("250") == -1)
+                    sadv.PriceColor = "-1";
+                else
+                {
+                    sadv.PriceColor = "1";
+                        }
+                
+                sadv.Adjustment =sad.AfterQuantity-sad.OriginalQuantity;
+                detailListViewModel.Add(sadv);
+                 };
+
+          //  viewModel.StockAdjustmentModel = stockAdjustmentViewModel;
+           // viewModel.StockAdjustmentDetailsModel = detailListViewModel;
+
+            return detailListViewModel;
+            }
 
 
-
+        }
     }
-}
+

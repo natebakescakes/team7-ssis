@@ -397,7 +397,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
-    <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
     <Content Include="Scripts\Custom\RedirectPost.js" />
@@ -405,6 +404,7 @@
     <Content Include="Scripts\Custom\Register.js" />
     <Content Include="Scripts\Custom\StockAdjustment.js" />
     <Content Include="Scripts\Custom\RequisitionDetail.js" />
+    <Content Include="Scripts\Custom\StockAdjustmentDetail.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
     <Content Include="Scripts\Custom\SupplierPriceList.js" />
     <Content Include="Scripts\editor\dataTables.editor.js" />

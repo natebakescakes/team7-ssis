@@ -1,12 +1,7 @@
 ﻿@model team7_ssis.ViewModels.StockAdjustmentViewModel
 
 <head>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.17/b-1.5.2/sl-1.2.6/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="Editor-1.7.4/css/editor.dataTables.css">
-
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.17/b-1.5.2/sl-1.2.6/datatables.min.js"></script>
-    <script type="text/javascript" src="Editor-1.7.4/js/dataTables.editor.js"></script>
-
 </head>
 <div class="row mb-3">
     <div class="col-md-8">
@@ -19,245 +14,246 @@
 <button id="addItemBtn" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 
 
-<table id="myTable" class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>Item Code</th>
-            <th>Description</th>
-            <th>Unit Price</th>
-            <th>Reason</th>
-            <th>Adjustment</th>
-            <th>delete</th>
-        </tr>
-    </thead>
+    <table id="myTable" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Reason</th>
+                <th>Adjustment</th>
+                <th>delete</th>
+            </tr>
+        </thead>
 
-</table>
+    </table>
+    
 
-@*<table class="table table-striped table-bordered">
-        <tr>
-            <td width="400" class="col-md-2"> Authorising Supervisor</td>
-            <td width="400" class="col-md-2"> Authorising Manager</td>
-        </tr>
+    @*<table class="table table-striped table-bordered">
+            <tr>
+                <td width="400" class="col-md-2"> Authorising Supervisor</td>
+                <td width="400" class="col-md-2"> Authorising Manager</td>
+            </tr>
 
-        <tr>
-            <td class="col-md-2">
-                @Html.DropDownList("FirstName", ViewBag.select1 as SelectList, "pls select supervicor")
-            </td>
+            <tr>
+                <td class="col-md-2">
+                    @Html.DropDownList("FirstName", ViewBag.select1 as SelectList, "pls select supervicor")
+                </td>
 
-            <td class="col-md-2">
+                <td class="col-md-2">
 
-                @Html.DropDownList("FirstName", ViewBag.select2 as SelectList, "pls select managers")
-            </td>
+                    @Html.DropDownList("FirstName", ViewBag.select2 as SelectList, "pls select managers")
+                </td>
 
-        </tr>
-    </table>*@
+            </tr>
+        </table>*@
 
-<div class="row mt-3">
-    <div class="col-md-12">
-        <h3>Authorising Supervisor</h3>
-        <select class="custom-select">
-            @foreach (var supervisor in Model.supervisors)
-            {
-                <option value="@supervisor.Id">@supervisor.FirstName @supervisor.LastName</option>
-            }
-        </select>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h3>Authorising Supervisor</h3>
+            <select class="custom-select">
+                @foreach (var supervisor in Model.supervisors)
+                {
+                    <option value="@supervisor.Id">@supervisor.FirstName @supervisor.LastName</option>
+                }
+            </select>
 
-        <h3>Authorising Manager</h3>
-        <select class="custom-select">
-            @foreach (var manager in Model.managers)
-            {
-            <option value="@manager.Id">@manager.FirstName @manager.LastName</option>
-            }
-        </select>
+            <h3>Authorising Manager</h3>
+            <select class="custom-select">
+                @foreach (var manager in Model.managers)
+                {
+                    <option value="@manager.Id">@manager.FirstName @manager.LastName</option>
+                }
+            </select>
+        </div>
     </div>
-</div>
 
-<div class="row mt-3">
-    <div class="col-md-12">
-        <button class="btn btn-default" id="cancelBtn">Cancel</button>
-        <button class="btn btn-primary" id="confirmBtn">Confirm</button>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button class="btn btn-default" id="cancelBtn">Cancel</button>
+            <button class="btn btn-primary" id="confirmBtn">Confirm</button>
+        </div>
     </div>
-</div>
 
 
-<div class="modal" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Item</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Item Code</th>
-                                    <th>Category</th>
-                                    <th>Description</th>
-                                    <th>In Stock</th>
-                                    <th>Unit of Measure</th>
-                                    <th>UnitPrice</th>
-                                </tr>
-                            </thead>
-                        </table>
+    <div class="modal" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Item Code</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>In Stock</th>
+                                        <th>Unit of Measure</th>
+                                        <th>UnitPrice</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
                     </div>
+                </div>
 
+
+                <div class="col-md-1">
+                    <label>Adjustment</label>
+
+                    <input id="AdjustmentInput" type="number" />
+                </div>
+                <div class="col-md-1">
+                    <label>Reason</label>
+                    <input id="ReasonInput" type="text" />
+                </div>
+                <div class="modal-footer">
+                    <button id="addToReq" type="button" class="btn btn-primary">Add to StockAdjustment</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
-
-
-            <div class="col-md-1">
-                <label>Adjustment</label>
-
-                <input id="AdjustmentInput" type="number" />
-            </div>
-            <div class="col-md-1">
-                <label>Reason</label>
-                <input id="ReasonInput" type="text" />
-            </div>
-            <div class="modal-footer">
-                <button id="addToReq" type="button" class="btn btn-primary">Add to StockAdjustment</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
         </div>
-            </div>
-</div>
+    </div>
 
 
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
 
-        var myTable = $('#myTable').DataTable({
-            "stateSave": true,
-            "bDeferRender": true,
-            columns: [
-                { title: "ItemCode" },
-                { title: "Description" },
-                { title: "UnitPrice" },
-                { title: "Reason" },
-                {
-                    title: "Adjustment"
-                    //render: function (data, type, row) {
-                    //    return '<input class="form-control"  style="border:none" id=Price" type="number"  min="-2500" step="1" max="2500" value = ' + row.Adjustment + '  >'
-                    //}
+            var myTable = $('#myTable').DataTable({
+                "stateSave": true,
+                "bDeferRender": true,
+                columns: [
+                    { title: "ItemCode" },
+                    { title: "Description" },
+                    { title: "UnitPrice" },
+                    { title: "Reason" },
+                    {
+                        title: "Adjustment"
+                        //render: function (data, type, row) {
+                        //    return '<input class="form-control"  style="border:none" id=Price" type="number"  min="-2500" step="1" max="2500" value = ' + row.Adjustment + '  >'
+                        //}
+                    },
+                    {
+                        defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>'
+                    }
+                ],
+
+            });
+
+            var addItemTable = $('#addItemTable').DataTable({
+                ajax: {
+                    url: "/api/manage/items",
+                    dataSrc: ""
                 },
-                {
-                    defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>'
-                }
-            ],
+                pageLength: 5,
+                columns: [
 
-        });
+                    { "data": "ItemCode", "autoWidth": true },
+                    { "data": "ItemCategoryName", "autoWidth": true },
+                    { "data": "Description", "autoWidth": true },
+                    { "data": "Quantity", "autoWidth": true },
+                    { "data": "Uom", "autoWidth": true },
+                    { "data": "UnitPrice", "autoWidth": true }
+                ],
 
-        var addItemTable = $('#addItemTable').DataTable({
-            ajax: {
-                url: "/api/manage/items",
-                dataSrc: ""
-            },
-            pageLength: 5,
-            columns: [
-
-                { "data": "ItemCode", "autoWidth": true },
-                { "data": "ItemCategoryName", "autoWidth": true },
-                { "data": "Description", "autoWidth": true },
-                { "data": "Quantity", "autoWidth": true },
-                { "data": "Uom", "autoWidth": true },
-                { "data": "UnitPrice", "autoWidth": true }
-            ],
-
-            select: "single"
-        });
-
-        $('#addItemBtn').click(function () {
-            $('#myModal').modal({
-                backdrop: 'static',
-            });
-        });
-
-
-          $('#saveAsBtn').click(function () {
-
-            var data = $('#myTable').dataTable().fnGetData();
-            var reqIdArray = [];
-            for (i = 0; i < data.length; i++) {
-                var obj = { Itemcode: data[i][0], Reason: data[i][3],Adjustment:data[i][4] };
-                reqIdArray[i] = obj;
-
-            }
-
-            $.ajax({
-                url: '/api/stockadjustment/save',
-                contentType: 'application/json',
-                data: JSON.stringify(reqIdArray),
-                dataType: "json",
-                type: "POST",
-                traditional: true,
-                success: function (responseJSON) {
-
-                    window.location.replace("/StockAdjustment");
-                }
+                select: "single"
             });
 
-            
-        });
-
-$('#cancelBtn').click(function () {
-//direct to home page
-window.location.href = "/StockAdjustment";
-});
-
-$('#confirmBtn').click(function () {
-//save as pending and go to home page with message shows
-    var data = $('#myTable').dataTable().fnGetData();
-    var reqIdArray = [];
-    for (i = 0; i < data.length; i++) {
-        var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
-        reqIdArray[i] = obj;
-
-    }
-
-    $.ajax({
-        url: '/api/stockadjustment/confirm',
-        contentType: 'application/json',
-        data: JSON.stringify(reqIdArray),
-        dataType: "json",
-        type: "POST",
-        traditional: true,
-        success: function (responseJSON) {
-
-            window.location.replace("/StockAdjustment");
-        }
-    });
-
-});
+            $('#addItemBtn').click(function () {
+                $('#myModal').modal({
+                    backdrop: 'static',
+                });
+            });
 
 
+            $('#saveAsBtn').click(function () {
+
+                var data = $('#myTable').dataTable().fnGetData();
+                var reqIdArray = [];
+                for (i = 0; i < data.length; i++) {
+                    var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
+                    reqIdArray[i] = obj;
+
+                }
+
+                $.ajax({
+                    url: '/api/stockadjustment/save',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reqIdArray),
+                    dataType: "json",
+                    type: "POST",
+                    traditional: true,
+                    success: function (responseJSON) {
+
+                        window.location.replace("/StockAdjustment");
+                    }
+                });
 
 
-$('#addToReq').click(function () {
-var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
-//var Reason = "";
-//var Adjustment=0;
-var Adjustment = parseInt($('#AdjustmentInput').val());
-    var Reason = $('#ReasonInput').val();
-myTable.row.add([data[0].ItemCode, data[0].Description, data[0].UnitPrice, Reason, Adjustment]).draw();
-$('#myModal').modal('hide');
-});
+            });
 
-$('#myTable tbody').on('click', 'i.fa.fa-times', function () {
-myTable
-    .row($(this).parents('tr'))
-    .remove()
-    .draw();
-});
-})
+            $('#cancelBtn').click(function () {
+                //direct to home page
+                window.location.href = "/StockAdjustment";
+            });
+
+            $('#confirmBtn').click(function () {
+                //save as pending and go to home page with message shows
+                var data = $('#myTable').dataTable().fnGetData();
+                var reqIdArray = [];
+                for (i = 0; i < data.length; i++) {
+                    var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
+                    reqIdArray[i] = obj;
+
+                }
+
+                $.ajax({
+                    url: '/api/stockadjustment/confirm',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reqIdArray),
+                    dataType: "json",
+                    type: "POST",
+                    traditional: true,
+                    success: function (responseJSON) {
+
+                        window.location.replace("/StockAdjustment");
+                    }
+                });
+
+            });
 
 
-</script>
+
+
+            $('#addToReq').click(function () {
+                var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
+                //var Reason = "";
+                //var Adjustment=0;
+                var Adjustment = parseInt($('#AdjustmentInput').val());
+                var Reason = $('#ReasonInput').val();
+                myTable.row.add([data[0].ItemCode, data[0].Description, data[0].UnitPrice, Reason, Adjustment]).draw();
+                $('#myModal').modal('hide');
+            });
+
+            $('#myTable tbody').on('click', 'i.fa.fa-times', function () {
+                myTable
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+        })
+
+
+    </script>
 
 
 

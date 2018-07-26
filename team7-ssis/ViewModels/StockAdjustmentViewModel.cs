@@ -45,7 +45,7 @@ namespace team7_ssis.ViewModels
 
         public string PriceColor { get; set; }
         public string UnitPrice { get; set; }
-        public string Adjustment { get; set; }
+        public int  Adjustment { get; set; }
 
     }
 

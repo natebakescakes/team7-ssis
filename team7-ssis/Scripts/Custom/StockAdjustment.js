@@ -7,8 +7,6 @@
             url: "/api/stockadjustment/all",
             dataSrc: ""
         },
-        //sAjaxSource: "api/stockadjustment/all",
-        //sAjaxDataProp: "",
 
         "columnDefs": [
 
@@ -18,8 +16,7 @@
 
                 "render": function (data, type, full, meta) {
 
-                   // return "<input type = 'button' id = 'testButton' value = 'View'>";
-                    return "<button class='btn btn-safe' id='testButton' style='font-size: 12px'><i class='fa fa-view'>View</i></button>";
+                    return "<button class='btn btn-safe' id='viewBtn' style='font-size: 12px'><i class='fa fa-view'>View</i></button>";
 
                 }
 
@@ -30,8 +27,7 @@
 
                 "render": function (data, type, full, meta) {
 
-                   // return "<input type = 'button' id = 'testButton2' value = 'delete'>";
-                    return "<button class='btn btn-danger' id='testButton2' style='font-size: 12px'><i class='fa fa-delete'>Cancel</i></button>";
+                    return "<button class='btn btn-danger' id='cancelBtn' style='font-size: 12px'><i class='fa fa-delete'>Cancel</i></button>";
 
                 }
             }
@@ -69,23 +65,20 @@
     });
 
    
-    $('#mySATable tbody').on("click", "#testButton", function () {
+    $('#mySATable tbody').on("click", "#viewBtn", function () {
 
       var row = $("table#mySATable tr").index($(this).closest("tr"));
-      var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
-
+        var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
         window.location.href = "StockAdjustment/Details/" + Id;
 
     });
 
-    $('#mySATable tbody').on("click", "#testButton2", function () {
+    $('#mySATable tbody').on("click", "#cancelBtn", function () {
 
         var row = $("table#mySATable tr").index($(this).closest("tr"));
 
         var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
-        //delete this one and refresh page
-      
-        alert(Id);
+
         $.ajax({
             type: "GET",
             contentType: 'application/json',

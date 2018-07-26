@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.Tests.Services;
 using team7_ssis.ViewModels;
-using System.Web.Http;
+using System.Web;
 using Microsoft.AspNet.Identity;
-using System.Net.Http;
-using System.Net;
-
 namespace team7_ssis.Controllers
 {
     public class StockAdjustmentController : Controller
@@ -60,14 +55,11 @@ namespace team7_ssis.Controllers
             viewmodel.managers = managers;
             
             return View(viewmodel);
-        }
-
-
-
-        public ActionResult Details(string id)
+        }      
+        public ActionResult Details(string Id)
         {
             //get the stockadjustment
-            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
@@ -75,36 +67,7 @@ namespace team7_ssis.Controllers
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
             sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
-
-            //get the stockadjustment details
-            List<StockAdjustmentDetail> detail_list = sa.StockAdjustmentDetails;
-            List<StockAdjustmentDetailViewModel> ViewModel_list = new List<StockAdjustmentDetailViewModel>();
-            StockAdjustmentDetailListViewModel ResultListViewModel = new StockAdjustmentDetailListViewModel();
-
-
-            foreach (StockAdjustmentDetail sd in detail_list)
-            {
-                StockAdjustmentDetailViewModel sadv = new StockAdjustmentDetailViewModel();
-
-                sadv.ItemCode = sd.ItemCode;
-                sadv.Description = sd.Item.Description;
-                sadv.Reason = sd.Reason;
-                sadv.UnitPrice = itemPriceService.GetDefaultPrice(sd.Item, 1);
-                sadv.Adjustment = (sd.AfterQuantity - sd.OriginalQuantity).ToString();
-                if (sadv.UnitPrice.CompareTo("250") == -1)
-                {
-                    sadv.PriceColor = "grey";
-                }
-                else
-                {
-                    sadv.PriceColor = "red";
-                }
-                ViewModel_list.Add(sadv);
-            }
-
-            ResultListViewModel.StockAdjustmentDetailsModel = ViewModel_list;
-            ResultListViewModel.StockAdjustmentModel = sv;
-            return View("Details", ResultListViewModel);
+            return View(sv);
         }
 
         public ActionResult AddItem()
@@ -123,17 +86,7 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        //public ActionResult SaveInSession(List<String> itemCodes)
-        //{
-        //    string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
-        //    List<string> itemcodes_list = (List<string>)System.Web.HttpContext.Current.Session[user + "stock"];
-        //    foreach (string i in itemCodes)
-        //    {
-        //        itemcodes_list.Add(i);
-        //    }
 
-        //    return View("New");
-        //}
 
 
     }
