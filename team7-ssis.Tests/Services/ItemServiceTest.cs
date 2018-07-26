@@ -19,7 +19,7 @@ namespace team7_ssis.Tests.Services
         ApplicationDbContext context;
         ItemService itemService;
         ItemRepository itemRepository;
-        InventoryRepository inventoryRepository;
+       
 
         [TestInitialize]
         public void TestInitialize()
@@ -27,6 +27,7 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
             itemRepository = new ItemRepository(context);
+           
         }
 
 
@@ -37,6 +38,19 @@ namespace team7_ssis.Tests.Services
             var result = itemService.FindAllItems();
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+        }
+
+        [TestMethod]
+        public void FindAllActiveItemTest()
+        {
+            //Act
+            var result = itemService.FindAllActiveItems();
+
+            //Assert
+            foreach(Item i in result)
+            {
+                Assert.AreEqual(1, i.Status.StatusId);
+            }
         }
 
         [TestMethod]

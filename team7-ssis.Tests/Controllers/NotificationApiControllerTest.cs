@@ -7,6 +7,7 @@ using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Controllers;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
@@ -27,6 +28,15 @@ namespace team7_ssis.Tests.Controllers
         public void GetNotifications_ContainsResult()
         {
             // Arrange
+            new NotificationRepository(context).Save(new Notification()
+            {
+                NotificationId = 999999,
+                NotificationType = new NotificationTypeRepository(context).FindById(1),
+                Contents = "TEST",
+                Status = new StatusService(context).FindStatusByStatusId(1),
+                CreatedFor = new UserService(context).FindUserByEmail("root@admin.com"),
+                CreatedDateTime = DateTime.Now,
+            });
             var expected = "TEST";
             var controller = new NotificationApiController
             {
@@ -61,6 +71,15 @@ namespace team7_ssis.Tests.Controllers
 
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            var notificationRepository = new NotificationRepository(context);
+
+            if (notificationRepository.ExistsById(999999))
+                notificationRepository.Delete(notificationRepository.FindById(999999));
         }
     }
 }

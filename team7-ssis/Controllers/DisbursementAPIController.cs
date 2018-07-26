@@ -57,7 +57,7 @@ namespace team7_ssis.Controllers
             {
                 DisbursementId = disbursement.DisbursementId,
                 Department = disbursement.Department != null ? disbursement.Department.Name : "",
-                CollectionPoint = disbursement.Department != null ? disbursement.Retrieval.Requisitions.Where(r => r.Department.Name == disbursement.Department.Name).FirstOrDefault().CollectionPoint.Name : "",
+                CollectionPoint = disbursement.Retrieval.Requisitions.Where(r => r.Department.Name == disbursement.Department.Name).FirstOrDefault().CollectionPoint.Name,
                 Status = disbursement.Status != null ? disbursement.Status.Name : "",
                 DisbursementDetails = disbursement.DisbursementDetails.Select(d => new DisbursementFormTableViewModel()
                 {
