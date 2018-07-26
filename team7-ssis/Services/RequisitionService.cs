@@ -171,5 +171,9 @@ namespace team7_ssis.Services
             return disbursementList;
         }
 
+        public List<Requisition> FindRequisitionsByDepartment(Department department)
+        {
+            return requisitionRepository.FindByDepartment(department).ToList();
+        }
     }
 }

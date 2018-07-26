@@ -142,5 +142,33 @@ namespace team7_ssis.Controllers
             return Ok(r.RequisitionId);
             
         }
+
+        /// <summary>
+        /// Get requisitions requested by the caller's department for mobile view
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/requisition/department")]
+        public IHttpActionResult GetRelatedRequisitions([FromBody] EmailViewModel model)
+        {
+            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department);
+
+            if (requisitions.Count == 0) return NotFound();
+
+            return Ok(requisitions.Select(requisition => new RequisitionMobileViewModel()
+            {
+                RequisitionId = requisition.RequisitionId,
+                RequestorName = $"{requisition.CreatedBy.FirstName} {requisition.CreatedBy.LastName}",
+                RequestedDate = requisition.CreatedDateTime.ToShortDateString(),
+                Status = requisition.Status != null ? requisition.Status.Name : "",
+                RequisitionDetails = requisition.RequisitionDetails.Select(d => new RequisitionDetailMobileViewModel()
+                {
+                    ItemCode = d.ItemCode,
+                    Description = d.Item.Description,
+                    Qty = d.Quantity,
+                    Uom = d.Item.Uom,
+                }).ToList()
+            }));
+        }
     }
 }

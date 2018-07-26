@@ -28,6 +28,24 @@ namespace team7_ssis.Tests.Services
             populateRequisitions();
         }
 
+        [TestMethod]
+        public void FindByDepartmentTest()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "RQSERVTEST",
+                Department = new DepartmentRepository(context).FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            var result = requisitionService.FindRequisitionsByDepartment(new DepartmentRepository(context).FindById("ENGL"));
+
+            // Assert
+            result.ToList().ForEach(r => Assert.AreEqual("ENGL", r.Department.DepartmentCode));
+        }
+
         [ClassCleanup]
         public static void TestCleanup()
         {
@@ -36,9 +54,11 @@ namespace team7_ssis.Tests.Services
             Requisition r1 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First();
             Requisition r2 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First();
             Requisition r3 = context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First();
+            Requisition r4 = context.Requisition.Where(x => x.RequisitionId == "RQSERVTEST").ToList().First();
             context.Requisition.Remove(r1);
             context.Requisition.Remove(r2);
             context.Requisition.Remove(r3);
+            context.Requisition.Remove(r4);
             context.SaveChanges();
         }
 
