@@ -14,5 +14,9 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.Department;
         }
+        public Department FindByUser(ApplicationUser user)
+        {
+            return context.Department.Where(x => x.DepartmentCode == user.Department.DepartmentCode).FirstOrDefault();
+        }
     }
 }

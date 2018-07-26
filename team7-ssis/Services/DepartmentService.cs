@@ -23,7 +23,7 @@ namespace team7_ssis.Services
         //method not needed
         public Department FindDepartmentByUser(ApplicationUser user) 
         {
-            throw new NotImplementedException();
+            return departmentRepository.FindByUser(user);
         }
         
         public List<ApplicationUser> FindUsersByDepartment(Department department)
