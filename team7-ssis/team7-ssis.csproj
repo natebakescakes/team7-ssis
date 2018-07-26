@@ -234,6 +234,7 @@
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\DisbursementAPIController.cs" />
     <Compile Include="Controllers\DisbursementController.cs" />
+    <Compile Include="Controllers\DepartmentAPIController.cs" />
     <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ItemCategoryAPIController.cs" />
@@ -295,9 +296,11 @@
     <Compile Include="Models\Title.cs" />
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="ViewModels\DelegationViewModel.cs" />
     <Compile Include="ViewModels\EditItemFinalViewModel.cs" />
     <Compile Include="ViewModels\ItemDetailModel.cs" />
     <Compile Include="ViewModels\ItemDetailsSupplierInfoViewModel.cs" />
+    <Compile Include="Services\DelegationService.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
     <Compile Include="ViewModels\RequisitionViewModels.cs" />
@@ -382,6 +385,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
@@ -535,6 +539,10 @@
     <Content Include="Views\DeliveryOrder\ReceiveGoodsView.cshtml" />
     <Content Include="Views\DeliveryOrder\DOConfirmationView.cshtml" />
     <Content Include="Views\DeliveryOrder\ReceivedGoodsPurchaseOrderView.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\Department\_DepartmentTable.cshtml" />
+    <Content Include="Views\Department\_AddDepartment.cshtml" />
+    <Content Include="Views\Department\_DepartmentDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
