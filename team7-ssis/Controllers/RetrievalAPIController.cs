@@ -103,7 +103,8 @@ namespace team7_ssis.Controllers
                 {
                     DeptId = dd.Disbursement.Department.DepartmentCode,
                     DeptName = dd.Disbursement.Department.Name,
-                    Needed = dd.PlanQuantity
+                    Needed = dd.PlanQuantity,
+                    Actual = dd.ActualQuantity
                 });
             }
             return viewModel;
