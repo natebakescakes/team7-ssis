@@ -42,7 +42,7 @@ namespace team7_ssis.Controllers
         {
             Supplier supplier = supplierService.FindSupplierById(id);
             return new SupplierViewModel()
-            {
+            {   
                 SupplierCode = supplier.SupplierCode,
                 Address = supplier.Address,
                 PhoneNumber = supplier.PhoneNumber,

@@ -234,6 +234,7 @@
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\DisbursementAPIController.cs" />
     <Compile Include="Controllers\DisbursementController.cs" />
+    <Compile Include="Controllers\DepartmentAPIController.cs" />
     <Compile Include="Controllers\InventoryAPIController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ItemCategoryAPIController.cs" />
@@ -295,11 +296,17 @@
     <Compile Include="Models\Title.cs" />
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="ViewModels\DelegationViewModel.cs" />
+    <Compile Include="ViewModels\EditItemFinalViewModel.cs" />
+    <Compile Include="ViewModels\ItemDetailModel.cs" />
+    <Compile Include="ViewModels\ItemDetailsSupplierInfoViewModel.cs" />
+    <Compile Include="Services\DelegationService.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
     <Compile Include="ViewModels\RequisitionViewModels.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\RetrivalViewModels.cs" />
+    <Compile Include="ViewModels\StockHistoryViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CollectionPointRepository.cs" />
@@ -373,10 +380,12 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\pencil1.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
@@ -480,7 +489,7 @@
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
     <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
-    <Content Include="Views\Shared\_itemtable.cshtml" />
+    <Content Include="Views\Inventory\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
     <Content Include="Views\Manage\EditProfile.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
@@ -522,6 +531,13 @@
     <Content Include="Views\ItemCategory\_ItemCategoryTable.cshtml" />
     <Content Include="Views\ItemCategory\_ItemCategoryDetails.cshtml" />
     <Content Include="Views\ItemCategory\_AddItemCategory.cshtml" />
+    <Content Include="Views\Inventory\Details.cshtml" />
+    <Content Include="Views\Inventory\_ItemDetail.cshtml" />
+    <Content Include="Views\Inventory\_StockHistoryTable.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\Department\_DepartmentTable.cshtml" />
+    <Content Include="Views\Department\_AddDepartment.cshtml" />
+    <Content Include="Views\Department\_DepartmentDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

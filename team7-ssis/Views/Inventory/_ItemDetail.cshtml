@@ -1,0 +1,89 @@
+﻿@model team7_ssis.ViewModels.EditItemFinalViewModel
+
+@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id = "itemdetails", role = "form" }))
+{
+    <div style="border-color:black" id="detail1">
+        <form id="form1">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="ItemCode">Item Code</label><br />
+                        @Html.TextBoxFor(m => m.ItemCode, new { @id = "ItemCode", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Description">Item Description</label><br />
+                        @Html.TextBoxFor(m => m.Description, new { @id = "Description", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Category">Category</label><br />
+                        @Html.TextBoxFor(m => m.ItemCategoryName, new { @id = "ItemCategoryName", @class = "form-control" })
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Category">Item Image</label><br />
+                        <img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="phone">Bin No</label><br />
+                        @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Fax">Unit of Measure</label><br />
+                        @Html.TextBoxFor(m => m.Uom, new { @id = "Uom", @class = "form-control" })
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Fax">In Stock</label><br />
+                        @Html.TextBoxFor(m => m.Quantity, new { @id = "Quantity", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Fax">Status</label><br />
+                        @Html.DropDownListFor(m => m.Statuses, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <table id="suppTable" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Supplier Name</th>
+                        <th>Supplier Unit Price</th>
+                    </tr>
+                </thead>
+            </table>
+
+            @*@Html.Partial("_SupplierDetailByInventory")*@
+            <a id="itemEdit" class="btn btn-info pull-right"><i class="fa fa-edit" aria-hidden="true"></i> Edit Details</a>
+            <br />
+            <div class="button-set">
+                <div class="form-row pull-right">
+                    <div style="padding: 10px;">
+                        <input type="button" id="cancel-btn" class="btn btn-danger fa-pull-right" value="Cancel">
+                    </div>
+
+                    <div style="padding: 10px;">
+                        <input type="submit" id="submit" class="btn btn-success fa-pull-right" value="Save">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+}
