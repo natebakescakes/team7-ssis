@@ -112,5 +112,29 @@ namespace team7_ssis.Controllers
 
             }).ToList();
         }
+
+
+        //Deliveryorder details for given purchase order
+        [Route("api/receivegoods/{purchaseorderno}")]
+        [HttpGet]
+        public List<DeliveryOrderViewModel> ViewDeliveryOrder(string purchaseOrderNo)
+        {
+
+            List<DeliveryOrder> dlist = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo);
+
+             return dlist.Select(x => new DeliveryOrderViewModel()
+            {
+                DeliveryOrderNo = x.DeliveryOrderNo,
+
+                PurchaseOrderNo = x.PurchaseOrder.PurchaseOrderNo,
+
+                SupplierName = x.Supplier.Name,
+
+                CreatedDate = x.CreatedDateTime,
+
+                Status = x.Status.Name
+
+            }).ToList();
+        }
     }
 }

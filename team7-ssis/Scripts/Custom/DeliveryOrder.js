@@ -35,7 +35,44 @@
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="infobutton" />' }
+                { defaultContent: '<input type="button" value="i" id="infobtn" />'}
+            ],
+
+        createdRow: function (row, data, dataIndex) {
+
+            if (data.Status == "Partially Delivered") {
+
+                $('td', row).eq(4).addClass('partially-delivered');
+
+            }
+
+            if (data.Status == "Awaiting Delivery") {
+
+                $('td', row).eq(4).addClass('awaiting-delivery');
+
+            }
+
+        }
+    });
+
+    var pon = $("#poNo").val();
+    var don = $("#doNo").val();
+
+    //Receive goods- View DeliveryOrders - purchaseordernumber
+
+    var rgTable = $('#myRGTable').DataTable({
+        ajax: {
+            url: "api/receivegoods/"+pon,
+            dataSrc: ""
+        },
+        columns:
+            [
+                { data: "DeliveryOrderNo" },
+                { data: "PurchaseOrderNo" },
+                { data: "SupplierName" },
+                { data: "CreatedDate" },
+                { data: "Status" },
+                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
             ],
 
         createdRow: function (row, data, dataIndex) {
@@ -84,9 +121,6 @@
             }
         }
     });
-
-    var pon = $("#poNo").val();
-    var don = $("#doNo").val();
 
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
@@ -150,11 +184,11 @@
 
     });
 
-    //$('#myTable tbody').on('click', '#edit', function (e) 
-    $('#infobutton').on('click', function (e) {
-        var mydata = $('#myDOTable').DataTable().rows({ selected: true }).data().toArray();
-        alert(mydata[0].DeliveryOrderNo);
-        var donum = mydata[0].DeliverOrderNo;
+    $('#myPOTable tbody').on('click', '#infobtn', function (e) {
+      
+        var dno = pTable.row($(this).parents('tr')).data().DeliveryOrderNo;
+
+        alert(dno);
 
         var form = document.createElement("form");
 
@@ -164,9 +198,9 @@
 
         form.action = "/deliveryorder/doconfirmationview";
 
-        element1.value = donum;
+        element1.value = dno;
 
-        element1.name = "donum";
+        element1.name = "dno";
 
         element1.type = "hidden";
 
@@ -175,6 +209,39 @@
         document.body.appendChild(form);
 
         form.submit();
+    });
+      
+
+
+    $('#myRGTable tbody').on('click', '#infobtn', function (e) {
+
+        var dno = rgtable.row($(this).parents('tr')).data().DeliveryOrderNo;
+        alert(dno);
+
+
+        $.ajax({
+
+            type: "POST",
+
+            url: '/deliveryorder/doconfirmationview',
+
+            data: dno,
+
+            success: function (data) {
+
+                if (data.status) {
+
+                    alert("Information has been successfully updated");
+
+                    table.ajax.reload();
+
+                }
+
+            }
+
+        });
+
+        e.preventDefault();
 
     });
 });

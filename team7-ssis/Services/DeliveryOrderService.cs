@@ -49,24 +49,24 @@ namespace team7_ssis.Services
         }
 
         
-        public DeliveryOrder FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
+        public List<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
             //// Exceptions
             //if (deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo) == null)
             //{
             //    throw new ArgumentException();
             //}
-            return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo);
+            return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo).ToList();
         }
 
-        public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
+        public List<DeliveryOrder> FindDeliveryOrderBySupplier(string supplierCode)
         {
             //// Exceptions
             //if (deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode) == null)
             //{
             //    throw new ArgumentException();
             //}
-            return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode);
+            return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode).ToList();
         }
   
         public DeliveryOrder Save(DeliveryOrder deliveryOrder)

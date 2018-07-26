@@ -38,6 +38,18 @@ namespace team7_ssis.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult ReceiveGoods()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult ReceivedGoodsPurchaseOrderView()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult ReceiveGoodsView(string ponum)
         {
@@ -53,12 +65,6 @@ namespace team7_ssis.Controllers
             POVM.Status = purchaseOrder.Status.Name;
 
             return View(POVM);
-        }
-
-        [HttpGet]
-        public ActionResult ReceiveGoods()
-        {
-           return View();
         }
 
 
@@ -142,10 +148,10 @@ namespace team7_ssis.Controllers
         }
 
         [HttpPost]
-        public ActionResult DOConfirmationView(string ponum)
+        public ActionResult DOConfirmationView(string DeliveryOrderNo)
         {
             DeliveryOrderViewModel DOVM = new DeliveryOrderViewModel();
-            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(ponum);
+            DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(DeliveryOrderNo);
 
             DOVM.PurchaseOrderNo = deliveryOrder.PurchaseOrder.PurchaseOrderNo;
 

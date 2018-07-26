@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "ReceivedGoodsPurchaseOrderView";
+}
+
+<h2>ReceivedGoodsPurchaseOrderView</h2>
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>*@
+    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
+}
+
+<link rel="stylesheet" href="~/Content/Site.css">
+@model team7_ssis.ViewModels.DeliveryOrderViewModel
+
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div class="col-md-8">
+
+        <h2>View Delivery Orders</h2>
+        @Html.Hidden("doNo", Model.DeliveryOrderNo)
+
+    </div>
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+
+        <div class="form-group">
+
+            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;"><i class="glyphicon glyphicon-download-alt" style="font-size: 1.0em;"></i>Download Selected</a>
+
+        </div>
+        <table id="myRGTable" class="hover">
+            <thead>
+                <tr>
+                    <th>DO Number</th>
+                    <th>PO Number</th>
+                    <th>SupplierName</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+</html>
+
+
+
