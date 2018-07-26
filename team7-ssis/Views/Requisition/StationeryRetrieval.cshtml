@@ -96,7 +96,7 @@
     <div class="col-md-12">
         <div class="pull-right">
             <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
-            <button class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Update Retrieval Form</button>
+            <button id="updateRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Update Retrieval Form</button>
         </div>
         
     </div>
@@ -104,16 +104,27 @@
 
 <script>
 
+    // icons representing checked/unchecked
+    var checked = '<i class="fa fa-check-square-o" aria-hidden="true"></i>';
+    var unchecked = '<i class="fa fa-square-o" aria-hidden="true"></i>';
+
     // load script
     $(document).ready(function () {
-        var oTable = $('#myTable').DataTable({
+        var table = $('#myTable').DataTable({
             ajax: {
                 url: "/api/stationeryretrieval/@Model.RetrievalID",
                 dataSrc: ""
             },
 
             columns: [
-                { "defaultContent": "<input type='checkbox' />" },
+                //{ "defaultContent": '<i class="fa fa-square-o" aria-hidden="true"></i>', className : "checkmark" },
+                {
+                    "data": "AllRetrieved",
+                    "className": "checkmark",
+                    "render": function (data, type, row, meta) {
+                        return data ? checked : unchecked;
+                    }
+                },
                 { "data": "ProductID", "autoWidth": true },
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
@@ -130,6 +141,23 @@
             var redirectURL = "/Retrieval/RetrievalDetails?retId=@Request.QueryString["rid"]&itemId=" + itemcode;
             window.location.href = redirectURL;
         });
+
+        // toggle checkboxes
+        $('#myTable tbody').on('click', '.checkmark', function () {
+            console.log('clicked');
+            var cell = table.cell(this);
+            if (cell.data() == true) {
+                cell.data(false).draw();
+            } else if (cell.data() == false) {
+                cell.data(true).draw();
+            }
+        });
+
+        $(document).on('click', '#updateRetrievalBtn', function () {
+            var data = table.rows().data().toArray();
+            console.log(data);
+        });
+
     });
 
     

@@ -15,6 +15,7 @@ namespace team7_ssis.ViewModels
     }
     public class StationeryRetrievalTableViewModel
     {
+        public bool AllRetrieved { get; set; }
         public string ProductID { get; set; }
         public string Bin { get; set; }
         public string Description { get; set; }

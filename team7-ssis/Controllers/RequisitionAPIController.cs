@@ -88,6 +88,7 @@ namespace team7_ssis.Controllers
             });
             List<StationeryRetrievalTableViewModel> viewModel = finalList.Select(y => new StationeryRetrievalTableViewModel
             {
+                AllRetrieved = (y.Sum(dd => dd.PlanQuantity)) == (y.Sum(dd => dd.ActualQuantity)) ? true : false,
                 ProductID = y.Key.ItemCode,
                 //Bin = y.Key.Bin,
                 Bin = "",
