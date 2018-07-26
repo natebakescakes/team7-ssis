@@ -32,16 +32,18 @@ namespace team7_ssis.Tests.Controllers
             retrievalService = new RetrievalService(context);
             disbursementService = new DisbursementService(context);
         }
-
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        [TestCleanup]
+        public void TestCleanup()
         {
-            
-        }
-        [ClassCleanup]
-        public static void TestCleanup()
-        {
-
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                // CLEANUP
+                context.Disbursement.RemoveRange(context.Disbursement.Where(x => x.DisbursementId != "TEST"));
+                context.Requisition.RemoveRange(context.Requisition.Where(x => x.RequisitionId != "TEST"));
+                context.Retrieval.RemoveRange(context.Retrieval.Where(x => x.RetrievalId != "TEST"));
+                context.DisbursementDetail.RemoveRange(context.DisbursementDetail);
+                context.SaveChanges();
+            }
         }
 
         /// <summary>
@@ -116,18 +118,21 @@ namespace team7_ssis.Tests.Controllers
             viewModel.Data.Add(d1);
 
             // Call the API controller
-            //requisitionApiController.StationeryRetrieval(viewModel);
+            requisitionApiController.StationeryRetrieval(viewModel);
 
             // ASSERT
             // The Disbursement Detail should be updated accordingly
-            int expected = savedDisbursement.DisbursementDetails.First().ActualQuantity;
+            //int expected = savedDisbursement.DisbursementDetails.First().ActualQuantity;
+
+            int expected;
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                expected = context.DisbursementDetail
+                .Where(x => x.DisbursementId == "DISBURSEMENT")
+                .Where(x => x.ItemCode == "C001").First().ActualQuantity;
+            }
+            
             Assert.AreEqual(expected, 10);
-
-            // CLEANUP
-            context.Retrieval.Remove(r);
-            context.Disbursement.Remove(d);
-            context.SaveChanges();
-
         }
     }
 }

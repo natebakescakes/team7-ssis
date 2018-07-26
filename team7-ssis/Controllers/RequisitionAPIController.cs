@@ -109,12 +109,38 @@ namespace team7_ssis.Controllers
 
             return viewModel;
         }
-        //[Route("api/stationeryretrieval")]
-        //[HttpPost]
-        //public IHttpActionResult StationeryRetrieval(StationeryRetrievalTableJSONViewModel viewModel)
-        //{
-            
-        //}
+        [Route("api/stationeryretrieval")]
+        [HttpPost]
+        public IHttpActionResult StationeryRetrieval(StationeryRetrievalTableJSONViewModel viewModel)
+        {
+            try
+            {
+                List<Disbursement> disbList = disbursementService.FindDisbursementsByRetrievalId(viewModel.RetrievalID);
+                List<DisbursementDetail> ddList = disbList.SelectMany(x => x.DisbursementDetails).ToList();
+                foreach (var row in viewModel.Data)
+                {
+                    if (row.AllRetrieved == true)
+                    {
+                        ddList
+                        .Where(x => x.ItemCode == row.ProductID)
+                        .ToList()
+                        .ForEach(x => x.ActualQuantity = x.PlanQuantity);
+                    }
+                    else
+                    {
+                        ddList
+                        .Where(x => x.ItemCode == row.ProductID)
+                        .ToList()
+                        .ForEach(x => x.ActualQuantity = 0);
+                    }
+                }
+                context.SaveChanges();
+            } catch
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
 
         /// <summary>
         /// Retrieves Disbursement Details linked to a given Retrieval and Item.
