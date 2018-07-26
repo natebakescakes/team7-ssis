@@ -85,7 +85,7 @@ namespace team7_ssis.Controllers
 
             return Ok(new MessageViewModel()
             {
-                Message = "Success"
+                Message = "Collection confirmed"
             });
         }
     }
