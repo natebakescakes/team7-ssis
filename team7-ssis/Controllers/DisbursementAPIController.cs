@@ -64,7 +64,8 @@ namespace team7_ssis.Controllers
                 {
                     ItemCode = d.ItemCode,
                     Description = d.Item.Description,
-                    Qty = d.ActualQuantity
+                    Qty = d.ActualQuantity,
+                    Uom = d.Item.Uom,
                 }).ToList()
             }));
         }

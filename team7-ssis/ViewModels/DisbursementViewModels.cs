@@ -19,6 +19,7 @@ namespace team7_ssis.ViewModels
         public string ItemCode { get; set; }
         public string Description { get; set; }
         public int Qty { get; set; }
+        public string Uom { get; set; }
     }
     public class StationeryDisbursementViewModel
     {
