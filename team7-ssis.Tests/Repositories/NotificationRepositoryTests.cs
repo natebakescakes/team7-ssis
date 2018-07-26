@@ -43,18 +43,32 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            notificationRepository.Save(new Notification()
+            {
+                NotificationId = 999999,
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = notificationRepository.FindById(1);
+            var result = notificationRepository.FindById(999999);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Notification));
+            Assert.AreEqual(999999, result.NotificationId);
         }
 
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            notificationRepository.Save(new Notification()
+            {
+                NotificationId = 999999,
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = notificationRepository.ExistsById(1);
+            var result = notificationRepository.ExistsById(999999);
 
             // Assert
             Assert.IsTrue(result);
@@ -64,20 +78,21 @@ namespace team7_ssis.Tests.Repositories
         public void SaveTestExistingChangeNotificationType()
         {
             // Arrange
-            var notificationType = new NotificationTypeRepository(context).FindById(1);
-            var notification = notificationRepository.FindById(1);
-            var original = notification.NotificationType;
-            notification.NotificationType = notificationType;
+            var expected = new NotificationTypeRepository(context).FindById(1);
+            notificationRepository.Save(new Notification()
+            {
+                NotificationId = 999999,
+                NotificationType = new NotificationTypeRepository(context).FindById(2),
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
-            var result = notificationRepository.Save(notification);
+            var result = notificationRepository.FindById(999999);
+            result.NotificationType = expected;
+            notificationRepository.Save(result);
 
             // Assert
-            Assert.AreEqual(notificationType, result.NotificationType);
-
-            // Tear Down
-            notification.NotificationType = original;
-            notificationRepository.Save(notification);
+            Assert.AreEqual(expected, result.NotificationType);
         }
 
         [TestMethod]
@@ -103,6 +118,13 @@ namespace team7_ssis.Tests.Repositories
 
             // Assert
             Assert.IsNull(notificationRepository.FindById(999999));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (notificationRepository.ExistsById(999999))
+                notificationRepository.Delete(notificationRepository.FindById(999999));
         }
     }
 }

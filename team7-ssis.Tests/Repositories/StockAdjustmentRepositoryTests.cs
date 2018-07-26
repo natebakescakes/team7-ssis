@@ -6,7 +6,7 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
+    [TestClass]
     public class StockAdjustmentRepositoryTests
     {
         ApplicationDbContext context;
@@ -43,8 +43,15 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = stockAdjustmentRepository.FindById("TEST");
+            var result = stockAdjustmentRepository.FindById("DOREPOTEST");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(StockAdjustment));
@@ -53,30 +60,40 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = stockAdjustmentRepository.ExistsById("TEST");
+            var result = stockAdjustmentRepository.ExistsById("DOREPOTEST");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeRemarks()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var stockAdjustment = stockAdjustmentRepository.FindById("TEST");
-            var original = stockAdjustment.Remarks;
-            stockAdjustment.Remarks = "UNIT TEST";
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Arrange - Get Existing
+            var expected = stockAdjustmentRepository.FindById("DOREPOTEST");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = stockAdjustmentRepository.Save(stockAdjustment);
+            var result = stockAdjustmentRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual("UNIT TEST", result.Remarks);
-
-            // Tear Down
-            stockAdjustment.Remarks = original;
-            stockAdjustmentRepository.Save(stockAdjustment);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
@@ -86,7 +103,7 @@ namespace team7_ssis.Tests.Repositories
             // Arrange
             var stockAdjustment = new StockAdjustment
             {
-                StockAdjustmentId = "UNIT TEST",
+                StockAdjustmentId = "DOREPOTEST",
                 CreatedDateTime = DateTime.Now
             };
 
@@ -101,19 +118,32 @@ namespace team7_ssis.Tests.Repositories
             stockAdjustmentRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(stockAdjustmentRepository.FindById("UNIT TEST"));
+            Assert.IsNull(stockAdjustmentRepository.FindById("DOREPOTEST"));
         }
 
         [TestMethod]
         public void FindByCreatedDateTimeTestNotNull()
         {
             // Arrange
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var result = stockAdjustmentRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
 
             // Assert
             Assert.IsTrue(result.Count() >= 1);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (stockAdjustmentRepository.ExistsById("DOREPOTEST"))
+                stockAdjustmentRepository.Delete(stockAdjustmentRepository.FindById("DOREPOTEST"));
+
         }
     }
 }

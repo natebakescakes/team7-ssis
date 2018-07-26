@@ -60,8 +60,10 @@
 <script>
     $(document).ready(function () {
         var oTable = $('#myTable').DataTable({
-
-            sAjaxSource: "api/stationerydisbursement/@ViewBag.Retrieval",
+            ajax: {
+                url: "/api/stationerydisbursement/@Request.QueryString["rid"]",
+                dataSrc: ""
+            },
 
             columns: [
                 { "data": "DisbursementID", "autoWidth": true },

@@ -240,6 +240,7 @@ namespace team7_ssis.Tests.Services
 
         //approve pending stockadjustment
         [TestMethod()]
+        [Ignore]
         public void ApproveStockAdjustmentTest()
         {
             //Arrange

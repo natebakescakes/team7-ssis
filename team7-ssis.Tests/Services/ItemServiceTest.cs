@@ -41,6 +41,19 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        public void FindAllActiveItemTest()
+        {
+            //Act
+            var result = itemService.FindAllActiveItems();
+
+            //Assert
+            foreach(Item i in result)
+            {
+                Assert.AreEqual(1, i.Status.StatusId);
+            }
+        }
+
+        [TestMethod]
         public void FindItemByItemCodeTest() 
         {
             //Arrange
