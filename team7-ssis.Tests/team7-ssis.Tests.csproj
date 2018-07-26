@@ -161,7 +161,7 @@
     <Compile Include="Controllers\ReportControllerTest.cs" />
     <Compile Include="Controllers\NotificationApiControllerTest.cs" />
     <Compile Include="Controllers\NotificationControllerTest.cs" />
-    <Compile Include="Controllers\RequisitionAPIController.cs" />
+    <Compile Include="Controllers\RequisitionAPIControllerTests.cs" />
     <Compile Include="Controllers\RequisitionControllerTests.cs" />
     <Compile Include="Controllers\UserApiControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

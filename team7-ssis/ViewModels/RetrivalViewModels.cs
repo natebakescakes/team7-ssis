@@ -21,6 +21,16 @@ namespace team7_ssis.ViewModels
         public string Description { get; set; }
         public int QtyOrdered { get; set; }
     }
+    public class StationeryRetrievalTableJSONViewModel
+    {
+        public string RetrievalID { get; set; }
+        public List<StationeryRetrievalTableRowJSONViewModel> Data { get; set; }
+    }
+    public class StationeryRetrievalTableRowJSONViewModel
+    {
+        public bool AllRetrieved { get; set; }
+        public string ProductID { get; set; }
+    }
     public class RetrievalDetailsJSON
     {
         public string retId { get; set; }

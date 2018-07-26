@@ -13,13 +13,24 @@ namespace team7_ssis.Controllers
 {
     public class RequisitionAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        RequisitionService requisitionService = new RequisitionService(context);
-        RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-        RetrievalService retrievalService = new RetrievalService(context);
-        DisbursementService disbursementService = new DisbursementService(context);
-        StatusService statusService = new StatusService(context);
-        ItemService itemService = new ItemService(context);
+        ApplicationDbContext context;
+        RequisitionService requisitionService;
+        RequisitionRepository requisitionRepository;
+        RetrievalService retrievalService;
+        DisbursementService disbursementService;
+        StatusService statusService;
+        ItemService itemService;
+
+        public RequisitionAPIController()
+        {
+            context = new ApplicationDbContext();
+            requisitionService = new RequisitionService(context);
+            requisitionRepository = new RequisitionRepository(context);
+            retrievalService = new RetrievalService(context);
+            disbursementService = new DisbursementService(context);
+            statusService = new StatusService(context);
+            itemService = new ItemService(context);
+        }
 
         [Route("api/reqdetail/all")]
         [HttpGet]
@@ -98,6 +109,13 @@ namespace team7_ssis.Controllers
 
             return viewModel;
         }
+        //[Route("api/stationeryretrieval")]
+        //[HttpPost]
+        //public IHttpActionResult StationeryRetrieval(StationeryRetrievalTableJSONViewModel viewModel)
+        //{
+            
+        //}
+
         /// <summary>
         /// Retrieves Disbursement Details linked to a given Retrieval and Item.
         /// </summary>
