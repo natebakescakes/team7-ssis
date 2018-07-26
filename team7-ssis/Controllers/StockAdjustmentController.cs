@@ -15,11 +15,20 @@ namespace team7_ssis.Controllers
 {
     public class StockAdjustmentController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        StockAdjustmentService stockAdjustmentService = new StockAdjustmentService(context);
-        UserService userService = new UserService(context);
-        UserRepository userRepository = new UserRepository(context);
-        ItemPriceService itemPriceService = new ItemPriceService(context);
+        private ApplicationDbContext context;
+        private StockAdjustmentService stockAdjustmentService;
+        private UserService userService;
+        private UserRepository userRepository;
+        private ItemPriceService itemPriceService;
+
+        public StockAdjustmentController()
+        {
+            context = new ApplicationDbContext();
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
+            userRepository = new UserRepository(context);
+            itemPriceService = new ItemPriceService(context);
+        }
 
         // GET: StockAdjustment
         public ActionResult Index()

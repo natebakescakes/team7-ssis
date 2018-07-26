@@ -10,6 +10,7 @@ namespace team7_ssis.Tests.Repositories
     public class StockAdjustmentDetailRepositoryTests
     {
         ApplicationDbContext context;
+        StockAdjustmentRepository stockAdjustmentRepository;
         StockAdjustmentDetailRepository stockAdjustmentDetailRepository;
 
         [TestInitialize]
@@ -17,6 +18,7 @@ namespace team7_ssis.Tests.Repositories
         {
             // Arrange
             context = new ApplicationDbContext();
+            stockAdjustmentRepository = new StockAdjustmentRepository(context);
             stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
         }
 
@@ -43,8 +45,21 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            var expected = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                ItemCode = "E030",
+            };
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            stockAdjustmentDetailRepository.Save(expected);
+
             // Act
-            var result = stockAdjustmentDetailRepository.FindById("TEST", "E030");
+            var result = stockAdjustmentDetailRepository.FindById("SADREPOTEST", "E030");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(StockAdjustmentDetail));
@@ -53,55 +68,109 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            var expected = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                ItemCode = "E030",
+            };
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            stockAdjustmentDetailRepository.Save(expected);
+
             // Act
-            var result = stockAdjustmentDetailRepository.ExistsById("TEST", "E030");
+            var result = stockAdjustmentDetailRepository.ExistsById("SADREPOTEST", "E030");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeOriginalQuantity()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var stockAdjustmentDetail = stockAdjustmentDetailRepository.FindById("TEST", "E030");
-            var original = stockAdjustmentDetail.OriginalQuantity;
-            stockAdjustmentDetail.OriginalQuantity = 999999;
+            // Arrange - Initialize
+            var afterQuantity = 1;
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            stockAdjustmentDetailRepository.Save(new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                AfterQuantity = afterQuantity,
+                ItemCode = "E030",
+            });
+
+            // Arrange - Get Existing
+            var expected = stockAdjustmentDetailRepository.FindById("SADREPOTEST", "E030");
+            expected.AfterQuantity = 999;
 
             // Act
-            var result = stockAdjustmentDetailRepository.Save(stockAdjustmentDetail);
+            var result = stockAdjustmentDetailRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(999999, result.OriginalQuantity);
-
-            // Tear Down
-            stockAdjustmentDetail.OriginalQuantity = original;
-            stockAdjustmentDetailRepository.Save(stockAdjustmentDetail);
+            Assert.AreEqual(expected.AfterQuantity, result.AfterQuantity);
         }
 
         [TestMethod]
-        public void SaveAndDeleteTestNew()
+        public void Save_InstanceOfType()
         {
-            // Save new object into DB
             // Arrange
             var stockAdjustmentDetail = new StockAdjustmentDetail
             {
-                StockAdjustmentId = "TEST",
+                StockAdjustmentId = "SADREPOTEST",
                 ItemCode = "P030"
             };
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var saveResult = stockAdjustmentDetailRepository.Save(stockAdjustmentDetail);
 
             // Assert
             Assert.IsInstanceOfType(saveResult, typeof(StockAdjustmentDetail));
+        }
 
-            // Delete saved object from DB
+        [TestMethod]
+        public void Delete_CannotFind()
+        {
+            // Arrange
+            stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            var saveResult = stockAdjustmentDetailRepository.Save(new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = "SADREPOTEST",
+                ItemCode = "E030",
+            });
+
             // Act
             stockAdjustmentDetailRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(stockAdjustmentDetailRepository.FindById("TEST", "P030"));
+            Assert.IsNull(stockAdjustmentDetailRepository.FindById("SADREPOTEST", "E030"));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (stockAdjustmentDetailRepository.ExistsById("SADREPOTEST", "E030"))
+                stockAdjustmentDetailRepository.Delete(stockAdjustmentDetailRepository.FindById("SADREPOTEST", "E030"));
+
+            if (stockAdjustmentDetailRepository.ExistsById("SADREPOTEST", "P030"))
+                stockAdjustmentDetailRepository.Delete(stockAdjustmentDetailRepository.FindById("SADREPOTEST", "P030"));
+
+            if (stockAdjustmentRepository.ExistsById("SADREPOTEST"))
+                stockAdjustmentRepository.Delete(stockAdjustmentRepository.FindById("SADREPOTEST"));
+
         }
     }
 }

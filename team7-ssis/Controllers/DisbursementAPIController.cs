@@ -12,8 +12,14 @@ namespace team7_ssis.Controllers
 {
     public class DisbursementAPIController : ApiController
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        DisbursementService disbursementService = new DisbursementService(context);
+        ApplicationDbContext context;
+        DisbursementService disbursementService;
+
+        public DisbursementAPIController()
+        {
+            context = new ApplicationDbContext();
+            disbursementService = new DisbursementService(context);
+        }
         
         /// <summary>
         /// Retrieves all Disbursement Details for the Disbursement

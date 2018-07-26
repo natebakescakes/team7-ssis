@@ -52,7 +52,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            @Html.ActionLink("Manage Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item">@Html.ActionLink("View Catalogue", "Index", "Home", null, new { @class = "nav-link" })</li>
@@ -63,8 +63,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown02">
-                            @Html.ActionLink("Outstanding Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Outstanding Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -75,7 +75,7 @@
                             @Html.ActionLink("Receive Goods", "Index", "Home", null, new { @class = "dropdown-item" })
                             <hr />
                             @Html.ActionLink("Manage Inventory", "Index", "Inventory", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Item Categories", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Item Categories", "Index", "ItemCategory", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Manage Stock Adjustments", "Index", "StockAdjustment", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
