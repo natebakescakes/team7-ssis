@@ -11,7 +11,7 @@ using team7_ssis.Models;
 namespace team7_ssis.Tests.Controllers
 {
     [TestClass]
-    class RetrievalControllerTests
+    public class RetrievalControllerTests
     {
         ApplicationDbContext context;
         RetrievalController retrievalController;

@@ -15,11 +15,13 @@ namespace team7_ssis.Controllers
 
         ApplicationDbContext context;
         DisbursementService disbursementService;
+        RetrievalService retrievalService;
 
         public RetrievalAPIController()
         {
             context = new ApplicationDbContext();
             disbursementService = new DisbursementService(context);
+            retrievalService = new RetrievalService(context);
         }
 
         [Route("api/stationeryretrieval/{rId}")]
@@ -110,7 +112,25 @@ namespace team7_ssis.Controllers
             return viewModel;
         }
 
-
+        [Route("api/updateretrievalform")]
+        [HttpPost]
+        public IHttpActionResult UpdateRetrievalForm(SaveJson json)
+        {
+            // string retId, string itemCode, List<BreakdownByDepartment> list
+            try
+            {
+                Retrieval r = retrievalService.FindRetrievalById(json.RetId);
+                foreach (BreakdownByDepartment bd in json.List)
+                {
+                    Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == bd.DeptId).First();
+                    disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, json.ItemCode, bd.Actual);
+                }
+            } catch
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 
 

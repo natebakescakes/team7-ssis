@@ -49,4 +49,16 @@ namespace team7_ssis.ViewModels
         public int Needed { get; set; }
         public int Actual { get; set; }
     }
+    public class BreakdownByDepartment
+    {
+        public string DeptId { get; set; }
+        public int Actual { get; set; }
+    }
+    public class SaveJson
+    {
+        public string RetId { get; set; }
+        public string ItemCode { get; set; }
+
+        public List<BreakdownByDepartment> List { get; set; }
+    }
 }

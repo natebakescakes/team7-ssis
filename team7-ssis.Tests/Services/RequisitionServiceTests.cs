@@ -226,7 +226,7 @@ namespace team7_ssis.Tests.Services
             var expected = statusService.FindStatusByStatusId(6);
 
             // Act
-            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com");
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
 
             // Assert
             Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
@@ -245,7 +245,7 @@ namespace team7_ssis.Tests.Services
             });
 
             // Act
-            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com");
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
         }
 
         [TestMethod]
@@ -255,7 +255,7 @@ namespace team7_ssis.Tests.Services
             // Arrange
 
             // Act
-            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com");
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
         }
 
         [TestMethod]
@@ -271,7 +271,7 @@ namespace team7_ssis.Tests.Services
             var expected = statusService.FindStatusByStatusId(5);
 
             // Act
-            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com");
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
 
             // Assert
             Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
@@ -290,7 +290,7 @@ namespace team7_ssis.Tests.Services
             });
 
             // Act
-            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com");
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
         }
 
         [TestMethod]
@@ -300,7 +300,7 @@ namespace team7_ssis.Tests.Services
             // Arrange
 
             // Act
-            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com");
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
         }
 
         private void populateRequisitions()
