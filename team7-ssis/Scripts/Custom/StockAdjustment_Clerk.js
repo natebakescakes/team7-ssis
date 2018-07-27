@@ -15,22 +15,17 @@
                 "targets": 5,
 
                 "render": function (data, type, full, meta) {
+                    if (data.StatusName == "Pending Approval" || data.StatusName == "Draft")
 
-                    return "<button class='btn btn-safe' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+                        return "<button class='btn btn-warning' id='processBtn' ><i class='fa fa-delete'>Process</i></button>";
 
-                }
+                    else (data.StatusName == "Approved" || data.StatusName == "Rejected")
+                        return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
 
-            },
-            {
-
-                "targets": 6,
-
-                "render": function (data, type, full, meta) {
-
-                    return "<button class='btn btn-danger' id='cancelBtn' ><i class='fa fa-delete'>Cancel</i></button>";
 
                 }
             }
+
 
         ],
         columns: [
@@ -39,7 +34,6 @@
             { data: "ApprovedBySupervisor" },
             { data: "CreatedDateTime"},
             { data: "StatusName" },
-            { data: null },
             { data: null }
         ],
         autowidth: true,
@@ -69,25 +63,26 @@
 
       var row = $("table#ClerkTable tr").index($(this).closest("tr"));
         var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
-        window.location.href = "StockAdjustment/Details/" + Id;
+        window.location.href = "/StockAdjustment/DetailsNoEdit/" + Id;
 
     });
 
-    $('#ClerkTable tbody').on("click", "#cancelBtn", function () {
+    $('#ClerkTable tbody').on("click", "#processBtn", function () {
 
         var row = $("table#ClerkTable tr").index($(this).closest("tr"));
 
         var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+        window.location.href = "/StockAdjustment/DetailsEdit/" + Id;
 
-        $.ajax({
-            type: "GET",
-            contentType: 'application/json',
-            url: '/api/stockadjustment/delete/?id=' + Id,
+        //$.ajax({
+        //    type: "GET",
+        //    contentType: 'application/json',
+        //    url: '/api/stockadjustment/delete/?id=' + Id,
 
-            success: function (responseJSON) {
-                window.location.replace("/StockAdjustment");
-            }
-        });
+        //    success: function (responseJSON) {
+        //        window.location.replace("/StockAdjustment");
+        //    }
+        //});
 
     });
 

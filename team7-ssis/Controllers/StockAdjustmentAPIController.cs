@@ -25,15 +25,14 @@ namespace team7_ssis.Controllers
         {
             context=new ApplicationDbContext();
             stockAdjustmentService = new StockAdjustmentService(context);
-            // stockAdjustmentRepository = new StockAdjustmentRepository(context);
              itemService = new ItemService(context);
              itemPriceService = new ItemPriceService(context);
             userService = new UserService(context);
-           // stockAdjustmentDetailRepository = new StockAdjustmentDetailRepository(context);
+          
         }
 
 
-
+        // Get All stockadjustment in clerk page
         [Route("api/stockadjustment/all")]
         [HttpGet]
         public IEnumerable<StockAdjustmentViewModel> stockadjustments()
@@ -58,6 +57,34 @@ namespace team7_ssis.Controllers
 
             return sadj;
         }
+
+        // Get All stockadjustment in manager/superviosr page
+        [Route("api/stockadjustment/allExceptDraftAndCancelled")]
+        [HttpGet]
+        public IEnumerable<StockAdjustmentViewModel> stockadjustmentsExceptDraft()
+        {
+            List<StockAdjustment> list = stockAdjustmentService.FindAllStockAdjustmentExceptDraft();
+            List<StockAdjustmentViewModel> sadj = new List<StockAdjustmentViewModel>();
+
+
+            foreach (StockAdjustment s in list)
+            {
+                sadj.Add(new StockAdjustmentViewModel
+                {
+                    StockAdjustmentId = s.StockAdjustmentId,
+                    CreatedBy = (s.CreatedBy == null) ? "" : s.CreatedBy.FirstName,
+                    ApprovedBySupervisor = (s.ApprovedBySupervisor == null) ? "" : s.ApprovedBySupervisor.FirstName,
+                    CreatedDateTime = s.CreatedDateTime,
+                    StatusName = (s.Status == null) ? "" : s.Status.Name,
+                    //Link = "/StockAdjustment/"+s.StockAdjustmentId
+                });
+
+            }
+
+            return sadj;
+        }
+
+
         [Route("api/stockadjustment/save")]
         [HttpPost]
         public void SaveStockAdjustmentAsDraft(List<ViewModelFromNew> list)
@@ -65,10 +92,12 @@ namespace team7_ssis.Controllers
            
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
+            s.CreatedDateTime = DateTime.Now;
             s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);
+            stockAdjustmentService.updateStockAdjustment(s);
             string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
             s.CreatedBy = userService.FindUserByEmail(UserName);
-            s.CreatedDateTime = DateTime.Now;
+         
             foreach (ViewModelFromNew v in list )
             {
                 StockAdjustmentDetail sd = new StockAdjustmentDetail();
@@ -116,17 +145,62 @@ namespace team7_ssis.Controllers
             stockAdjustmentService.CreatePendingStockAdjustment(s);
         }
 
+
+        
         [Route("api/stockadjustment/delete")]
         [HttpGet]
         public void DeleteDraftStockAdjustment(string id)
         {
             stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
+            StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
+           
+
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            ApplicationUser currentUser = userService.FindUserByEmail(UserName);
+            sd.UpdatedBy = currentUser;
+            sd.UpdatedDateTime = DateTime.Now;
+
+            stockAdjustmentService.updateStockAdjustment(sd);
+
+        }
+
+
+        [Route("api/stockadjustment/reject")]
+        [HttpGet]
+        public void RejectStockAdjustment(string id)
+        {
+            stockAdjustmentService.RejectStockAdjustment(id);
+            StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
+           
 
 
         }
-        [Route("api/stockadjustment/update")]
+
+        [Route("api/stockadjustment/approve")]
+        [HttpGet]
+        public void ApproveStockAdjustment(string id)
+        {
+            stockAdjustmentService.ApproveStockAdjustment(id);
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
+            ApplicationUser currentUser= userService.FindUserByEmail(UserName);
+            if (currentUser.Roles.Where(role => role.RoleId == "5").Count() > 0) // if Manager
+            {
+                sd.ApprovedByManager = userService.FindUserByEmail(UserName);
+                sd.ApprovedManagerDateTime = DateTime.Now;
+            } else if (currentUser.Roles.Where(role => role.RoleId == "4").Count() > 0)
+            {
+                sd.ApprovedBySupervisor = currentUser;
+                sd.ApprovedSupervisorDateTime = DateTime.Now;
+            }
+          
+            stockAdjustmentService.updateStockAdjustment(sd);
+
+        }
+
+        [Route("api/stockadjustment/update_to_draft")]
         [HttpPost]
-        public void UpdateStockAdjustment(List<ViewModelFromEditDetail> list)
+        public void UpdateStockAdjustmentAsDraft(List<ViewModelFromEditDetail> list)
         {
         
             foreach (ViewModelFromEditDetail v in list)
@@ -137,6 +211,29 @@ namespace team7_ssis.Controllers
                 sd.Reason = v.Reason;             
                 stockAdjustmentService.updateStockAdjustmentDetail(sd);
             }
+            string stockadjustmentid = list.First().StockAdjustmentID;
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustmentid);
+            stockAdjustmentService.updateToDraftStockAdjustment(sa);
+        }
+
+        [Route("api/stockadjustment/update_to_pending")]
+        [HttpPost]
+        public void UpdateStockAdjustmentAsPending(List<ViewModelFromEditDetail> list)
+        {
+
+
+           
+            foreach (ViewModelFromEditDetail v in list)
+            {
+                StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
+                int d = v.Adjustment;
+                sd.AfterQuantity = sd.OriginalQuantity + v.Adjustment;
+                sd.Reason = v.Reason;               
+                stockAdjustmentService.updateStockAdjustmentDetail(sd);
+            }
+            string stockadjustmentid = list.First().StockAdjustmentID;
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustmentid);
+            stockAdjustmentService.updateToPendingStockAdjustment(sa);
         }
 
 

@@ -30,121 +30,12 @@
 </table>
 
 
-<table id="myTable" class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th width="200">Item Code</th>
-            <th width="200">Description</th>
-            <th width="200"> Reason</th>
-            <th width="200">Unit Price</th>
-            <th width="200">Adjustment</th>
-        </tr>
-    </thead>
-</table>
+<div>
+    @Html.Partial("DetailsEdit")
 
-<div class="row mt-3">
-    <div class="col-md-12">
-        <button class="btn btn-default" id="cancelBtn">Cancel</button>
-        <button class="btn btn-primary" id="saveBtn">Save</button>
-    </div>
+    @*@Html.Partial("DetailsNoEdit")*@
+
 </div>
-
-
-<script>
- 
-    $(document).ready(function () {
-        var saUrl = $("#StockAdjustmentId").val();
-
-        var oTable = $('#myTable').DataTable({
-
-            ajax: {
-                url: "/api/stockadjustment/detail/" + saUrl,
-                dataSrc: ""
-            },
-
-            columns: [
-                {
-                    "data": "ItemCode"
-                },
-                {
-                    "data": "Description"
-                },
-                {
-                    "data": "Reason",
-                    "render": function (data, type, row, meta) {
-                        var html = '<input class="actual_1" type="textbox" ' +
-                            'value="' + data + '"/>';
-                        return html;
-                    }
-                },
-                {
-                    "data": "UnitPrice"
-                },
-                {
-                    "data": "Adjustment",
-                    "render": function (data, type, row, meta) {
-                        var html = '<input class="actual" type="number" ' +
-                            'value="' + data + '"/>';
-                        return html;
-                    }
-                }
-            ],
-            createdRow: function (row, data, index) {
-                if (data['UnitPrice'] < 250) {//操作次数大于1000的变红显示
-                    $('td', row).eq(3).css('font-weight', "bold").css("color", "green");
-                }
-            },
-            autowidth: true,
-            select: 'api'
-
-        });
-
-        $(document).on("blur", ".actual", function () {
-            // grab the cell that the td refers to, which is the parent of the <input> element
-            var cell = oTable.cell(this.parentElement);
-            // assign the cell with the value from the <input> element
-            cell.data($(this).val()).draw();
-        });
-        $(document).on("blur", ".actual_1", function () {
-            // grab the cell that the td refers to, which is the parent of the <input> element
-            var cell = oTable.cell(this.parentElement);
-            // assign the cell with the value from the <input> element
-            cell.data($(this).val()).draw();
-        });
-
-
-        $('#cancelBtn').click(function () {
-            //direct to home page
-            window.location.href = "/StockAdjustment";
-        });
-
-        $('#saveBtn').click(function () {
-            // var data = $('#myTable').dataTable().fnGetData();
-            // var data=oTable.rows().data().toArray();
-            var data = oTable.data();
-            var reqIdArray = [];
-            for (i = 0; i < data.length; i++) {
-                var obj = { StockAdjustmentId: saUrl, ItemCode: data[i].ItemCode, Reason: data[i].Reason, Adjustment: data[i].Adjustment };
-                reqIdArray[i] = obj;
-            }
-            alert(data[0].Adjustment);
-            $.ajax({
-                url: '/api/stockadjustment/update',
-                contentType: 'application/json',
-                data: JSON.stringify(reqIdArray),
-                dataType: "json",
-                type: "POST",
-                traditional: true,
-                success: function (responseJSON) {
-
-                    window.location.replace("/StockAdjustment");
-                }
-            });
-        });
-    });
-
-      
-</script>
 
 
 

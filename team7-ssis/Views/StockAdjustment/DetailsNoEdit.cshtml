@@ -1,0 +1,76 @@
+﻿@model team7_ssis.ViewModels.StockAdjustmentViewModel
+
+
+<div>@Html.Hidden("StockAdjustmentId", Model.StockAdjustmentId)</div>
+
+<table id="myTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th width="200">Item Code</th>
+            <th width="200">Description</th>
+            <th width="200"> Reason</th>
+            <th width="200">Unit Price</th>
+            <th width="200">Adjustment</th>
+        </tr>
+    </thead>
+</table>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <button class="btn btn-default" id="backBtn">Back</button>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var saUrl = $("#StockAdjustmentId").val();
+
+        var oTable = $('#myTable').DataTable({
+
+            ajax: {
+                url: "/api/stockadjustment/detail/" + saUrl,
+                dataSrc: ""
+            },
+
+            columns: [
+                {
+                    "data": "ItemCode"
+                },
+                {
+                    "data": "Description"
+                },
+                {
+                    "data": "Reason"
+
+                },
+                {
+                    "data": "UnitPrice"
+                },
+                {
+                    "data": "Adjustment"
+                }
+
+            ],
+            createdRow: function (row, data, index) {
+                if (data['UnitPrice'] > 250) {//操作次数大于1000的变红显示
+                    $('td', row).eq(3).css('font-weight', "bold").css("color", "green");
+                }
+            },
+            autowidth: true,
+            select: 'api'
+
+        });
+
+
+
+
+        $('#backBtn').click(function () {
+            //direct to home page
+            window.location.href = "/StockAdjustment";
+        });
+    });
+
+
+</script>

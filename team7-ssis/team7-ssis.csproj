@@ -572,6 +572,9 @@
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
     <Content Include="Views\StockAdjustment\StoreManagerView.cshtml" />
     <Content Include="Views\StockAdjustment\StoreClerkView.cshtml" />
+    <Content Include="Views\StockAdjustment\Process.cshtml" />
+    <Content Include="Views\StockAdjustment\DetailsEdit.cshtml" />
+    <Content Include="Views\StockAdjustment\DetailsNoEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

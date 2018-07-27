@@ -34,12 +34,6 @@ namespace team7_ssis.Tests.Services
         {
             //controller pass stockadjustment to the method
 
-            
-            if (statusRepository.FindById(3) == null)
-            {
-                throw new Exception("can't find such status");
-
-            }
             stockadjustment.Status = statusRepository.FindById(3);
             stockAdjustmentRepository.Save(stockadjustment);
             return stockadjustment;
@@ -97,17 +91,34 @@ namespace team7_ssis.Tests.Services
             return stockAdjustment;
         }
 
+
+
+        //update stockadjustment to pending
+        public StockAdjustment updateToPendingStockAdjustment(StockAdjustment s)
+        {
+
+            s.Status = statusRepository.FindById(4);
+            return stockAdjustmentRepository.Save(s);
+
+        }
+
+        //update stockadjustment to draft
+        public StockAdjustment updateToDraftStockAdjustment(StockAdjustment s)
+        {
+
+            s.Status = statusRepository.FindById(3);
+            return stockAdjustmentRepository.Save(s);
+
+        }
+
+       
+
+
         //create new StockAdjustment with status: pending
         public StockAdjustment CreatePendingStockAdjustment(StockAdjustment stockadjustment)
             //controller pass stockadjustment to the method
         {
          
-          
-            if (statusRepository.FindById(4) == null)
-            {
-                throw new Exception("can't find such status");
-
-            }
             stockadjustment.Status = statusRepository.FindById(4);
             stockAdjustmentRepository.Save(stockadjustment);
                 return stockadjustment;
@@ -115,12 +126,19 @@ namespace team7_ssis.Tests.Services
         }
 
 
-
-
         //find all stockadjustemnt
         public List<StockAdjustment> FindAllStockAdjustment()
         {
             return stockAdjustmentRepository.FindAll().ToList();
+            
+        }
+
+
+        //find stockadjustments except draft
+
+        public List<StockAdjustment> FindAllStockAdjustmentExceptDraft()
+        {
+            return stockAdjustmentRepository.FindAll().Where(x => x.Status.StatusId != 3 ).Where(x => x.Status.StatusId != 2).ToList();
         }
 
         //find stockadjustment by stockjustmentid

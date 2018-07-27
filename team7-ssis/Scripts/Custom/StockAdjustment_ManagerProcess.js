@@ -4,39 +4,34 @@
     var datatb1 = $table.DataTable({
 
         ajax: {
-            url: "/api/stockadjustment/all",
+            url: "/api/stockadjustment/allExceptDraft",
             dataSrc: ""
         },
 
         "columnDefs": [
 
+            //{
+
+            //    "targets": 5,
+
+            //    "render": function (data, type, full, meta) {
+
+            //        return "<button class='btn btn-safe' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+
+            //    }
+
+            //},
             {
 
                 "targets": 5,
 
                 "render": function (data, type, full, meta) {
+                    if (data.StatusName=="Pending Approval")
 
-                    return "<button class='btn btn-safe' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+                        return "<button class='btn btn-primary' id='processBtn' ><i class='fa fa-delete'>Process</i></button>";
+                    else (data.StatusName == "Rejected" || data.StatusName == "Approved")
+                    return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
 
-                }
-
-            },
-            {
-
-                "targets": 6,
-
-                "render": function (data, type, full, meta) {
-
-                    return "<button class='btn btn-danger' id='cancelBtn' ><i class='fa fa-delete'>Cancel</i></button>";
-
-                }
-            },
-            {
-                "targets": 7,
-
-                "render": function (data, type, full, meta) {
-
-                    return "<button class='btn btn-safe' id='processBtn' ><i class='fa fa-delete'>Process</i></button>";
                 }
             }
 
@@ -47,8 +42,7 @@
             { data: "ApprovedBySupervisor" },
             { data: "CreatedDateTime" },
             { data: "StatusName" },
-            { data: null },
-            { data: null },
+            //{ data: null },
             { data: null }
         ],
         autowidth: true,
@@ -78,27 +72,20 @@
 
         var row = $("table#mySATable tr").index($(this).closest("tr"));
         var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
-        window.location.href = "StockAdjustment/Details/" + Id;
+        window.location.href = "/StockAdjustment/Details/" + Id;
 
     });
 
-    $('#mySATable tbody').on("click", "#cancelBtn", function () {
+    $('#mySATable tbody').on("click", "#processBtn", function () {
 
         var row = $("table#mySATable tr").index($(this).closest("tr"));
 
         var Id = $("table#mySATable").find("tr").eq(row).find("td").eq(0).text();
 
-        $.ajax({
-            type: "GET",
-            contentType: 'application/json',
-            url: '/api/stockadjustment/delete/?id=' + Id,
+        window.location.href = "/StockAdjustment/Process/" + Id;
 
-            success: function (responseJSON) {
-                window.location.replace("/StockAdjustment");
-            }
-        });
 
-    });
+    })
 
 });
 

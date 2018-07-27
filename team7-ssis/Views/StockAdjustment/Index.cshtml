@@ -5,8 +5,8 @@
 }
 
 @section scripts {
-    <script src="~/Scripts/Custom/StockAdjustment_Clerk.js"></script>
-    <script src="~/Scripts/Custom/StockAdjustment_ManagerProcess.js"></script>
+    @*<script src="~/Scripts/Custom/StockAdjustment_Clerk.js"></script>
+    <script src="~/Scripts/Custom/StockAdjustment_ManagerProcess.js"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
 
 }
@@ -26,9 +26,10 @@
 
 <body>
     <h2>Manage Stock Adjustments</h2>
-    @*@Html.Partial("StoreManagerView")*@
 
-    @Html.Partial("StoreClerkView")
+    @Html.Partial("StoreManagerView")
+
+    @*@Html.Partial("StoreClerkView")*@
 
 
 </body>

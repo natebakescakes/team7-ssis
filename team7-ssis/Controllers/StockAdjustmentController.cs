@@ -56,19 +56,7 @@ namespace team7_ssis.Controllers
             
             return View(viewmodel);
         }      
-        public ActionResult Details(string Id)
-        {
-            //get the stockadjustment
-            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
-            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
-            sv.StockAdjustmentId = sa.StockAdjustmentId;
-            sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
-            sv.CreatedDateTime = sa.CreatedDateTime;
-            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
-                + sa.ApprovedBySupervisor.LastName;
-            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
-            return View(sv);    
-        }
+
 
         public ActionResult AddItem()
         {
@@ -86,8 +74,61 @@ namespace team7_ssis.Controllers
             return View();
         }
 
+        public ActionResult Process(string Id)
+        {
+            //get the stockadjustment
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
+            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
+            sv.StockAdjustmentId = sa.StockAdjustmentId;
+            sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
+            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
+                + sa.ApprovedBySupervisor.LastName;
+            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
+            return View(sv);
+        }
+        public ActionResult Details(string id)
+        {
+            //get the stockadjustment
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
+            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
+            sv.StockAdjustmentId = sa.StockAdjustmentId;
+            sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
+            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
+                + sa.ApprovedBySupervisor.LastName;
+            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
+            return View(sv);
+        }
+
+        public ActionResult DetailsNoEdit(string id)
+        {
+            //get the stockadjustment
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
+            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
+            sv.StockAdjustmentId = sa.StockAdjustmentId;
+            sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
+            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
+                + sa.ApprovedBySupervisor.LastName;
+            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
+            return View(sv);
+        }
 
 
+        public ActionResult DetailsEdit(string Id)
+        {
+            //get the stockadjustment
+            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
+            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
+            sv.StockAdjustmentId = sa.StockAdjustmentId;
+            sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
+            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
+                + sa.ApprovedBySupervisor.LastName;
+            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
+            return View(sv);
+        }
 
     }
 }
