@@ -19,6 +19,8 @@ namespace team7_ssis.Controllers
         private StockAdjustmentService stockAdjustmentService;
         private StockAdjustmentRepository stockAdjustmentRepository;
         private UserService userService;
+        private StatusService statusService;
+        private ItemService itemService;
 
         public StockAdjustmentAPIController()
         {
@@ -26,6 +28,8 @@ namespace team7_ssis.Controllers
             stockAdjustmentService = new StockAdjustmentService(context);
             stockAdjustmentRepository = new StockAdjustmentRepository(context);
             userService = new UserService(context);
+            statusService = new StatusService(context);
+            itemService = new ItemService(context);
         }
 
         [Route("api/stockadjustment/all")]
@@ -55,7 +59,7 @@ namespace team7_ssis.Controllers
 
         [Route("api/stockadjustment/save")]
         [HttpPost]
-        public IHttpActionResult Save(List<StockAdjustmentDetailViewModel> models)
+        public IHttpActionResult Save(List<MobileSADViewModel> models)
         {
             try
             {
@@ -64,12 +68,27 @@ namespace team7_ssis.Controllers
                 {
                     StockAdjustmentId = IdService.GetNewStockAdjustmentId(context),
                     CreatedDateTime = DateTime.Now,
+                    Status = statusService.FindStatusByStatusId(4),
+                    CreatedBy = userService.FindUserByEmail(models.First().UserName),          
                     
                 };
-                //convert viewmodels to StockAdmustmentDetails list and link to stockadjustment object
-              
-                //save SA details into database 
 
+                //convert viewmodels to StockAdmustmentDetails list and link to stockadjustment object
+                foreach (MobileSADViewModel m in models)
+                { Item item = itemService.FindItemByItemCode(m.ItemCode);
+                    SA.StockAdjustmentDetails.Add(new StockAdjustmentDetail()
+                    {
+                        StockAdjustment = SA,
+                        ItemCode = m.ItemCode,
+                        Item = item,
+                        OriginalQuantity = item.Inventory.Quantity,
+                        AfterQuantity = item.Inventory.Quantity + m.QuantityAdjusted,
+                        Reason =m.Reason
+
+                    });
+                }
+                //save SA object into database 
+               
             }
             catch (ArgumentException)
             {
