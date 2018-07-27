@@ -130,6 +130,9 @@ namespace team7_ssis.Controllers
             List<string> purchaseOrderIds = new List<string>();
             foreach(PurchaseOrder pOrder in poList)
             {
+                pOrder.CreatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                pOrder.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
+                purchaseOrderService.Save(pOrder);
                 purchaseOrderIds.Add(pOrder.PurchaseOrderNo);
             }
             
@@ -141,12 +144,12 @@ namespace team7_ssis.Controllers
                 poDetail.Quantity = pod.QuantityOrdered;
                 poDetail.Status = statusService.FindStatusByStatusId(11);
                 poDetail.Status.StatusId = 11;
-                poDetail.UpdatedDateTime = DateTime.Now;
-                poDetail.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                //poDetail.UpdatedDateTime = DateTime.Now;
+               // poDetail.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
                 
                 foreach(PurchaseOrder po in poList)
                 {
-                    po.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
+                    
                     Item item = itemService.FindItemByItemCode(pod.ItemCode);
                     ItemPrice itemPrice = itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
                     if (itemPrice.SupplierCode == po.SupplierCode)

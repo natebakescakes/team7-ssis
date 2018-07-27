@@ -1,10 +1,17 @@
 ﻿$(document).ready(function () {
     var generatePOTbl = $('#generatePoTable').DataTable({
         columns: [
-            { title: "ItemCode" },
+            { title: "Item Code" },
             { title: "Description" },
-            { title: "Quantity" },
-            { title: "UnitPrice" },
+            {
+                title: "Quantity",
+                render: function (data, type, row, meta) {
+                    var html = '<input class="edit" type="number" ' +
+                        'value="' + data + '"/>';
+                    return html;
+                } 
+            },
+            { title: "Unit Price" },
             { title: "Supplier" },
             { title: "Amount" },
             { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
@@ -92,7 +99,7 @@
                 var qty = parseInt($('#generateQty').val());
                 var amount = parseInt($('#generateAmount').val());
                 var id = "supervisor" + i.toString();
-                generatePOTbl.row.add([data[0].ItemCode, data[0].Description, '<input id="edit'+id+'" class="edit" type="text" value="' + qty + '" />', data[0].UnitPrice, '<select id="'+id+'"></select>', amount]).draw();
+                generatePOTbl.row.add([data[0].ItemCode, data[0].Description, qty, data[0].UnitPrice, '<select id="'+id+'"></select>', amount]).draw();
                 document.getElementById("generateAmount").value = 0;
                 document.getElementById("generateUnitPrice").value = 0;
                 document.getElementById("generateQty").value = 0;
@@ -136,11 +143,17 @@
         document.getElementById("generateAmount").value = document.getElementById("generateUnitPrice").value * document.getElementById("generateQty").value;
     });
 
+    $(document).on("change", ".edit", function () {
+
+        var cell = generatePOTbl.cell(this.parentElement);
+        // assign the cell with the value from the <input> element 
+        cell.data($(this).val()).draw();
+    });
+
+
 
     //SAVE
     $("#generateforms").click(function () {
-
-
 
         var datatableData = generatePOTbl.rows().data().toArray();
 
@@ -151,12 +164,13 @@
         for (var i = 0; i < datatableData.length; i++) {
 
             var id = "#supervisor" + (i + 1).toString();
-           
+
+            //alert(datatableData[i][2]);
 
             var o = {
                 "ItemCode": datatableData[i][0],
                 "Description": datatableData[i][1],
-                "QuantityOrdered": 15,
+                "QuantityOrdered": datatableData[i][2],
                 "UnitPrice": datatableData[i][3],
                 "SupplierName": $(id).children("option").filter(":selected").text(),
                 "SupplierPriority": $(id).children("option").filter(":selected").val(),

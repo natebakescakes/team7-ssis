@@ -108,6 +108,8 @@ namespace team7_ssis.Services
                 p.PurchaseOrderNo = IdService.GetNewPurchaseOrderNo(context);
                 p.Supplier = supplier;
                 p.CreatedDateTime = DateTime.Now;
+                p.Status = statusRepository.FindById(11);
+                p.Status.StatusId = 11;
                 purchaseOrderRepository.Save(p);
 
                 poList.Add(p);
