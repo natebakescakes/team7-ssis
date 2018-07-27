@@ -133,12 +133,21 @@
                     { title: "ItemCode" },
                     { title: "Description" },
                     { title: "UnitPrice" },
-                    { title: "Reason" },
                     {
-                        title: "Adjustment"
-                        //render: function (data, type, row) {
-                        //    return '<input class="form-control"  style="border:none" id=Price" type="number"  min="-2500" step="1" max="2500" value = ' + row.Adjustment + '  >'
-                        //}
+                        title: "Reason",
+                        render: function (data, type, row, meta) {
+                            var html = '<input class="edit1" type="textbox" ' +
+                                'value="' + data + '"/>';
+                            return html;
+                        }
+                    },
+                    {
+                        title: "Adjustment",
+                         render: function (data, type, row, meta) {
+                            var html = '<input class="edit2" type="number" ' +
+                                'value="' + data + '"/>';
+                            return html;
+                        }
                     },
                     {
                         defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>'
@@ -247,6 +256,22 @@
                     .row($(this).parents('tr'))
                     .remove()
                     .draw();
+            });
+
+
+            $(document).on("change", ".edit1", function () {
+
+                var cell = myTable.cell(this.parentElement);
+                // assign the cell with the value from the <input> element 
+                cell.data($(this).val()).draw();
+            });
+
+
+            $(document).on("change", ".edit2", function () {
+
+                var cell = myTable.cell(this.parentElement);
+                // assign the cell with the value from the <input> element 
+                cell.data($(this).val()).draw();
             });
         })
 
