@@ -363,12 +363,9 @@
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\OrderItem.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
-    <Compile Include="ViewModels\StockAdjustmentListViewModel.cs" />
     <Compile Include="ViewModels\StockAdjustmentViewModel.cs" />
     <Compile Include="ViewModels\ReportViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
-    <Compile Include="ViewModels\StockAdjustmentDetailListViewModel.cs" />
-    <Compile Include="ViewModels\StockAdjustmentDetailViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -377,6 +374,19 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\dataTables.editor.css" />
+    <Content Include="Content\editor.bootstrap.css" />
+    <Content Include="Content\editor.bootstrap.min.css" />
+    <Content Include="Content\editor.bootstrap4.css" />
+    <Content Include="Content\editor.bootstrap4.min.css" />
+    <Content Include="Content\editor.dataTables.css" />
+    <Content Include="Content\editor.dataTables.min.css" />
+    <Content Include="Content\editor.foundation.css" />
+    <Content Include="Content\editor.foundation.min.css" />
+    <Content Include="Content\editor.jqueryui.css" />
+    <Content Include="Content\editor.jqueryui.min.css" />
+    <Content Include="Content\editor.semanticui.css" />
+    <Content Include="Content\editor.semanticui.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Site.css" />
@@ -392,16 +402,29 @@
     <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\CreateRequisition.js" />
     <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
-    <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
     <Content Include="Scripts\Custom\RedirectPost.js" />
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
-    <Content Include="Scripts\Custom\StockAdjustment.js" />
+    <Content Include="Scripts\Custom\StockAdjustment_Clerk.js" />
     <Content Include="Scripts\Custom\RequisitionDetail.js" />
+    <Content Include="Scripts\Custom\StockAdjustmentDetail.js" />
+    <Content Include="Scripts\Custom\StockAdjustment_ManagerProcess.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
     <Content Include="Scripts\Custom\SupplierPriceList.js" />
+    <Content Include="Scripts\editor\dataTables.editor.js" />
+    <Content Include="Scripts\editor\dataTables.editor.min.js" />
+    <Content Include="Scripts\editor\editor.bootstrap.js" />
+    <Content Include="Scripts\editor\editor.bootstrap.min.js" />
+    <Content Include="Scripts\editor\editor.bootstrap4.js" />
+    <Content Include="Scripts\editor\editor.bootstrap4.min.js" />
+    <Content Include="Scripts\editor\editor.foundation.js" />
+    <Content Include="Scripts\editor\editor.foundation.min.js" />
+    <Content Include="Scripts\editor\editor.jqueryui.js" />
+    <Content Include="Scripts\editor\editor.jqueryui.min.js" />
+    <Content Include="Scripts\editor\editor.semanticui.js" />
+    <Content Include="Scripts\editor\editor.semanticui.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -517,7 +540,6 @@
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
     <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
-    <Content Include="Views\StockAdjustment\AddItem.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
@@ -526,10 +548,6 @@
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
     <Content Include="Views\Supplier\SupplierPriceList.cshtml" />
-    <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
-    <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
-    <Content Include="Views\StockAdjustment\Details.cshtml" />
-    <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
     <Content Include="Views\ItemCategory\Index.cshtml" />
     <Content Include="Views\ItemCategory\_ItemCategoryTable.cshtml" />
     <Content Include="Views\ItemCategory\_ItemCategoryDetails.cshtml" />
@@ -546,6 +564,11 @@
     <Content Include="Views\Report\DepartmentUsageMobile.cshtml" />
     <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
+    <Content Include="Views\StockAdjustment\StoreManagerView.cshtml" />
+    <Content Include="Views\StockAdjustment\StoreClerkView.cshtml" />
+    <Content Include="Views\StockAdjustment\Process.cshtml" />
+    <Content Include="Views\StockAdjustment\DetailsEdit.cshtml" />
+    <Content Include="Views\StockAdjustment\DetailsNoEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

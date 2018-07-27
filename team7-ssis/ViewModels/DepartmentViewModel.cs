@@ -34,6 +34,12 @@ namespace team7_ssis.ViewModels
         public string EmailHead { get; set; }
         public string EmailRep { get; set; }
 
+        //Delegation properties
+        public string Recipient { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public int DelegationId { get; set; }
+        public int DelegationStatus { get; set; }
 
 
     }
