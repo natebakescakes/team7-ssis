@@ -105,14 +105,15 @@ namespace team7_ssis.Controllers
                 var clerk = d.Department.CollectionPoint.ClerkInCharge;
                 string disbursedBy = String.Format("{0} {1}", clerk.FirstName, clerk.LastName);
 
-                viewModel.Add(new StationeryDisbursementViewModel
-                {
-                    DisbursementID = d.DisbursementId,
-                    Department = d.Department.Name,
-                    //CollectionPoint = d.Department.CollectionPoint.Name,
-                    //DisbursedBy = disbursedBy,
-                    //Status = d.Status.Name
-                });
+                StationeryDisbursementViewModel vm = new StationeryDisbursementViewModel();
+                vm.DisbursementID = d.DisbursementId;
+                vm.Department = d.Department.Name;
+                vm.CollectionPoint = d.Department.CollectionPoint.Name;
+                vm.DisbursedBy = disbursedBy;
+                vm.Status = d.Status.Name;
+
+                viewModel.Add(vm);
+
             }
 
             return viewModel;

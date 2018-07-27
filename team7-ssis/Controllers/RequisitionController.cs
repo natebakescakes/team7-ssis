@@ -68,33 +68,35 @@ namespace team7_ssis.Controllers
         [Route("/Requisition/StationeryRetrieval")]
         public ActionResult StationeryRetrieval(string rid)
         {
-            if (rid == null)
-            {
-                return new HttpStatusCodeResult(400);
-            }
-
             Retrieval r = retrievalService.FindRetrievalById(rid);
             StationeryRetrievalViewModel viewModel = new StationeryRetrievalViewModel();
-            viewModel.RetrievalID = r.RetrievalId;
 
-            try { viewModel.CreatedBy = String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName); }
-            catch { viewModel.CreatedBy = ""; }
-            viewModel.CreatedOn = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
             try
             {
-                viewModel.UpdatedBy = String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
-            } catch
-            {
-                viewModel.UpdatedBy = "";
-            }
-            try
-            {
-                viewModel.UpdatedOn = String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
-            } catch
-            {
-                viewModel.UpdatedOn = "";
-            }
+                viewModel.RetrievalID = r.RetrievalId;
 
+                try { viewModel.CreatedBy = String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName); }
+                catch { viewModel.CreatedBy = ""; }
+                viewModel.CreatedOn = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
+                try
+                {
+                    viewModel.UpdatedBy = String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
+                }
+                catch
+                {
+                    viewModel.UpdatedBy = "";
+                }
+                try
+                {
+                    viewModel.UpdatedOn = String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
+                }
+                catch
+                {
+                    viewModel.UpdatedOn = "";
+                }
+            } catch {
+                return new HttpStatusCodeResult(400);
+            }
             return View(viewModel);
         }
         // GET: /Requisiton/StationeryDisbursement

@@ -7,24 +7,33 @@ using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
+using Microsoft.AspNet.Identity;
+
 namespace team7_ssis.Services
 {
     public class RequisitionService
     {
         ApplicationDbContext context;
+
         RetrievalService retrievalService;
         DisbursementService disbursementService;
 
         RequisitionRepository requisitionRepository;
         RequisitionDetailRepository requisitionDetailRepository;
+        StatusRepository statusRepository;
+        UserRepository userRepository;
 
         public RequisitionService(ApplicationDbContext context)
         {
             this.context = context;
+
             retrievalService = new RetrievalService(context);
             disbursementService = new DisbursementService(context);
+
             requisitionRepository = new RequisitionRepository(context);
             requisitionDetailRepository = new RequisitionDetailRepository(context);
+            statusRepository = new StatusRepository(context);
+            userRepository = new UserRepository(context);
         }
 
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
@@ -75,6 +84,8 @@ namespace team7_ssis.Services
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);
             r.CreatedDateTime = DateTime.Now;
+            r.Status = statusRepository.FindById(17);
+            r.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
 
             // save the Retrieval
             retrievalService.Save(r);
@@ -89,6 +100,8 @@ namespace team7_ssis.Services
             {
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
+                d.Status = statusRepository.FindById(17);
+                d.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
                 disbursementService.Save(d);
             }
 

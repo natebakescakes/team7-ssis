@@ -25,6 +25,7 @@ namespace team7_ssis.ViewModels
     {
         public string DisbursementID { get; set; }
         public string Department { get; set; }
+        public string Time { get; set; }
         public string CollectionPoint { get; set; }
         public string DisbursedBy { get; set; }
         public string Status { get; set; }

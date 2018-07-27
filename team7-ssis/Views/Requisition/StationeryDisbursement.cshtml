@@ -48,7 +48,6 @@
             <th>Disbursement ID</th>
             <th>Department</th>
             <th>Collection Point</th>
-            <th>Time</th>
             <th>Disbursed By</th>
             <th>Status</th>
             <th></th>
@@ -70,9 +69,19 @@
                 { "data": "Department", "autoWidth": true },
                 { "data": "CollectionPoint", "autoWidth": true },
                 { "data": "DisbursedBy", "autoWidth": true },
-                { "data": "Status", "autoWidth": true }
+                { "data": "Status", "autoWidth": true },
+                {
+                    "render": function (data, type, row, meta) {
+                        console.log(row);
+                        var html =
+                            '<a class="btn btn-secondary" href="/Disbursement/DisbursementDetails?did=' + row.DisbursementID + '">' +
+                            '<i class="fa fa-info-circle" aria-hidden="true"></i>' +
+                            '</a>';
+                        return html;
+                    }
+                }
             ],
-            select: 'single'
+            select: 'api'
         });
     })
 
