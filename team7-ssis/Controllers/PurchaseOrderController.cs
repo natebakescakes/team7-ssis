@@ -44,17 +44,24 @@ namespace team7_ssis.Controllers
             PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
             decimal totalAmount = 0;
 
-            podModel.PurchaseOrderNo = po.PurchaseOrderNo;
-            podModel.SupplierName = po.Supplier.Name;
-            podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
-            podModel.Status = po.Status.Name;
-
-            foreach(PurchaseOrderDetail pod in po.PurchaseOrderDetails)
+            if (poNum != null)
             {
-                totalAmount = totalAmount + purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod);
+                podModel.PurchaseOrderNo = po.PurchaseOrderNo;
+                podModel.SupplierName = po.Supplier.Name;
+                podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
+                podModel.Status = po.Status.Name;
+
+                foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
+                {
+                    totalAmount = totalAmount + purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod);
+                }
+                ViewBag.Amount = totalAmount;
+
+                return View(podModel);
             }
-            ViewBag.Amount = totalAmount;
-            return View(podModel);
+
+            return HttpNotFound();
+            
 
         }
 
@@ -77,27 +84,45 @@ namespace team7_ssis.Controllers
 
 
         [HttpPost]
-        public string Delete(string purchaseOrderNum, string itemCode)
+        public ActionResult Delete(string purchaseOrderNum, string itemCode)
         {
-            
+            decimal totalAmount=0;
+
             string[] itemCodeArray = new string[] { itemCode };
 
             PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
 
             purchaseOrderService.DeleteItemFromPurchaseOrder(purchaseOrder,itemCodeArray);
 
-            return "Deleted";
+            if (purchaseOrder.PurchaseOrderDetails.Count == 0)
+            {
+                purchaseOrder.Status = statusService.FindStatusByStatusId(2);
+                purchaseOrder.Status.StatusId = 2;
+                purchaseOrderService.Save(purchaseOrder);
+            }
+            else
+
+            {
+                foreach (PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
+                {
+                    totalAmount = totalAmount + purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod);
+                }
+            }
+            
+            
+
+            return new JsonResult { Data = new { amount = totalAmount } };
         }
 
 
         [HttpPost]
-        public string Cancel(string purchaseOrderNum)
+        public ActionResult Cancel(string purchaseOrderNum)
         {
             PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
             purchaseOrder.Status = statusService.FindStatusByStatusId(2);
             purchaseOrderService.Save(purchaseOrder);
 
-            return "Cancelled";
+            return new JsonResult { Data = new { status = "Cancelled" } };
         }
 
         public ActionResult Generate()

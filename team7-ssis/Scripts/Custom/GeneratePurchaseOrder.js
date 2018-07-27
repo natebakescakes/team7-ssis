@@ -235,7 +235,8 @@
             { data: "SupplierName" },
             { defaultContent: '<button id="infobutton" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' }
         ],
-        dom: "t"
+        dom: "t",
+        select: "multiple"
     });
 
 

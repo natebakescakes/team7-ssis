@@ -87,18 +87,21 @@ namespace team7_ssis.Controllers
             //string text=string.Join(",", poNums);
             //string[] PONums = text.Split(',');
 
-            string[] PONums = poNums.Split(',');
-
-            foreach(string s in PONums)
+            if (poNums != null)
             {
-                PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(s);
-                PurchaseOrderViewModel purchaseOrder = new PurchaseOrderViewModel();
-                purchaseOrder.PurchaseOrderNo = s;
-                purchaseOrder.SupplierName = p.Supplier.Name;
+                string[] PONums = poNums.Split(',');
 
-                purchaseOrders.Add(purchaseOrder);
+                foreach (string s in PONums)
+                {
+                    PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(s);
+                    PurchaseOrderViewModel purchaseOrder = new PurchaseOrderViewModel();
+                    purchaseOrder.PurchaseOrderNo = s;
+                    purchaseOrder.SupplierName = p.Supplier.Name;
+
+                    purchaseOrders.Add(purchaseOrder);
+                }
             }
-
+            
             return purchaseOrders;
 
         }

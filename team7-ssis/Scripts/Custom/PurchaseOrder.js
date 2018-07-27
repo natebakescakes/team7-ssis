@@ -31,7 +31,7 @@ $(document).ready(function(){
                 },
                 
                 columns: [
-                    { defaultContent: '<input type="checkbox" class="checkbox" />' },
+                    
                     {
                         data: "PurchaseOrderNo",
                         defaultContent: "<i>Not available</i>"
@@ -58,19 +58,19 @@ $(document).ready(function(){
 
                 createdRow: function (row, data, dataIndex) {
                     if (data.Status == "Delivered") {
-                        $('td', row).eq(4).addClass('delivered');
+                        $('td', row).eq(3).addClass('delivered');
                     }
                     if (data.Status == "Partially Delivered") {
-                        $('td', row).eq(4).addClass('partially-delivered');
+                        $('td', row).eq(3).addClass('partially-delivered');
                     }
                     if (data.Status == "Awaiting Delivery") {
-                        $('td', row).eq(4).addClass('awaiting-delivery');
+                        $('td', row).eq(3).addClass('awaiting-delivery');
                     }
                 },
 
                 initComplete: function (){ // After DataTable initialized
                     
-                    this.api().columns([4]).every(function () {
+                    this.api().columns([3]).every(function () {
                         var column = this;
                         var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
                             .prependTo($('.dataTables_filter')) 
@@ -98,7 +98,7 @@ $(document).ready(function(){
 
     $('#poTable tbody').on('change', '.action', function (e) {
 
-        var poNum = datatbl.row($(this).parents('tr')).data().PNo;
+        var poNum = datatbl.row($(this).parents('tr')).data().PurchaseOrderNo;
         
         var value = Number($(this).val());
         var url;
@@ -240,9 +240,13 @@ $(document).ready(function(){
             data: JSON.stringify({ purchaseOrderNum: pNum, itemCode: itemCode}),
             contentType: "application/json",
             cache: true,
-            success: function (result){
-                alert(result);
-                ajax.reload(); }
+            success: function (data) {
+                if (data.amount==0) {
+                    window.location.reload();
+                }
+                document.getElementById("amountLabel").innerHTML = "$ " + data.amount;
+                podAwaitingdatatbl.ajax.reload();
+            }
     });
         
         
@@ -260,15 +264,20 @@ $(document).ready(function(){
             data: JSON.stringify({ purchaseOrderNum: pNum }),
             contentType: "application/json",
             cache: true,
-            success: function () {
-                if (result == "Cancelled") {
-                    ajax.reload();
+            success: function (result) {
+                if (result.status == "Cancelled") {
+                    window.location.reload();
                 }
                 
             }
         });
 
 
+    });
+
+
+    $('#backBtn').on('click', function (e) {
+        document.location.href = '/PurchaseOrder';
     });
 
 
