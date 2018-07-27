@@ -68,7 +68,7 @@ namespace team7_ssis.Services
             //}
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode).ToList();
         }
-  
+
         public DeliveryOrder Save(DeliveryOrder deliveryOrder)
         {
             deliveryOrderRepository.Save(deliveryOrder);

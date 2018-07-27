@@ -171,5 +171,55 @@ namespace team7_ssis.Services
             return disbursementList;
         }
 
+        public List<Requisition> FindRequisitionsByDepartment(Department department)
+        {
+            return requisitionRepository.FindByDepartment(department).ToList();
+        }
+
+        /// <summary>
+        /// Approves requisition if in the correct status
+        /// </summary>
+        /// <param name="requisitionId"></param>
+        public void ApproveRequisition(string requisitionId, string email)
+        {
+            if (!requisitionRepository.ExistsById(requisitionId))
+                throw new ArgumentException("Requisition not found");
+
+            if (requisitionRepository.FindById(requisitionId).Status.StatusId == 5 ||
+                requisitionRepository.FindById(requisitionId).Status.StatusId == 6)
+                throw new ArgumentException("Requisition has already been approved or rejected");
+
+            // Change values
+            var requisition = requisitionRepository.FindById(requisitionId);
+            requisition.Status = new StatusService(context).FindStatusByStatusId(6);
+            requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
+            requisition.ApprovedDateTime = DateTime.Now;
+
+            // Save
+            requisitionRepository.Save(requisition);
+        }
+
+        /// <summary>
+        /// Rejects requisition if in the correc status
+        /// </summary>
+        /// <param name="requisitionId"></param>
+        public void RejectRequisition(string requisitionId, string email)
+        {
+            if (!requisitionRepository.ExistsById(requisitionId))
+                throw new ArgumentException("Requisition not found");
+
+            if (requisitionRepository.FindById(requisitionId).Status.StatusId == 5 ||
+                requisitionRepository.FindById(requisitionId).Status.StatusId == 6)
+                throw new ArgumentException("Requisition has already been approved or rejected");
+
+            // Change values
+            var requisition = requisitionRepository.FindById(requisitionId);
+            requisition.Status = new StatusService(context).FindStatusByStatusId(5);
+            requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
+            requisition.ApprovedDateTime = DateTime.Now;
+
+            // Save
+            requisitionRepository.Save(requisition);
+        }
     }
 }

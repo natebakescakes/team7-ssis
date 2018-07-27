@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
@@ -32,11 +33,19 @@ namespace team7_ssis.Tests.Services
             inventoryRepository = new InventoryRepository(context);
             itemService = new ItemService(context);
             this.stockMovementRepository = new StockMovementRepository(context);
+
+            //save new item object into db
+            Item item = new Item();
+            item.ItemCode = "he06";
+            item.CreatedDateTime = DateTime.Now;
+            itemRepository.Save(item);
+            itemService.SaveInventory(item, 40);
+
+          
         }
 
         //create new StockAdjustment with status: draft
         [TestMethod()]
-
         public void CreateDraftStockAdjustmentTest()
         {
             //Arrange 
@@ -62,7 +71,6 @@ namespace team7_ssis.Tests.Services
 
         //Delete one item if StockAdjustment in Draft Status
         [TestMethod()]
-
         public void DeleteItemFromDraftOrPendingStockAdjustmentTest()
         {
             //Arrange 
@@ -240,15 +248,10 @@ namespace team7_ssis.Tests.Services
 
         //approve pending stockadjustment
         [TestMethod()]
-        [Ignore]
         public void ApproveStockAdjustmentTest()
         {
             //Arrange
-            Item item = new Item();
-            item.ItemCode = "he06";
-            item.CreatedDateTime = DateTime.Now;
-            itemRepository.Save(item);
-            itemService.SaveInventory(item, 40);
+            Item item = context.Item.Where(x => x.ItemCode == "he06").First();
 
 
             StockAdjustmentDetail sd = new StockAdjustmentDetail();
@@ -256,8 +259,8 @@ namespace team7_ssis.Tests.Services
             sd.OriginalQuantity = 10;
             sd.AfterQuantity = 20;
 
-            List<StockAdjustmentDetail> li = new List<StockAdjustmentDetail>();
-            li.Add(sd);
+            List<StockAdjustmentDetail> list = new List<StockAdjustmentDetail>();
+            list.Add(sd);
 
             StockAdjustment expect = new StockAdjustment();
             Random rd = new Random();
@@ -265,35 +268,35 @@ namespace team7_ssis.Tests.Services
             string id = "he07";
             expect.StockAdjustmentId = id;
             expect.CreatedDateTime = DateTime.Now;
-            expect.StockAdjustmentDetails = li;
+            expect.StockAdjustmentDetails = list;
             service.CreatePendingStockAdjustment(expect);
 
+
+            StockMovement sm = new StockMovement(); 
 
             try
             {
                 //Act
                 var result = service.ApproveStockAdjustment(id);
-                //Assert
-                int latest_id = stockMovementRepository.Count();
-                StockMovement sm = stockMovementRepository.FindById(latest_id);
-              
+                sm = context.StockMovement.Where(x => x.Item.ItemCode == "he06").First(); 
 
+                //Assert
                 Assert.IsTrue(expect.Status.StatusId == 6);
                 Assert.IsTrue(item.Inventory.Quantity == 20);
                 Assert.IsTrue(sm.AfterQuantity == 20);
-
-
-
-                stockMovementRepository.Delete(sm);
-                stockAdjustmentRepository.Delete(expect);
-                itemRepository.Delete(item);
-            
-
 
             }
             catch (Exception e)
             {
                 Assert.IsTrue(e.Message.Contains("can't find StockAdjustment"));
+
+            }
+            finally
+            {
+
+                stockMovementRepository.Delete(sm);
+                stockAdjustmentRepository.Delete(expect);
+                
 
             }
         }
@@ -405,7 +408,9 @@ namespace team7_ssis.Tests.Services
                 if (sa != null)
                     stockAdjustmentRepository.Delete(sa);
             }
-            
+
+            Item item = context.Item.Where(x => x.ItemCode == "he06").First();
+            itemRepository.Delete(item);
 
         }
     }

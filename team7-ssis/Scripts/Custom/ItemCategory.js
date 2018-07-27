@@ -3,8 +3,7 @@
     var table = $('#myTable').DataTable({
 
         sAjaxSource: "/api/itemcategory/all",
-        sAjaxDataProp: "",
-        
+        sAjaxDataProp: "",  
         columns: [
             { "data": "ItemCategoryId", "autoWidth": true },
             { "data": "Name", "autoWidth": true },
