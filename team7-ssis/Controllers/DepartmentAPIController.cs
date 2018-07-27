@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
 
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
@@ -15,18 +17,22 @@ namespace team7_ssis.Controllers
         public ApplicationDbContext context = new ApplicationDbContext();
         DepartmentService departmentService;
         DelegationService delegationService;
+        DelegationRepository delegationRepository;
+        UserService userService;
+        ApplicationUser user;
 
         public DepartmentAPIController()
         {
             departmentService = new DepartmentService(context);
             delegationService = new DelegationService(context);
+            userService = new UserService(context);
+            user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
         }
         
         [Route("api/department/all")] 
         [HttpGet]
         public List<DepartmentViewModel> Departments()
         {
-
             return departmentService.FindAllDepartments().Select(department => new DepartmentViewModel()
             {
                 DepartmentCode = department.DepartmentCode,
@@ -59,13 +65,16 @@ namespace team7_ssis.Controllers
         }
         [Route("api/delegation/all")]
         [HttpGet]
-        public List<DelegationViewModel> Delegations()
+        public List<DepartmentViewModel> Delegations()
         {
-            return delegationService.FindAllDelegations().Select(delegation => new DelegationViewModel()
+            return delegationService.FindDelegationsByDepartment(user).Select(delegation => new DepartmentViewModel() //only displays delegation from your department
+            //return delegationService.FindAllDelegations().Select(delegation => new DepartmentViewModel()
             {
-                Recipient = delegation.Receipient.FirstName + " " + delegation.Receipient.LastName,
+                DelegationId = delegation.DelegationId,
+                Recipient = delegation.Receipient != null? delegation.Receipient.FirstName + " " + delegation.Receipient.LastName : "",
                 StartDate = delegation.StartDate.ToShortDateString(),
-                EndDate = delegation.EndDate.ToShortDateString()
+                EndDate = delegation.EndDate.ToShortDateString(),
+                DelegationStatus = delegation.Status.StatusId
             }).ToList();
         }
     }

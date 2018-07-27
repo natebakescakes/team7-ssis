@@ -12,23 +12,28 @@ namespace team7_ssis.Controllers
 {
     public class ItemCategoryController : Controller
     {
-        ApplicationDbContext context;
+        public ApplicationDbContext context { get; set; }
         StatusService statusService;
         UserService userService;
         ItemCategoryService itemcategoryService;
+        public String CurrentUserName { get; set; }
 
         public ItemCategoryController()
         {
             context = new ApplicationDbContext();
-            statusService = new StatusService(context);
-            userService = new UserService(context);
-            itemcategoryService = new ItemCategoryService(context);
+            try
+            {
+                CurrentUserName = System.Web.HttpContext.Current.User.Identity.Name;
+            }
+            catch (NullReferenceException) { }
 
         }
 
         // GET: ItemCategory
         public ActionResult Index()
         {
+            statusService = new StatusService(context);
+
             List<Status> list = new List<Status>();
             list.Add(statusService.FindStatusByStatusId(0)); //add disabled option
             list.Add(statusService.FindStatusByStatusId(1)); //add enabled option
@@ -48,6 +53,11 @@ namespace team7_ssis.Controllers
         public ActionResult Save(ItemCategoryViewModel model)
         {
             bool status = false;
+
+            statusService = new StatusService(context);
+            itemcategoryService = new ItemCategoryService(context);
+            userService = new UserService(context);
+
             ItemCategory s = new ItemCategory();
 
             if (itemcategoryService.FindItemCategoryByItemCategoryId(model.ItemCategoryId) == null)
@@ -56,7 +66,7 @@ namespace team7_ssis.Controllers
                 s.ItemCategoryId = IdService.GetNewItemCategoryId(context);
                 //assign user info
                 s.CreatedDateTime = DateTime.Now;
-                s.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                s.CreatedBy = userService.FindUserByEmail(CurrentUserName);
 
             }
 
@@ -67,7 +77,7 @@ namespace team7_ssis.Controllers
 
                 //assign user info into update fields
                 s.UpdatedDateTime = DateTime.Now;
-                s.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                s.UpdatedBy = userService.FindUserByEmail(CurrentUserName);
 
             }
 

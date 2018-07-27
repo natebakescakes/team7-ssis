@@ -11,10 +11,12 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         DelegationRepository delegationRepository;
+        UserRepository userRepository;
         public DelegationService(ApplicationDbContext context)
         {
             this.context = context;
             this.delegationRepository = new DelegationRepository(context);
+            this.userRepository = new UserRepository(context);
         }
         public Delegation DelegateManager(Delegation delegation)
         {
@@ -23,6 +25,14 @@ namespace team7_ssis.Services
         public List<Delegation> FindAllDelegations()
         {
             return delegationRepository.FindAll().ToList();
+        }
+        public List<Delegation> FindDelegationsByDepartment(ApplicationUser user)
+        {
+            return delegationRepository.FindByDepartment(user).ToList();
+        }
+        public Delegation FindDelegationByDelegationId(int delegationId)
+        {
+            return delegationRepository.FindById(delegationId);
         }
     }
 }

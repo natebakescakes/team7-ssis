@@ -24,5 +24,9 @@ namespace team7_ssis.Services
         {
             return collectionPointRepository.FindById(id);
         }
+        public CollectionPoint FindCollectionPointByDepartment(Department department)
+        {
+            return collectionPointRepository.FindByDepartment(department);
+        }
     }
 }
