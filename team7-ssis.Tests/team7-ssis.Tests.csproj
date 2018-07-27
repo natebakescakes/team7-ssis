@@ -158,6 +158,7 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\DepartmentControllerTest.cs" />
     <Compile Include="Controllers\ReportControllerTest.cs" />
     <Compile Include="Controllers\NotificationApiControllerTest.cs" />
     <Compile Include="Controllers\NotificationControllerTest.cs" />

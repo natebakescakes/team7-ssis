@@ -29,6 +29,10 @@ namespace team7_ssis.Repositories
         {
             return context.Users.Where(x => x.Department.DepartmentCode == department.DepartmentCode);
         }
+        public IQueryable<ApplicationUser> FindRepByDepartment(Department department)
+        {
+            return context.Users.Where(x => x.Email == department.Representative.Email);
+        }
 
         /// <summary>
         /// Finds users who are supervisors and match department
@@ -44,5 +48,6 @@ namespace team7_ssis.Repositories
                 .Where(x => x.Department.DepartmentCode == department.DepartmentCode &&
                     supervisorList.Contains(x.UserName));
         }
+        
     }
 }
