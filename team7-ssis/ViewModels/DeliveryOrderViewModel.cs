@@ -21,6 +21,8 @@ namespace team7_ssis.ViewModels
 
     public class DeliveryOrderDetailsViewModel
     {
+        public string DeliveryOrderNo { get; set; }
+        public string PurchaseOrderNo { get; set; }
         public string ItemCode { get; set; }
         public string Description { get; set; }
         public int QtyOrdered { get; set; }

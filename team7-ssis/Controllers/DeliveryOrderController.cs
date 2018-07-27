@@ -19,8 +19,9 @@ namespace team7_ssis.Controllers
         private UserService userService;
         private StatusService statusService;
         private SupplierService supplierService;
-       
-       
+        private ItemService itemService;
+
+
         public DeliveryOrderController()
         {
             context = new ApplicationDbContext();
@@ -107,47 +108,39 @@ namespace team7_ssis.Controllers
 
         [HttpPost]
 
-        public ActionResult Save(DeliveryOrderViewModel model)
+        public ActionResult Save(List<DeliveryOrderDetailsViewModel> deliveryOrderDetailList)
         {
             bool status = false;
 
             DeliveryOrder deliveryOrder = new DeliveryOrder();
-            List<DeliveryOrderDetail> deliveryOrderDetaillist = new List <DeliveryOrderDetail>();
-            PurchaseOrder purchaseOrder= purchaseOrderService.FindPurchaseOrderById(model.PurchaseOrderNo);
-            deliveryOrder.PurchaseOrder = purchaseOrder;
-            deliveryOrder.Supplier = supplierService.FindSupplierById(purchaseOrder.SupplierCode);
-            //deliveryOrder.DeliveryOrderDetails=
+            List<DeliveryOrderDetailsViewModel> dlist = new List<DeliveryOrderDetailsViewModel>();
+            PurchaseOrder purchaseOrder;
 
-            if (deliveryOrderService.FindDeliveryOrderById(model.DeliveryOrderNo) == null)
-
-            {
-                deliveryOrder.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
-
-                deliveryOrder.CreatedDateTime= DateTime.Now;
-
-                deliveryOrder.CreatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            foreach (DeliveryOrderDetailsViewModel dod in deliveryOrderDetailList)
+            {   
+                DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail();
+                deliveryOrderDetail.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
+                deliveryOrderDetail.Item = itemService.FindItemByItemCode(dod.ItemCode);
+                deliveryOrderDetail.ItemCode = dod.ItemCode;
+                deliveryOrderDetail.PlanQuantity = dod.QtyOrdered;
+                deliveryOrderDetail.ActualQuantity = dod.ReceivedQty;
+                deliveryOrderDetail.Status = statusService.FindStatusByStatusId(1);
+                purchaseOrder= purchaseOrderService.FindPurchaseOrderById(dod.PurchaseOrderNo);
+                deliveryOrder.PurchaseOrder = purchaseOrder;
+                deliveryOrder.Supplier = supplierService.FindSupplierById(purchaseOrder.SupplierCode);
             }
+           
+            deliveryOrder.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
 
-            else
+            deliveryOrder.CreatedDateTime= DateTime.Now;
 
-            {
+            deliveryOrder.CreatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
 
-              deliveryOrder = deliveryOrderService.FindDeliveryOrderById(model.DeliveryOrderNo);
+            //deliveryOrder.InvoiceFileName = model.InvoiceFileName;
 
-              deliveryOrder.UpdatedDateTime = DateTime.Now;
-
-              deliveryOrder.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
-
-            }
-
-            deliveryOrder.InvoiceFileName = model.InvoiceFileName;
-
-            deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
+            //deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
 
             deliveryOrder.Status = statusService.FindStatusByStatusId(1);
-
-
-            
 
             if (deliveryOrderService.Save(deliveryOrder) != null) status = true;
 

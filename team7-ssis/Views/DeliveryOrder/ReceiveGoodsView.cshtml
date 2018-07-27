@@ -77,12 +77,9 @@
             <table>
                 <tr>
                     <td>
-                        @*@using (Html.BeginForm("Save", "DeliveryOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
-                            {@Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type = "hidden" })
-                            <input type="submit" name="Submit" value="Submit" />}*@
                         <div class="modal-footer">
 
-                            <button id="submitbtn" type="button" class="btn btn-primary">Submit</button>
+                            <button id="submitbtn" type="button" class="btn btn-default pull-right">Submit</button>
 
                         </div>
                     </td>

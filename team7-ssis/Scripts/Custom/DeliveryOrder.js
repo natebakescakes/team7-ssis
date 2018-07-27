@@ -315,15 +315,6 @@ $(document).ready(function () {
 
     });
 
-    $('#submitbtn').click(function () {
-        var mydata = $('#myOutstandingTable').DataTable().rows().data().toArray();
-        //for (i = 0; i < mydata.length; i++)
-        //{
-        //    alert(mydata[i].ItemCode);
-        //} 
-        alert(mydata.length);
-    });
-
     $('#VRDObtn').click(function () {
 
         alert(pon);
@@ -402,6 +393,60 @@ $(document).ready(function () {
         document.body.appendChild(form1);
 
         form1.submit();
+
+    });
+
+    $('#submitbtn').click(function () {
+
+        var mydata = oTable.rows().data().toArray();
+        alert(pon);
+        var details = new Array();
+
+        for (var i = 0; i < datatableData.length; i++) {
+
+            var o = {
+
+                "PurchaseOrderNo": pon,
+
+                "ItemCode": datatableData[i][0],
+
+                "Description": datatableData[i][1],
+
+                "QuantityOrdered": datatableData[i][2],
+
+                "ReceivedQuantity": 1,
+
+                "RemainingQuantity": datatableData[i][4],
+
+            };
+
+            details.push(o);
+        
+            };
+
+        }
+
+        $.ajax({
+
+            type: "POST",
+
+            url: "/DeliveryOrder/Save",
+
+            dataType: "json",
+
+            data: JSON.stringify(details),
+
+            contentType: "application/json",
+
+            cache: true,
+
+            success: function (data) {
+
+                alert("Delivery Order information has been successfully saved");
+
+            }
+
+        });
 
     });
 
