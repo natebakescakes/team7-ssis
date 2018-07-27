@@ -50,8 +50,9 @@
                     url: '/api/delete/items',
                     contentType: "application/json",
                     data: JSON.stringify(selected),
-                    success: function (response) {
-                        table.ajax.reload();
+                    success: function (data) {
+                        //alert("Success");
+                        oTable.ajax.reload();
                     },
                     dataType: "json",
                     traditional: true

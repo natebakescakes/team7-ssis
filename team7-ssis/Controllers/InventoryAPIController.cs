@@ -129,7 +129,7 @@ namespace team7_ssis.Controllers
 
         [Route("api/delete/items")]
         [HttpPost]
-        public IHttpActionResult DeleteItems([FromBody]string[] itemCodes)
+        public Boolean DeleteItems([FromBody]string[] itemCodes)
         {
             Console.WriteLine("In API Controller" + itemCodes.Length);
             List<Item> list = new List<Item>();
@@ -142,16 +142,15 @@ namespace team7_ssis.Controllers
             {
                 for (int i = 0; i < list.Count; i++)
                 {
-                    itemService.DeleteItem(list[i]);
+                   itemService.DeleteItem(list[i]);
                 }
             } catch (Exception e) {
                 Console.WriteLine("In API Controller error" + e);
-                return BadRequest();
-
+                return false;
             }
 
             Console.WriteLine("In API Controller OK");
-            return Ok();
+            return true;
 
         }
     }
