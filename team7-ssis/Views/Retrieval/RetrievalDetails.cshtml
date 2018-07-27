@@ -79,7 +79,7 @@
     });
 
     // change the value of the cell in the datatable with an input field
-    $(document).on("blur", ".actual", function () {
+    $(document).on("change", ".actual", function () {
         // grab the cell that the td refers to, which is the parent of the <input> element
         var cell = table.cell(this.parentElement);
         // assign the cell with the value from the <input> element
