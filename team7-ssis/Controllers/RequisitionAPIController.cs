@@ -163,6 +163,7 @@ namespace team7_ssis.Controllers
                 RequestorName = $"{requisition.CreatedBy.FirstName} {requisition.CreatedBy.LastName}",
                 RequestedDate = requisition.CreatedDateTime.ToShortDateString(),
                 Remarks = requisition.EmployeeRemarks == null ? "" : requisition.EmployeeRemarks,
+                HeadRemarks = requisition.HeadRemarks == null ? "" : requisition.HeadRemarks,
                 Status = requisition.Status != null ? requisition.Status.Name : "",
                 RequisitionDetails = requisition.RequisitionDetails.Select(d => new RequisitionDetailMobileViewModel()
                 {
