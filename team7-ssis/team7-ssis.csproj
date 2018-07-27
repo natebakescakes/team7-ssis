@@ -256,7 +256,7 @@
     <Compile Include="Controllers\UserApiController.cs" />
     <Compile Include="Controllers\StockAdjustmentAPIController.cs" />
     <Compile Include="Controllers\StockAdjustmentController.cs" />
-    <Compile Include="Views\Global.asax.cs">
+    <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
@@ -382,7 +382,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
-    <Content Include="Views\Global.asax" />
+    <Content Include="Global.asax" />
     <Content Include="Images\pencil1.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
