@@ -26,9 +26,9 @@ namespace team7_ssis.ViewModels
     {
         public string StockAdjustmentId { get; set; }  
         public string CreatedBy { get; set; }
-        public DateTime UpdateDateTime { get; set; }
+        public string UpdateDateTime { get; set; }
         public  string ApprovedBySupervisor { get; set; }
-        public DateTime CreatedDateTime { get; set; }
+        public string CreatedDateTime { get; set; }
         public  string  StatusName { get; set; }
         public  string Link { get; set; }
 

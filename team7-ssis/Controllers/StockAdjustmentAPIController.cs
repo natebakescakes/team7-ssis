@@ -48,7 +48,7 @@ namespace team7_ssis.Controllers
                 savm.StockAdjustmentId = s.StockAdjustmentId;
                 savm.CreatedBy = s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
                 savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
-                savm.CreatedDateTime = s.CreatedDateTime;
+                savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
                 sadj.Add(savm);
                 }
@@ -71,7 +71,7 @@ namespace team7_ssis.Controllers
                 savm.StockAdjustmentId = s.StockAdjustmentId;                
                 savm.CreatedBy = s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
                 savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null?"": s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
-                savm.CreatedDateTime = s.CreatedDateTime;
+                savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
                 sadj.Add(savm);
             }

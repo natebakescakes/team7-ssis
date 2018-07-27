@@ -81,10 +81,9 @@ namespace team7_ssis.Controllers
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
-            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
             return View(sv);
         }
         public ActionResult Details(string id)
@@ -94,10 +93,9 @@ namespace team7_ssis.Controllers
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
-            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
-                + sa.ApprovedBySupervisor.LastName;
-            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
+                + sa.ApprovedBySupervisor.LastName;           
             return View(sv);
         }
 
@@ -108,10 +106,10 @@ namespace team7_ssis.Controllers
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
-            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
+            
             return View(sv);
         }
 
@@ -123,10 +121,9 @@ namespace team7_ssis.Controllers
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
-            sv.CreatedDateTime = sa.CreatedDateTime;
+            sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-            sv.UpdateDateTime = sa.UpdatedDateTime == null ? DateTime.Now : (DateTime)sa.UpdatedDateTime;
             return View(sv);
         }
 
