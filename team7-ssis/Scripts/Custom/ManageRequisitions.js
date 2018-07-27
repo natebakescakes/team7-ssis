@@ -21,8 +21,9 @@
 //    console.log(table.rows({ selected: true }).data().toArray());
 //})
 
-$('#processAllRequisitionButton').click(function () {
-
+// Click "Process All Requisitions" button
+$('#processAllRequisitionButton').click(function (e) {
+    e.preventDefault();
     var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
     var reqIdArray = [];
     for (i = 0; i < data.length; i++) {
@@ -42,5 +43,4 @@ $('#processAllRequisitionButton').click(function () {
         }
     });
 
-    
 })

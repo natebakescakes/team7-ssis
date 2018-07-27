@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
@@ -12,7 +13,11 @@ namespace team7_ssis.Tests.Services
     {
         ApplicationDbContext context;
         NotificationService notificationService;
+
         NotificationRepository notificationRepository;
+        DisbursementRepository disbursementRepository;
+        StockAdjustmentRepository saRepository;
+        RequisitionRepository requisitionRepository;
 
         [TestInitialize]
         public void TestInitialize()
@@ -20,18 +25,56 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             notificationRepository = new NotificationRepository(context);
             notificationService = new NotificationService(context);
+
+            disbursementRepository = new DisbursementRepository(context);
+            saRepository = new StockAdjustmentRepository(context);
+            requisitionRepository = new RequisitionRepository(context);
+
+            //save new disbursement object into db
+            Disbursement disbursement = new Disbursement();
+            if (disbursementRepository.FindById("TEST") == null)
+            {
+                disbursement.DisbursementId = "TEST";
+                disbursement.CreatedDateTime = DateTime.Now;
+
+            }
+            else disbursement = disbursementRepository.FindById("TEST");
+            disbursementRepository.Save(disbursement);
+
+            //save new requisition object into db
+            Requisition requisition = new Requisition();
+            if (requisitionRepository.FindById("TEST") == null)
+            {
+                requisition.RequisitionId = "TEST";
+                requisition.CreatedDateTime = DateTime.Now;
+            }
+            else requisition = requisitionRepository.FindById("TEST");
+            requisitionRepository.Save(requisition);
+
+            //create new SA object and save into db
+            StockAdjustment SA = new StockAdjustment();
+            if (saRepository.FindById("TEST") == null)
+            {
+                SA.StockAdjustmentId = "TEST";
+                SA.CreatedDateTime = DateTime.Now;
+
+            }
+            else SA = saRepository.FindById("TEST");
+            saRepository.Save(SA);
+
         }
+
         [TestMethod]
-        [Ignore]
         public void CreateDisbursementNotificationTest()
         {
             //Arrange
-            Disbursement disbursement = context.Disbursement.First();
-            Notification notification = context.Notification.First();
+            Disbursement disbursement = context.Disbursement.Where(x=>x.DisbursementId=="TEST").First();
+            ApplicationUser user = context.Users.Where(x=>x.FirstName=="admin").First();
+
             int expected = 1;
 
             //Act
-            var result = notificationService.CreateNotification(disbursement, notification.CreatedFor);
+            var result = notificationService.CreateNotification(disbursement, user);
 
 
             //Assert
@@ -39,15 +82,14 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void CreateRequisitionNotificationTest()
         {
             //Arrange
-            Requisition requisition = context.Requisition.First();
-            Notification notification = context.Notification.First();
+            Requisition requisition = context.Requisition.Where(x=>x.RequisitionId=="TEST").First();
+            ApplicationUser user = context.Users.Where(x => x.FirstName == "admin").First();
             int expected = 2;
             //Act
-            var result = notificationService.CreateNotification(requisition, notification.CreatedFor);
+            var result = notificationService.CreateNotification(requisition, user);
 
 
             //Assert
@@ -55,16 +97,15 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void CreateStockAdjustmentNotificationTest()
         {
             //Arrange
-            StockAdjustment stockAdjustment = context.StockAdjustment.First();
-            Notification notification = context.Notification.First();
+            StockAdjustment stockAdjustment = context.StockAdjustment.Where(x=>x.StockAdjustmentId=="TEST").First();
+            ApplicationUser user = context.Users.Where(x => x.FirstName == "admin").First();
             int expected = 3;
 
             //Act
-            var result = notificationService.CreateNotification(stockAdjustment, notification.CreatedFor);
+            var result = notificationService.CreateNotification(stockAdjustment, user);
 
             //Assert
             Assert.AreEqual(expected, result.NotificationType.NotificationTypeId);
@@ -208,6 +249,29 @@ namespace team7_ssis.Tests.Services
             var usedNotificationId = IdService.GetNewNotificationId(context) - 1;
             if (notificationRepository.ExistsById(usedNotificationId))
                 notificationRepository.Delete(notificationRepository.FindById(usedNotificationId));
+
+
+            //delete test object from Disbursements
+            List<Disbursement> ddlist = context.Disbursement.Where(x => x.DisbursementId == "TEST").ToList();
+            foreach (Disbursement dd in ddlist)
+            {
+                disbursementRepository.Delete(dd);
+            }
+
+            //delete test object from Requisitions
+            List<Requisition> rlist = context.Requisition.Where(x => x.RequisitionId == "TEST").ToList();
+            foreach(Requisition r in rlist)
+            {
+                requisitionRepository.Delete(r);
+            }
+
+            //delete test object from StockAdjustments
+            List<StockAdjustment> salist = context.StockAdjustment.Where(x => x.StockAdjustmentId == "TEST").ToList();
+            foreach (StockAdjustment SA in salist)
+            {
+                saRepository.Delete(SA);
+            }
+
         }
     }
 }

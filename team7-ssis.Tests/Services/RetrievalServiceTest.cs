@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
@@ -13,14 +14,63 @@ namespace team7_ssis.Tests.Services
     {
         ApplicationDbContext context;
         RetrievalService retrievalService;
-        RetrievalRepository retrievalRepository;
+        ItemService itemService;
+        DisbursementService disbursementService;
 
+        RetrievalRepository retrievalRepository;
+        DisbursementRepository disbursementRepository;
+        DisbursementDetailRepository disbursementdetailRepository;
+        StockMovementRepository stockmovementRepository;
+
+        
         [TestInitialize]
         public void TestInitialize()
         {
             context = new ApplicationDbContext();
-            retrievalRepository = new RetrievalRepository(context);
+            
             retrievalService = new RetrievalService(context);
+            itemService = new ItemService(context);
+            disbursementService = new DisbursementService(context);
+
+            retrievalRepository = new RetrievalRepository(context);
+            disbursementRepository = new DisbursementRepository(context);
+            disbursementdetailRepository = new DisbursementDetailRepository(context);
+            stockmovementRepository = new StockMovementRepository(context);
+
+
+            Retrieval retrieval = new Retrieval();
+            if (retrievalRepository.FindById("TEST") == null)
+            {
+                //save retrieval object into db
+
+                retrieval.RetrievalId = "TEST";
+                retrieval.CreatedDateTime = DateTime.Now;
+                retrievalRepository.Save(retrieval);
+            }
+            else retrieval = retrievalRepository.FindById("TEST");
+
+            Disbursement disbursement = new Disbursement();
+            if (disbursementRepository.FindById("TEST") == null)
+            {
+                disbursement.DisbursementId = "TEST";
+                disbursement.CreatedDateTime = DateTime.Now;
+                disbursement.Retrieval = retrieval;
+
+            }
+            else disbursement = disbursementRepository.FindById("TEST");
+
+            disbursementRepository.Save(disbursement);
+
+            //save disbursement detail object into db
+            DisbursementDetail detail = new DisbursementDetail()
+            {
+                Disbursement = disbursement,
+                Item = context.Item.Where(x=>x.ItemCode=="C003").First(),
+                PlanQuantity = 5,
+                ActualQuantity =5
+
+            };
+            disbursementdetailRepository.Save(detail);
         }
 
         [TestMethod]
@@ -38,7 +88,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void FindRetrievalByIdTest()
         {
             //Arrange
@@ -53,7 +102,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void SaveTest()
         {
             //Arrange
@@ -74,11 +122,10 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void SaveEditTest()
         {
             //Arrange
-            Retrieval retrieval = context.Retrieval.First();
+            Retrieval retrieval = context.Retrieval.Where(x=>x.RetrievalId=="TEST").First();
             Status status = context.Status.Where(x => x.StatusId == 1).First();
             retrieval.Status = status;
 
@@ -89,5 +136,52 @@ namespace team7_ssis.Tests.Services
             Assert.AreEqual(status.Name, result.Status.Name);
         }
 
+        [TestMethod]
+        public void RetrieveItemsTest()
+        {
+            //Arrange
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
+            //quantity of the first disbursement detail in the first disbursement in retrieval
+            int before = retrieval.Disbursements.First().DisbursementDetails.First().Item.Inventory.Quantity;
+            int quantity = retrieval.Disbursements.First().DisbursementDetails.First().ActualQuantity;
+            //Act
+            var result = retrievalService.RetrieveItems(retrieval);
+
+            //Assert
+            //compare item quantity
+            int after = retrieval.Disbursements.First().DisbursementDetails.First().Item.Inventory.Quantity;
+            Assert.AreEqual(quantity, before - after);
+            //find the stockmovement
+            StockMovement sm = context.StockMovement.Where(x => x.DisbursementId == "TEST").First();
+            Assert.IsNotNull(sm);
+
+        }
+
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
+
+            List<StockMovement> smlist = context.StockMovement.Where(x => x.DisbursementId == "TEST").ToList();
+               foreach(StockMovement sm in smlist)
+            {
+                stockmovementRepository.Delete(sm);
+
+            }
+
+
+            List<Disbursement> list = disbursementService.FindDisbursementsByRetrievalId(retrieval.RetrievalId);
+            foreach (Disbursement d in list)
+            {
+                //Delete dummy disbursement test objects
+                disbursementRepository.Delete(d);
+            }
+
+            //delete retrieval objects
+            retrievalRepository.Delete(retrieval);
+
+
+         }
     }
 }

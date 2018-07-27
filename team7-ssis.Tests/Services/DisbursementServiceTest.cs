@@ -62,7 +62,7 @@ namespace team7_ssis.Tests.Services
                 Disbursement = disbursement,
                 Item = context.Item.First(),
                 PlanQuantity = 1,
-                ActualQuantity = 0,
+                ActualQuantity = 0
 
             };
             disbursementdetailRepository.Save(detail);
@@ -123,6 +123,8 @@ namespace team7_ssis.Tests.Services
 
         }
 
+
+
         [TestMethod]
         public void ConfirmCollectionTest()
         {
@@ -144,6 +146,24 @@ namespace team7_ssis.Tests.Services
 
             //Asert
             Assert.AreEqual(expected, result.Status.StatusId);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ConfirmCollection_ThrowsError()
+        {
+            // Arrange
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "COLLECTIONTEST",
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(10),
+            });
+
+            // Act
+            disbursementService.ConfirmCollection("COLLECTIONTEST");
+
+            // Assert
         }
 
         [TestMethod]
@@ -227,6 +247,10 @@ namespace team7_ssis.Tests.Services
 
             //delete retrieval objects
             retrievalRepository.Delete(retrieval);
+            //}
+
+            if (disbursementRepository.ExistsById("COLLECTIONTEST"))
+                disbursementRepository.Delete(disbursementRepository.FindById("COLLECTIONTEST"));
         }
 
     }
