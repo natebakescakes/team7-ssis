@@ -162,6 +162,8 @@ namespace team7_ssis.Controllers
                 RequisitionId = requisition.RequisitionId,
                 RequestorName = $"{requisition.CreatedBy.FirstName} {requisition.CreatedBy.LastName}",
                 RequestedDate = requisition.CreatedDateTime.ToShortDateString(),
+                Remarks = requisition.EmployeeRemarks == null ? "" : requisition.EmployeeRemarks,
+                HeadRemarks = requisition.HeadRemarks == null ? "" : requisition.HeadRemarks,
                 Status = requisition.Status != null ? requisition.Status.Name : "",
                 RequisitionDetails = requisition.RequisitionDetails.Select(d => new RequisitionDetailMobileViewModel()
                 {
@@ -178,7 +180,7 @@ namespace team7_ssis.Controllers
         {
             try
             {
-                new RequisitionService(Context).ApproveRequisition(model.RequisitionId, model.Email);
+                new RequisitionService(Context).ApproveRequisition(model.RequisitionId, model.Email, model.Remarks);
             }
             catch (ArgumentException)
             {
@@ -196,7 +198,7 @@ namespace team7_ssis.Controllers
         {
             try
             {
-                new RequisitionService(Context).RejectRequisition(model.RequisitionId, model.Email);
+                new RequisitionService(Context).RejectRequisition(model.RequisitionId, model.Email, model.Remarks);
             }
             catch (ArgumentException)
             {

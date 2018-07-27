@@ -180,7 +180,7 @@ namespace team7_ssis.Services
         /// Approves requisition if in the correct status
         /// </summary>
         /// <param name="requisitionId"></param>
-        public void ApproveRequisition(string requisitionId, string email)
+        public void ApproveRequisition(string requisitionId, string email, string remarks)
         {
             if (!requisitionRepository.ExistsById(requisitionId))
                 throw new ArgumentException("Requisition not found");
@@ -191,6 +191,7 @@ namespace team7_ssis.Services
 
             // Change values
             var requisition = requisitionRepository.FindById(requisitionId);
+            requisition.HeadRemarks = remarks;
             requisition.Status = new StatusService(context).FindStatusByStatusId(6);
             requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
             requisition.ApprovedDateTime = DateTime.Now;
@@ -203,7 +204,7 @@ namespace team7_ssis.Services
         /// Rejects requisition if in the correc status
         /// </summary>
         /// <param name="requisitionId"></param>
-        public void RejectRequisition(string requisitionId, string email)
+        public void RejectRequisition(string requisitionId, string email, string remarks)
         {
             if (!requisitionRepository.ExistsById(requisitionId))
                 throw new ArgumentException("Requisition not found");
@@ -214,6 +215,7 @@ namespace team7_ssis.Services
 
             // Change values
             var requisition = requisitionRepository.FindById(requisitionId);
+            requisition.HeadRemarks = remarks;
             requisition.Status = new StatusService(context).FindStatusByStatusId(5);
             requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
             requisition.ApprovedDateTime = DateTime.Now;
