@@ -13,6 +13,8 @@ namespace team7_ssis.ViewModels
         public string Reason;
         public int Adjustment;
         public string Unitprice;
+        public string Supervisor;
+        public string Manager;
     }
 
     public class ViewModelFromEditDetail
@@ -21,6 +23,9 @@ namespace team7_ssis.ViewModels
         public string Itemcode;
         public string Reason;
         public int Adjustment;
+        public string Unitprice;
+        public string Supervisor;
+        public string Manager;
     }
 
     public class StockAdjustmentViewModel

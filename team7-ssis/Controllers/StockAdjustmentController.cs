@@ -124,6 +124,24 @@ namespace team7_ssis.Controllers
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
+
+
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            Department d = userService.FindUserByEmail(UserName).Department;
+
+            List<ApplicationUser> supervisors = new List<ApplicationUser>();
+
+            List<ApplicationUser> managers = new List<ApplicationUser>();
+
+            if (d != null)
+            {
+                supervisors = userService.FindSupervisorsByDepartment(d);
+                managers = new List<ApplicationUser>() { d.Head };
+            }
+
+            sv.supervisors = supervisors;
+            sv.managers = managers;
+
             return View(sv);
         }
 
