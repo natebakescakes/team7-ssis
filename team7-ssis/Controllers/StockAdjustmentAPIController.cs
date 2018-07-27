@@ -21,9 +21,10 @@ namespace team7_ssis.Controllers
         ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
-        StatusService statusService;
+        NotificationService notificationService;
         public string CurrentUserName { get; set; }
 
+      
         public StockAdjustmentAPIController()
         {
             context=new ApplicationDbContext();
@@ -162,11 +163,13 @@ namespace team7_ssis.Controllers
                 sd.StockAdjustmentId = s.StockAdjustmentId;
                 sd.OriginalQuantity =item.Inventory.Quantity;
                 sd.AfterQuantity = v.Adjustment + sd.OriginalQuantity;
+                
                 detaillist.Add(sd);
              //  stockAdjustmentDetailRepository.Save(sd);
             }
             s.StockAdjustmentDetails = detaillist;           
             stockAdjustmentService.CreateDraftStockAdjustment(s);
+
             }
 
 
@@ -178,6 +181,7 @@ namespace team7_ssis.Controllers
             userService = new UserService(context);
             stockAdjustmentService = new StockAdjustmentService(context);
             itemService = new ItemService(context);
+            notificationService = new NotificationService(context);
 
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
@@ -200,6 +204,28 @@ namespace team7_ssis.Controllers
             }
             s.StockAdjustmentDetails = detaillist;
             stockAdjustmentService.CreatePendingStockAdjustment(s);
+
+            int flag = 0;
+            foreach (ViewModelFromNew v in list)
+            {
+               
+                if (v.Unitprice.CompareTo("250") == 1)
+                {
+                    flag = 1;break;
+                }
+                                   
+            }
+            string supervisor = list.First().Supervisor;
+            string manager = list.First().Manager;
+            if(flag==1)
+            {
+                notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
+            }
+            if(flag==0)
+            {
+                notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
+            }
+
         }
 
 
@@ -228,7 +254,7 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public void RejectStockAdjustment(string id)
         {
-
+            stockAdjustmentService = new StockAdjustmentService(context);
             stockAdjustmentService.RejectStockAdjustment(id);
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
 
@@ -306,6 +332,28 @@ namespace team7_ssis.Controllers
             sa.UpdatedBy = currentUser;
             sa.UpdatedDateTime = DateTime.Now;
             stockAdjustmentService.updateToPendingStockAdjustment(sa);
+
+            // decide who to sent notification
+            int flag = 0;
+            foreach (ViewModelFromEditDetail v in list)
+            {
+
+                if (v.Unitprice.CompareTo("250") == 1)
+                {
+                    flag = 1; break;
+                }
+
+            }
+            string supervisor = list.First().Supervisor;
+            string manager = list.First().Manager;
+            if (flag == 1)
+            {
+                notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
+            }
+            if (flag == 0)
+            {
+                notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
+            }
         }
 
 
@@ -314,7 +362,7 @@ namespace team7_ssis.Controllers
         public IEnumerable<StockAdjustmentDetailViewModel>  GetStockAdjustmentDetail(string StockAdjustmentId)
         {
             stockAdjustmentService = new StockAdjustmentService(context);
-         
+            itemPriceService = new ItemPriceService(context);
             itemService = new ItemService(context);
 
             List<StockAdjustmentDetailViewModel> detailListViewModel = new List<StockAdjustmentDetailViewModel>();

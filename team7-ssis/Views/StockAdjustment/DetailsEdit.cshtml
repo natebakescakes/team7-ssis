@@ -1,8 +1,5 @@
 ﻿@model team7_ssis.ViewModels.StockAdjustmentViewModel
 
-
-
-
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
@@ -38,6 +35,31 @@
         </tr>
     </thead>
 </table>
+
+
+
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <h3>Authorising Supervisor</h3>
+        <form id="form1" name="form1">
+            <select id="ChosenSupervisor" name="ChosenSupervisor" class="custom-select" onChange="chose1()">
+                @foreach (var supervisor in Model.supervisors)
+                {
+                    <option value="@supervisor.UserName">@supervisor.FirstName @supervisor.LastName</option>
+                }
+            </select>
+
+            <h3>Authorising Manager</h3>
+            <select id="ChosenManager" name="ChosenManager" class="custom-select" onChange="chose2()">
+                @foreach (var manager in Model.managers)
+                {
+                    <option value="@manager.UserName">@manager.FirstName @manager.LastName</option>
+                }
+            </select>
+        </form>
+    </div>
+</div>
 
 <div class="row mt-3">
     <div class="col-md-12">
@@ -97,18 +119,6 @@
 
         });
 
-        //$(document).on("blur", ".actual", function () {
-        //    // grab the cell that the td refers to, which is the parent of the <input> element
-        //    var cell = oTable.cell(this.parentElement);
-        //    // assign the cell with the value from the <input> element
-        //    cell.data($(this).val()).draw();
-        //});
-        //$(document).on("blur", ".actual_1", function () {
-        //    // grab the cell that the td refers to, which is the parent of the <input> element
-        //    var cell = oTable.cell(this.parentElement);
-        //    // assign the cell with the value from the <input> element
-        //    cell.data($(this).val()).draw();
-        //});
 
         $(document).on("change", ".actual", function () {
 
@@ -158,12 +168,28 @@
         });
 
         $('#submitBtn').click(function () {
-            // var data = $('#myTable').dataTable().fnGetData();
-            // var data=oTable.rows().data().toArray();
+            var myselect1 = document.getElementById("ChosenSupervisor");
+            var index1 = myselect1.selectedIndex;
+            var supervisor = myselect1.options[index1].value;
+            // alert(supervisor);
+
+            var myselect2 = document.getElementById("ChosenManager");
+            var index2 = myselect2.selectedIndex;
+            var manager = myselect2.options[index2].value;
+               // alert(manager);
+
             var data = oTable.data();
             var reqIdArray = [];
             for (i = 0; i < data.length; i++) {
-                var obj = { StockAdjustmentId: saUrl, ItemCode: data[i].ItemCode, Reason: data[i].Reason, Adjustment: data[i].Adjustment };
+                var obj = {
+                    StockAdjustmentId: saUrl,
+                    ItemCode: data[i].ItemCode,
+                    Reason: data[i].Reason,
+                    Adjustment: data[i].Adjustment,
+                    Unitprice: data[i].UnitPrice,
+                    Supervisor: supervisor,
+                    Manager: manager
+                };
                 reqIdArray[i] = obj;
             }
             // alert(data[0].Adjustment);

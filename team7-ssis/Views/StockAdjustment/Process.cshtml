@@ -71,7 +71,12 @@
                     "data": "Description"
                 },
                 {
-                    "data": "Reason"
+                    "data": "Reason",
+                     "render": function (data, type, row, meta) {
+                        var html = '<input class="actual_1" type="textbox" ' +
+                            'value="' + data + '"/>';
+                        return html;
+                    }
                     
                 },
                 {
@@ -92,8 +97,7 @@
 
         });
 
-      
-
+     
 
         $('#backBtn').click(function () {
             //direct to home page
@@ -101,7 +105,7 @@
         });
 
         $('#rejectBtn').click(function () {
-            alert(saUrl);
+            //alert(saUrl);
             $.ajax({
                 type: "GET",
                 contentType: 'application/json',
@@ -115,7 +119,7 @@
 
 
         $('#approveBtn').click(function () {
-            alert(saUrl);
+           // alert(saUrl);
             $.ajax({
                 type: "GET",
                 contentType: 'application/json',
