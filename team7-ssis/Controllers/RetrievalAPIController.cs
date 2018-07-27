@@ -111,13 +111,20 @@ namespace team7_ssis.Controllers
             }
             return viewModel;
         }
-        public IHttpActionResult UpdateRetrievalForm(string retId, string deptId, string itemCode, int actual)
+
+        [Route("api/updateretrievalform")]
+        [HttpPost]
+        public IHttpActionResult UpdateRetrievalForm(SaveJson json)
         {
+            // string retId, string itemCode, List<BreakdownByDepartment> list
             try
             {
-                Retrieval r = retrievalService.FindRetrievalById(retId);
-                Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == deptId).First();
-                disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, itemCode, actual);
+                Retrieval r = retrievalService.FindRetrievalById(json.RetId);
+                foreach (BreakdownByDepartment bd in json.List)
+                {
+                    Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == bd.DeptId).First();
+                    disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, json.ItemCode, bd.Actual);
+                }
             } catch
             {
                 return BadRequest();

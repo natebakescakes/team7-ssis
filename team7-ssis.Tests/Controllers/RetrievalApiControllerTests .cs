@@ -9,6 +9,7 @@ using team7_ssis.Controllers;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
+using team7_ssis.ViewModels;
 
 namespace team7_ssis.Tests.Controllers
 {
@@ -73,8 +74,22 @@ namespace team7_ssis.Tests.Controllers
 
             try
             {
+                SaveJson json = new SaveJson
+                {
+                    ItemCode = itemCode,
+                    RetId = retId,
+                    List = new List<BreakdownByDepartment>
+                    {
+                        new BreakdownByDepartment
+                        {
+                            DeptId = deptId,
+                            Actual = actual
+                        }
+                    }
+                };
+
                 // ACT
-                retrievalAPIController.UpdateRetrievalForm(retId, deptId, itemCode, actual);
+                retrievalAPIController.UpdateRetrievalForm(json);
 
                 // ASSERT
                 int expected = 99;
@@ -91,7 +106,9 @@ namespace team7_ssis.Tests.Controllers
 
                 Assert.AreEqual(expected, dd.ActualQuantity);
 
-            } finally {
+            }
+            finally
+            {
 
                 using (context = new ApplicationDbContext())
                 {
@@ -108,5 +125,5 @@ namespace team7_ssis.Tests.Controllers
 
         }
     }
-    
+
 }
