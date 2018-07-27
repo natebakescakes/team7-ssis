@@ -26,10 +26,10 @@ namespace team7_ssis.Controllers
             departmentService = new DepartmentService(context);
             delegationService = new DelegationService(context);
             userService = new UserService(context);
-            user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            //user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
         }
-        
-        [Route("api/department/all")] 
+
+        [Route("api/department/all")]
         [HttpGet]
         public List<DepartmentViewModel> Departments()
         {
@@ -37,7 +37,7 @@ namespace team7_ssis.Controllers
             {
                 DepartmentCode = department.DepartmentCode,
                 DepartmentName = department.Name,
-                DepartmentHead = department.Head.FirstName+ " " + department.Head.LastName,
+                DepartmentHead = department.Head.FirstName + " " + department.Head.LastName,
                 DepartmentRep = department.Representative != null ? department.Representative.FirstName + " " + department.Representative.LastName : "",
                 CollectionPoint = department.CollectionPoint != null ? department.CollectionPoint.Name : "",
                 ContactName = department.ContactName,
@@ -71,11 +71,44 @@ namespace team7_ssis.Controllers
             //return delegationService.FindAllDelegations().Select(delegation => new DepartmentViewModel()
             {
                 DelegationId = delegation.DelegationId,
-                Recipient = delegation.Receipient != null? delegation.Receipient.FirstName + " " + delegation.Receipient.LastName : "",
+                Recipient = delegation.Receipient != null ? delegation.Receipient.FirstName + " " + delegation.Receipient.LastName : "",
                 StartDate = delegation.StartDate.ToShortDateString(),
                 EndDate = delegation.EndDate.ToShortDateString(),
                 DelegationStatus = delegation.Status.StatusId
             }).ToList();
+        }
+
+        [Route("api/departmentoptions/")]
+        [HttpPost]
+        public IHttpActionResult GetDepartmentOptions([FromBody] EmailViewModel model)
+        {
+            var departmentService = new DepartmentService(context);
+            var userService = new UserService(context);
+
+            var department = departmentService.FindDepartmentByUser(userService.FindUserByEmail(model.Email));
+
+            var delegations = new DelegationService(context).FindDelegationsByDepartment(userService.FindUserByEmail(model.Email));
+
+            return Ok(new DepartmentOptionsViewModel()
+            {
+                Department = department.Name,
+                Representative = department.Representative != null ?
+                    $"{department.Representative.FirstName} {department.Representative.LastName}" : "",
+                Delegations = delegations.Select(delegation => new DelegationMobileViewModel()
+                {
+                    DelegationId = delegation.DelegationId,
+                    Recipient = delegation.Receipient != null ? 
+                        $"{delegation.Receipient.FirstName} {delegation.Receipient.LastName}" : "",
+                    StartDate = delegation.StartDate.ToLongDateString(),
+                    EndDate = delegation.EndDate.ToLongDateString(),
+                    Status = delegation.Status.Name,
+                }).ToList(),
+                Employees = department.Employees.Select(employee => new EmployeeViewModel()
+                {
+                    Name = $"{employee.FirstName} {employee.LastName}",
+                    Email = employee.Email,
+                }).ToList(),
+            });
         }
     }
 }
