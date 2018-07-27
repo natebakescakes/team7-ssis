@@ -172,6 +172,7 @@ namespace team7_ssis.Services
                                 DisbursementDetail newDD = new DisbursementDetail();
                                 newDD.Item = rd.Item;
                                 newDD.PlanQuantity = rd.Quantity;
+                                newDD.Bin = rd.Item.Bin;
 
                                 // Add to the Disbursement
                                 d.DisbursementDetails.Add(newDD);
