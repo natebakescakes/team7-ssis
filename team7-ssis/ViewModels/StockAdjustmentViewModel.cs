@@ -12,6 +12,7 @@ namespace team7_ssis.ViewModels
         public string Itemcode;
         public string Reason;
         public int Adjustment;
+        public string Unitprice;
     }
 
     public class ViewModelFromEditDetail

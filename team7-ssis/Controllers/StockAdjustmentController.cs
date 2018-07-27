@@ -15,14 +15,14 @@ namespace team7_ssis.Controllers
         ApplicationDbContext context;
         StockAdjustmentService stockAdjustmentService;
         UserService userService;
-        UserRepository userRepository;
+        
         ItemPriceService itemPriceService;
         public StockAdjustmentController()
         {
             context =new ApplicationDbContext();
             stockAdjustmentService = new StockAdjustmentService(context);
             userService = new UserService(context);
-            userRepository = new UserRepository(context);
+           
             itemPriceService = new ItemPriceService(context);
         }
        

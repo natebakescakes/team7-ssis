@@ -218,7 +218,7 @@
                 var data = $('#myTable').dataTable().fnGetData();
                 var reqIdArray = [];
                 for (i = 0; i < data.length; i++) {
-                    var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
+                    var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4],Unitprice:data[i][2],Supervisor:supervisor,Manager:manager };
                     reqIdArray[i] = obj;
 
                 }

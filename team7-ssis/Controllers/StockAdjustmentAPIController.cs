@@ -18,7 +18,7 @@ namespace team7_ssis.Controllers
     {
         ApplicationDbContext context;
         StockAdjustmentService stockAdjustmentService;
-      ItemService itemService;
+        ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
         public StockAdjustmentAPIController()
