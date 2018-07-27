@@ -14,7 +14,7 @@
             <h2>Purchase Order Details</h2>
         </div>
         <div class="col-md-4">
-            @Html.Hidden("purchaseOrderNo", Model.PNo)
+            @Html.Hidden("purchaseOrderNo", Model.PurchaseOrderNo)
 
             @if (Model.Status != "Awaiting Delivery" || Model.Status != "Cancelled")
     {
@@ -27,7 +27,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             <div>Purchase Order # </div>
-            <div>@Model.PNo</div>
+            <div>@Model.PurchaseOrderNo</div>
         </div>
 
         <div class="col-md-3">

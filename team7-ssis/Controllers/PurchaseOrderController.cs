@@ -44,7 +44,7 @@ namespace team7_ssis.Controllers
             PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
             decimal totalAmount = 0;
 
-            podModel.PNo = po.PurchaseOrderNo;
+            podModel.PurchaseOrderNo = po.PurchaseOrderNo;
             podModel.SupplierName = po.Supplier.Name;
             podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
             podModel.Status = po.Status.Name;
@@ -136,6 +136,7 @@ namespace team7_ssis.Controllers
             foreach (PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList)
             {
                 PurchaseOrderDetail poDetail = new PurchaseOrderDetail();
+                poDetail.Item = itemService.FindItemByItemCode(pod.ItemCode);
                 poDetail.ItemCode = pod.ItemCode;
                 poDetail.Quantity = pod.QuantityOrdered;
                 poDetail.Status = statusService.FindStatusByStatusId(11);
@@ -170,9 +171,10 @@ namespace team7_ssis.Controllers
         
 
         [HttpPost]
-        public ActionResult Success(List<string> purchaseOrderIds)
+        public ActionResult Success(string purchaseOrderIds)
         {
-            return View(purchaseOrderIds);
+            ViewBag.poNums = purchaseOrderIds;
+            return View();
         }
 
     }

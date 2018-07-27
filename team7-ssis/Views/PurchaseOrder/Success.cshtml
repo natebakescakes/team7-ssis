@@ -1,10 +1,8 @@
-﻿@model IEnumerable<string>
-
+﻿
 @{
     ViewBag.Title = "Success";
 }
 
-<h2>Success</h2>
 
 @section scripts {
     <script src="~/Scripts/Custom/GeneratePurchaseOrder.js"></script>
@@ -13,11 +11,12 @@
 <div class="row mb-3">
     <div class="col-md-12">
         <h2>Successfully generated Purchase Order Form(s)</h2>
+
+        @Html.Hidden("PONums", (string)ViewBag.poNums)
     </div>
 
 </div>
 
-@Html.Hidden("PONums", Model);
 
 <button id="ViewPrintButton" class="btn btn-default mb-3"><i class="fa fa-print" aria-hidden="true"></i> View & Print All Generated Forms</button>
 <br />

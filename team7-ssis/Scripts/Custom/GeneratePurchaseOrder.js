@@ -176,6 +176,8 @@
             cache: true,
             success: function (result) {
 
+                alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE");
+
                 url = $("#successUrl").val();
 
                 var form = document.createElement("form");
@@ -183,7 +185,7 @@
                 form.method = "POST";
                 form.action = url;
 
-                element1.value = result;
+                element1.value = result.purchaseOrders;
                 element1.name = "purchaseOrderIds";
                 element1.type = "hidden";
                 form.appendChild(element1);
@@ -211,11 +213,11 @@
             dataType: "json",
             data: { '': PONums },
             contentType: 'application/x-www-form-urlencoded',
-            cache: true
+            cache: true,
+            dataSrc: ""
         },
-        pageLength: 5,
         columns: [
-            { data: "PNo" },
+            { data: "PurchaseOrderNo" },
             { data: "SupplierName" },
             { defaultContent: '<button id="infobutton" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' }
         ],

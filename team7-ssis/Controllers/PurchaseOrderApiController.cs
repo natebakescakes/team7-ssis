@@ -33,7 +33,7 @@ namespace team7_ssis.Controllers
         {
             return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
             {
-                PNo = po.PurchaseOrderNo,
+                PurchaseOrderNo = po.PurchaseOrderNo,
                 SupplierName=po.Supplier.Name,
                 CreatedDate=po.CreatedDateTime.ToShortDateString() + " "+ po.CreatedDateTime.ToShortTimeString(),
                 Status=po.Status.Name
@@ -78,6 +78,30 @@ namespace team7_ssis.Controllers
         }
 
 
+        [Route("api/purchaseOrder/success")]
+        [HttpPost]
+        public List<PurchaseOrderViewModel> Success([FromBody]string poNums)
+        {
+            List<PurchaseOrderViewModel> purchaseOrders = new List<PurchaseOrderViewModel>();
+
+            //string text=string.Join(",", poNums);
+            //string[] PONums = text.Split(',');
+
+            string[] PONums = poNums.Split(',');
+
+            foreach(string s in PONums)
+            {
+                PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(s);
+                PurchaseOrderViewModel purchaseOrder = new PurchaseOrderViewModel();
+                purchaseOrder.PurchaseOrderNo = s;
+                purchaseOrder.SupplierName = p.Supplier.Name;
+
+                purchaseOrders.Add(purchaseOrder);
+            }
+
+            return purchaseOrders;
+
+        }
 
 
 

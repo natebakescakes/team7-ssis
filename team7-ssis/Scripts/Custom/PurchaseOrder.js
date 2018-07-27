@@ -33,7 +33,7 @@ $(document).ready(function(){
                 columns: [
                     { defaultContent: '<input type="checkbox" class="checkbox" />' },
                     {
-                        data: "PNo",
+                        data: "PurchaseOrderNo",
                         defaultContent: "<i>Not available</i>"
                     },
                     {
