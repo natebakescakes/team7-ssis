@@ -140,6 +140,8 @@
     //SAVE
     $("#generateforms").click(function () {
 
+
+
         var datatableData = generatePOTbl.rows().data().toArray();
 
         //alert(datatableData);
@@ -174,6 +176,22 @@
             cache: true,
             success: function (result) {
 
+                url = $("#successUrl").val();
+
+                var form = document.createElement("form");
+                var element1 = document.createElement("input");
+                form.method = "POST";
+                form.action = url;
+
+                element1.value = result;
+                element1.name = "purchaseOrderIds";
+                element1.type = "hidden";
+                form.appendChild(element1);
+
+                document.body.appendChild(form);
+
+                form.submit();
+
             }
             
         });
@@ -181,15 +199,17 @@
         
     });
         
-      
+
     
+    var PONums = $("#PONums").val();
 
     var successPOTable = $('#successPoTable').DataTable({
+
         ajax: {
             type: "POST",
             url: "/api/purchaseOrder/success",
             dataType: "json",
-            data: { '': PONo },
+            data: { '': PONums },
             contentType: 'application/x-www-form-urlencoded',
             cache: true
         },

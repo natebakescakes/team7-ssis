@@ -14,7 +14,7 @@
 
 </div>
 
-
+@Html.Hidden("successUrl", Url.Action("success", "PurchaseOrder"))
 <button id="addItemButton" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 
 <table id="generatePoTable" class="table table-striped table-bordered" style="width: 100%">
@@ -100,12 +100,12 @@
             </div>
             <div class="modal-footer">
                 <label>Qty</label>
-                <input id="generateQty" type="number" style="width:75px"/>
+                <input id="generateQty" type="number" style="width:75px" />
                 <label>x</label>
                 <label>Unit Price</label>
-                <input id="generateUnitPrice" type="text" disabled style="width:100px"/>
+                <input id="generateUnitPrice" type="text" disabled style="width:100px" />
                 <label>Amount</label>
-                <input id="generateAmount" type="text" disabled  style="width:100px" />
+                <input id="generateAmount" type="text" disabled style="width:100px" />
                 <button id="addToPOBtn" type="button" class="btn btn-primary">Add to Purchase Order</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>

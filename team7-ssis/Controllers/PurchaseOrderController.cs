@@ -15,11 +15,11 @@ namespace team7_ssis.Controllers
     {
         private ApplicationDbContext context;
         private PurchaseOrderService purchaseOrderService;
-        StatusService statusService;
-        ItemService itemService;
-        UserService userService;
-        ItemPriceService itemPriceService;
-        PurchaseOrderService purchaseOrderDetail;
+        private StatusService statusService;
+        private ItemService itemService;
+        private UserService userService;
+        private ItemPriceService itemPriceService;
+        
 
         public PurchaseOrderController()
         {
@@ -28,6 +28,7 @@ namespace team7_ssis.Controllers
             statusService = new StatusService(context);
             itemService = new ItemService(context);
             itemPriceService = new ItemPriceService(context);
+            userService = new UserService(context);
         }
 
         public ActionResult Index()
@@ -144,6 +145,7 @@ namespace team7_ssis.Controllers
                 
                 foreach(PurchaseOrder po in poList)
                 {
+                    po.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
                     Item item = itemService.FindItemByItemCode(pod.ItemCode);
                     ItemPrice itemPrice = itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
                     if (itemPrice.SupplierCode == po.SupplierCode)
@@ -156,14 +158,25 @@ namespace team7_ssis.Controllers
                     }
                 }
 
-                purchaseOrderDetail.SavePurchaseOrderDetail(poDetail);
+                purchaseOrderService.SavePurchaseOrderDetail(poDetail);
                 
             }
 
-            return View("Success",purchaseOrderIds);
-            
+            return new JsonResult { Data = new { purchaseOrders = purchaseOrderIds } };
+
 
         }
 
+        
+
+        [HttpPost]
+        public ActionResult Success(List<string> purchaseOrderIds)
+        {
+            return View(purchaseOrderIds);
+        }
+
     }
+
+   
+
 }
