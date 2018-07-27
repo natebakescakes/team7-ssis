@@ -16,19 +16,24 @@ namespace team7_ssis.Controllers
     
     public class StockAdjustmentAPIController : ApiController
     {
-        ApplicationDbContext context;
+        public ApplicationDbContext context { get; set; }
         StockAdjustmentService stockAdjustmentService;
         ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
+        StatusService statusService;
+        public string CurrentUserName { get; set; }
+
         public StockAdjustmentAPIController()
         {
             context=new ApplicationDbContext();
-            stockAdjustmentService = new StockAdjustmentService(context);
-             itemService = new ItemService(context);
-             itemPriceService = new ItemPriceService(context);
-            userService = new UserService(context);
-          
+
+            try
+            {
+                CurrentUserName = System.Web.HttpContext.Current.User.Identity.Name;
+            }
+            catch (NullReferenceException) { }
+
         }
 
 
@@ -37,6 +42,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<StockAdjustmentViewModel> stockadjustments()
         {
+            stockAdjustmentService = new StockAdjustmentService(context);
+
             List<StockAdjustment> list = stockAdjustmentService.FindAllStockAdjustment();
             List<StockAdjustmentViewModel > sadj= new List<StockAdjustmentViewModel>();
 
@@ -60,6 +67,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<StockAdjustmentViewModel> stockadjustmentsExceptDraft()
         {
+            stockAdjustmentService = new StockAdjustmentService(context);
+
             List<StockAdjustment> list = stockAdjustmentService.FindAllStockAdjustmentExceptDraft();
             List<StockAdjustmentViewModel> sadj = new List<StockAdjustmentViewModel>();
 
@@ -81,19 +90,67 @@ namespace team7_ssis.Controllers
             return sadj;
         }
 
+        //saving stock adjustment requests from mobile
+        [Route("api/stockadjustment/mobile/save")]
+        [HttpPost]
+        public IHttpActionResult Save(List<MobileSADViewModel> models)
+        {
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
+            itemService = new ItemService(context);
+            StockAdjustment SA;
+            try
+            {
+                //create new StockAdjustment object
+                SA = new StockAdjustment()
+                {
+                    StockAdjustmentId = IdService.GetNewStockAdjustmentId(context),
+                    StockAdjustmentDetails = new List<StockAdjustmentDetail>(),
+                    CreatedDateTime = DateTime.Now,   
+                    CreatedBy = userService.FindUserByEmail(models.First().UserName)          
+                    
+                };
+
+                //convert viewmodels to StockAdmustmentDetails list and link to stockadjustment object
+                foreach (MobileSADViewModel m in models)
+                { Item item = itemService.FindItemByItemCode(m.ItemCode);
+                    SA.StockAdjustmentDetails.Add(new StockAdjustmentDetail()
+                    {
+                        StockAdjustment = SA,
+                        ItemCode = m.ItemCode,
+                        Item = item,
+                        OriginalQuantity = item.Inventory.Quantity,
+                        AfterQuantity = item.Inventory.Quantity + m.QuantityAdjusted,
+                        Reason =m.Reason
+
+                    });
+                }
+                //save SA object into database 
+                stockAdjustmentService.updateToPendingStockAdjustment(SA);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Unable to save Stock Adjustments!");
+            }
+
+            return Ok(SA.StockAdjustmentId);
+
+        }
 
         [Route("api/stockadjustment/save")]
         [HttpPost]
         public void SaveStockAdjustmentAsDraft(List<ViewModelFromNew> list)
         {
+            userService = new UserService(context);
+            stockAdjustmentService = new StockAdjustmentService(context);
+            itemService = new ItemService(context);
            
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
             s.CreatedDateTime = DateTime.Now;
             s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);
             stockAdjustmentService.updateStockAdjustment(s);
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
-            s.CreatedBy = userService.FindUserByEmail(UserName);
+            s.CreatedBy = userService.FindUserByEmail(CurrentUserName);
          
             foreach (ViewModelFromNew v in list )
             {
@@ -118,11 +175,14 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public void CreatePendingStockAdjustment(List<ViewModelFromNew> list)
         {
+            userService = new UserService(context);
+            stockAdjustmentService = new StockAdjustmentService(context);
+            itemService = new ItemService(context);
+
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
-            s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
-            s.CreatedBy = userService.FindUserByEmail(UserName);
+            s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(context);   
+            s.CreatedBy = userService.FindUserByEmail(CurrentUserName);
             s.CreatedDateTime = DateTime.Now;
         
             foreach (ViewModelFromNew v in list)
@@ -148,12 +208,14 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public void DeleteDraftStockAdjustment(string id)
         {
+            userService = new UserService(context);
+            stockAdjustmentService = new StockAdjustmentService(context);
+
             stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
-           
 
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
-            ApplicationUser currentUser = userService.FindUserByEmail(UserName);
+            
+            ApplicationUser currentUser = userService.FindUserByEmail(CurrentUserName);
             sd.UpdatedBy = currentUser;
             sd.UpdatedDateTime = DateTime.Now;
 
@@ -166,10 +228,9 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public void RejectStockAdjustment(string id)
         {
+
             stockAdjustmentService.RejectStockAdjustment(id);
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
-           
-
 
         }
 
@@ -177,13 +238,17 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public void ApproveStockAdjustment(string id)
         {
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
+
             stockAdjustmentService.ApproveStockAdjustment(id);
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+        
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
-            ApplicationUser currentUser= userService.FindUserByEmail(UserName);
+            ApplicationUser currentUser= userService.FindUserByEmail(CurrentUserName);
+
             if (currentUser.Roles.Where(role => role.RoleId == "5").Count() > 0) // if Manager
             {
-                sd.ApprovedByManager = userService.FindUserByEmail(UserName);
+                sd.ApprovedByManager = userService.FindUserByEmail(CurrentUserName);
                 sd.ApprovedManagerDateTime = DateTime.Now;
             } else if (currentUser.Roles.Where(role => role.RoleId == "4").Count() > 0)
             {
@@ -199,7 +264,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public void UpdateStockAdjustmentAsDraft(List<ViewModelFromEditDetail> list)
         {
-        
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
+
             foreach (ViewModelFromEditDetail v in list)
             {
                 StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
@@ -210,8 +277,8 @@ namespace team7_ssis.Controllers
             }
             string stockadjustmentid = list.First().StockAdjustmentID;
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustmentid);
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
-            ApplicationUser currentUser = userService.FindUserByEmail(UserName);
+           
+            ApplicationUser currentUser = userService.FindUserByEmail(CurrentUserName);
             sa.UpdatedBy = currentUser;
             sa.UpdatedDateTime = DateTime.Now;
             stockAdjustmentService.updateToDraftStockAdjustment(sa);
@@ -221,9 +288,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public void UpdateStockAdjustmentAsPending(List<ViewModelFromEditDetail> list)
         {
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
 
-
-           
             foreach (ViewModelFromEditDetail v in list)
             {
                 StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
@@ -234,9 +301,8 @@ namespace team7_ssis.Controllers
             }
             string stockadjustmentid = list.First().StockAdjustmentID;
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustmentid);
-
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();      
-            ApplicationUser currentUser = userService.FindUserByEmail(UserName);
+ 
+            ApplicationUser currentUser = userService.FindUserByEmail(CurrentUserName);
             sa.UpdatedBy = currentUser;
             sa.UpdatedDateTime = DateTime.Now;
             stockAdjustmentService.updateToPendingStockAdjustment(sa);
@@ -247,7 +313,9 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public IEnumerable<StockAdjustmentDetailViewModel>  GetStockAdjustmentDetail(string StockAdjustmentId)
         {
-   
+            stockAdjustmentService = new StockAdjustmentService(context);
+         
+            itemService = new ItemService(context);
 
             List<StockAdjustmentDetailViewModel> detailListViewModel = new List<StockAdjustmentDetailViewModel>();
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(StockAdjustmentId);

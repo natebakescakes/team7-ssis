@@ -43,7 +43,8 @@ namespace team7_ssis.Services
             if (query == null)
             {
                 throw new Exception("No Requisitions contain given statuses.");
-            } else
+            }
+            else
             {
                 return requisitionRepository.FindRequisitionsByStatus(statusList).ToList();
             }
@@ -67,7 +68,8 @@ namespace team7_ssis.Services
             if (query == null)
             {
                 throw new Exception("No Requisition Details Found");
-            } else
+            }
+            else
             {
                 return query;
             }
@@ -79,13 +81,16 @@ namespace team7_ssis.Services
             {
                 throw new Exception("List of Requisitions cannot be null");
             }
-            
+
             // create one Retrieval
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);
             r.CreatedDateTime = DateTime.Now;
             r.Status = statusRepository.FindById(17);
-            r.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
+            if (HttpContext.Current != null)
+            {
+                r.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
+            }
 
             // save the Retrieval
             retrievalService.Save(r);
@@ -101,7 +106,10 @@ namespace team7_ssis.Services
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
                 d.Status = statusRepository.FindById(17);
-                d.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
+                if (HttpContext.Current != null)
+                {
+                    d.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
+                }
                 disbursementService.Save(d);
             }
 
