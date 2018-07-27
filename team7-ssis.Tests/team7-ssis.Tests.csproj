@@ -163,6 +163,10 @@
     <Compile Include="Controllers\NotificationControllerTest.cs" />
     <Compile Include="Controllers\RequisitionControllerTests.cs" />
     <Compile Include="Controllers\DisbursementApiControllerTest.cs" />
+    <Compile Include="Controllers\SupplierControllerTest.cs" />
+    <Compile Include="Controllers\RetrievalApiControllerTests .cs" />
+    <Compile Include="Controllers\RetrievalControllerTests.cs" />
+    <Compile Include="Controllers\RequisitionApiControllerTest.cs" />
     <Compile Include="Controllers\UserApiControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />

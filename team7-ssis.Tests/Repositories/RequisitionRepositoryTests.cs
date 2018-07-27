@@ -138,6 +138,24 @@ namespace team7_ssis.Tests.Repositories
             Assert.IsTrue(result.Count() >= 1);
         }
 
+        [TestMethod]
+        public void FindByDepartmentTest()
+        {
+            // Arrange
+            requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQREPOTEST",
+                Department = new DepartmentRepository(context).FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            var result = requisitionRepository.FindByDepartment(new DepartmentRepository(context).FindById("ENGL"));
+
+            // Assert
+            result.ToList().ForEach(r => Assert.AreEqual("ENGL", r.Department.DepartmentCode));
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {

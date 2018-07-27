@@ -27,9 +27,40 @@ namespace team7_ssis.ViewModels
         public int Quantity { get; set; }
         public string Status { get; set; }
     }
-    public class CreateRequisitionsViewModel
+    public class CreateRequisitionViewModel
     {
         public List<CollectionPoint> SelectCollectionPointList { get; set; }
         public string Representative { get; set; }
+    }
+    public class CreateRequisitionJSONViewModel
+    {
+        public string ItemCode { get; set; }
+        public int Qty { get; set; }
+    }
+
+    public class RequisitionMobileViewModel
+    {
+        public string RequisitionId { get; set; }
+        public string RequestorName { get; set; }
+        public string RequestedDate { get; set; }
+        public string Remarks { get; set; }
+        public string HeadRemarks { get; set; }
+        public string Status { get; set; }
+        public List<RequisitionDetailMobileViewModel> RequisitionDetails { get; set; }
+    }
+
+    public class RequisitionDetailMobileViewModel
+    {
+        public string ItemCode { get; set; }
+        public string Description { get; set; }
+        public int Qty { get; set; }
+        public string Uom { get; set; }
+    }
+
+    public class RequisitionIdViewModel
+    {
+        public string RequisitionId { get; set; }
+        public string Email { get; set; }
+        public string Remarks { get; set; }
     }
 }

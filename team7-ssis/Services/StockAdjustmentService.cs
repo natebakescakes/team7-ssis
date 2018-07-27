@@ -17,6 +17,7 @@ namespace team7_ssis.Tests.Services
         ItemService itemService;
         InventoryRepository inventoryRepository;
         StockMovementRepository stockMovementRepository;
+        StockMovementService stockMovementService;
 
         public StockAdjustmentService(ApplicationDbContext context)
         {
@@ -27,6 +28,7 @@ namespace team7_ssis.Tests.Services
             this.itemService = new ItemService(context);
             this.inventoryRepository = new InventoryRepository(context);
             this.stockMovementRepository = new StockMovementRepository(context);
+            this.stockMovementService = new StockMovementService(context);
         }
 
         //create new StockAdjustment with status: draft
@@ -34,12 +36,6 @@ namespace team7_ssis.Tests.Services
         {
             //controller pass stockadjustment to the method
 
-            
-            if (statusRepository.FindById(3) == null)
-            {
-                throw new Exception("can't find such status");
-
-            }
             stockadjustment.Status = statusRepository.FindById(3);
             stockAdjustmentRepository.Save(stockadjustment);
             return stockadjustment;
@@ -67,8 +63,10 @@ namespace team7_ssis.Tests.Services
                 s1.StockAdjustmentDetails.Remove(s);
                 //delete one stockadjustmentdetail
                 stockAdjustmentDetailRepository.Delete(s);
+                stockAdjustmentRepository.Save(s1);
             }
             return itemcode;
+            
 
         }
 
@@ -85,26 +83,44 @@ namespace team7_ssis.Tests.Services
             if (stockAdjustment.Status.StatusId == 3 || stockAdjustment.Status.StatusId==4)
             {
                 stockAdjustment.Status = statusRepository.FindById(2);
-                if(statusRepository.FindById(2)==null)
-                {
-                    throw new Exception("can't find such status");
-                }
-
+                //if(statusRepository.FindById(2)==null)
+                //{
+                //    throw new Exception("can't find such status");
+                //}
+                stockAdjustmentRepository.Save(stockAdjustment);
+                
             }
             return stockAdjustment;
         }
+
+
+
+        //update stockadjustment to pending
+        public StockAdjustment updateToPendingStockAdjustment(StockAdjustment s)
+        {
+
+            s.Status = statusRepository.FindById(4);
+            return stockAdjustmentRepository.Save(s);
+
+        }
+
+        //update stockadjustment to draft
+        public StockAdjustment updateToDraftStockAdjustment(StockAdjustment s)
+        {
+
+            s.Status = statusRepository.FindById(3);
+            return stockAdjustmentRepository.Save(s);
+
+        }
+
+       
+
 
         //create new StockAdjustment with status: pending
         public StockAdjustment CreatePendingStockAdjustment(StockAdjustment stockadjustment)
             //controller pass stockadjustment to the method
         {
          
-          
-            if (statusRepository.FindById(4) == null)
-            {
-                throw new Exception("can't find such status");
-
-            }
             stockadjustment.Status = statusRepository.FindById(4);
             stockAdjustmentRepository.Save(stockadjustment);
                 return stockadjustment;
@@ -112,12 +128,19 @@ namespace team7_ssis.Tests.Services
         }
 
 
-
-
         //find all stockadjustemnt
         public List<StockAdjustment> FindAllStockAdjustment()
         {
             return stockAdjustmentRepository.FindAll().ToList();
+            
+        }
+
+
+        //find stockadjustments except draft
+
+        public List<StockAdjustment> FindAllStockAdjustmentExceptDraft()
+        {
+            return stockAdjustmentRepository.FindAll().Where(x => x.Status.StatusId != 3 ).Where(x => x.Status.StatusId != 2).ToList();
         }
 
         //find stockadjustment by stockjustmentid
@@ -143,17 +166,8 @@ namespace team7_ssis.Tests.Services
                 //update item inventory
                 foreach (StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
                 {
-                   //save into inventory
-                    itemService.UpdateQuantity(sd.Item, sd.AfterQuantity);                   
+                    stockMovementService.CreateStockMovement(sd);
                 }
-
-                foreach(StockAdjustmentDetail sd in stockadjustment.StockAdjustmentDetails)
-                {
-                    //save into StockMovement
-                    SaveStockMovement(sd);
-                }
-
-
 
             }
             return stockadjustment;
@@ -187,21 +201,22 @@ namespace team7_ssis.Tests.Services
             return s;
         }
 
-
-
-        public StockMovement SaveStockMovement(StockAdjustmentDetail sjd)
+        public StockAdjustment updateStockAdjustment(StockAdjustment sa)
         {
-            StockMovement sm = new StockMovement();
-            sm.StockMovementId = IdService.GetNewStockMovementId(context);
-            sm.StockAdjustmentId = sjd.StockAdjustmentId;
-            sm.Item = sjd.Item;           
-            sm.StockAdjustmentDetail = sjd;
-            sm.StockAdjustmentDetailItemCode = sjd.ItemCode;
-            sm.OriginalQuantity = sjd.OriginalQuantity;
-            sm.AfterQuantity = sjd.AfterQuantity;
+            stockAdjustmentRepository.Save(sa);
+            return sa;
 
-            sm.CreatedDateTime = DateTime.Now;
-            return stockMovementRepository.Save(sm);
+        }
+
+        public StockAdjustmentDetail updateStockAdjustmentDetail(StockAdjustmentDetail sd)
+        {
+            stockAdjustmentDetailRepository.Save(sd);
+            return sd;
+        }
+
+        public StockAdjustmentDetail findStockAdjustmentDetailById(string id,string itemcode)
+        {
+            return stockAdjustmentDetailRepository.FindById(id, itemcode);
         }
 
 
