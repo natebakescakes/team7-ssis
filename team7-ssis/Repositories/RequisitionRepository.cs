@@ -39,5 +39,10 @@ namespace team7_ssis.Repositories
         {
             return context.RequisitionDetail.Where(x => x.RequisitionId == requisitionId);
         }
+
+        public IQueryable<Requisition> FindByDepartment(Department department)
+        {
+            return context.Requisition.Where(r => r.Department.DepartmentCode == department.DepartmentCode);
+        }
     }
 }

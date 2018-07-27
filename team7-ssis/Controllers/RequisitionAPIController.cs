@@ -32,6 +32,8 @@ namespace team7_ssis.Controllers
             itemService = new ItemService(context);
         }
 
+        public ApplicationDbContext Context { get { return context; } set { context = value; } }
+
         [Route("api/reqdetail/all")]
         [HttpGet]
         public IEnumerable<ManageRequisitionsViewModel> Requisitions()
@@ -141,6 +143,72 @@ namespace team7_ssis.Controllers
             }
             return Ok(r.RequisitionId);
             
+        }
+
+        /// <summary>
+        /// Get requisitions requested by the caller's department for mobile view
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/requisition/department")]
+        public IHttpActionResult GetRelatedRequisitions([FromBody] EmailViewModel model)
+        {
+            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department);
+
+            if (requisitions.Count == 0) return NotFound();
+
+            return Ok(requisitions.Select(requisition => new RequisitionMobileViewModel()
+            {
+                RequisitionId = requisition.RequisitionId,
+                RequestorName = $"{requisition.CreatedBy.FirstName} {requisition.CreatedBy.LastName}",
+                RequestedDate = requisition.CreatedDateTime.ToShortDateString(),
+                Remarks = requisition.EmployeeRemarks == null ? "" : requisition.EmployeeRemarks,
+                HeadRemarks = requisition.HeadRemarks == null ? "" : requisition.HeadRemarks,
+                Status = requisition.Status != null ? requisition.Status.Name : "",
+                RequisitionDetails = requisition.RequisitionDetails.Select(d => new RequisitionDetailMobileViewModel()
+                {
+                    ItemCode = d.ItemCode,
+                    Description = d.Item.Description,
+                    Qty = d.Quantity,
+                    Uom = d.Item.Uom,
+                }).ToList()
+            }));
+        }
+
+        [Route("api/requisition/approve")]
+        public IHttpActionResult ApproveRequisition([FromBody] RequisitionIdViewModel model)
+        {
+            try
+            {
+                new RequisitionService(Context).ApproveRequisition(model.RequisitionId, model.Email, model.Remarks);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Requisition already approved!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully approved"
+            });
+        }
+
+        [Route("api/requisition/reject")]
+        public IHttpActionResult RejectRequisition([FromBody] RequisitionIdViewModel model)
+        {
+            try
+            {
+                new RequisitionService(Context).RejectRequisition(model.RequisitionId, model.Email, model.Remarks);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Requisition already approved!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully rejected"
+            });
         }
     }
 }

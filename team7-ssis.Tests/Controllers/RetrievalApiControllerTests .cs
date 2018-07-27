@@ -117,6 +117,7 @@ namespace team7_ssis.Tests.Controllers
 
                     Retrieval deleteR = context.Retrieval.Where(x => x.RetrievalId == retId).First();
                     context.Retrieval.Remove(deleteR);
+                    context.SaveChanges();
                 }
 
             }
