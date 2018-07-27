@@ -65,6 +65,18 @@ namespace team7_ssis.ViewModels
 
     }
 
+    public class MobileSADViewModel
+    {
+        public string ItemCode { get; set; }
+
+        public string Reason { get; set; }
+
+        public string UserName { get; set; }
+
+        public int QuantityAdjusted { get; set; }
+
+
+    }
 
 
 }

@@ -75,6 +75,7 @@ namespace team7_ssis.Tests.Services
 
 
         [TestMethod]
+        [Ignore]
         public void FindPurchaseOrderBySupplierTest()
         {
             //Arrange
