@@ -283,7 +283,7 @@ namespace team7_ssis.Tests.Services
 
                 //Assert
                 int latest_id = stockMovementRepository.Count();
-                StockMovement sm = stockMovementRepository.FindById(latest_id);
+                sm = stockMovementRepository.FindById(latest_id);
               
 
                Assert.IsTrue(expect.Status.StatusId == 6);
