@@ -541,7 +541,6 @@
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
     <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
-    <Content Include="Views\StockAdjustment\AddItem.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
     <Content Include="Views\Supplier\_SupplierDetail.cshtml" />
@@ -549,11 +548,7 @@
     <Content Include="Views\PurchaseOrder\Manage.cshtml" />
     <Content Include="Views\PurchaseOrder\Details.cshtml" />
     <Content Include="Views\Report\StoreOperations.cshtml" />
-    <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\Supplier\SupplierPriceList.cshtml" />
-    <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
-    <Content Include="Views\StockAdjustment\Details.cshtml" />
-    <Content Include="Views\StockAdjustment\NewStockAdjustment.cshtml" />
     <Content Include="Views\ItemCategory\Index.cshtml" />
     <Content Include="Views\ItemCategory\_ItemCategoryTable.cshtml" />
     <Content Include="Views\ItemCategory\_ItemCategoryDetails.cshtml" />

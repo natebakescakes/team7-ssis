@@ -43,18 +43,15 @@ namespace team7_ssis.Controllers
 
             foreach (StockAdjustment s in list)
             {
-                sadj.Add(new StockAdjustmentViewModel
-                {
-                    StockAdjustmentId = s.StockAdjustmentId,
-                    CreatedBy = (s.CreatedBy == null) ? "" : s.CreatedBy.FirstName,
-                    ApprovedBySupervisor = (s.ApprovedBySupervisor == null) ? "" : s.ApprovedBySupervisor.FirstName,
-                    CreatedDateTime = s.CreatedDateTime,
-                    StatusName = (s.Status == null) ? "" : s.Status.Name,
-                    //Link = "/StockAdjustment/"+s.StockAdjustmentId
-                });
+                StockAdjustmentViewModel savm = new StockAdjustmentViewModel();
 
-            }
-
+                savm.StockAdjustmentId = s.StockAdjustmentId;
+                savm.CreatedBy = s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
+                savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
+                savm.CreatedDateTime = s.CreatedDateTime;
+                savm.StatusName = s.Status.Name;
+                sadj.Add(savm);
+                }
             return sadj;
         }
 
@@ -69,17 +66,17 @@ namespace team7_ssis.Controllers
 
             foreach (StockAdjustment s in list)
             {
-                sadj.Add(new StockAdjustmentViewModel
-                {
-                    StockAdjustmentId = s.StockAdjustmentId,
-                    CreatedBy = (s.CreatedBy == null) ? "" : s.CreatedBy.FirstName,
-                    ApprovedBySupervisor = (s.ApprovedBySupervisor == null) ? "" : s.ApprovedBySupervisor.FirstName,
-                    CreatedDateTime = s.CreatedDateTime,
-                    StatusName = (s.Status == null) ? "" : s.Status.Name,
-                    //Link = "/StockAdjustment/"+s.StockAdjustmentId
-                });
+                StockAdjustmentViewModel savm = new StockAdjustmentViewModel();
 
+                savm.StockAdjustmentId = s.StockAdjustmentId;                
+                savm.CreatedBy = s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
+                savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null?"": s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
+                savm.CreatedDateTime = s.CreatedDateTime;
+                savm.StatusName = s.Status.Name;
+                sadj.Add(savm);
             }
+
+        
 
             return sadj;
         }
@@ -119,7 +116,7 @@ namespace team7_ssis.Controllers
 
         [Route("api/stockadjustment/confirm")]
         [HttpPost]
-        public void CreatePendingStockAdjustmentPending(List<ViewModelFromNew> list)
+        public void CreatePendingStockAdjustment(List<ViewModelFromNew> list)
         {
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
@@ -213,6 +210,10 @@ namespace team7_ssis.Controllers
             }
             string stockadjustmentid = list.First().StockAdjustmentID;
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustmentid);
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            ApplicationUser currentUser = userService.FindUserByEmail(UserName);
+            sa.UpdatedBy = currentUser;
+            sa.UpdatedDateTime = DateTime.Now;
             stockAdjustmentService.updateToDraftStockAdjustment(sa);
         }
 
@@ -233,6 +234,11 @@ namespace team7_ssis.Controllers
             }
             string stockadjustmentid = list.First().StockAdjustmentID;
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustmentid);
+
+            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();      
+            ApplicationUser currentUser = userService.FindUserByEmail(UserName);
+            sa.UpdatedBy = currentUser;
+            sa.UpdatedDateTime = DateTime.Now;
             stockAdjustmentService.updateToPendingStockAdjustment(sa);
         }
 
