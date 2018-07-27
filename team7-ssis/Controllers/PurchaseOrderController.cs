@@ -66,20 +66,34 @@ namespace team7_ssis.Controllers
         }
 
         [HttpPost]
-        public string Update(string purchaseOrderNum, string itemCode, int quantity)
+        public ActionResult Update(List<PurchaseOrderDetailsViewModel> updateValues)
         {
-            PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
-            foreach(PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
+            decimal totalAmount = 0;
+            string purchaseOrderNo = updateValues[0].PurchaseOrderNo;
+
+            PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNo);
+
+            foreach (PurchaseOrderDetailsViewModel podViewModel in updateValues)
             {
-                if (itemCode == pod.ItemCode)
+                foreach (PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
                 {
-                    pod.Quantity = quantity;
-                    purchaseOrderService.Save(purchaseOrder);
-                    break;
+                    if (podViewModel.ItemCode == pod.ItemCode)
+                    {
+                        pod.Quantity = podViewModel.QuantityOrdered;
+                        purchaseOrderService.Save(purchaseOrder);
+                        break;
+                    }
                 }
+
             }
 
-            return "Updated";
+            foreach (PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
+            {
+                totalAmount = totalAmount + purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod);
+            }
+
+            return new JsonResult { Data = new { amount = totalAmount } };
+        
         }
 
 

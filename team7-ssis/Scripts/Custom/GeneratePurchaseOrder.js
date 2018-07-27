@@ -18,8 +18,6 @@
         ],
         select: "api",
         dom: "t",
-        scrollY: "200px",
-        scrollCollapse: true,
         autoWidth: true
        
 

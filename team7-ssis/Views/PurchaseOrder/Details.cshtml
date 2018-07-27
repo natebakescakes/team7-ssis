@@ -15,8 +15,9 @@
         </div>
         <div class="col-md-4">
             @Html.Hidden("purchaseOrderNo", Model.PurchaseOrderNo)
+            @Html.Hidden("podStatus", Model.Status)
 
-            @if(Model.Status != "Awaiting Delivery" && Model.Status != "Cancelled")
+            @if (Model.Status != "Awaiting Delivery" && Model.Status != "Cancelled")
     {
         <a id="viewRelatedDel" class="popup btn btn-primary pull-right" href=""><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</a>
 }

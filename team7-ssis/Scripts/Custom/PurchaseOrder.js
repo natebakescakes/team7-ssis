@@ -128,7 +128,24 @@ $(document).ready(function(){
     });
 
 
+    var simple_cancel = function (data, type, row, meta) {
+        var html;
 
+        if (podStatus == "Partially Delivered") {
+            if (data == 0) {
+                html = '<a class="cancelPODbtn btn-default btn" href="#"  ><i class="fa fa-close"></i></a>';
+            }
+            else {
+                html = '<a class="cancelPODbtn btn-default btn" disabled ><i class="fa fa-close"></i></a>';
+            }   
+        }
+        else {
+            html = '<a class="cancelPODbtn btn-default btn" disabled><i class="fa fa-close"></i></a>';
+        }
+
+        return html;
+        
+    };
    
 
     var podUrl = $("#purchaseOrderNo").val();
@@ -167,6 +184,10 @@ $(document).ready(function(){
                 },
                 {
                     data: "RemainingQuantity"
+                },
+                {
+                    data: "ReceivedQuantity",
+                    render: simple_cancel
                 }
 
             ],
@@ -286,25 +307,46 @@ $(document).ready(function(){
         alert("in save");
 
         var item = podAwaitingdatatbl.rows().data().toArray();
-        alert(item);
-        // alert(item);
 
-        //alert(quantity);
+        var updateArr = new Array();
 
-        //$.ajax({
+        for(i = 0; i < item.length;i++)
+        {
+            var o = {
+               "ItemCode": item[i].ItemCode,
+               "QuantityOrdered": item[i].QuantityOrdered,
+                "PurchaseOrderNo": podUrl
+            }
 
-        //    type: "POST",
-        //    url: "/PurchaseOrder/save",
-        //    dataType: "json",
-        //    data: JSON.stringify({ PurchaseOrderNum: pNum, ItemCode: itemCode, Quantity: quantity }),
-        //    contentType: "application/json",
-        //    cache: true,
-        //    success: function (result) {
-        //        alert(result);
-        //        ajax.reload();
-        //    }
-        //});
+            updateArr.push(o);
+            
+        }
 
+        $.ajax({
+
+            type: "POST",
+            url: "/purchaseOrder/update",
+            dataType: "json",
+            data: JSON.stringify(updateArr),
+            contentType: "application/json",
+            cache: true,
+            success: function (result) {
+
+                document.getElementById("amountLabel").innerHTML = "$ " + result.amount;
+                //alert("Quantity has been updated!");
+                podAwaitingdatatbl.ajax.reload();
+                
+            }
+        });
+
+    });
+
+
+    $(document).on("change", ".qty", function () {
+
+        var cell = podAwaitingdatatbl.cell(this.parentElement);
+        // assign the cell with the value from the <input> element 
+        cell.data($(this).val()).draw();
     });
    
 
