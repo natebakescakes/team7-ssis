@@ -43,6 +43,7 @@ namespace team7_ssis.ViewModels
         public string RequisitionId { get; set; }
         public string RequestorName { get; set; }
         public string RequestedDate { get; set; }
+        public string Remarks { get; set; }
         public string Status { get; set; }
         public List<RequisitionDetailMobileViewModel> RequisitionDetails { get; set; }
     }
@@ -59,5 +60,6 @@ namespace team7_ssis.ViewModels
     {
         public string RequisitionId { get; set; }
         public string Email { get; set; }
+        public string Remarks { get; set; }
     }
 }
