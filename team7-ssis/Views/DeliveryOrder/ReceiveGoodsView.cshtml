@@ -1,4 +1,14 @@
-﻿
+﻿@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="~/Content/Site.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap" />
 
 @model team7_ssis.ViewModels.PurchaseOrderViewModel
 
@@ -18,31 +28,29 @@
 
     </div>
     <h1>Submit delivery order forms & invoices and update inventory</h1>
-    <div style="width:90%; margin:0 auto" class="container">
 
-        @using (Html.BeginForm("ReceivedGoodsPurchaseOrderView", "DeliveryOrder", FormMethod.Get, new { Id = "Form1" }))
-        {<button class="btn btn-default pull-right">View Related Delivery Order</button>}
-         <div>
-             <table class="table table-striped table-bordered" style="width: 100%">
-                 <thead>
-                     <tr>
-                         <td>Purchase Order #</td>
-                         <td> Supplier Name</td>
-                         <td>Order Date</td>
-                     </tr>
-                 </thead>
-                 <tr>
-                     <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
-                     <td>@Html.DisplayFor(model => model.SupplierName)</td>
-                     <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-                 </tr>
-             </table>
-             @*<button id="viewBtn" class="btn btn-default mb-3">View</button>*@
-             @using (Html.BeginForm("####", "PurchaseOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
-             {@Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type = "hidden" })
-         <input type="submit" name="viewbtn" value="View" />}
-         </div>
+    <div class="modal-footer">
+
+        <button id="VRDObtn" type="button" class="btn btn-default pull-right">View Related Delivery Order</button>
+
     </div>
+   
+    <table class="table table-striped table-bordered" style="width: 100%">
+        <thead>
+            <tr>
+                <td>Purchase Order #</td>
+                <td> Supplier Name</td>
+                <td>Order Date</td>
+            </tr>
+        </thead>
+        <tr>
+            <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
+            <td>@Html.DisplayFor(model => model.SupplierName)</td>
+            <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+        </tr>
+    </table>
+
+    <button id="Viewbtn" class="btn btn-default mb-3">View</button>
 
     <br /><br />
     @Html.Partial("_OutstandingItemsTable")
@@ -69,9 +77,14 @@
             <table>
                 <tr>
                     <td>
-                        @using (Html.BeginForm("Save", "DeliveryOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
-                        {@Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type = "hidden" })
-                        <input type="submit" name="Submit" value="Submit" />}
+                        @*@using (Html.BeginForm("Save", "DeliveryOrder", FormMethod.Post, new { Id = "DeliveryOrder" }))
+                            {@Html.TextBoxFor(model => model.PurchaseOrderNo, new { Id = "purorderno", type = "hidden" })
+                            <input type="submit" name="Submit" value="Submit" />}*@
+                        <div class="modal-footer">
+
+                            <button id="submitbtn" type="button" class="btn btn-primary">Submit</button>
+
+                        </div>
                     </td>
                     <td>
                         @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))

@@ -20,6 +20,9 @@
 
 <link rel="stylesheet" href="~/Content/Site.css">
 
+@model team7_ssis.ViewModels.PurchaseOrderViewModel
+
+
 <!DOCTYPE html>
 <html>
 
@@ -27,6 +30,7 @@
     <div class="col-md-8">
 
         <h2>View Delivery Orders</h2>
+        @Html.Hidden("poNo", Model.PurchaseOrderNo)
 
     </div>
     <div style="width:90%; margin:0 auto" class="tablecontainer">

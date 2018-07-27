@@ -66,7 +66,7 @@ $(document).ready(function () {
 
                 var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
 
-                var select = $('#sel1').on('change', function () {
+                var select1 = $('#sel1').on('change', function () {
 
                     var val = $(this).val() + '';
 
@@ -94,8 +94,8 @@ $(document).ready(function () {
 
     var rgTable = $('#myRGTable').DataTable({
         ajax: {
-            url: "/api/receivegoods/"+ pon,
-            dataSrc: ""
+          url: "/api/receivegoods/"+ pon,
+          dataSrc: ""
         },
         columns:
             [
@@ -104,7 +104,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
+                { defaultContent: '<input type="button" value="i" id="ibtn" />' }
             ],
 
         createdRow: function (row, data, dataIndex) {
@@ -125,7 +125,7 @@ $(document).ready(function () {
 
         initComplete: function () { // After DataTable initialized
 
-            this.api().columns([3]).every(function () {
+            this.api().columns([4]).every(function () {
 
                 var column = this;
 
@@ -155,6 +155,35 @@ $(document).ready(function () {
             }); // this.api function
         }
     });
+
+    // clicks i button from view delivery orders when purchase order no given
+    $('#myRGTable tbody').on('click', '#ibtn', function (e) {
+
+            var dno = rgTable.row($(this).parents('tr')).data().DeliveryOrderNo;
+
+            alert(dno);
+
+            var form = document.createElement("form");
+
+            var element1 = document.createElement("input");
+
+            form.method = "POST";
+
+            form.action = "/deliveryorder/doconfirmationview";
+
+            element1.value = dno;
+
+            element1.name = "dno";
+
+            element1.type = "hidden";
+
+            form.appendChild(element1);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        });
+
 
     //for Index Page
     var Table = $('#myTable').DataTable({
@@ -230,6 +259,34 @@ $(document).ready(function () {
         alert(rowSelected);
     });
 
+    // clicks i button from view delivery orders
+    $('#myPOTable tbody').on('click', '#infobtn', function (e) {
+      
+        var dno = pTable.row($(this).parents('tr')).data().DeliveryOrderNo;
+
+        alert(dno);
+
+        var form = document.createElement("form");
+
+        var element1 = document.createElement("input");
+
+        form.method = "POST";
+
+        form.action = "/deliveryorder/doconfirmationview";
+
+        element1.value = dno;
+
+        element1.name = "dno";
+
+        element1.type = "hidden";
+
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+    });
+
 
     $('#confirm').click(function () {
         var mydata = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
@@ -258,61 +315,38 @@ $(document).ready(function () {
 
     });
 
-    // clicks i button from view delivery orders
-    $('#myPOTable tbody').on('click', '#infobtn', function (e) {
-      
-        var dno = pTable.row($(this).parents('tr')).data().DeliveryOrderNo;
-
-        alert(dno);
-
-        var form = document.createElement("form");
-
-        var element1 = document.createElement("input");
-
-        form.method = "POST";
-
-        form.action = "/deliveryorder/doconfirmationview";
-
-        element1.value = dno;
-
-        element1.name = "dno";
-
-        element1.type = "hidden";
-
-        form.appendChild(element1);
-
-        document.body.appendChild(form);
-
-        form.submit();
+    $('#submitbtn').click(function () {
+        var mydata = $('#myOutstandingTable').DataTable().rows().data().toArray();
+        //for (i = 0; i < mydata.length; i++)
+        //{
+        //    alert(mydata[i].ItemCode);
+        //} 
+        alert(mydata.length);
     });
-      
 
-    // clicks i button from view delivery orders when purchase order no given
-    $('#myRGTable tbody').on('click', '#infobtn', function (e) {
+    $('#VRDObtn').click(function () {
 
-        var dno = rgtable.row($(this).parents('tr')).data().DeliveryOrderNo;
-        alert(dno);
+        alert(pon);
 
-
-        var form = document.createElement("form");
+        var form1 = document.createElement("form");
 
         var element1 = document.createElement("input");
 
-        form.method = "POST";
+        form1.method = "POST";
 
-        form.action = "/deliveryorder/doconfirmationview";
+        form1.action = "/deliveryorder/ReceivedGoodsPurchaseOrderView";
 
-        element1.value = dno;
+        element1.value = pon;
 
-        element1.name = "dno";
+        element1.name = "pon";
 
         element1.type = "hidden";
 
-        form.appendChild(element1);
+        form1.appendChild(element1);
 
-        document.body.appendChild(form);
+        document.body.appendChild(form1);
 
-        form.submit();
+        form1.submit();
 
     });
 
@@ -329,7 +363,7 @@ $(document).ready(function () {
 
         form.method = "POST";
 
-        form.action = "/deliveryorder/doconfirmationview";
+        form.action = "/purchaseorder/doconfirmationview";
 
         element1.value = pno;
 
@@ -344,4 +378,31 @@ $(document).ready(function () {
         form.submit();
 
     });
+
+    $('#Viewbtn').click(function () {
+
+        alert(pon);
+
+        var form1 = document.createElement("form");
+
+        var element1 = document.createElement("input");
+
+        form1.method = "POST";
+
+        form1.action = "/purchaseorder/ReceivedGoodsPurchaseOrderView";
+
+        element1.value = pon;
+
+        element1.name = "pon";
+
+        element1.type = "hidden";
+
+        form1.appendChild(element1);
+
+        document.body.appendChild(form1);
+
+        form1.submit();
+
+    });
+
 });

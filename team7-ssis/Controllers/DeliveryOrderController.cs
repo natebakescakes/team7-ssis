@@ -44,10 +44,14 @@ namespace team7_ssis.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult ReceivedGoodsPurchaseOrderView()
+        [HttpPost]
+        public ActionResult ReceivedGoodsPurchaseOrderView(string pon)
         {
-            return View();
+            PurchaseOrderViewModel POVM = new PurchaseOrderViewModel();
+
+            POVM.PurchaseOrderNo = pon;
+
+            return View(POVM);
         }
 
         [HttpPost]
@@ -108,6 +112,7 @@ namespace team7_ssis.Controllers
             bool status = false;
 
             DeliveryOrder deliveryOrder = new DeliveryOrder();
+            List<DeliveryOrderDetail> deliveryOrderDetaillist = new List <DeliveryOrderDetail>();
             PurchaseOrder purchaseOrder= purchaseOrderService.FindPurchaseOrderById(model.PurchaseOrderNo);
             deliveryOrder.PurchaseOrder = purchaseOrder;
             deliveryOrder.Supplier = supplierService.FindSupplierById(purchaseOrder.SupplierCode);
@@ -140,6 +145,9 @@ namespace team7_ssis.Controllers
             deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
 
             deliveryOrder.Status = statusService.FindStatusByStatusId(1);
+
+
+            
 
             if (deliveryOrderService.Save(deliveryOrder) != null) status = true;
 

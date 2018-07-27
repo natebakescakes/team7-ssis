@@ -115,12 +115,12 @@ namespace team7_ssis.Controllers
 
 
         //Deliveryorder details for given purchase order
-        [Route("api/receivegoods/{purchaseorderno}")]
+        [Route("api/receivegoods/{pon}")]
         [HttpGet]
-        public List<DeliveryOrderViewModel> ViewDeliveryOrder(string purchaseOrderNo)
+        public List<DeliveryOrderViewModel> ViewDeliveryOrder(string pon)
         {
 
-            List<DeliveryOrder> dlist = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo);
+            List<DeliveryOrder> dlist = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(pon);
 
              return dlist.Select(x => new DeliveryOrderViewModel()
             {
