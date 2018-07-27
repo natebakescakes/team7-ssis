@@ -15,11 +15,13 @@ namespace team7_ssis.Controllers
 
         ApplicationDbContext context;
         DisbursementService disbursementService;
+        RetrievalService retrievalService;
 
         public RetrievalAPIController()
         {
             context = new ApplicationDbContext();
             disbursementService = new DisbursementService(context);
+            retrievalService = new RetrievalService(context);
         }
 
         [Route("api/stationeryretrieval/{rId}")]
@@ -109,8 +111,19 @@ namespace team7_ssis.Controllers
             }
             return viewModel;
         }
-
-
+        public IHttpActionResult UpdateRetrievalForm(string retId, string deptId, string itemCode, int actual)
+        {
+            try
+            {
+                Retrieval r = retrievalService.FindRetrievalById(retId);
+                Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == deptId).First();
+                disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, itemCode, actual);
+            } catch
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 
 
