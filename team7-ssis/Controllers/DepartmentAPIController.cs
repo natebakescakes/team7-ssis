@@ -33,7 +33,6 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<DepartmentViewModel> Departments()
         {
-
             return departmentService.FindAllDepartments().Select(department => new DepartmentViewModel()
             {
                 DepartmentCode = department.DepartmentCode,

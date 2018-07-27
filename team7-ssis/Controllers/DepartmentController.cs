@@ -14,7 +14,7 @@ namespace team7_ssis.Controllers
 {
     public class DepartmentController : Controller
     {
-        public ApplicationDbContext context;
+        public ApplicationDbContext context { get; set; }
         DepartmentService departmentService;
         CollectionPointService collectionPointService;
         UserService userService;
@@ -22,27 +22,39 @@ namespace team7_ssis.Controllers
         StatusService statusService;
         DelegationService delegationService;
         UserRepository userRepository;
-        
+        public String CurrentUserName { get; set; }
+
         public DepartmentController()
         {
             context = new ApplicationDbContext();
-            departmentService = new DepartmentService(context);
-            collectionPointService = new CollectionPointService(context);
-            userService = new UserService(context);
-            user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
-            statusService = new StatusService(context);
-            delegationService = new DelegationService(context);
-            userRepository = new UserRepository(context);
+
+            try
+            {
+                CurrentUserName = System.Web.HttpContext.Current.User.Identity.Name;
+            }
+            catch (NullReferenceException) { }
+
+            //context = new ApplicationDbContext();
+            //departmentService = new DepartmentService(context);
+            //collectionPointService = new CollectionPointService(context);
+            //userService = new UserService(context);
+            //user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            //statusService = new StatusService(context);
+            //delegationService = new DelegationService(context);
+            //userRepository = new UserRepository(context);
         }
 
         [HttpGet]
         public ActionResult DepartmentOptions()
         {
-            List<ApplicationUser> userByDepartmentList = departmentService.FindUsersByDepartment(user.Department);
+            departmentService = new DepartmentService(context);
+            collectionPointService = new CollectionPointService(context);
+            userService = new UserService(context);
 
+            List<ApplicationUser> userByDepartmentList = departmentService.FindUsersByDepartment(userService.FindUserByEmail(CurrentUserName).Department);
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
-            CollectionPoint collectionPoint = collectionPointService.FindCollectionPointByDepartment(user.Department);
-            ApplicationUser departmentRep = userService.FindRepresentativeByDepartment(user.Department);
+            CollectionPoint collectionPoint = collectionPointService.FindCollectionPointByDepartment(userService.FindUserByEmail(CurrentUserName).Department);
+            ApplicationUser departmentRep = userService.FindRepresentativeByDepartment(userService.FindUserByEmail(CurrentUserName).Department);
             return View(new DepartmentViewModel
             {
                 UsersByDepartment = new SelectList(
@@ -63,6 +75,10 @@ namespace team7_ssis.Controllers
     
         public ActionResult Index()
         {
+            statusService = new StatusService(context);
+            userService = new UserService(context);
+            collectionPointService = new CollectionPointService(context);
+
             List<Status> list = new List<Status>();
             list.Add(statusService.FindStatusByStatusId(0));
             list.Add(statusService.FindStatusByStatusId(1));
@@ -91,10 +107,15 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult SaveOptions(DepartmentViewModel model)
         {
+            departmentService = new DepartmentService(context);
+            collectionPointService = new CollectionPointService(context);
+            userService = new UserService(context);
+            statusService = new StatusService(context);
+            delegationService = new DelegationService(context);
+
             bool status = false;
             Department dpt = departmentService.FindDepartmentByUser(user);
             Delegation delegation = new Delegation();
-            
             
             dpt.UpdatedDateTime = DateTime.Now;
             dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
@@ -111,7 +132,8 @@ namespace team7_ssis.Controllers
                 delegation.StartDate = DateTime.Parse(model.StartDate, new CultureInfo("fr-FR", false));
                 delegation.EndDate = DateTime.Parse(model.EndDate, new CultureInfo("fr-FR", false));
                 delegation.CreatedDateTime = DateTime.Now;
-                delegation.CreatedBy = user;
+                //delegation.CreatedBy = user;
+                delegation.CreatedBy = userService.FindUserByEmail(CurrentUserName); 
                 delegation.Status = statusService.FindStatusByStatusId(1);
                 delegationService.DelegateManager(delegation);
             }
@@ -121,10 +143,14 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult SaveStatus(DepartmentViewModel model)
         {
+            statusService = new StatusService(context);
+            delegationService = new DelegationService(context);
+
             bool status = false;
             Delegation delegation = delegationService.FindDelegationByDelegationId(model.DelegationId);
             delegation.Status = statusService.FindStatusByStatusId(model.DelegationStatus);
-            delegation.UpdatedBy = user;
+            //delegation.UpdatedBy = user;
+            delegation.CreatedBy = userService.FindUserByEmail(CurrentUserName);
             delegation.UpdatedDateTime = DateTime.Now;
 
             if (delegationService.DelegateManager(delegation) != null) status = true;
@@ -134,6 +160,10 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult Save(DepartmentViewModel model)
         {
+            departmentService = new DepartmentService(context);
+            collectionPointService = new CollectionPointService(context);
+            userService = new UserService(context);
+
             bool status = false;
             Department dpt = new Department();
 
@@ -153,7 +183,8 @@ namespace team7_ssis.Controllers
 
                 //assign user info into update fields
                 dpt.UpdatedDateTime = DateTime.Now;
-                dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                //dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                dpt.UpdatedBy = userService.FindUserByEmail(CurrentUserName);
 
             }
             

@@ -60,7 +60,7 @@
                         </div>
                     </li>
                     <li class="nav-item">@Html.ActionLink("View Catalogue", "Index", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Department Options", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Department Options", "DepartmentOptions", "Department", null, new { @class = "nav-link" })</li>
                 }
                 @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
                 {
@@ -84,7 +84,7 @@
                         </div>
                     </li>
                     <li class="nav-item">@Html.ActionLink("Suppliers", "Index", "Supplier", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Department", null, new { @class = "nav-link" })</li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Forms</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
