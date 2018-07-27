@@ -1,0 +1,153 @@
+﻿<div style="width:90%; margin:0 auto" class="tablecontainer">
+
+    <table id="ClerkTable" class="hover">
+        <thead>
+            <tr>
+                <th>StockAdjustmentId</th>
+                <th>CreatedBy</th>
+                <th>ApprovedBySupervisor</th>
+                <th>CreatedDateTime</th>
+                <th>StatusName</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        var $table = $('#ClerkTable');
+
+        var datatb1 = $table.DataTable({
+
+            ajax: {
+                url: "/api/stockadjustment/all",
+                dataSrc: ""
+            },
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search...",
+            },
+
+            "columnDefs": [
+
+                {
+
+                    "targets": 5,
+
+                    "render": function (data, type, full, meta) {
+                        if (data.StatusName == "Pending Approval")
+
+                            return "<button class='btn btn-warning' id='cancelBtn' ><i class='fa fa-delete'>Cancel</i></button>";
+
+                        else if (data.StatusName == "Draft" || data.StatusName=="Cancelled")
+
+                            return "<button class='btn btn-warning' id='editBtn' ><i class='fa fa-delete'>Edit</i></button>";
+
+                        else (data.StatusName == "Approved" || data.StatusName == "Rejected")
+
+                        return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+
+
+                    }
+                }
+
+
+            ],
+            columns: [
+                { data: "StockAdjustmentId" },
+                { data: "CreatedBy" },
+                { data: "ApprovedBySupervisor" },
+                { data: "CreatedDateTime" },
+                { data: "StatusName" },
+                { data: null }
+            ],
+            autowidth: true,
+            select: "single",
+            createdRow: function (row, data, dataIndex) {
+                if (data.StatusName === "Approved") {
+                    $('td', row).eq(4).addClass('delivered');
+                }
+                if (data.StatusName === "Pending Approval") {
+                    $('td', row).eq(4).addClass('partially-delivered');
+                }
+                if (data.StatusName === "Rejected") {
+                    $('td', row).eq(4).addClass('awaiting-delivery');
+                }
+                if (data.StatusName === "Draft") {
+                    $('td', row).eq(4).addClass('draft');
+                }
+                if (data.StatusName === "Cancelled") {
+                    $('td', row).eq(4).addClass('cancel');
+                }
+            },
+
+            initComplete: function () { // After DataTable initialized
+
+                this.api().columns([4]).every(function () {
+                    var column = this;
+                    var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
+                        .prependTo($('.dataTables_filter'))
+                    var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
+                    var select = $('#sel1').on('change', function () {
+
+                        var val = $(this).val() + '';
+
+
+                        column.search(val != '' ? '^' + val.split(',').join('$|^') + '$' : '', true, false).draw();
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                    $('.selectpicker').selectpicker();
+                }); // this.api function
+
+
+            } //initComplete function 
+
+        });
+
+
+        $('#ClerkTable tbody').on("click", "#cancelBtn", function () {
+
+            var row = $("table#ClerkTable tr").index($(this).closest("tr"));
+            var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+
+            $.ajax({
+                type: "GET",
+                contentType: 'application/json',
+                url: '/api/stockadjustment/delete/?id=' + Id,
+
+                success: function (responseJSON) {
+                    window.location.replace("/StockAdjustment");
+                }
+            });
+
+        });
+
+
+        $('#ClerkTable tbody').on("click", "#viewBtn", function () {
+
+            var row = $("table#ClerkTable tr").index($(this).closest("tr"));
+            var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+ 
+
+            window.location.href = "/StockAdjustment/DetailsNoEdit/" + Id;
+
+        });
+
+        $('#ClerkTable tbody').on("click", "#editBtn", function () {
+
+            var row = $("table#ClerkTable tr").index($(this).closest("tr"));
+
+            var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+            window.location.href = "/StockAdjustment/DetailsEdit/" + Id;
+            
+
+        });
+
+    });
+
+
+</script>
