@@ -21,6 +21,7 @@ namespace team7_ssis.Controllers
         ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
+        NotificationService notificationService;
         public StockAdjustmentAPIController()
         {
             context=new ApplicationDbContext();
@@ -28,7 +29,9 @@ namespace team7_ssis.Controllers
              itemService = new ItemService(context);
              itemPriceService = new ItemPriceService(context);
             userService = new UserService(context);
-          
+            notificationService = new NotificationService(context);
+
+
         }
 
 
@@ -105,11 +108,13 @@ namespace team7_ssis.Controllers
                 sd.StockAdjustmentId = s.StockAdjustmentId;
                 sd.OriginalQuantity =item.Inventory.Quantity;
                 sd.AfterQuantity = v.Adjustment + sd.OriginalQuantity;
+                
                 detaillist.Add(sd);
              //  stockAdjustmentDetailRepository.Save(sd);
             }
             s.StockAdjustmentDetails = detaillist;           
             stockAdjustmentService.CreateDraftStockAdjustment(s);
+
             }
 
 
@@ -140,6 +145,28 @@ namespace team7_ssis.Controllers
             }
             s.StockAdjustmentDetails = detaillist;
             stockAdjustmentService.CreatePendingStockAdjustment(s);
+
+            int flag = 0;
+            foreach (ViewModelFromNew v in list)
+            {
+               
+                if (v.Unitprice.CompareTo("250") == 1)
+                {
+                    flag = 1;break;
+                }
+                                   
+            }
+            string supervisor = list.First().Supervisor;
+            string manager = list.First().Manager;
+            if(flag==1)
+            {
+                notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
+            }
+            if(flag==0)
+            {
+                notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
+            }
+
         }
 
 
@@ -221,8 +248,6 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public void UpdateStockAdjustmentAsPending(List<ViewModelFromEditDetail> list)
         {
-
-
            
             foreach (ViewModelFromEditDetail v in list)
             {
@@ -240,6 +265,28 @@ namespace team7_ssis.Controllers
             sa.UpdatedBy = currentUser;
             sa.UpdatedDateTime = DateTime.Now;
             stockAdjustmentService.updateToPendingStockAdjustment(sa);
+
+            // decide who to sent notification
+            int flag = 0;
+            foreach (ViewModelFromEditDetail v in list)
+            {
+
+                if (v.Unitprice.CompareTo("250") == 1)
+                {
+                    flag = 1; break;
+                }
+
+            }
+            string supervisor = list.First().Supervisor;
+            string manager = list.First().Manager;
+            if (flag == 1)
+            {
+                notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
+            }
+            if (flag == 0)
+            {
+                notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
+            }
         }
 
 

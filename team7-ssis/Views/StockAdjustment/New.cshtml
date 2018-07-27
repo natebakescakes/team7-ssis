@@ -1,8 +1,11 @@
 ﻿@model team7_ssis.ViewModels.StockAdjustmentViewModel
 
+<!DOCTYPE html>
+<html>
 <head>
     <link rel="stylesheet" type="text/css" href="Editor-1.7.4/css/editor.dataTables.css">
 </head>
+<body>
 <div class="row mb-3">
     <div class="col-md-8">
         <h2>Make Stock Adjustment</h2>
@@ -51,20 +54,22 @@
     <div class="row mt-3">
         <div class="col-md-12">
             <h3>Authorising Supervisor</h3>
-            <select class="custom-select">
-                @foreach (var supervisor in Model.supervisors)
-                {
-                    <option value="@supervisor.Id">@supervisor.FirstName @supervisor.LastName</option>
-                }
-            </select>
+            <form id="form1" name="form1">
+                <select id="ChosenSupervisor" name="ChosenSupervisor" class="custom-select" onChange="chose1()">
+                    @foreach (var supervisor in Model.supervisors)
+                    {
+                        <option value="@supervisor.UserName">@supervisor.FirstName @supervisor.LastName</option>
+                    }
+                </select>
 
-            <h3>Authorising Manager</h3>
-            <select class="custom-select">
-                @foreach (var manager in Model.managers)
-                {
-                    <option value="@manager.Id">@manager.FirstName @manager.LastName</option>
-                }
-            </select>
+                <h3>Authorising Manager</h3>
+                <select id="ChosenManager" name="ChosenManager" class="custom-select" onChange="chose2()">
+                    @foreach (var manager in Model.managers)
+                    {
+                        <option value="@manager.UserName">@manager.FirstName @manager.LastName</option>
+                    }
+                </select>
+            </form>
         </div>
     </div>
 
@@ -125,6 +130,21 @@
 
 
     <script>
+
+        //function chose1() {
+        //    var myselect1 = document.getElementById("ChosenSupervisor");
+        //    var index1 = myselect1.selectedIndex;
+        //    var supervisor = myselect1.options[index1].value;
+        //    alert(supervisor);
+
+        //}
+        //function chose2() {
+        //    var myselect2 = document.getElementById("ChosenManager");
+        //    var index2 = myselect2.selectedIndex;
+        //    var manager = myselect2.options[index2].value;
+        //    alert(manager);
+        //}
+
         $(document).ready(function () {
             var myTable = $('#myTable').DataTable({
                 "stateSave": true,
@@ -184,27 +204,49 @@
 
             $('#saveAsBtn').click(function () {
 
+                var myselect1 = document.getElementById("ChosenSupervisor");
+                var index1 = myselect1.selectedIndex;
+                var supervisor = myselect1.options[index1].value;
+                // alert(supervisor);
+
+                var myselect2 = document.getElementById("ChosenManager");
+                var index2 = myselect2.selectedIndex;
+                var manager = myselect2.options[index2].value;
+               // alert(manager);
+
                 var data = $('#myTable').dataTable().fnGetData();
-                var reqIdArray = [];
-                for (i = 0; i < data.length; i++) {
-                    var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4] };
-                    reqIdArray[i] = obj;
-
+               
+                if (data.obj == null) {
+                    alert("Please choose Item before Save.");
                 }
-
-                $.ajax({
-                    url: '/api/stockadjustment/save',
-                    contentType: 'application/json',
-                    data: JSON.stringify(reqIdArray),
-                    dataType: "json",
-                    type: "POST",
-                    traditional: true,
-                    success: function (responseJSON) {
-
-                        window.location.replace("/StockAdjustment");
+                 if (data.obj != null) {
+                    var reqIdArray = [];
+                    for (i = 0; i < data.length; i++) {
+                        var obj = {
+                            Itemcode: data[i][0],
+                            Unitprice: data[i][2],
+                            Reason: data[i][3],
+                            Adjustment: data[i][4],
+                            Supervisor: supervisor,
+                            Manager: manager
+                        };
+                        reqIdArray[i] = obj;
                     }
-                });
 
+                    $.ajax({
+                        url: '/api/stockadjustment/save',
+                        contentType: 'application/json',
+                        data: JSON.stringify(reqIdArray),
+                        dataType: "json",
+                        type: "POST",
+                        traditional: true,
+                        success: function (responseJSON) {
+
+                            window.location.replace("/StockAdjustment");
+                        }
+                    });
+                }
+             
 
             });
 
@@ -214,28 +256,52 @@
             });
 
             $('#confirmBtn').click(function () {
+
+                var myselect1 = document.getElementById("ChosenSupervisor");
+                var index1 = myselect1.selectedIndex;
+                var supervisor = myselect1.options[index1].value;
+               // alert(supervisor);
+
+                var myselect2 = document.getElementById("ChosenManager");
+                var index2 = myselect2.selectedIndex;
+                var manager = myselect2.options[index2].value;
+               // alert(manager);
+
+
                 //save as pending and go to home page with message shows
                 var data = $('#myTable').dataTable().fnGetData();
-                var reqIdArray = [];
-                for (i = 0; i < data.length; i++) {
-                    var obj = { Itemcode: data[i][0], Reason: data[i][3], Adjustment: data[i][4],Unitprice:data[i][2],Supervisor:supervisor,Manager:manager };
-                    reqIdArray[i] = obj;
 
+                if (data.obj == null) {
+                    alert("Please choose Item before Submit.");
                 }
+                if (data.obj != null) {
+                    var reqIdArray = [];
+                    for (i = 0; i < data.length; i++) {
+                        var obj = {
+                            Itemcode: data[i][0],
+                            Unitprice: data[i][2],
+                            Reason: data[i][3],
+                            Adjustment: data[i][4],
+                            Supervisor: supervisor,
+                            Manager: manager
+                        };
+                        reqIdArray[i] = obj;
 
-                $.ajax({
-                    url: '/api/stockadjustment/confirm',
-                    contentType: 'application/json',
-                    data: JSON.stringify(reqIdArray),
-                    dataType: "json",
-                    type: "POST",
-                    traditional: true,
-                    success: function (responseJSON) {
-
-                        window.location.replace("/StockAdjustment");
                     }
-                });
 
+                    $.ajax({
+                        url: '/api/stockadjustment/confirm',
+                        contentType: 'application/json',
+                        data: JSON.stringify(reqIdArray),
+                        dataType: "json",
+                        type: "POST",
+                        traditional: true,
+                        success: function (responseJSON) {
+
+                            window.location.replace("/StockAdjustment");
+                        }
+                    });
+                }
             });
 
 
@@ -277,6 +343,8 @@
 
 
     </script>
+</body>
+</html>
 
 
 
