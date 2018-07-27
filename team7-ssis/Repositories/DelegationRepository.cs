@@ -29,7 +29,7 @@ namespace team7_ssis.Repositories
         public IQueryable<Delegation> FindByDepartment(ApplicationUser user)
         {
             return context.Delegation
-                 .Where(x => x.Receipient.Department.DepartmentCode == user.Department.DepartmentCode);
+                 .Where(x => x.Receipient.Department.DepartmentCode == user.Department.DepartmentCode && x.Status.StatusId == 1);
         }
     }
 }

@@ -26,9 +26,13 @@ namespace team7_ssis.Services
         {
             return delegationRepository.FindAll().ToList();
         }
-        public List<Delegation> FindByDepartment(ApplicationUser user)
+        public List<Delegation> FindDelegationsByDepartment(ApplicationUser user)
         {
             return delegationRepository.FindByDepartment(user).ToList();
+        }
+        public Delegation FindDelegationByDelegationId(int delegationId)
+        {
+            return delegationRepository.FindById(delegationId);
         }
     }
 }

@@ -118,7 +118,19 @@ namespace team7_ssis.Controllers
             return new JsonResult { Data = new { status = status } };
            
         }
+        [HttpPost]
+        public ActionResult SaveStatus(DepartmentViewModel model)
+        {
+            bool status = false;
+            Delegation delegation = delegationService.FindDelegationByDelegationId(model.DelegationId);
+            delegation.Status = statusService.FindStatusByStatusId(model.DelegationStatus);
+            delegation.UpdatedBy = user;
+            delegation.UpdatedDateTime = DateTime.Now;
 
+            if (delegationService.DelegateManager(delegation) != null) status = true;
+
+            return new JsonResult { Data = new { status = status } };
+        }
         [HttpPost]
         public ActionResult Save(DepartmentViewModel model)
         {

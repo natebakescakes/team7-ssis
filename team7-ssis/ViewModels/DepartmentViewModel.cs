@@ -38,6 +38,8 @@ namespace team7_ssis.ViewModels
         public string Recipient { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public int DelegationId { get; set; }
+        public int DelegationStatus { get; set; }
 
 
     }

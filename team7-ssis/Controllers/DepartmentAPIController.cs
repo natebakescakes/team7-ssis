@@ -66,14 +66,16 @@ namespace team7_ssis.Controllers
         }
         [Route("api/delegation/all")]
         [HttpGet]
-        public List<DelegationViewModel> Delegations()
+        public List<DepartmentViewModel> Delegations()
         {
-            return delegationService.FindByDepartment(user).Select(delegation => new DelegationViewModel() //only displays delegation from your department
-            //return delegationService.FindAllDelegations().Select(delegation => new DelegationViewModel()
+            return delegationService.FindDelegationsByDepartment(user).Select(delegation => new DepartmentViewModel() //only displays delegation from your department
+            //return delegationService.FindAllDelegations().Select(delegation => new DepartmentViewModel()
             {
+                DelegationId = delegation.DelegationId,
                 Recipient = delegation.Receipient != null? delegation.Receipient.FirstName + " " + delegation.Receipient.LastName : "",
                 StartDate = delegation.StartDate.ToShortDateString(),
-                EndDate = delegation.EndDate.ToShortDateString()
+                EndDate = delegation.EndDate.ToShortDateString(),
+                DelegationStatus = delegation.Status.StatusId
             }).ToList();
         }
     }
