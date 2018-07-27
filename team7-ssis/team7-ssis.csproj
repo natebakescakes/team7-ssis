@@ -512,7 +512,6 @@
     <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
     <Content Include="Views\Requisition\StationeryDisbursement.cshtml" />
     <Content Include="Views\Retrieval\RetrievalDetails.cshtml" />
-    <Content Include="Views\Retrieval\_RetrievalDetailsTable.cshtml" />
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />

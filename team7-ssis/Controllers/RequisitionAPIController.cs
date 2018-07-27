@@ -8,6 +8,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace team7_ssis.Controllers
 {
@@ -20,6 +21,8 @@ namespace team7_ssis.Controllers
         DisbursementService disbursementService;
         StatusService statusService;
         ItemService itemService;
+        DepartmentService departmentService;
+        UserRepository userRepository;
 
         public RequisitionAPIController()
         {
@@ -30,6 +33,10 @@ namespace team7_ssis.Controllers
             disbursementService = new DisbursementService(context);
             statusService = new StatusService(context);
             itemService = new ItemService(context);
+            departmentService = new DepartmentService(context);
+            userRepository = new UserRepository(context);
+
+            
         }
 
         public ApplicationDbContext Context { get { return context; } set { context = value; } }
@@ -114,6 +121,8 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
         {
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
             if (itemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
@@ -124,6 +133,10 @@ namespace team7_ssis.Controllers
             r.RequisitionDetails = new List<RequisitionDetail>();
             r.Status = statusService.FindStatusByStatusId(4);
             r.CreatedDateTime = DateTime.Now;
+            r.Department = user.Department;
+            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CreatedBy = user;
+
             foreach (CreateRequisitionJSONViewModel dd in itemList)
             {
                 r.RequisitionDetails.Add(new RequisitionDetail
