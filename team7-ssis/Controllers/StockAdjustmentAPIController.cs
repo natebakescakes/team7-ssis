@@ -21,10 +21,10 @@ namespace team7_ssis.Controllers
         ItemService itemService;
         ItemPriceService itemPriceService;
         UserService userService;
-        StatusService statusService;
+        NotificationService notificationService;
         public string CurrentUserName { get; set; }
 
-        NotificationService notificationService;
+      
         public StockAdjustmentAPIController()
         {
             context=new ApplicationDbContext();
@@ -181,6 +181,7 @@ namespace team7_ssis.Controllers
             userService = new UserService(context);
             stockAdjustmentService = new StockAdjustmentService(context);
             itemService = new ItemService(context);
+            notificationService = new NotificationService(context);
 
             List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
             StockAdjustment s = new StockAdjustment();
@@ -253,7 +254,7 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public void RejectStockAdjustment(string id)
         {
-
+            stockAdjustmentService = new StockAdjustmentService(context);
             stockAdjustmentService.RejectStockAdjustment(id);
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
 
@@ -361,7 +362,7 @@ namespace team7_ssis.Controllers
         public IEnumerable<StockAdjustmentDetailViewModel>  GetStockAdjustmentDetail(string StockAdjustmentId)
         {
             stockAdjustmentService = new StockAdjustmentService(context);
-         
+            itemPriceService = new ItemPriceService(context);
             itemService = new ItemService(context);
 
             List<StockAdjustmentDetailViewModel> detailListViewModel = new List<StockAdjustmentDetailViewModel>();

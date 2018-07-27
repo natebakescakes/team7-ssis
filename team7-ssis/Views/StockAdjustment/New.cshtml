@@ -216,10 +216,8 @@
 
                 var data = $('#myTable').dataTable().fnGetData();
                
-                if (data.obj == null) {
-                    alert("Please choose Item before Save.");
-                }
-                 if (data.obj != null) {
+          
+                 
                     var reqIdArray = [];
                     for (i = 0; i < data.length; i++) {
                         var obj = {
@@ -245,7 +243,7 @@
                             window.location.replace("/StockAdjustment");
                         }
                     });
-                }
+                
              
 
             });
@@ -271,10 +269,7 @@
                 //save as pending and go to home page with message shows
                 var data = $('#myTable').dataTable().fnGetData();
 
-                if (data.obj == null) {
-                    alert("Please choose Item before Submit.");
-                }
-                if (data.obj != null) {
+   
                     var reqIdArray = [];
                     for (i = 0; i < data.length; i++) {
                         var obj = {
@@ -301,8 +296,7 @@
                             window.location.replace("/StockAdjustment");
                         }
                     });
-                }
-            });
+        });
 
 
 
