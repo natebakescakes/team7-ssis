@@ -42,46 +42,5 @@ namespace team7_ssis.Controllers
                 )
             });
         }
-
-        //Save new or update existing ItemCategory
-        [HttpPost]
-        public ActionResult Save(ItemCategoryViewModel model)
-        {
-            bool status = false;
-            ItemCategory s = new ItemCategory();
-
-            if (itemcategoryService.FindItemCategoryByItemCategoryId(model.ItemCategoryId) == null)
-            {
-                //new item category 
-                s.ItemCategoryId = IdService.GetNewItemCategoryId(context);
-                //assign user info
-                s.CreatedDateTime = DateTime.Now;
-                s.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
-
-            }
-
-            else
-            {
-                //existing ItemCategory
-                s = itemcategoryService.FindItemCategoryByItemCategoryId(model.ItemCategoryId);
-
-                //assign user info into update fields
-                s.UpdatedDateTime = DateTime.Now;
-                s.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
-
-            }
-
-            //assign item category info
-            s.Name = model.Name;
-            s.Description = model.Description;          
-            s.Status = statusService.FindStatusByStatusId(model.Status);
-
-            //save info to database
-            if (itemcategoryService.Save(s) != null) status = true;
-
-            //return RedirectToAction("Index", "ItemCategory");
-            return new JsonResult { Data = new { status = status } };
-        }
-
     }
 }

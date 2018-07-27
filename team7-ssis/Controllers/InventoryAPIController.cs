@@ -92,12 +92,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<ItemDetailsSupplierInfoViewModel> FindSupplierInfo(string itemCode)
         {
-            List<int> arr = new List<int>();
-            arr.Add(1);
-            arr.Add(2);
-            arr.Add(3);
             int count = 0;
-            List<ItemPrice> itemPrices = itemPriceService.FindItemPriceByItemCode(itemCode);
+            List<ItemPrice> itemPrices = itemPriceService.FindAllItemPriceByOrder(itemCode);
             List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
             foreach(ItemPrice i in itemPrices)
             {
@@ -107,6 +103,25 @@ namespace team7_ssis.Controllers
                     Number= count,
                     SupplierName = i.Supplier.Name,
                     SupplierUnitPrice = (double)i.Price
+                });
+            }
+            return list;
+        }
+
+        [Route("api/manage/supplierInfoAll")]
+        [HttpGet]
+        public List<ItemDetailsSupplierInfoViewModel> FindAllSupplierInfo()
+        {
+            int count = 0;
+            List<Supplier> slist = new SupplierService(context).FindAllSuppliers();
+            List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
+            foreach (Supplier i in slist)
+            {
+                count++;
+                list.Add(new ItemDetailsSupplierInfoViewModel()
+                {
+                    Number = count,
+                    SupplierName = i.Name
                 });
             }
             return list;

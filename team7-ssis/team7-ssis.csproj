@@ -530,6 +530,7 @@
     <Content Include="Views\Inventory\Details.cshtml" />
     <Content Include="Views\Inventory\_ItemDetail.cshtml" />
     <Content Include="Views\Inventory\_StockHistoryTable.cshtml" />
+    <Content Include="Views\Inventory\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

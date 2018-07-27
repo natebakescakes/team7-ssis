@@ -83,6 +83,23 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        public void FindInventoryByItemCodeTest()
+        {
+            //Arrange
+            Item k = new Item();
+            k.ItemCode = "MMM";
+            k.CreatedDateTime = DateTime.Now;
+            itemService.Save(k,10);
+
+            //Act
+            var result = itemService.FindInventoryByItemCode("MMM");
+
+            //Assert
+            Assert.AreEqual("MMM", result.ItemCode);
+            itemRepository.Delete(k);
+        }
+
+        [TestMethod]
         public void FindItemQuantityLessThanReorderLevel()
         {
             //Act
@@ -132,6 +149,8 @@ namespace team7_ssis.Tests.Services
             //Assert.AreEqual(40, result.Quantity);
             itemRepository.Delete(i);
         }
+
+        
 
 
         [TestMethod]
@@ -199,7 +218,7 @@ namespace team7_ssis.Tests.Services
         public void MyTestCleanup()
         {
             string[] ids = new string[]
-           { "BBB","CCC","DDD","EEE","GGG","FFF" };
+           { "BBB","CCC","DDD","EEE","GGG","FFF","MMM" };
 
             foreach (string id in ids)
             {

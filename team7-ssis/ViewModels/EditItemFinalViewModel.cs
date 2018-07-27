@@ -17,6 +17,16 @@ namespace team7_ssis.ViewModels
         public int Status { get; set; }
         public IEnumerable<SelectListItem> Statuses { get; set; }
         public IEnumerable<SelectListItem> SupplierName { get; set; }
-        public double SupplierUnitPrice { get; set; }
+        public string SupplierName1 { get; set; }
+        public string SupplierName2 { get; set; }
+        public string SupplierName3 { get; set; }
+        public decimal SupplierUnitPrice1 { get; set; }
+        public decimal SupplierUnitPrice2 { get; set; }
+        public decimal SupplierUnitPrice3 { get; set; }
+        public IEnumerable<SelectListItem> Categories { get; set; }
+        public int CategoryId { get; set; }
+        public string ItemName { get; set; }
+        public int ReorderLevel { get; set; }
+        public int ReorderQuantity { get; set; }
     }
 }
