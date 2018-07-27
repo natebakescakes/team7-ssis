@@ -8,6 +8,7 @@ using team7_ssis.Models;
 using team7_ssis.Tests.Services;
 using team7_ssis.ViewModels;
 using team7_ssis.Repositories;
+using team7_ssis.Services;
 
 namespace team7_ssis.Controllers
 {
@@ -17,12 +18,14 @@ namespace team7_ssis.Controllers
         private ApplicationDbContext context;
         private StockAdjustmentService stockAdjustmentService;
         private StockAdjustmentRepository stockAdjustmentRepository;
+        private UserService userService;
 
         public StockAdjustmentAPIController()
         {
             context = new ApplicationDbContext();
             stockAdjustmentService = new StockAdjustmentService(context);
             stockAdjustmentRepository = new StockAdjustmentRepository(context);
+            userService = new UserService(context);
         }
 
         [Route("api/stockadjustment/all")]
@@ -50,6 +53,32 @@ namespace team7_ssis.Controllers
             return sadj;
         }
 
+        [Route("api/stockadjustment/save")]
+        [HttpPost]
+        public IHttpActionResult Save(List<StockAdjustmentDetailViewModel> models)
+        {
+            try
+            {
+                //create new StockAdjustment object
+                StockAdjustment SA = new StockAdjustment()
+                {
+                    StockAdjustmentId = IdService.GetNewStockAdjustmentId(context),
+                    CreatedDateTime = DateTime.Now,
+                    
+                };
+                //convert viewmodels to StockAdmustmentDetails list and link to stockadjustment object
+              
+                //save SA details into database 
+
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Unable to save Stock Adjustments!");
+            }
+
+            return Ok();
+
+        }
 
 
         //[Route("api/supervisor/all")]
