@@ -1,6 +1,5 @@
 ﻿@section Scripts {
     <script src="~/Scripts/Custom/RedirectPost.js"></script>
-    <script src="~/Scripts/Custom/ManageRequisitions.js"></script>
 }
 
 @{
@@ -10,10 +9,24 @@
 <div class="row mb-3">
     <div class="col-md-8">
         <h2>Manage Requisitions</h2>
+        @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+        {
+            <p>New Requisitions & Partially Filled Requisitions will be processed from most recent to least recent.</p>
+        }
     </div>
     <div class="col-md-4">
-        @*<a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>*@
-        <a id="processAllRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Process All Requisitions</a>
+        @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
+        {
+            <a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>
+        }
+        @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
+        {
+            <a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
+        }
+        @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+        {
+            <a id="processAllRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Process All Requisitions</a>
+        }
     </div>
 </div>
 
@@ -29,11 +42,14 @@
     }
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <button id="processSelectedButton" class="btn btn-default mb-2">Process Selected</button>
+@if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <button id="processSelectedButton" class="btn btn-default mb-2">Process Selected</button>
+        </div>
     </div>
-</div>
+}
 
 <table id="myTable" class="table table-striped table-bordered" style="width: 100%">
     <thead>
@@ -48,3 +64,111 @@
     </thead>
 
 </table>
+
+<script>
+    $(document).ready(function () {
+        var oTable = $('#myTable').DataTable({
+            ajax: {
+                url: "/api/reqdetail/all",
+                dataSrc: ""
+            },
+            order: [[0, 'desc']],
+            columns: [
+                { "data": "Requisition", "autoWidth": true },
+                { "data": "ItemCode", "autoWidth": true },
+                { "data": "Description", "autoWidth": true },
+                { "data": "Quantity", "autoWidth": true },
+                { "data": "Status", "autoWidth": true },
+                {
+                    "render": function (data, type, row, meta) {
+
+                        var html = "";
+                        @if ( User.IsInRole("Employee") || User.IsInRole("Admin") )
+                        {
+                        <text>
+
+                        var viewDetailsHtml = '<a class="dropdown-item" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i> View Details</a>';
+                        var editDetailsHtml = '<a class="dropdown-item" href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
+                        var createNewDraftWithHtml = '<a class="dropdown-item" href="#"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
+                        var cancelHtml = '<div class="dropdown-divider"></div>' +
+                            '<a class="dropdown-item" href="#"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
+
+                         html += '<div class="dropdown">' +
+                            '<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                            'Actions' +
+                            '</a>' +
+                            '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">' +
+                            (row.Status == "Pending Approval" ? editDetailsHtml : viewDetailsHtml ) +
+                            createNewDraftWithHtml +
+                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? cancelHtml : "" ) +
+                            '</div >' +
+                            '</div >';
+                        </text>
+                        }
+
+                        @if ( User.IsInRole("Department Head") || User.IsInRole("Admin") )
+                        {
+                            <text>
+                        html += '<button type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
+                            '<button type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
+
+                            </text>
+                        }
+
+                        @if ( User.IsInRole("Department Head") || User.IsInRole("Store Clerk") || User.IsInRole("Admin") )
+                        {
+                            <text>
+                        html += '<button type="button" class="btn btn-secondary"><i class="fa fa-info-circle" aria-hidden="true"></i></button>';
+
+                            </text>
+                        }
+
+
+                        return html;
+                    }
+                }
+            ],
+            @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
+            {
+            <text>
+            select: 'api'
+            </text>
+            }
+
+        });
+    })
+
+    // Click "Process All Requisitions" button
+    $('#processAllRequisitionButton').click(function (e) {
+        e.preventDefault();
+        var data = $('#myTable').DataTable().rows().data().toArray();
+        process(data);
+    })
+
+    // Click "Process All Requisitions" button
+    $('#processSelectedButton').click(function (e) {
+        e.preventDefault();
+        var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
+        process(data);
+    })
+
+    function process(data) {
+        var reqIdArray = [];
+        for (i = 0; i < data.length; i++) {
+            reqIdArray[i] = data[i].Requisition;
+        }
+
+        // call the appropriate controller with the data
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: "/api/processrequisitions",
+            data: JSON.stringify(reqIdArray),
+            dataType: "json",
+            success: function (rid) {
+                message = reqIdArray.length + " Requisitions processed. Retrieval Form #" + rid + " created.";
+                window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
+            }
+        });
+    }
+</script>
