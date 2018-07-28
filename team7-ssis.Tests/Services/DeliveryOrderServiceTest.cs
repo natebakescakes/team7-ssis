@@ -122,8 +122,6 @@ namespace team7_ssis.Tests.Services
 
         [TestMethod]
         [Ignore]
-
-        [TestMethod]
         public void FindDeliveryOrderBySupplierValidTest()
         {
             //Arrange

@@ -74,6 +74,7 @@ namespace team7_ssis.Controllers
         public List<DeliveryOrderDetailsViewModel> OutstandingItems(string deliveryorderno)
         {
             DeliveryOrder deliveryOrder = deliveryOrderService.FindDeliveryOrderById(deliveryorderno);
+            PurchaseOrder po = deliveryOrder.PurchaseOrder;
             List<DeliveryOrderDetail> dlist = new List<DeliveryOrderDetail>();
             foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
             {
@@ -84,7 +85,7 @@ namespace team7_ssis.Controllers
             {
                 ItemCode = x.ItemCode,
                 Description = x.Item.Description,
-                QtyOrdered = x.PlanQuantity,
+                QtyOrdered = deliveryOrderService.FindPurchaseOrderDetailbyIdItem(po.PurchaseOrderNo,x.ItemCode).Quantity,
                 ReceivedQty = x.ActualQuantity
             }).ToList();
         }
@@ -96,6 +97,7 @@ namespace team7_ssis.Controllers
         public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseorderNo)
         {
             PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseorderNo);
+            
 
             return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
 
@@ -104,11 +106,14 @@ namespace team7_ssis.Controllers
 
                 Description = pod.Item.Description,
 
-                QuantityOrdered = pod.Quantity,
+                QuantityOrdered = purchaseOrderService.FindRemainingQuantity(pod),
 
-                ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
+                ReceivedQuantity = 0,
 
-                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod)
+                RemainingQuantity = 0,
+
+                Status = pod.Status.Name
+                
 
             }).ToList();
         }

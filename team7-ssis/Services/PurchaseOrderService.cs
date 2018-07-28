@@ -86,6 +86,12 @@ namespace team7_ssis.Services
         }
 
 
+        public void SavePurchaseOrderDetails(PurchaseOrderDetail purchaseOrderDetail)
+        {
+            purchaseOrderDetailRepository.Save(purchaseOrderDetail);
+        }
+
+
         public List<PurchaseOrder> CreatePOForEachSupplier(List<Item> items)
         {
             List<Supplier> supList = new List<Supplier>();

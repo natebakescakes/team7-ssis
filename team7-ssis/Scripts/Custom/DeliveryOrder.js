@@ -1,27 +1,7 @@
 ﻿
 $(document).ready(function () {
 
-    var action_dropbox = function (data, type, row, meta) {
-
-        if (data == "Delivered") {
-
-            return '<select  class="action form-control form-control-sm"><option value="-1">Action</option><option value="0">View Purchase Order details</option> <option value=1>View Related Delivery Orders</option></select>';
-
-        }
-
-        else if (data == "Partially Delivered") {
-
-            return '<select  class=" action form-control form-control-sm"><option value="-1">Action</option><option value="0">View Purchase Order details</option> <option value=1>View Related Delivery Orders</option><option value=2 > Receive Goods</ option></select>';
-
-        }
-
-        else {
-
-            return '<select class="action form-control form-control-sm"><option value="-1">Action</option><option value="0">View Purchase Order details</option> <option value=2 > Receive Goods</ option></select>';
-
-        }
-
-    }
+ 
     //Receive goods- View DeliveryOrders
 
     var pTable = $('#myPOTable').DataTable({
@@ -36,7 +16,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="infobtn" />'}
+                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
             ],
 
         createdRow: function (row, data, dataIndex) {
@@ -94,8 +74,8 @@ $(document).ready(function () {
 
     var rgTable = $('#myRGTable').DataTable({
         ajax: {
-          url: "/api/receivegoods/"+ pon,
-          dataSrc: ""
+            url: "/api/receivegoods/" + pon,
+            dataSrc: ""
         },
         columns:
             [
@@ -159,30 +139,30 @@ $(document).ready(function () {
     // clicks i button from view delivery orders when purchase order no given
     $('#myRGTable tbody').on('click', '#ibtn', function (e) {
 
-            var dno = rgTable.row($(this).parents('tr')).data().DeliveryOrderNo;
+        var dno = rgTable.row($(this).parents('tr')).data().DeliveryOrderNo;
 
-            alert(dno);
+        alert(dno);
 
-            var form = document.createElement("form");
+        var form = document.createElement("form");
 
-            var element1 = document.createElement("input");
+        var element1 = document.createElement("input");
 
-            form.method = "POST";
+        form.method = "POST";
 
-            form.action = "/deliveryorder/doconfirmationview";
+        form.action = "/deliveryorder/doconfirmationview";
 
-            element1.value = dno;
+        element1.value = dno;
 
-            element1.name = "dno";
+        element1.name = "dno";
 
-            element1.type = "hidden";
+        element1.type = "hidden";
 
-            form.appendChild(element1);
+        form.appendChild(element1);
 
-            document.body.appendChild(form);
+        document.body.appendChild(form);
 
-            form.submit();
-        });
+        form.submit();
+    });
 
 
     //for Index Page
@@ -197,7 +177,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                {defaultContent: '<input type="button" value="i" id="infobtn" />'}
+                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
             ],
         select: "single",
 
@@ -216,6 +196,19 @@ $(document).ready(function () {
         }
     });
 
+    var simple_cancel = function (data, type, row, meta) {
+
+        var html = '<a class="cancelPODbtn btn-default btn disabled" ><i class="fa fa-close"></i></a>';
+
+        if (data == "Awaiting Delivery") {
+            html = '<a id="cancelAwaiting" class="cancelPODbtn btn-default btn"  ><i class="fa fa-close"></i></a>';
+
+        }
+
+        return html;
+    };
+
+
 
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
@@ -229,11 +222,88 @@ $(document).ready(function () {
                 { data: "ItemCode" },
                 { data: "Description" },
                 { data: "QuantityOrdered" },
-                { defaultContent: '<input type="textbox" class="textbox" />' },
+                { defaultContent: '<input type="textbox" class="recdqtytextbox" />' },
                 { data: "RemainingQuantity" },
-                { defaultContent: '<input type="checkbox" class="checkbox" id="vcheck"/>' }
+                {
+                    data: "Status",
+                    render: simple_cancel
+                }
             ],
         select: "single"
+    });
+
+   
+    //checkbox 
+
+    //Textbox change
+    $(document).on("change", ".recdqtytextbox", function () {
+
+        var cell = oTable.cell(this.parentElement);
+        cell.data($(this).val()).draw();
+        //var thisRow = oTable.row($(this).parents('tr'));
+        //var receivedCell = thisRow.cell(4);
+        //var outstandingCell = thisRow.cell(2);
+        //var remainingCell = thisRow.cell(3);
+        //alert(receivedCell);
+        // assign the cell with the value from the <input> element 
+
+        
+
+        //var remainingValue = outstandingCell.data() - receivedCell.data();
+        //alert(remainingValue);
+        //remainingCell.data(remainingValue).draw();
+        
+
+    });
+
+    $('#submitbtn').click(function () {
+
+        var mydata = oTable.rows().data().toArray();
+
+        var details = new Array();
+
+        for (var i = 0; i < mydata.length; i++) {
+
+
+            var o = {
+
+                "PurchaseOrderNo": pon,
+
+                "ItemCode": mydata[i].ItemCode,
+
+                "Description": mydata[i].Description,
+
+                "QtyOrdered": mydata[i].QuantityOrdered,
+
+                "ReceivedQty": mydata[i].ReceivedQuantity,
+
+                "RemainingQuantity": mydata[i].RemainingQuantity
+            };
+
+            details.push(o);
+        }
+
+        $.ajax({
+
+            type: "POST",
+
+            url: "/DeliveryOrder/Save",
+
+            dataType: "json",
+
+            data: JSON.stringify(details),
+
+            contentType: "application/json",
+
+            cache: true,
+
+            success: function (data) {
+
+                alert("Delivery Order information has been successfully saved");
+
+            }
+
+        });
     });
 
    
@@ -253,11 +323,6 @@ $(document).ready(function () {
             ]
     });
 
-    //checkbox 
-    $('#myOutstandingTable tbody').on('change', '#vcheck', function (e) {
-        var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
-        alert(rowSelected);
-    });
 
     // clicks i button from view delivery orders
     $('#myPOTable tbody').on('click', '#infobtn', function (e) {
@@ -395,59 +460,4 @@ $(document).ready(function () {
         form1.submit();
 
     });
-
-    $('#submitbtn').click(function () {
-
-        var mydata = oTable.rows().data().toArray();
-        alert(pon);
-        var details = new Array();
-
-        for (var i = 0; i < datatableData.length; i++) {
-
-            var o = {
-
-                "PurchaseOrderNo": pon,
-
-                "ItemCode": datatableData[i][0],
-
-                "Description": datatableData[i][1],
-
-                "QuantityOrdered": datatableData[i][2],
-
-                "ReceivedQuantity": 1,
-
-                "RemainingQuantity": datatableData[i][4],
-
-            };
-
-            details.push(o);
-        
-            };
-
-        }
-
-        $.ajax({
-
-            type: "POST",
-
-            url: "/DeliveryOrder/Save",
-
-            dataType: "json",
-
-            data: JSON.stringify(details),
-
-            contentType: "application/json",
-
-            cache: true,
-
-            success: function (data) {
-
-                alert("Delivery Order information has been successfully saved");
-
-            }
-
-        });
-
-    });
-
 });

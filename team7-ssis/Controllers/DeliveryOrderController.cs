@@ -31,6 +31,7 @@ namespace team7_ssis.Controllers
             userService = new UserService(context);
             statusService = new StatusService(context);
             supplierService = new SupplierService(context);
+            itemService = new ItemService(context);
         }
 
         // GET: DeliveryOrder
@@ -80,16 +81,8 @@ namespace team7_ssis.Controllers
             if (file != null && file.ContentLength > 0)
                 try
                 {
-                    int i = deliveryOrderService.UploadDeliveryOrderFile(file);
-                    if (i == 1)
-                    {
-                        ViewBag.Message = "File uploaded successfully";
-                    }
-
-                    else
-                    {
-                        ViewBag.Message = "File uploading Unsuccessful";
-                    }
+                   string path = deliveryOrderService.UploadDeliveryOrderFile(file);
+                   string result = System.IO.Path.GetFileName(path);
                 }
 
                 catch (Exception ex)
@@ -108,43 +101,59 @@ namespace team7_ssis.Controllers
 
         [HttpPost]
 
-        public ActionResult Save(List<DeliveryOrderDetailsViewModel> deliveryOrderDetailList)
+        public ActionResult Save(List<DeliveryOrderDetailsViewModel> deliveryOrderDetailViewList)
         {
-            bool status = false;
+           // purchaseOrderDetail = deliveryOrderService.FindPurchaseOrderDetailbyIdItem(dovm.PurchaseOrderNo, dovm.ItemCode);
+
 
             DeliveryOrder deliveryOrder = new DeliveryOrder();
-            List<DeliveryOrderDetailsViewModel> dlist = new List<DeliveryOrderDetailsViewModel>();
-            PurchaseOrder purchaseOrder;
+            deliveryOrder.DeliveryOrderDetails = new List<DeliveryOrderDetail>();
 
-            foreach (DeliveryOrderDetailsViewModel dod in deliveryOrderDetailList)
-            {   
-                DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail();
-                deliveryOrderDetail.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
-                deliveryOrderDetail.Item = itemService.FindItemByItemCode(dod.ItemCode);
-                deliveryOrderDetail.ItemCode = dod.ItemCode;
-                deliveryOrderDetail.PlanQuantity = dod.QtyOrdered;
-                deliveryOrderDetail.ActualQuantity = dod.ReceivedQty;
-                deliveryOrderDetail.Status = statusService.FindStatusByStatusId(1);
-                purchaseOrder= purchaseOrderService.FindPurchaseOrderById(dod.PurchaseOrderNo);
-                deliveryOrder.PurchaseOrder = purchaseOrder;
-                deliveryOrder.Supplier = supplierService.FindSupplierById(purchaseOrder.SupplierCode);
-            }
-           
+            deliveryOrder.PurchaseOrder = purchaseOrderService.FindPurchaseOrderById(deliveryOrderDetailViewList[0].PurchaseOrderNo);
+            deliveryOrder.PurchaseOrder.DeliveryOrders.Add(deliveryOrder);
+
+           // PurchaseOrderDetail purchaseOrderDetail;
+
+
             deliveryOrder.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
 
             deliveryOrder.CreatedDateTime= DateTime.Now;
 
             deliveryOrder.CreatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
-
+            deliveryOrder.Supplier = supplierService.FindSupplierById(deliveryOrder.PurchaseOrder.SupplierCode);
             //deliveryOrder.InvoiceFileName = model.InvoiceFileName;
 
             //deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
 
             deliveryOrder.Status = statusService.FindStatusByStatusId(1);
+            deliveryOrderService.Save(deliveryOrder);
 
-            if (deliveryOrderService.Save(deliveryOrder) != null) status = true;
 
-            return new JsonResult { Data = new { status = status } };
+            foreach (DeliveryOrderDetailsViewModel dovm in deliveryOrderDetailViewList)
+            {
+                
+
+                if (dovm.ReceivedQty != 0)
+                    {
+
+                    DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail();
+
+                    deliveryOrderDetail.DeliveryOrderNo = deliveryOrder.DeliveryOrderNo;
+                    deliveryOrderDetail.Item = itemService.FindItemByItemCode(dovm.ItemCode);
+                    deliveryOrderDetail.ItemCode = dovm.ItemCode;
+                    deliveryOrderDetail.PlanQuantity = dovm.QtyOrdered;
+                    deliveryOrderDetail.ActualQuantity = dovm.ReceivedQty;
+                    deliveryOrderDetail.Status = statusService.FindStatusByStatusId(1);
+                    deliveryOrderDetail.UpdatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+                    deliveryOrderDetail.UpdatedDateTime = DateTime.Now;
+                    deliveryOrder.DeliveryOrderDetails.Add(deliveryOrderDetail);
+                    
+                }
+            }
+
+            deliveryOrderService.CheckSave(deliveryOrder);
+
+            return new JsonResult { Data = new { status = "Saved" } };
 
         }
 
