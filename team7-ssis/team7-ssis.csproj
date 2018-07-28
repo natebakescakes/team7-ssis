@@ -548,6 +548,7 @@
     <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
     <Content Include="Views\Inventory\Create.cshtml" />
+    <Content Include="Views\Inventory\TestView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

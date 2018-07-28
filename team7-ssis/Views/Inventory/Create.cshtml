@@ -8,7 +8,7 @@
 
 @model team7_ssis.ViewModels.EditItemFinalViewModel
 
-@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id = "itemdetails", role = "form" }))
+@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id="itemdetails", enctype = "multipart/form-data" }))
 {
     <div style="border-color:black" id="detail1">
         <form id="form1">
@@ -84,7 +84,11 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Category">Item Image</label><br />
-                        <img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">
+                        @*<img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">*@
+                        <input type="file" name="ImageFile" id="ImageFile" onchange="show(this)" />
+                    </div>
+                    <div class="form-group">
+                        <img id="user_img" height="130" width="130" style="border:solid" />
                     </div>
                 </div>
 
@@ -120,6 +124,19 @@
     </div>
 
     <script>
+        //for image show
+        function show(input) {
+            alert('Show');
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#user_img').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+            }
+        }
+
+
         var mine = @Html.Raw(Json.Encode(this.Model));
         var test = mine.SupplierName;
         //alert(test.length);

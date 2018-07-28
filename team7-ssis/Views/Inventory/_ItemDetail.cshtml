@@ -24,13 +24,17 @@
                         <label for="Category">Category</label><br />
                         <label id="itemcategoryname"></label>
                         @Html.TextBoxFor(m => m.ItemCategoryName, new { @id = "ItemCategoryName", @class = "form-control", type = "hidden" })
-
+                        
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Category">Item Image</label><br />
-                        <img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">
+                        @*<img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">*@
+                        <img src="@Url.Content(Model.ImagePath)" alt="Image" height="100" width="100"/>
+                        <a href='@Url.Action("DeleteImage", "Inventory")' onclick='navigate(this.href);'>
+                            Delete
+                        </a>
                     </div>
                 </div>
             </div>
@@ -91,3 +95,11 @@
 
     </div>
 }
+    <script>
+     var k= '@(ViewBag.VB)'
+       function navigate(target) {
+           alert("for delete"+k)
+           //Perform your AJAX call to your Controller Action
+          // $.post(target, new { item=k });
+       }
+    </script>

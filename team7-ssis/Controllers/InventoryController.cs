@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using team7_ssis.Services;
 using team7_ssis.Models;
 using team7_ssis.ViewModels;
+using System.IO;
 
 namespace team7_ssis.Controllers
 {
@@ -104,14 +105,27 @@ namespace team7_ssis.Controllers
                      "Value",
                     "Text"
                 ),
-                SupplierName=new SelectList(
-                    list2.Select(x=>new { Value= x.SupplierCode, Text= x.Name}),
+                SupplierName = new SelectList(
+                    list2.Select(x => new { Value = x.SupplierCode, Text = x.Name }),
                     "Value",
                     "Text"
-                )
+                ),
+                ImagePath = "~/Images/" + itemCode.ToString() +".JPG"
+
             });
         }
 
+        public ActionResult TestView()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public Boolean DeleteImage(string item)
+        {
+            Console.WriteLine(item);
+            return true;
+        }
 
 
         [HttpPost]
@@ -139,7 +153,20 @@ namespace team7_ssis.Controllers
             {
                 ViewBag.Message = "You have not specified a file.";
             }
-            return RedirectToAction("Manage");
+            return RedirectToAction("TestView", "Inventory");
+        }
+
+        public void SaveImage(EditItemFinalViewModel model)
+        {
+            Console.WriteLine(model.ImageFile);
+            string fileName = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
+            string extension = Path.GetExtension(model.ImageFile.FileName);
+            //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+            fileName = model.ItemCode.ToString() + extension;
+            model.ImagePath = "~/Images/" + fileName;
+            fileName = Path.Combine(Server.MapPath("~/Images/") + fileName);
+            model.ImageFile.SaveAs(fileName);
+
         }
 
         //Save new or update existing ItemCategory
@@ -147,6 +174,7 @@ namespace team7_ssis.Controllers
         public ActionResult Save(EditItemFinalViewModel model)
         {
             Console.WriteLine(model);
+            SaveImage(model);
             string error = "";
             Item newItem = new Item();
             ItemPrice newItemPrice = new ItemPrice();
