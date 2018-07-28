@@ -42,26 +42,23 @@ namespace team7_ssis.Controllers
         }
 
         // GET: /Requisiton/RequisitionDetails
-        public ActionResult RequisitionDetails(string reqId)
+        public ActionResult RequisitionDetails(string rid)
         {
-            Requisition r = requisitionRepository.FindById(reqId);
-            if (reqId == null)
-            {
+            Requisition r = requisitionRepository.FindById(rid);
+            RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
+            try {
+                viewModel.RequisitionID = r.RequisitionId;
+                viewModel.Department = r.Department == null ? "" : r.Department.Name;
+                viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
+                viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
+                viewModel.CreatedTime = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
+                viewModel.UpdatedBy = r.UpdatedBy == null ? "" : String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
+                viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
+                viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
+                viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
+            } catch {
                 return new HttpStatusCodeResult(400);
             }
-
-            RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
-            
-            viewModel.RequisitionID = r.RequisitionId;
-            viewModel.Department = r.Department == null ? "" : r.Department.Name;
-            viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
-            viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
-            viewModel.CreatedTime = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
-            viewModel.UpdatedBy = r.UpdatedBy == null ? "" : String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
-            viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
-            viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
-            viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
-
             return View(viewModel);
         }
         // GET: /Requisiton/StationeryRetrieval

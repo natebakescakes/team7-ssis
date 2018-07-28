@@ -10,6 +10,6 @@
             { "data": "Quantity", "autoWidth": true },
             { "data": "Status", "autoWidth": true },
         ],
-        select: true
+        select: "api"
     });
 })

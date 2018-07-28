@@ -408,7 +408,7 @@
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
     <Content Include="Scripts\Custom\StockAdjustment_Clerk.js" />
-    <Content Include="Scripts\Custom\RequisitionDetail.js" />
+    <Content Include="Scripts\Custom\RequisitionDetails.js" />
     <Content Include="Scripts\Custom\StockAdjustmentDetail.js" />
     <Content Include="Scripts\Custom\StockAdjustment_ManagerProcess.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
