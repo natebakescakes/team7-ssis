@@ -105,19 +105,35 @@ namespace team7_ssis.Controllers
             ViewBag.RetrievalID = rid;
             return View();
         }
-        
+
+        // GET: /Requisiton/CreateRequisition
         public ActionResult CreateRequisition()
         {
+            CreateRequisitionViewModel viewModel = CreateReqViewModel("Create");
+            return View("../Requisition/CreateEditRequisition", viewModel);
+        }
+
+        // GET: /Requisiton/EditRequisition
+        public ActionResult EditRequisition()
+        {
+            CreateRequisitionViewModel viewModel = CreateReqViewModel("Edit");
+            return View("../Requisition/CreateEditRequisition", viewModel);
+        }
+
+        private CreateRequisitionViewModel CreateReqViewModel(string action)
+        {
             CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
+            viewModel.Action = action;
             try
             {
                 viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
-            } catch
+            }
+            catch
             {
                 viewModel.Representative = "";
             }
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
-            return View(viewModel);
+            return viewModel;
         }
     }
 }

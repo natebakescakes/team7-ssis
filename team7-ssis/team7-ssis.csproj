@@ -400,7 +400,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
-    <Content Include="Scripts\Custom\CreateRequisition.js" />
+    <Content Include="Scripts\Custom\CreateEditRequisition.js" />
     <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -537,7 +537,7 @@
     <Content Include="Views\Retrieval\RetrievalDetails.cshtml" />
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
-    <Content Include="Views\Requisition\CreateRequisition.cshtml" />
+    <Content Include="Views\Requisition\CreateEditRequisition.cshtml" />
     <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />

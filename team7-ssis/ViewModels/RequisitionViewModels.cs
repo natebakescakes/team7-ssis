@@ -29,6 +29,7 @@ namespace team7_ssis.ViewModels
     }
     public class CreateRequisitionViewModel
     {
+        public string Action { get; set; }
         public List<CollectionPoint> SelectCollectionPointList { get; set; }
         public string Representative { get; set; }
     }
