@@ -22,7 +22,10 @@ namespace team7_ssis.Services
         public string GetDefaultPrice(Item item, int priority)
         {
             ItemPrice i = itemPriceRepository.FindByItemCode(item.ItemCode).Where(x => x.PrioritySequence == priority).First();
-            return i.Price.ToString();
+            if (i != null)
+                return i.Price.ToString();
+            else
+                return "";
         }
 
         public List<ItemPrice> FindAllItemPriceByOrder(string itemCode)

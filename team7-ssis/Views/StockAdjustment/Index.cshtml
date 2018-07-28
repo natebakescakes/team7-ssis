@@ -1,13 +1,12 @@
-﻿
+﻿@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Index";
 }
 
-
 @section scripts {
-    <script src="~/Scripts/Custom/StockAdjustment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+
 
 }
 
@@ -22,27 +21,19 @@
     <link rel="stylesheet" href="~/Content/Site.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap-select.min.css">
 
+
 </head>
 
 <body>
     <h2>Manage Stock Adjustments</h2>
-
-    <div style="width:90%; margin:0 auto" class="tablecontainer">
-
-        <table id="mySATable" class="hover">
-            <thead>
-                <tr>
-                    <th>StockAdjustmentId</th>
-                    <th>CreatedBy</th>
-                    <th> ApprovedBySupervisor</th>
-                    <th>CreatedDateTime</th>
-                    <th>StatusName</th>
-                    <th>Detail</th>
-                </tr>
-            </thead>
-
-        </table>
-    </div>
+    @if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+    {
+        @Html.Partial("StoreManagerView")
+    }
+    @if (User.IsInRole("Store Clerk"))
+    {
+        @Html.Partial("StoreClerkView")
+    }
 
 </body>
 </html>

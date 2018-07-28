@@ -34,7 +34,33 @@ namespace team7_ssis.ViewModels
         public string EmailHead { get; set; }
         public string EmailRep { get; set; }
 
+        //Delegation properties
+        public string Recipient { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public int DelegationId { get; set; }
+        public int DelegationStatus { get; set; }
 
 
+    }
+
+    public class DepartmentOptionsViewModel
+    {
+        public string Department { get; set; }
+        public string Representative { get; set; }
+        public List<DelegationMobileViewModel> Delegations { get; set; }
+        public List<EmployeeViewModel> Employees { get; set; }
+    }
+
+    public class EmployeeViewModel
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class ChangeRepresentativeViewModel
+    {
+        public string RepresentativeEmail { get; set; }
+        public string HeadEmail { get; set; }
     }
 }

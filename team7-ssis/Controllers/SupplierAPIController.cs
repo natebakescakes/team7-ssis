@@ -24,9 +24,13 @@ namespace team7_ssis.Controllers
         }
         [Route("api/supplier/all")]
         [HttpGet]
-        public List<SupplierViewModel> Suppliers()
+        public IHttpActionResult Suppliers()
         {
-            return supplierService.FindAllSuppliers().Select(supplier => new SupplierViewModel()
+            var suppliers = supplierService.FindAllSuppliers();
+
+            if (suppliers.Count == 0) return NotFound();
+
+            return Ok(suppliers.Select(supplier => new SupplierViewModel()
             {
                 SupplierCode = supplier.SupplierCode,
                 Address = supplier.Address,
@@ -34,7 +38,8 @@ namespace team7_ssis.Controllers
                 ContactName = supplier.ContactName,
                 FaxNumber = supplier.FaxNumber,
                 Name = supplier.Name
-            }).ToList();
+            }).ToList());
+
         }
 
 
@@ -57,17 +62,21 @@ namespace team7_ssis.Controllers
 
         [Route("api/supplier/pricelist/{Id}")]
         [HttpGet]
-        public List<ItemPriceViewModel> GetPriceList(string Id)
+        public IHttpActionResult GetPriceList(string Id)
         {
+            List<ItemPrice> pricelist = itempriceService.FindItemPriceBySupplierCode(Id);
 
-            return itempriceService.FindItemPriceBySupplierCode(Id).Select(item => new ItemPriceViewModel {
+            if (pricelist.Count == 0) return NotFound();
+
+            return Ok(pricelist.Select(item => new ItemPriceViewModel {
                 ItemCode = item.ItemCode,
+                SupplierCode = item.SupplierCode,
                 ItemCategoryName = item.Item.ItemCategory.Name,
                 Description = item.Item.Description,
                 Uom = item.Item.Uom,
                 Price = item.Price
 
-            }).ToList();
+            }).ToList());
             
         }
 

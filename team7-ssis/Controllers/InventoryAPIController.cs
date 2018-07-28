@@ -64,7 +64,8 @@ namespace team7_ssis.Controllers
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,
                     Uom = i.Uom,
-                    Quantity = i.Inventory.Quantity
+                    Quantity = i.Inventory.Quantity,
+                    UnitPrice =itemPriceService.GetDefaultPrice(i,1)
                 });
             }
             return items;

@@ -24,9 +24,13 @@ namespace team7_ssis.Controllers
 
         [Route("api/itemcategory/all")]
         [HttpGet]
-        public List<ItemCategoryViewModel> ItemCategories()
+        public IHttpActionResult ItemCategories()
         {
-            return itemcategoryService.FindAllItemCategory().Select(x => new ItemCategoryViewModel()
+            var itemcategories = itemcategoryService.FindAllItemCategory();
+
+            if (itemcategories.Count == 0) return NotFound();
+
+            return Ok( itemcategories.Select(x => new ItemCategoryViewModel()
             {
                 ItemCategoryId = x.ItemCategoryId,
                 Name = x.Name,
@@ -34,7 +38,7 @@ namespace team7_ssis.Controllers
                 StatusName = x.Status.Name
                 
  
-            }).ToList();
+            }).ToList());
         }
 
         public ItemCategoryViewModel GetItemCategory(string id)
