@@ -6,6 +6,7 @@ using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Controllers;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
@@ -25,9 +26,10 @@ namespace team7_ssis.Tests.Controllers
         public void GetDepartmentOptions_Valid()
         {
             // Arrange
-            var expectedRepresentative = "Commerce Representative";
-            var expectedEmployeeEmail = "CommerceEmp@email.com";
-            var expectedDepartment = "Commerce Dept";
+            var department = new DepartmentRepository(context).FindById("COMM");
+            var expectedRepresentative = department.Representative != null ? $"{department.Representative.FirstName} {department.Representative.LastName}" : "";
+            var expectedEmployeeEmail = "CommerceHead@email.com";
+            var expectedDepartment = department.Name;
 
             var controller = new DepartmentAPIController()
             {
