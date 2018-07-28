@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ItemCategoryAPIControllerTest.cs" />
     <Compile Include="Controllers\RequisitionApiControllerTest.cs" />
     <Compile Include="Controllers\StockAdjustmentAPIControllerTest.cs" />
+    <Compile Include="Controllers\DepartmentApiControllerTest.cs" />
     <Compile Include="Controllers\UserApiControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Services\NotificationServiceTests.cs" />
     <Compile Include="Services\TitleServiceTest.cs" />
     <Compile Include="Services\StatusServiceTest.cs" />
+    <Compile Include="Services\DelegationServiceTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>

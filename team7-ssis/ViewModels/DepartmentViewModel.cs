@@ -43,4 +43,24 @@ namespace team7_ssis.ViewModels
 
 
     }
+
+    public class DepartmentOptionsViewModel
+    {
+        public string Department { get; set; }
+        public string Representative { get; set; }
+        public List<DelegationMobileViewModel> Delegations { get; set; }
+        public List<EmployeeViewModel> Employees { get; set; }
+    }
+
+    public class EmployeeViewModel
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class ChangeRepresentativeViewModel
+    {
+        public string RepresentativeEmail { get; set; }
+        public string HeadEmail { get; set; }
+    }
 }
