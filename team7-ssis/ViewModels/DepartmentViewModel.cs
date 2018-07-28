@@ -57,4 +57,10 @@ namespace team7_ssis.ViewModels
         public string Name { get; set; }
         public string Email { get; set; }
     }
+
+    public class ChangeRepresentativeViewModel
+    {
+        public string RepresentativeEmail { get; set; }
+        public string HeadEmail { get; set; }
+    }
 }

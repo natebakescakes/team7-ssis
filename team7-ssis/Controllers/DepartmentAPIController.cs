@@ -14,25 +14,21 @@ namespace team7_ssis.Controllers
 {
     public class DepartmentAPIController : ApiController
     {
-        public ApplicationDbContext context = new ApplicationDbContext();
-        DepartmentService departmentService;
-        DelegationService delegationService;
-        DelegationRepository delegationRepository;
-        UserService userService;
-        ApplicationUser user;
+        ApplicationDbContext context;
 
         public DepartmentAPIController()
         {
-            departmentService = new DepartmentService(context);
-            delegationService = new DelegationService(context);
-            userService = new UserService(context);
-            //user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            context = new ApplicationDbContext();
         }
+
+        public ApplicationDbContext Context { get { return context; } set { context = value; } }
 
         [Route("api/department/all")]
         [HttpGet]
         public List<DepartmentViewModel> Departments()
         {
+            var departmentService = new DepartmentService(context);
+
             return departmentService.FindAllDepartments().Select(department => new DepartmentViewModel()
             {
                 DepartmentCode = department.DepartmentCode,
@@ -48,6 +44,8 @@ namespace team7_ssis.Controllers
         }
         public DepartmentViewModel GetDepartment(string id)
         {
+            var departmentService = new DepartmentService(context);
+
             Department department = departmentService.FindDepartmentByDepartmentCode(id);
             return new DepartmentViewModel()
             {
@@ -67,6 +65,11 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<DepartmentViewModel> Delegations()
         {
+            var userService = new UserService(context);
+            var delegationService = new DelegationService(context);
+
+            var user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.Name);
+
             return delegationService.FindDelegationsByDepartment(user).Select(delegation => new DepartmentViewModel() //only displays delegation from your department
             //return delegationService.FindAllDelegations().Select(delegation => new DepartmentViewModel()
             {
@@ -108,6 +111,63 @@ namespace team7_ssis.Controllers
                     Name = $"{employee.FirstName} {employee.LastName}",
                     Email = employee.Email,
                 }).ToList(),
+            });
+        }
+
+        [Route("api/departmentoptions/representative")]
+        [HttpPost]
+        public IHttpActionResult ChangeRepresentative([FromBody] ChangeRepresentativeViewModel model)
+        {
+            try
+            {
+                new DepartmentService(Context).ChangeRepresentative(model.RepresentativeEmail, model.HeadEmail);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully changed"
+            });
+        }
+
+        [Route("api/departmentoptions/delegate")]
+        [HttpPost]
+        public IHttpActionResult DelegateManagerRole([FromBody] DelegationSubmitViewModel model)
+        {
+            try
+            {
+                new DelegationService(Context).DelegateManagerRole(model.RecipientEmail, model.HeadEmail, model.StartDate, model.EndDate);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully delegated"
+            });
+        }
+
+        [Route("api/departmentoptions/canceldelegation")]
+        [HttpPost]
+        public IHttpActionResult CancelDelegation([FromBody] CancelDelegationViewModel model)
+        {
+            try
+            {
+                new DelegationService(Context).CancelDelegation(model.DelegationId, model.HeadEmail);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully cancelled"
             });
         }
     }

@@ -18,10 +18,9 @@ namespace team7_ssis.Controllers
         DepartmentService departmentService;
         CollectionPointService collectionPointService;
         UserService userService;
-        ApplicationUser user;
         StatusService statusService;
         DelegationService delegationService;
-        UserRepository userRepository;
+
         public String CurrentUserName { get; set; }
 
         public DepartmentController()
@@ -114,7 +113,7 @@ namespace team7_ssis.Controllers
             delegationService = new DelegationService(context);
 
             bool status = false;
-            Department dpt = departmentService.FindDepartmentByUser(user);
+            Department dpt = departmentService.FindDepartmentByUser(userService.FindUserByEmail(CurrentUserName));
             Delegation delegation = new Delegation();
             
             dpt.UpdatedDateTime = DateTime.Now;
