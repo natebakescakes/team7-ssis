@@ -128,7 +128,7 @@ namespace team7_ssis.Tests.Controllers
             IHttpActionResult actionResult = controller.ChangeRepresentative(new ChangeRepresentativeViewModel()
             {
                 RepresentativeEmail = "CommerceEmp@email.com",
-                HeadEmail = "root@admin.com",
+                HeadEmail = "RegistraHead@email.com",
             });
             BadRequestErrorMessageResult badRequest = actionResult as BadRequestErrorMessageResult;
 
