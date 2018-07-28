@@ -316,6 +316,7 @@ namespace team7_ssis.Controllers
         {
             stockAdjustmentService = new StockAdjustmentService(context);
             userService = new UserService(context);
+            notificationService = new NotificationService(context);
 
             foreach (ViewModelFromEditDetail v in list)
             {
