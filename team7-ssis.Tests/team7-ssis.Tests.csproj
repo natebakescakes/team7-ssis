@@ -219,6 +219,7 @@
     <Compile Include="Services\NotificationServiceTests.cs" />
     <Compile Include="Services\TitleServiceTest.cs" />
     <Compile Include="Services\StatusServiceTest.cs" />
+    <Compile Include="Services\DelegationServiceTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
