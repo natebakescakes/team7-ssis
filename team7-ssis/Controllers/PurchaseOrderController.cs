@@ -40,12 +40,13 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult Details(string poNum)
         {
-            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
-            PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
-            decimal totalAmount = 0;
-
-            if (poNum != null)
+            if (poNum != null && poNum != "")
             {
+                PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+                PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
+                decimal totalAmount = 0;
+
+            
                 podModel.PurchaseOrderNo = po.PurchaseOrderNo;
                 podModel.SupplierName = po.Supplier.Name;
                 podModel.CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString();
@@ -60,7 +61,11 @@ namespace team7_ssis.Controllers
                 return View(podModel);
             }
 
-            return HttpNotFound();
+            else
+            {
+                ViewBag.Message = "Purchase Order is not a valid one. Please try again!";
+                return View("Error");
+            }
             
 
         }
@@ -86,6 +91,8 @@ namespace team7_ssis.Controllers
                 }
 
             }
+
+            
 
             foreach (PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
             {
@@ -215,6 +222,10 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult Success(string purchaseOrderIds)
         {
+            if(purchaseOrderIds==null || purchaseOrderIds == "")
+            {
+                ViewBag.Message = "This page has expired!. Please return to Manage Purchase Orders to view all purchase orders created!";
+            }
             ViewBag.poNums = purchaseOrderIds;
             return View();
         }

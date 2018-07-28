@@ -129,18 +129,13 @@ $(document).ready(function(){
 
 
     var simple_cancel = function (data, type, row, meta) {
-        var html;
+        var podStatus = $("#podStatus").val();
+        var html = '<a class="cancelPODbtn btn-default btn disabled" ><i class="fa fa-close"></i></a>';
 
         if (podStatus == "Partially Delivered") {
             if (data == 0) {
-                html = '<a class="cancelPODbtn btn-default btn" href="#"  ><i class="fa fa-close"></i></a>';
+                html = '<a id="cancelAwaiting" class="cancelPODbtn btn-default btn"  ><i class="fa fa-close"></i></a>';
             }
-            else {
-                html = '<a class="cancelPODbtn btn-default btn" disabled ><i class="fa fa-close"></i></a>';
-            }   
-        }
-        else {
-            html = '<a class="cancelPODbtn btn-default btn" disabled><i class="fa fa-close"></i></a>';
         }
 
         return html;

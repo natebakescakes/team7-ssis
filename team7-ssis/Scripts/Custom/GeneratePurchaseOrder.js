@@ -1,4 +1,9 @@
 ﻿$(document).ready(function () {
+    $('#generateModal').modal({
+        backdrop: 'static',
+    });
+    $('#generateModal').modal('hide');
+
     var generatePOTbl = $('#generatePoTable').DataTable({
         columns: [
             { title: "Item Code" },
@@ -96,7 +101,7 @@
                 
                 var qty = parseInt($('#generateQty').val());
                 var amount = parseInt($('#generateAmount').val());
-                var id = "supervisor" + i.toString();
+                var id = "supervisor" + data[0].ItemCode; //i.toString();
                 generatePOTbl.row.add([data[0].ItemCode, data[0].Description, qty, data[0].UnitPrice, '<select id="'+id+'"></select>', amount]).draw();
                 document.getElementById("generateAmount").value = 0;
                 document.getElementById("generateUnitPrice").value = 0;
@@ -161,8 +166,7 @@
 
         for (var i = 0; i < datatableData.length; i++) {
 
-            var id = "#supervisor" + (i + 1).toString();
-
+            var id = "#supervisor" + datatableData[i][0]; // (i + 1).toString();
             //alert(datatableData[i][2]);
 
             var o = {
@@ -173,8 +177,8 @@
                 "SupplierName": $(id).children("option").filter(":selected").text(),
                 "SupplierPriority": $(id).children("option").filter(":selected").val(),
                 "Amount": datatableData[i][5]
-            };  
-            
+            };
+            //alert(JSON.stringify(o));
             details.push(o);
         }
 
