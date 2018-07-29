@@ -308,7 +308,7 @@
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
     <Compile Include="ViewModels\RequisitionViewModels.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
-    <Compile Include="ViewModels\RetrivalViewModels.cs" />
+    <Compile Include="ViewModels\RetrievalViewModels.cs" />
     <Compile Include="ViewModels\StockHistoryViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -401,7 +401,6 @@
     <Content Include="Scripts\Custom\AcceptRejectButtons.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
-    <Content Include="Scripts\Custom\CreateEditRequisition.js" />
     <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -537,7 +536,7 @@
     <Content Include="Views\Retrieval\RetrievalDetails.cshtml" />
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
-    <Content Include="Views\Requisition\CreateEditRequisition.cshtml" />
+    <Content Include="Views\Requisition\CreateRequisition.cshtml" />
     <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
@@ -571,6 +570,7 @@
     <Content Include="Views\StockAdjustment\DetailsNoEdit.cshtml" />
     <Content Include="Views\Retrieval\Manage.cshtml" />
     <Content Include="Views\Disbursement\Manage.cshtml" />
+    <Content Include="Views\Requisition\EditRequisition.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -37,42 +37,31 @@ namespace team7_ssis.Controllers
             departmentService = new DepartmentService(context);
             userRepository = new UserRepository(context);
             statusRepository = new StatusRepository(context);
-            
+
         }
 
         public ApplicationDbContext Context { get { return context; } set { context = value; } }
 
-        //[Route("api/reqdetail/all")]
-        //[HttpGet]
-        //public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitionDetails()
-        //{
-        //    List<RequisitionDetail> reqDetailList = requisitionService.FindAllRequisitionDetail();
-        //    List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+        [Route("api/reqdetail/{rid}")]
+        [HttpGet]
+        public IEnumerable<RequisitionDetailVTableiewModel> GetAllRequisitionDetails(string rid)
+        {
+            List<RequisitionDetail> reqDetailList = requisitionService.GetRequisitionDetails(rid);
+            List<RequisitionDetailVTableiewModel> viewModel = new List<RequisitionDetailVTableiewModel>();
 
-        //    foreach (RequisitionDetail r in reqDetailList)
-        //    {
-        //        string status;
-        //        if (r.Status != null)
-        //        {
-        //            int statusId = r.Status.StatusId;
-        //            status = context.Status.Where(x => x.StatusId == statusId).First().Name;
-        //        } else
-        //        {
-        //            status = "";
-        //        }
+            foreach (RequisitionDetail r in reqDetailList)
+            {
+                viewModel.Add(new RequisitionDetailVTableiewModel
+                {
+                    ItemCode = r.ItemCode,
+                    Description = r.Item.Description,
+                    Quantity = r.Quantity,
+                    Status = r.Status.Name
+                });
+            }
 
-        //        viewModel.Add(new ManageRequisitionsViewModel
-        //        {
-        //            Requisition = r.RequisitionId,
-        //            ItemCode = r.ItemCode,
-        //            Description = r.Item.Description,
-        //            Quantity = r.Quantity,
-        //            Status = status
-        //        });
-        //    }
-
-        //    return viewModel;
-        //}
+            return viewModel;
+        }
 
         [Route("api/requisition")]
         [HttpGet]
@@ -107,7 +96,8 @@ namespace team7_ssis.Controllers
             try
             {
                 rid = requisitionService.ProcessRequisitions(reqList);
-            } catch
+            }
+            catch
             {
                 return BadRequest();
             }
@@ -173,12 +163,53 @@ namespace team7_ssis.Controllers
             try
             {
                 requisitionService.Save(r);
-            } catch
+            }
+            catch
             {
                 return BadRequest("An unexpected error occured.");
             }
             return Ok(r.RequisitionId);
-            
+
+        }
+
+        [Route("api/editrequisition")]
+        [HttpPost]
+        public IHttpActionResult EditRequisition(UpdateRequisitionJSONViewModel json)
+        {
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
+            if (json.ItemList.Count < 1)
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+
+            try
+            {
+                Requisition r = requisitionRepository.FindById(json.RequisitionId);
+                List<RequisitionDetail> reqList = requisitionRepository.FindRequisitionDetails(json.RequisitionId).ToList();
+
+                // Load exisiting repository
+                requisitionRepository.FindRequisitionDetails(json.RequisitionId);
+                r.RequisitionDetails = new List<RequisitionDetail>();
+
+                foreach (CreateRequisitionJSONViewModel dd in json.ItemList)
+                {
+                    r.RequisitionDetails.Add(new RequisitionDetail
+                    {
+                        ItemCode = dd.ItemCode,
+                        Item = itemService.FindItemByItemCode(dd.ItemCode),
+                        Quantity = dd.Qty,
+                        Status = statusService.FindStatusByStatusId(4)
+                    });
+                }
+                requisitionService.Save(r);
+            }
+            catch
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+            return Ok(json.RequisitionId);
+
         }
 
         /// <summary>

@@ -1,4 +1,7 @@
-﻿
+﻿@{
+    ViewBag.Title = "Manage Disbursement Forms";
+}
+
 <h3>View Disbursement Forms</h3>
 
 <table id="myTable" class="table table-striped table-bordered" style="width: 100%">
@@ -24,8 +27,8 @@
             },
 
             columns: [
-                { "data": "DisbursementID", "autoWidth": true },
-                { "data": "RetrievalID", "autoWidth": true },
+                { "data": "DisbursementId", "autoWidth": true },
+                { "data": "RetrievalId", "autoWidth": true },
                 { "data": "Department", "autoWidth": true },
                 { "data": "CreatedDate", "autoWidth": true },
                 { "data": "Status", "autoWidth": true },
@@ -33,7 +36,7 @@
                     "render": function (data, type, row, meta) {
                         console.log(row);
                         var html =
-                            '<a class="btn btn-secondary" href="/Disbursement/DisbursementDetails?did=' + row.DisbursementID + '">' +
+                            '<a class="btn btn-secondary" href="/Disbursement/DisbursementDetails?did=' + row.DisbursementId + '">' +
                             '<i class="fa fa-info-circle" aria-hidden="true"></i>' +
                             '</a>';
                         return html;

@@ -35,8 +35,8 @@ namespace team7_ssis.Controllers
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
-        // GET: /Requisition
-        public ActionResult ManageRequisitions()
+        // GET: /Requisition/ManageRequisitions
+        public ActionResult ManageRequisitions(string update, string create)
         {
             return View();
         }
@@ -106,15 +106,45 @@ namespace team7_ssis.Controllers
         // GET: /Requisiton/CreateRequisition
         public ActionResult CreateRequisition()
         {
-            CreateRequisitionViewModel viewModel = CreateReqViewModel("Create");
-            return View("../Requisition/CreateEditRequisition", viewModel);
+            CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
+            viewModel.Action = "Create";
+            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
+
+            try
+            {
+                viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
+            }
+            catch
+            {
+                viewModel.Representative = "";
+            }
+
+            return View(viewModel);
         }
 
         // GET: /Requisiton/EditRequisition
-        public ActionResult EditRequisition()
+        public ActionResult EditRequisition(string rid)
         {
-            CreateRequisitionViewModel viewModel = CreateReqViewModel("Edit");
-            return View("../Requisition/CreateEditRequisition", viewModel);
+            if (rid == null)
+            {
+                return new HttpStatusCodeResult(400);
+            }
+
+            EditRequisitionViewModel viewModel = new EditRequisitionViewModel();
+            viewModel.Action = "Edit";
+            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
+            viewModel.RequisitionId = rid;
+
+            try
+            {
+                viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
+            }
+            catch
+            {
+                viewModel.Representative = "";
+            }
+            
+            return View(viewModel);
         }
 
         // POST: /Requisition/Approve
@@ -129,23 +159,6 @@ namespace team7_ssis.Controllers
         {
             requisitionService.RejectRequisition(rid, email, remarks);
             return View("../Requisition/ManageRequisitions");
-        }
-
-
-        private CreateRequisitionViewModel CreateReqViewModel(string action)
-        {
-            CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
-            viewModel.Action = action;
-            try
-            {
-                viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
-            }
-            catch
-            {
-                viewModel.Representative = "";
-            }
-            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
-            return viewModel;
         }
         
     }

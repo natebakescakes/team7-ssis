@@ -1,25 +1,15 @@
-﻿@model team7_ssis.ViewModels.CreateRequisitionViewModel
-
-@section Scripts {
-    <script src="~/Scripts/Custom/CreateEditRequisition.js"></script>
-}
+﻿@model team7_ssis.ViewModels.EditRequisitionViewModel
 
 <div class="row mb-3">
     <div class="col-md-8">
-        @if (Model.Action == "Create")
-        {
-            <h2>Create Requisition</h2>
-        }
-        else
-        {
-            <h2>Edit Requisition</h2>
-        }
-
+        <h2>Edit Requisition</h2>
     </div>
     <div class="col-md-4">
         <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
     </div>
 </div>
+
+<div id="alert"></div>
 
 <button id="addItemBtn" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 
@@ -132,3 +122,112 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function () {
+
+    // render main table
+    var myTable = $('#myTable').DataTable({
+        ajax: {
+            url: "/api/reqdetail/@Model.RequisitionId",
+            dataSrc: ""
+        },
+        columns: [
+            { data: "ItemCode" },
+            { data: "Description" },
+            { data: "Quantity" },
+            { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
+        ],
+        select: "api"
+    });
+
+    // render Item table
+    var addItemTable = $('#addItemTable').DataTable({
+        ajax: {
+            url: "/api/manage/items",
+            dataSrc: ""
+        },
+        pageLength: 5,
+        columns: [
+            { "defaultContent": '<div class="thumbnail__small"></div>' },
+            { "data": "ItemCode", "autoWidth": true },
+            { "data": "ItemCategoryName", "autoWidth": true },
+            { "data": "Description", "autoWidth": true },
+            { "data": "Quantity", "autoWidth": true },
+            { "data": "Uom", "autoWidth": true },
+        ],
+        select: "single"
+    });
+
+    // Display the Add Item modal
+    $('#addItemBtn').click(function () {
+        $('#myModal').modal({
+            backdrop: 'static',
+        });
+    })
+
+    // Add items to myTable
+    $('#addToReq').click(function () {
+        var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
+        //console.log(data);
+        //TODO: write some logic that will add quantity to the requisitionDetail
+        var qty = parseInt($('#qtyInput').val());
+
+        if ((data.length > 0) && (qty > 0)) {
+            myTable.row.add({ ItemCode: data[0].ItemCode, Description: data[0].Description, Quantity: qty }).draw();
+            $('#myModal').modal('hide');
+            $('#modalMsg').html('');
+        } else {
+            $('#modalMsg').html('You must select an item and a valid quantity.');
+            console.log("Error");
+        }
+
+    })
+
+    // Delete row
+    $('#myTable tbody').on('click', 'i.fa.fa-times', function () {
+        myTable
+            .row($(this).parents('tr'))
+            .remove()
+            .draw();
+    });
+
+    // Click 'Confirm' button
+    $('#confirmChangeBtn').click(function () {
+        var tableData = myTable.rows().data().toArray();
+
+        if (tableData.length > 0) {
+            var data = { RequisitionId: "@Model.RequisitionId" , ItemList: [] };
+
+            for (i = 0; i < tableData.length; i++) {
+                data.ItemList[i] = { ItemCode: tableData[i].ItemCode, Qty: tableData[i].Quantity }
+            }
+
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json',
+                url: "/api/editrequisition",
+                data: JSON.stringify(data),
+                dataType: "json",
+                success: function (rid) {
+                    // redirect to ManageRetrieval with a msg
+                    window.location.replace("/Requisition/ManageRequisitions?update=" + encodeURIComponent(rid));
+                },
+                error: function (msg) {
+                    $('#alert').html(
+                        '<div class="alert alert-danger" role="alert">' +
+                        'An unexpected error occured.' +
+                        '</div>'
+                    );
+                }
+            });
+        } else {
+            $('#alert').html(
+                '<div class="alert alert-danger" role="alert">' +
+                'Please add some items to your Requisition.' +
+                '</div>'
+            );
+        }
+    })
+})
+</script>
