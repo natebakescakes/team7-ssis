@@ -395,8 +395,144 @@ namespace team7_ssis.Tests.Services
             }
         }
 
+        [TestMethod]
+        public void ApproveStockAdjustmentMobile_Valid()
+        {
+            // Arrange
+            var stockAdjustmentRepository = new StockAdjustmentRepository(context);
+            var stockAdjustmentService = new StockAdjustmentService(context);
 
-        
+            var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(4),
+                StockAdjustmentDetails = new List<StockAdjustmentDetail> ()
+                {
+                    new StockAdjustmentDetail()
+                    {
+                        StockAdjustmentId = "ADJAPPROVETEST",
+                        ItemCode = "E030",
+                        OriginalQuantity = 10,
+                        AfterQuantity = 10,
+                    }
+                }
+            });
+
+            // Act
+            stockAdjustmentService.ApproveStockAdjustment("ADJAPPROVETEST", "StoreClerk1@email.com");
+
+            // Assert
+            Assert.AreEqual(6, stockAdjustment.Status.StatusId);
+            Assert.AreEqual(10, new StockMovementRepository(context).FindByStockAdjustmentId("ADJAPPROVETEST").FirstOrDefault().AfterQuantity);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ApproveStockAdjustmentMobile_DoesNotExist_ThrowsException()
+        {
+            // Act
+            new StockAdjustmentService(context).ApproveStockAdjustment("ASDFASDFASDF", "StoreClerk1@email.com");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ApproveStockAdjustmentMobile_AlreadyApproved_ThrowsException()
+        {
+            // Arrange
+            var stockAdjustmentRepository = new StockAdjustmentRepository(context);
+            var stockAdjustmentService = new StockAdjustmentService(context);
+
+            var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(6),
+                StockAdjustmentDetails = new List<StockAdjustmentDetail>()
+                {
+                    new StockAdjustmentDetail()
+                    {
+                        StockAdjustmentId = "ADJAPPROVETEST",
+                        ItemCode = "E030",
+                        OriginalQuantity = 10,
+                        AfterQuantity = 10,
+                    }
+                }
+            });
+
+            // Act
+            stockAdjustmentService.ApproveStockAdjustment("ADJAPPROVETEST", "StoreClerk1@email.com");
+        }
+
+        [TestMethod]
+        public void RejectStockAdjustmentMobile_Valid()
+        {
+            // Arrange
+            var stockAdjustmentRepository = new StockAdjustmentRepository(context);
+            var stockAdjustmentService = new StockAdjustmentService(context);
+
+            var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(4),
+                StockAdjustmentDetails = new List<StockAdjustmentDetail>()
+                {
+                    new StockAdjustmentDetail()
+                    {
+                        StockAdjustmentId = "ADJAPPROVETEST",
+                        ItemCode = "E030",
+                        OriginalQuantity = 10,
+                        AfterQuantity = 10,
+                    }
+                }
+            });
+
+            // Act
+            stockAdjustmentService.RejectStockAdjustment("ADJAPPROVETEST", "StoreClerk1@email.com");
+
+            // Assert
+            Assert.AreEqual(5, stockAdjustment.Status.StatusId);
+            Assert.IsTrue(new StockMovementRepository(context).FindByStockAdjustmentId("ADJAPPROVETEST").FirstOrDefault() == null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RejectStockAdjustmentMobile_DoesNotExist_ThrowsException()
+        {
+            // Act
+            new StockAdjustmentService(context).RejectStockAdjustment("ASDFASDFASDF", "StoreClerk1@email.com");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RejectStockAdjustmentMobile_AlreadyApproved_ThrowsException()
+        {
+            // Arrange
+            var stockAdjustmentRepository = new StockAdjustmentRepository(context);
+            var stockAdjustmentService = new StockAdjustmentService(context);
+
+            var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
+            {
+                StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(6),
+                StockAdjustmentDetails = new List<StockAdjustmentDetail>()
+                {
+                    new StockAdjustmentDetail()
+                    {
+                        StockAdjustmentId = "ADJAPPROVETEST",
+                        ItemCode = "E030",
+                        OriginalQuantity = 10,
+                        AfterQuantity = 10,
+                    }
+                }
+            });
+
+            // Act
+            stockAdjustmentService.RejectStockAdjustment("ADJAPPROVETEST", "StoreClerk1@email.com");
+        }
+
         [TestCleanup]
         public void CleanAllObjectCreated()
         {
@@ -420,7 +556,8 @@ namespace team7_ssis.Tests.Services
                 inventoryRepository.Delete(inventoryRepository.FindById("he06"));
             }
 
-
+            if (stockAdjustmentRepository.ExistsById("ADJAPPROVETEST"))
+                stockAdjustmentRepository.Delete(stockAdjustmentRepository.FindById("ADJAPPROVETEST"));               
         }
     }
 }
