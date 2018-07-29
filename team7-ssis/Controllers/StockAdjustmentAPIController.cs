@@ -281,7 +281,7 @@ namespace team7_ssis.Controllers
             stockAdjustmentService = new StockAdjustmentService(context);
             userService = new UserService(context);
             string stockadjustment_id = list.First().StockAdjustmentID;
-            stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
+           
         
             StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
             ApplicationUser currentUser= userService.FindUserByEmail(CurrentUserName);
@@ -304,6 +304,7 @@ namespace team7_ssis.Controllers
             }
           
             stockAdjustmentService.updateStockAdjustment(sd);
+            stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
 
         }
 
