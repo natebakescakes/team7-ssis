@@ -82,8 +82,8 @@
                         {
                         <text>
 
-                        var viewDetailsHtml = '<a class="dropdown-item" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i> View Details</a>';
-                        var editDetailsHtml = '<a class="dropdown-item" href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
+                        var viewDetailsHtml = '<a class="dropdown-item getInfo" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i> View Details</a>';
+                        var editDetailsHtml = '<a class="dropdown-item getInfo" href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
                         var createNewDraftWithHtml = '<a class="dropdown-item" href="#"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
                         var cancelHtml = '<div class="dropdown-divider"></div>' +
                             '<a class="dropdown-item" href="#"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
@@ -113,7 +113,7 @@
                         @if ( User.IsInRole("Department Head") || User.IsInRole("Store Clerk") || User.IsInRole("Admin") )
                         {
                             <text>
-                        html += '<button type="button" class="btn btn-secondary"><i class="fa fa-info-circle" aria-hidden="true"></i></button>';
+                        html += '<button type="button" class="btn btn-secondary getInfo"><i class="fa fa-info-circle" aria-hidden="true"></i></button>';
 
                             </text>
                         }
@@ -126,9 +126,12 @@
             @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
             {
             <text>
-            select: 'api'
+            select: true
             </text>
-            }
+            } else {
+            <text>
+            select: "api"
+            </text>}
 
         });
     })
@@ -151,6 +154,16 @@
             .row($(this).parents('tr'))
             .data();
         post("/Requisition/Reject", { rid: data.Requisition, email: "", remarks: ""});
+    });
+
+     // Click "Info" buttons
+    $(document).on("click", ".getInfo", function (e) {
+        e.preventDefault();
+        console.log("Get Info");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        window.location.href = "/Requisition/RequisitionDetails?rid=" + data.Requisition;
     });
 
     // Click "Process All Requisitions" button
