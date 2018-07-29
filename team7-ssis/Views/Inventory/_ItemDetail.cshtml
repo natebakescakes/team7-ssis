@@ -1,6 +1,6 @@
 ﻿@model team7_ssis.ViewModels.EditItemFinalViewModel
 
-@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id = "itemdetails", role = "form" }))
+@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id = "itemdetails", enctype = "multipart/form-data" }))
 {
     <div style="border-color:black" id="detail1">
         <form id="form1">
@@ -31,10 +31,13 @@
                     <div class="form-group">
                         <label for="Category">Item Image</label><br />
                         @*<img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">*@
-                        <img src="@Url.Content(Model.ImagePath)" alt="Image" height="100" width="100"/>
-                        <a href='@Url.Action("DeleteImage", "Inventory")' onclick='navigate(this.href);'>
+                       <img src="@Url.Content(Model.ImagePath)" id="user_img" alt="Image" height="100" width="100" />
+                        <br/>
+                        <a href="@Url.Action("DeleteImage","Inventory",new {filename= ViewBag.VB})">
                             Delete
                         </a>
+                        <a href="#" onclick="document.getElementById('ImageFile').click(); return false;">Change File</a>
+                        <input type="file" name="ImageFile" id="ImageFile" accept="image/*" onchange="show(this)" style="visibility:hidden" />
                     </div>
                 </div>
             </div>
@@ -96,10 +99,21 @@
     </div>
 }
     <script>
-     var k= '@(ViewBag.VB)'
+        var fn= '@(ViewBag.VB)'
        function navigate(target) {
-           alert("for delete"+k)
+           alert("for delete "+filename)
            //Perform your AJAX call to your Controller Action
-          // $.post(target, new { item=k });
-       }
+          // $.post(target, new {filename= fn});
+        }
+
+        function show(input) {
+            alert('Show');
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#user_img').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+            }
+        }
     </script>

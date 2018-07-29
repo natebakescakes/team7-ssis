@@ -93,9 +93,20 @@ namespace team7_ssis.Controllers
             //get data for Supplier dropdownlist
             List<Supplier> list2 = new List<Supplier>();
             List<Supplier> sAllList = supplierService.FindAllSuppliers();
-            foreach(Supplier i in sAllList)
+            foreach (Supplier i in sAllList)
             {
                 list2.Add(i);
+            }
+
+            //image
+            string path;
+            if (System.IO.File.Exists(Server.MapPath("~/Images/" + itemCode.ToString() + ".JPG")))
+            {
+                path = "~/Images/" + itemCode.ToString() + ".JPG";
+            }
+            else
+            {
+                path = "~/Images/default"+".JPG";
             }
 
             return View(new EditItemFinalViewModel
@@ -110,50 +121,22 @@ namespace team7_ssis.Controllers
                     "Value",
                     "Text"
                 ),
-                ImagePath = "~/Images/" + itemCode.ToString() +".JPG"
+                //ImagePath = "~/Images/" + itemCode.ToString() +".JPG"
+                ImagePath= path
 
             });
         }
 
-        public ActionResult TestView()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public Boolean DeleteImage(string item)
-        {
-            Console.WriteLine(item);
-            return true;
-        }
 
 
-        [HttpPost]
-        public ActionResult ImageUpload(HttpPostedFileBase file)
+        public ActionResult DeleteImage(string filename)
         {
-            if (file != null && file.ContentLength > 0)
-                try
-                {
-                    int i=itemService.UploadItemImage(file);
-                    if (i == 1)
-                    {
-                        ViewBag.Message = "File uploaded successfully";
-                    }
-                    else
-                    {
-                        ViewBag.Message = "File uploaded unsuccessful!";
-                    }
-                   
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
-                }
-            else
+            Console.WriteLine(filename);
+            if (System.IO.File.Exists(Server.MapPath("~/Images/" + filename + ".JPG")))
             {
-                ViewBag.Message = "You have not specified a file.";
+                System.IO.File.Delete(Server.MapPath("~/Images/" + filename + ".JPG"));
             }
-            return RedirectToAction("TestView", "Inventory");
+            return RedirectToAction("Details", new { itemCode = filename });
         }
 
         public void SaveImage(EditItemFinalViewModel model)
@@ -162,7 +145,7 @@ namespace team7_ssis.Controllers
             string fileName = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
             string extension = Path.GetExtension(model.ImageFile.FileName);
             //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-            fileName = model.ItemCode.ToString() + extension;
+            fileName = model.ItemCode.ToString() + ".JPG";
             model.ImagePath = "~/Images/" + fileName;
             fileName = Path.Combine(Server.MapPath("~/Images/") + fileName);
             model.ImageFile.SaveAs(fileName);

@@ -127,6 +127,9 @@
             $('#itemdetails')
                 .find('select')
                 .prop('disabled', true);
+            $('#itemdetails')
+                .find('a')
+                .prop('disabled', true);
         }
         function enableInput() {
             $('#itemdetails')
@@ -137,6 +140,9 @@
                 .prop('disabled', false);
             $('#itemdetails')
                 .find('select')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('a')
                 .prop('disabled', false);
 
         }
