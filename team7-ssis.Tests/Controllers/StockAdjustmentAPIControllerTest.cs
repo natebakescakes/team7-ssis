@@ -19,7 +19,10 @@ namespace team7_ssis.Tests.Controllers
         private ApplicationDbContext context;
         StockAdjustmentService saService;
         StockAdjustmentRepository saRepository;
-        StockAdjustmentRepository sadRepository;
+        StockAdjustmentDetailRepository sadRepository;
+        StatusRepository statusRepository;
+        ItemRepository itemRepository;
+        StockMovementRepository smRepository;
 
 
         [TestInitialize]
@@ -28,7 +31,10 @@ namespace team7_ssis.Tests.Controllers
             context = new ApplicationDbContext();
             saService = new StockAdjustmentService(context);
             saRepository = new StockAdjustmentRepository(context);
-            sadRepository = new StockAdjustmentRepository(context);
+            sadRepository = new StockAdjustmentDetailRepository(context);
+            statusRepository = new StatusRepository(context);
+            itemRepository = new ItemRepository(context);
+            smRepository = new StockMovementRepository(context);
 
         }
 
@@ -37,7 +43,7 @@ namespace team7_ssis.Tests.Controllers
         {
             //Arrange
             //Instantiate controller
-         
+
             StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
             {
                 CurrentUserName = "root@admin.com",
@@ -68,6 +74,346 @@ namespace team7_ssis.Tests.Controllers
             //Delete
             saRepository.Delete(saRepository.FindById(contentResult.Content));
         }
+
+        [TestMethod]
+        public void GetAllStockadjustment_ContainResult()
+        {
+            //Arrange
+            //Instantiate controller
+            var controller = new StockAdjustmentAPIController();
+
+            StockAdjustment sa1 = new StockAdjustment();
+            sa1.StockAdjustmentId = "he01";
+            sa1.CreatedDateTime = DateTime.Now;
+            sa1.Status = statusRepository.FindById(3);
+
+            StockAdjustmentDetail s1 = new StockAdjustmentDetail();
+            s1.StockAdjustmentId = "he01";
+            s1.ItemCode = "C001";
+            s1.OriginalQuantity = 10;
+            s1.AfterQuantity = 20;
+            StockAdjustmentDetail s2 = new StockAdjustmentDetail();
+            s2.StockAdjustmentId = "he01";
+            s2.ItemCode = "C002";
+            s2.OriginalQuantity = 20;
+            s2.AfterQuantity = 30;
+            List<StockAdjustmentDetail> list = new List<StockAdjustmentDetail>();
+            list.Add(s1);
+            list.Add(s2);
+            sa1.StockAdjustmentDetails = list;
+            saRepository.Save(sa1);
+
+            //Act
+            StockAdjustmentViewModel result = controller.GetAllStockAdjustments().OrderByDescending
+                (x => x.CreatedDateTime).First();
+
+            //Assert
+            Assert.AreEqual(sa1.StockAdjustmentId, result.StockAdjustmentId);
+            saRepository.Delete(saRepository.FindById("he01"));
+
+        }
+
+
+        [TestMethod]
+        public void GetAllStockadjustmentExceptDraft_ContainResult()
+        {
+            //Arrange
+            //Instantiate controller
+            var controller = new StockAdjustmentAPIController();
+
+            StockAdjustment sa1 = new StockAdjustment();
+            sa1.StockAdjustmentId = "he02";
+            sa1.CreatedDateTime = DateTime.Now;
+            sa1.Status = statusRepository.FindById(3);
+
+            StockAdjustmentDetail s1 = new StockAdjustmentDetail();
+            s1.StockAdjustmentId = "he02";
+            s1.ItemCode = "C001";
+            s1.OriginalQuantity = 10;
+            s1.AfterQuantity = 20;
+            StockAdjustmentDetail s2 = new StockAdjustmentDetail();
+            s2.StockAdjustmentId = "he02";
+            s2.ItemCode = "C002";
+            s2.OriginalQuantity = 20;
+            s2.AfterQuantity = 30;
+            List<StockAdjustmentDetail> list = new List<StockAdjustmentDetail>();
+            list.Add(s1);
+            list.Add(s2);
+            sa1.StockAdjustmentDetails = list;
+            saRepository.Save(sa1);
+
+            //Act
+            StockAdjustmentViewModel result = controller.GetAllStockAdjustments().OrderByDescending
+                (x => x.CreatedDateTime).First();
+
+            //Assert
+            Assert.AreEqual(sa1.StockAdjustmentId, result.StockAdjustmentId);
+            saRepository.Delete(saRepository.FindById("he02"));
+        }
+
+        [TestMethod]
+        public void SaveStockAdjustmentAsDraft_Test()
+        {
+            //Arrange
+            List<ViewModelFromNew> list = new List<ViewModelFromNew>();
+            ViewModelFromNew v1 = new ViewModelFromNew();
+            v1.Adjustment = 1;
+            v1.Itemcode = "C001";
+            v1.Reason = "Test1";
+            list.Add(v1);
+            var controller = new StockAdjustmentAPIController();
+
+            //Act
+            controller.SaveStockAdjustmentAsDraft(list);
+            StockAdjustment sa = context.StockAdjustment.OrderByDescending(x => x.StockAdjustmentId).First();
+            StockAdjustmentDetail sad = context.StockAdjustmentDetail.OrderByDescending(x => x.StockAdjustmentId).First();
+
+            //Assert
+            Assert.IsTrue(sad.ItemCode == "C001");
+            Assert.IsTrue(sa.Status.StatusId == 3);
+            saRepository.Delete(sa);
+
+        }
+
+        [TestMethod]
+        public void CreatePendingStockAdjustmentAsDraft_Test()
+        {
+
+            //Arrange
+            List<ViewModelFromNew> list = new List<ViewModelFromNew>();
+            ViewModelFromNew v1 = new ViewModelFromNew();
+            v1.Adjustment = 1;
+            v1.Itemcode = "C001";
+            v1.Reason = "Test1";
+            v1.Unitprice = "1.0";
+            v1.Supervisor = "StoreSupervisor@email.com";
+            list.Add(v1);
+            var controller = new StockAdjustmentAPIController();
+
+            //Act
+            controller.CreatePendingStockAdjustment(list);
+            StockAdjustment sa = context.StockAdjustment.OrderByDescending(x => x.StockAdjustmentId).First();
+            StockAdjustmentDetail sad = context.StockAdjustmentDetail.OrderByDescending(x => x.StockAdjustmentId).First();
+
+            //Assert
+            Assert.IsTrue(sad.ItemCode == "C001");
+            Assert.IsTrue(sa.Status.StatusId == 4);
+            saRepository.Delete(sa);
+
+        }
+
+        [TestMethod]
+        public void RejectStockAdjustment_Test()
+        {
+            StockAdjustment sa = new StockAdjustment();
+            sa.StockAdjustmentId = "test1";
+            sa.CreatedDateTime = DateTime.Now;
+            sa.Status = statusRepository.FindById(4);
+
+            StockAdjustmentDetail sad = new StockAdjustmentDetail();
+            sad.StockAdjustmentId = "test1";
+            sad.Reason = "test1";
+            sad.ItemCode = "C001";
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            detaillist.Add(sad);
+
+            sa.StockAdjustmentDetails = detaillist;
+            saRepository.Save(sa);
+            //sadRepository.Save(sad);
+
+            List<ViewModelFromEditDetail> list = new List<ViewModelFromEditDetail>();
+            ViewModelFromEditDetail v1 = new ViewModelFromEditDetail();
+            v1.StockAdjustmentID = "test1";
+            v1.Reason = "test1";
+            v1.Itemcode = "C001";
+            list.Add(v1);
+
+
+            StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
+            {
+                CurrentUserName = "StoreClerk1@email.com",
+                context = this.context
+            };
+
+            controller.RejectStockAdjustment(list);
+
+
+            Assert.AreEqual(saRepository.FindById("test1").Status.StatusId, 5);
+            saRepository.Delete(saRepository.FindById("test1"));
+        }
+
+        [TestMethod]
+        public void ApproveStockAdjustment_Test()
+        {
+
+            StockAdjustment sa = new StockAdjustment();
+            sa.StockAdjustmentId = "test1";
+            sa.CreatedDateTime = DateTime.Now;
+            sa.Status = statusRepository.FindById(4);
+
+            StockAdjustmentDetail sad = new StockAdjustmentDetail();
+            sad.StockAdjustmentId = "test1";
+            sad.Reason = "test1";
+            sad.ItemCode = "C001";
+            sad.Item = itemRepository.FindById("C001");
+            sad.OriginalQuantity = 0;
+            sad.AfterQuantity = 10;
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            detaillist.Add(sad);
+
+            sa.StockAdjustmentDetails = detaillist;
+            saRepository.Save(sa);
+            //sadRepository.Save(sad);
+
+            List<ViewModelFromEditDetail> list = new List<ViewModelFromEditDetail>();
+            ViewModelFromEditDetail v1 = new ViewModelFromEditDetail();
+            v1.StockAdjustmentID = "test1";
+            v1.Reason = "test1";
+            v1.Itemcode = "C001";
+            list.Add(v1);
+
+
+            StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
+            {
+                CurrentUserName = "StoreClerk1@email.com",
+                context = this.context
+            };
+
+            controller.ApproveStockAdjustment(list);
+
+
+            Assert.AreEqual(saRepository.FindById("test1").Status.StatusId, 6);
+            saRepository.Delete(saRepository.FindById("test1"));
+            StockMovement sv = context.StockMovement.OrderByDescending(x => x.StockMovementId).First();
+            smRepository.Delete(sv);
+
+        }
+
+        [TestMethod]
+        public void UpdateStockAdjustmentAsDraft_Test()
+        {
+            StockAdjustment sa = new StockAdjustment();
+            sa.StockAdjustmentId = "test1";
+            sa.CreatedDateTime = DateTime.Now;
+            sa.Status = statusRepository.FindById(3);
+
+            StockAdjustmentDetail sad = new StockAdjustmentDetail();
+            sad.StockAdjustmentId = "test1";
+            sad.Reason = "test1";
+            sad.ItemCode = "C001";
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            detaillist.Add(sad);
+
+            sa.StockAdjustmentDetails = detaillist;
+            saRepository.Save(sa);
+
+            List<ViewModelFromEditDetail> list = new List<ViewModelFromEditDetail>();
+            ViewModelFromEditDetail v1 = new ViewModelFromEditDetail();
+            v1.StockAdjustmentID = "test1";
+            v1.Reason = "test2";
+            v1.Itemcode = "C001";
+            v1.Adjustment = 10;
+            list.Add(v1);
+
+            StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
+            {
+                CurrentUserName = "StoreClerk1@email.com",
+                context = this.context
+            };
+
+            controller.UpdateStockAdjustmentAsDraft(list);
+
+            Assert.AreEqual(sadRepository.FindById("test1","C001").Reason,"test2");
+          
+            saRepository.Delete(saRepository.FindById("test1"));
+
+
+
+        }
+
+
+        [TestMethod]
+        public void UpdateStockAdjustmentAsPending_Test()
+        {
+            StockAdjustment sa = new StockAdjustment();
+            sa.StockAdjustmentId = "test1";
+            sa.CreatedDateTime = DateTime.Now;
+            sa.Status = statusRepository.FindById(4);
+
+            StockAdjustmentDetail sad = new StockAdjustmentDetail();
+            sad.StockAdjustmentId = "test1";
+            sad.Reason = "test1";
+            sad.ItemCode = "C001";
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            detaillist.Add(sad);
+
+            sa.StockAdjustmentDetails = detaillist;
+            saRepository.Save(sa);
+
+            List<ViewModelFromEditDetail> list = new List<ViewModelFromEditDetail>();
+            ViewModelFromEditDetail v1 = new ViewModelFromEditDetail();
+            v1.StockAdjustmentID = "test1";
+            v1.Reason = "test2";
+            v1.Itemcode = "C001";
+            v1.Adjustment = 10;
+            v1.Supervisor ="StoreSuperviosr@email.com";
+            v1.Manager = "StoreManager@email.com";
+            v1.Unitprice = "1.0";
+            list.Add(v1);
+
+            StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
+            {
+                CurrentUserName = "StoreClerk1@email.com",
+                context = this.context
+            };
+
+            controller.UpdateStockAdjustmentAsDraft(list);
+
+            Assert.AreEqual(sadRepository.FindById("test1", "C001").Reason, "test2");
+
+            saRepository.Delete(saRepository.FindById("test1"));
+
+        }
+
+        [TestMethod]
+        public void GetStockAdjustmentDetail_Test()
+        {
+            StockAdjustment sa = new StockAdjustment();
+            sa.StockAdjustmentId = "test1";
+            sa.CreatedDateTime = DateTime.Now;
+            sa.Status = statusRepository.FindById(4);
+
+            StockAdjustmentDetail sad = new StockAdjustmentDetail();
+            sad.StockAdjustmentId = "test1";
+            sad.Reason = "test1";
+            sad.ItemCode = "C001";
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            detaillist.Add(sad);
+
+            sa.StockAdjustmentDetails = detaillist;
+            saRepository.Save(sa);
+
+
+            StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
+            {
+                CurrentUserName = "StoreClerk1@email.com",
+                context = this.context
+            };
+
+            StockAdjustmentDetailViewModel result = controller.GetStockAdjustmentDetail("test1").First();
+
+            Assert.AreEqual(result.Reason, "test1");
+            saRepository.Delete(saRepository.FindById("test1"));
+
+
+        }
+
+
 
         [TestCleanup]
         public void TestCleanUp()

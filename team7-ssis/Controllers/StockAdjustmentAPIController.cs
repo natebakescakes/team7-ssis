@@ -41,7 +41,7 @@ namespace team7_ssis.Controllers
         // Get All stockadjustment in clerk page
         [Route("api/stockadjustment/all")]
         [HttpGet]
-        public IEnumerable<StockAdjustmentViewModel> stockadjustments()
+        public IEnumerable<StockAdjustmentViewModel> GetAllStockAdjustments()
         {
             stockAdjustmentService = new StockAdjustmentService(context);
 
@@ -54,7 +54,7 @@ namespace team7_ssis.Controllers
                 StockAdjustmentViewModel savm = new StockAdjustmentViewModel();
 
                 savm.StockAdjustmentId = s.StockAdjustmentId;
-                savm.CreatedBy = s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
+                savm.CreatedBy =s.CreatedBy==null?"":s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
                 savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
                 savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
@@ -66,7 +66,7 @@ namespace team7_ssis.Controllers
         // Get All stockadjustment in manager/superviosr page
         [Route("api/stockadjustment/allExceptDraftAndCancelled")]
         [HttpGet]
-        public IEnumerable<StockAdjustmentViewModel> stockadjustmentsExceptDraft()
+        public IEnumerable<StockAdjustmentViewModel> GetAllStockAdjustmentsExceptDraft()
         {
             stockAdjustmentService = new StockAdjustmentService(context);
 
@@ -230,26 +230,7 @@ namespace team7_ssis.Controllers
         }
 
 
-        
-        //[Route("api/stockadjustment/delete")]
-        //[HttpGet]
-        //public void DeleteDraftStockAdjustment(string id)
-        //{
-        //    userService = new UserService(context);
-        //    stockAdjustmentService = new StockAdjustmentService(context);
-
-        //    stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
-        //    StockAdjustment sd = stockAdjustmentService.FindStockAdjustmentById(id);
-
-            
-        //    ApplicationUser currentUser = userService.FindUserByEmail(CurrentUserName);
-        //    sd.UpdatedBy = currentUser;
-        //    sd.UpdatedDateTime = DateTime.Now;
-
-        //    stockAdjustmentService.updateStockAdjustment(sd);
-
-        //}
-
+      
 
         // reject with reason
         [Route("api/stockadjustment/reject")]
@@ -270,7 +251,6 @@ namespace team7_ssis.Controllers
             stockAdjustmentService.RejectStockAdjustment(stockadjustment_id);
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
             
-
         }
 
         //approve with reason
@@ -415,11 +395,14 @@ namespace team7_ssis.Controllers
                 detailListViewModel.Add(sadv);
                  };
 
-          //  viewModel.StockAdjustmentModel = stockAdjustmentViewModel;
-           // viewModel.StockAdjustmentDetailsModel = detailListViewModel;
 
             return detailListViewModel;
             }
+
+
+
+
+
 
 
         }
