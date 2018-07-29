@@ -101,4 +101,10 @@ namespace team7_ssis.ViewModels
         public string AfterQuantity { get; set; }
         public string Reason { get; set; }
     }
+
+    public class StockAdjustmentIdViewModel
+    {
+        public string StockAdjustmentId { get; set; }
+        public string Email { get; set; }
+    }
 }
