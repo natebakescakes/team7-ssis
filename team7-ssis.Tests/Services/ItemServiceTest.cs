@@ -4,7 +4,12 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Models;
 using team7_ssis.Services;
+using team7_ssis.Controllers;
 using team7_ssis.Repositories;
+using System.Web.Mvc;
+using System.Web;
+using System.IO;
+using Moq;
 
 namespace team7_ssis.Tests.Services
 {
@@ -14,7 +19,7 @@ namespace team7_ssis.Tests.Services
         ApplicationDbContext context;
         ItemService itemService;
         ItemRepository itemRepository;
-        InventoryRepository inventoryRepository;
+       
 
         [TestInitialize]
         public void TestInitialize()
@@ -22,6 +27,7 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
             itemRepository = new ItemRepository(context);
+           
         }
 
 
@@ -35,7 +41,20 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindItemByItemCodeTest()
+        public void FindAllActiveItemTest()
+        {
+            //Act
+            var result = itemService.FindAllActiveItems();
+
+            //Assert
+            foreach(Item i in result)
+            {
+                Assert.AreEqual(1, i.Status.StatusId);
+            }
+        }
+
+        [TestMethod]
+        public void FindItemByItemCodeTest() 
         {
             //Arrange
             string test = "C001";
@@ -49,7 +68,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindItemsByCategory()
+        public void FindItemsByCategoryTest()
         {
             //Arrange
             ItemCategory i = new ItemCategory();
@@ -60,6 +79,22 @@ namespace team7_ssis.Tests.Services
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+            
+        }
+
+        [TestMethod]
+        public void FindItemQuantityLessThanReorderLevel()
+        {
+            //Act
+            var result = itemService.FindItemQuantityLessThanReorderLevel();
+
+            //Assert
+            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
+            foreach (Item element in result)
+            {
+                Assert.IsTrue(element.Inventory.Quantity < element.ReorderLevel);
+            }
+
         }
 
         [TestMethod]
@@ -85,7 +120,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             Item i = new Item();
-            i.ItemCode = "BBB";
+            i.ItemCode = "CCC";
             i.CreatedDateTime = DateTime.Now;
             new ItemRepository(context).Save(i);
 
@@ -93,7 +128,7 @@ namespace team7_ssis.Tests.Services
             var result = itemService.SaveInventory(i,40);
 
             //Arrange
-            Assert.AreEqual("BBB", result.ItemCode);
+            Assert.AreEqual("CCC", result.ItemCode);
             //Assert.AreEqual(40, result.Quantity);
             itemRepository.Delete(i);
         }
@@ -104,7 +139,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrage
             Item i = new Item();
-            i.ItemCode = "BBB";
+            i.ItemCode = "DDD";
             i.CreatedDateTime = DateTime.Now;
             itemService.Save(i, 20);
 
@@ -121,7 +156,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             Item i = new Item();
-            i.ItemCode = "BBB";
+            i.ItemCode = "EEE";
             i.CreatedDateTime = DateTime.Now;
             itemService.Save(i, 20);
 
@@ -131,6 +166,47 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(30,result.Quantity);
             itemRepository.Delete(i);
+        }
+
+        [TestMethod]
+        public void AddQuantityTest()
+        {
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "GGG";
+            i.CreatedDateTime = DateTime.Now;
+            itemService.Save(i, 40);
+
+            //Act
+            var result = itemService.AddQuantity(i, -10);
+
+            //Assert
+            Assert.AreEqual(30, result.Quantity);
+            itemRepository.Delete(i);
+        }
+
+        [TestMethod]
+        public void UploadItemImageTest()
+        {
+            //var file = MockRepository.GenerateStub<HttpPostedFileBase>();
+
+            //file.Expect(f => f.ContentLength).Return(1);
+            //file.Expect(f => f.FileName).Return("myFileName");
+            //controller.Index(file);
+        }
+
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            string[] ids = new string[]
+           { "BBB","CCC","DDD","EEE","GGG","FFF" };
+
+            foreach (string id in ids)
+            {
+               Item i = itemRepository.FindById(id);
+                if (i != null)
+                    itemRepository.Delete(i);
+            }
         }
 
     }

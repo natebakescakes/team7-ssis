@@ -15,5 +15,9 @@ namespace team7_ssis.Repositories
             this.context = context;
             this.entity = context.CollectionPoint;
         }
+        public CollectionPoint FindByDepartment(Department department)
+        {
+            return context.CollectionPoint.Where(x => x.CollectionPointId == department.CollectionPoint.CollectionPointId).FirstOrDefault();
+        }
     }
 }

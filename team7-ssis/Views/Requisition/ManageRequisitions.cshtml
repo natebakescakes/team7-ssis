@@ -1,0 +1,32 @@
+﻿@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+    <script src="~/Scripts/Custom/ManageRequisitions.js"></script>
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Manage Requisitions</h2>
+    </div>
+    <div class="col-md-4">
+        @*<a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>*@
+        <a id="processAllRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Process All Requisitions</a>
+    </div>
+</div>
+
+<table id="myTable" class="table table-striped table-bordered" style="width: 100%">
+    <thead>
+        <tr>
+            <th>Requisition</th>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+
+</table>

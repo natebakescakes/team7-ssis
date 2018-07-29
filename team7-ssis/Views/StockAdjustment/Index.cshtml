@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/Site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap-select.min.css">
+
+
+</head>
+
+<body>
+    <h2>Manage Stock Adjustments</h2>
+    @if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+    {
+        @Html.Partial("StoreManagerView")
+    }
+    @if (User.IsInRole("Store Clerk"))
+    {
+        @Html.Partial("StoreClerkView")
+    }
+
+</body>
+</html>
