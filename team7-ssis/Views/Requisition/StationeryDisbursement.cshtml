@@ -2,15 +2,13 @@
 @{
     ViewBag.Title = "StationeryDisbursement";
 }
-<div class="alert alert-primary mb-3" role="alert">
-    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> 4 Disbursement Forms created.
-</div>
+<div id="alert"></div>
 
 <div class="row mb-3 step__container">
     <div class="step__arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
     <div class="col-md-6">
-        <a>
-            <div class="card">
+        <a href="/Requisition/StationeryRetrieval?rid=@ViewBag.RetrievalId">
+            <div class="card step__unselected">
                 <div class="card-body">
                     <div class="step__icon">
                         <i class="fa fa-archive" aria-hidden="true"></i>
@@ -25,7 +23,7 @@
     </div>
     <div class="col-md-6">
         <a>
-            <div class="card">
+            <div class="card step__selected">
                 <div class="card-body">
                     <div class="step__icon">
                         <i class="fa fa-truck" aria-hidden="true"></i>
@@ -33,7 +31,7 @@
                     <div class="step__label">
                         <h5>Stationery Disbursement</h5>
                         Deliver items according to Disbursement Forms.
-                    </div>balsamiq 
+                    </div>
                 </div>
             </div>
         </a>

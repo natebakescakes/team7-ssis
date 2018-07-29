@@ -63,10 +63,11 @@ namespace team7_ssis.Controllers
         }
         // GET: /Requisiton/StationeryRetrieval
         [Route("/Requisition/StationeryRetrieval")]
-        public ActionResult StationeryRetrieval(string rid)
+        public ActionResult StationeryRetrieval(string rid, string message)
         {
             Retrieval r = retrievalService.FindRetrievalById(rid);
             StationeryRetrievalViewModel viewModel = new StationeryRetrievalViewModel();
+            ViewBag.Message = message;
 
             try
             {
@@ -99,6 +100,10 @@ namespace team7_ssis.Controllers
         // GET: /Requisiton/StationeryDisbursement
         public ActionResult StationeryDisbursement(string rid)
         {
+            if (rid == null)
+            {
+                return new HttpStatusCodeResult(400);
+            }
             ViewBag.RetrievalID = rid;
             return View();
         }

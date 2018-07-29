@@ -214,7 +214,8 @@
             dataType: "json",
             success: function (rid) {
                 message = reqIdArray.length + " Requisitions processed. Retrieval Form #" + rid + " created.";
-                window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
+                post("/Requisition/StationeryRetrieval?rid=" + rid, { message: message });
+                //window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
             }
         });
     }
