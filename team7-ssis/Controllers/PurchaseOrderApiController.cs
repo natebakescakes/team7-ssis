@@ -55,8 +55,10 @@ namespace team7_ssis.Controllers
                 UnitPrice = purchaseOrderService.FindUnitPriceByPurchaseOrderDetail(pod),
                 Amount = purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod),
                 ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
-                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod)
-                
+                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod),
+                Status = pod.Status.Name
+
+
             }).ToList();
 
         }

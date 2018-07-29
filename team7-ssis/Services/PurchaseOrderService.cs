@@ -41,6 +41,19 @@ namespace team7_ssis.Services
           
         }
 
+        public void CancelItemFromPurchaseOrder(string purchaseOrderNum , string itemCode)
+        {
+            PurchaseOrderDetail pod=purchaseOrderDetailRepository.FindById(purchaseOrderNum, itemCode);
+
+            if (pod.Status.StatusId == 11)
+            {
+                pod.Status = statusRepository.FindById(2);
+                purchaseOrderDetailRepository.Save(pod);
+            }
+ 
+
+        }
+
         public List<PurchaseOrder> FindAllPurchaseOrders()
         {
             purchaseOrderDetailRepository.FindById("Hi", "Hello");

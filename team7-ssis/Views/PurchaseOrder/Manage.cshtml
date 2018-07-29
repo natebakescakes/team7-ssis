@@ -28,7 +28,9 @@
 
 </head>
 <body>
-    @Html.Hidden("detailsUrl", Url.Action("details","PurchaseOrder"))
+    @Html.Hidden("detailsUrl", Url.Action("details", "PurchaseOrder"))
+    @Html.Hidden("relDelOrdersUrl", Url.Action("", "DeliveryOrder"))
+    @Html.Hidden("receiveGoodsUrl", Url.Action("", "DeliveryOrder"))
 
     <div>
 
@@ -40,7 +42,7 @@
 
             </div>
         </div>
-       
+
 
         <div>
             @*<div>

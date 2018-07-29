@@ -23,9 +23,11 @@ namespace team7_ssis.ViewModels
         public decimal Amount { get; set; }
         public int ReceivedQuantity { get; set; }
         public int RemainingQuantity { get; set; }
+        public string Status { get; set; }
         public int SupplierPriority { get; set; }
-
         public string SupplierName { get; set; }
+
+       
 
 
     }

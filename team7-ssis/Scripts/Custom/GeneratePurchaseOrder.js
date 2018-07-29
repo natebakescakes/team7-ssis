@@ -1,9 +1,6 @@
 ﻿$(document).ready(function () {
-    $('#generateModal').modal({
-        backdrop: 'static',
-    });
-    $('#generateModal').modal('hide');
 
+    //Generate purchase order datatable
     var generatePOTbl = $('#generatePoTable').DataTable({
         columns: [
             { title: "Item Code" },
@@ -16,9 +13,15 @@
                     return html;
                 } 
             },
-            { title: "Unit Price" },
+            {
+                title: "Unit Price",
+                render: $.fn.dataTable.render.number(',', '.', 2, '$')
+            },
             { title: "Supplier" },
-            { title: "Amount" },
+            {
+                title: "Amount",
+                render: $.fn.dataTable.render.number(',', '.', 2, '$')
+            },
             { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
         ],
         select: "api",
@@ -28,6 +31,8 @@
 
     });
 
+
+    //function to populate supplier dropdown
     var populate_dropbox = function (supplierList,id) {
 
         for (var supplier in supplierList) {
@@ -45,6 +50,7 @@
 
     }
 
+    //Add item popup datatable
     var addItemTable = $('#generateAddItem').DataTable({
         ajax: {
             url: "/api/manage/items",
@@ -60,12 +66,16 @@
             { data: "ReorderLevel"},
             { data: "ReorderQuantity"},
             { data: "Uom" },
-            { data: "UnitPrice"}
+            {
+                data: "UnitPrice",
+                render: $.fn.dataTable.render.number(',', '.', 2, '$')}
         ],
         select: "single",
         dom: "ftp"
     });
 
+
+    //Button to open up Add item popup
     $('#addItemButton').click(function () {
 
         document.getElementById("generateAmount").value = 0;
@@ -75,46 +85,70 @@
         $('#generateModal').modal({
             backdrop: 'static',
         });
-    })
+    });
 
-    //$('#saveAsBtn').click(function () {
-    //    myTable.row.add([2, 3, 4]).draw();
-    //})
 
-    var i = 1;
-
+    //var checkifExists = function (itemNo,check) {
+    //    $("#generatePoTable tr td:nth-child(0)").each(function () {
+    //        var itemCode = this.innerText.trim();
+    //        alert(itemCode + "HURRAY");
+    //        if (itemCode == itemNo) {
+    //            var alertMessage = "This item has already been added to the list!";
+    //            check = 'true';
+    //            return false;
+    //        }
+    //        return check;
+    //    });
+    //}
+    
+    
+    // Adds item to purchase order
     $('#addToPOBtn').click(function () {
-
-        var data = $('#generateAddItem').DataTable().rows({ selected: true }).data().toArray();
-        var itemNo = data[0].ItemCode;
+        //var data = $('#generateAddItem').DataTable().rows({ selected: true }).data().toArray();
+       // var itemNo = data[0].ItemCode.toString();
+        //var check = 'false';
         
-
-        $.ajax({
-
-            type: "POST",
-            url: "/api/purchaseOrder/getsupplier",
-            dataType: "json",
-            data: { '': itemNo },
-            contentType: 'application/x-www-form-urlencoded',
-            cache: true,
-            success: function (result) {
-                
-                var qty = parseInt($('#generateQty').val());
-                var amount = parseInt($('#generateAmount').val());
-                var id = "supervisor" + data[0].ItemCode; //i.toString();
-                generatePOTbl.row.add([data[0].ItemCode, data[0].Description, qty, data[0].UnitPrice, '<select id="'+id+'"></select>', amount]).draw();
-                document.getElementById("generateAmount").value = 0;
-                document.getElementById("generateUnitPrice").value = 0;
-                document.getElementById("generateQty").value = 0;
-                populate_dropbox(result, id);
-                document.getElementById(id).value = 1;
-                i++;
-                $('#generateModal').modal('hide');
-
-            }
-        });
-
+        //if (checkifExists(itemNo, check)=='false') {
+            var data = $('#generateAddItem').DataTable().rows({ selected: true }).data().toArray();
+            
+            var qty = parseInt($('#generateQty').val());
         
+       
+
+            
+        if ((data.length > 0) && (qty > 0)) {
+            var itemNo = data[0].ItemCode;
+            $.ajax({
+
+                type: "POST",
+                url: "/api/purchaseOrder/getsupplier",
+                dataType: "json",
+                data: { '': itemNo },
+                contentType: 'application/x-www-form-urlencoded',
+                cache: true,
+                success: function (result) {
+
+
+                    var amount = parseInt($('#generateAmount').val());
+                    var id = "supplier" + data[0].ItemCode; //i.toString();
+                    generatePOTbl.row.add([data[0].ItemCode, data[0].Description, qty, data[0].UnitPrice, '<select class="supplier" id="' + id + '"></select>', amount]).draw();
+                    document.getElementById("generateAmount").value = 0;
+                    document.getElementById("generateUnitPrice").value = 0;
+                    document.getElementById("generateQty").value = 0;
+                    populate_dropbox(result, id);
+                    document.getElementById(id).value = 1;
+                    $('#generateModal').modal('hide');
+                    $('#modalMsg').html('');
+
+                }
+            });
+        }
+        else {
+            $('#modalMsg').html('You must select an item and a valid quantity.');
+            console.log("Error");
+        }
+
+       // }
         
     })
 
@@ -130,11 +164,21 @@
     $('#generateAddItem tbody').on('click', 'tr', function () {
         var unitPrice = addItemTable.row(this).data().UnitPrice;
         
+        var data = addItemTable.row(this).data();
+        
         document.getElementById("generateUnitPrice").value = unitPrice;
         document.getElementById("generateQty").value = 0;
         document.getElementById("generateAmount").value = 0;
-
-    });
+        
+        document.getElementById("itemnumber").innerHTML = data.ItemCode;
+        document.getElementById("instock").innerHTML = data.Quantity;
+        document.getElementById("description").innerHTML = data.Description;
+        document.getElementById("reorderlevel").innerHTML = data.ReorderLevel;
+        document.getElementById("reorderquantity").innerHTML = data.ReorderQuantity;         
+        document.getElementById("category").innerHTML = data.ItemCategoryName;
+        document.getElementById("uom").innerHTML = data.Uom;
+            
+            });
 
     $("#generateQty").change(function () {
         
@@ -145,6 +189,8 @@
         
         document.getElementById("generateAmount").value = document.getElementById("generateUnitPrice").value * document.getElementById("generateQty").value;
     });
+
+    
 
     $(document).on("change", ".edit", function () {
 
@@ -160,60 +206,69 @@
 
         var datatableData = generatePOTbl.rows().data().toArray();
 
-        //alert(datatableData);
-        //alert(datatableData.length);
-        var details = new Array();
+        if (datatableData.length > 0) {
 
-        for (var i = 0; i < datatableData.length; i++) {
+            var details = new Array();
 
-            var id = "#supervisor" + datatableData[i][0]; // (i + 1).toString();
-            //alert(datatableData[i][2]);
+            for (var i = 0; i < datatableData.length; i++) {
 
-            var o = {
-                "ItemCode": datatableData[i][0],
-                "Description": datatableData[i][1],
-                "QuantityOrdered": datatableData[i][2],
-                "UnitPrice": datatableData[i][3],
-                "SupplierName": $(id).children("option").filter(":selected").text(),
-                "SupplierPriority": $(id).children("option").filter(":selected").val(),
-                "Amount": datatableData[i][5]
-            };
-            //alert(JSON.stringify(o));
-            details.push(o);
-        }
+                var id = "#supplier" + datatableData[i][0]; // (i + 1).toString();
+                //alert(datatableData[i][2]);
 
-        $.ajax({
-
-            type: "POST",
-            url: "/purchaseOrder/save",
-            dataType: "json",
-            data: JSON.stringify(details),
-            contentType: "application/json",
-            cache: true,
-            success: function (result) {
-
-                alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE");
-
-                url = $("#successUrl").val();
-
-                var form = document.createElement("form");
-                var element1 = document.createElement("input");
-                form.method = "POST";
-                form.action = url;
-
-                element1.value = result.purchaseOrders;
-                element1.name = "purchaseOrderIds";
-                element1.type = "hidden";
-                form.appendChild(element1);
-
-                document.body.appendChild(form);
-
-                form.submit();
-
+                var o = {
+                    "ItemCode": datatableData[i][0],
+                    "Description": datatableData[i][1],
+                    "QuantityOrdered": datatableData[i][2],
+                    "UnitPrice": datatableData[i][3],
+                    "SupplierName": $(id).children("option").filter(":selected").text(),
+                    "SupplierPriority": $(id).children("option").filter(":selected").val(),
+                    "Amount": datatableData[i][5]
+                };
+                //alert(JSON.stringify(o));
+                details.push(o);
             }
-            
-        });
 
+            $.ajax({
+
+                type: "POST",
+                url: "/purchaseOrder/save",
+                dataType: "json",
+                data: JSON.stringify(details),
+                contentType: "application/json",
+                cache: true,
+                success: function (result) {
+
+                    alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE");
+
+                    url = $("#successUrl").val();
+
+                    var form = document.createElement("form");
+                    var element1 = document.createElement("input");
+                    form.method = "POST";
+                    form.action = url;
+
+                    element1.value = result.purchaseOrders;
+                    element1.name = "purchaseOrderIds";
+                    element1.type = "hidden";
+                    form.appendChild(element1);
+
+                    document.body.appendChild(form);
+
+                    form.submit();
+
+                },
+                error: function (msg) {
+                    //console.log(msg.responseJSON.Message);
+                    $('#errorAlert').removeAttr('hidden').html("An unexpected error occured.");
+                }
+
+            });
+
+        }
+        else {
+            $('#errorAlert').removeAttr('hidden').html("Please add some items to your Purchase Order!.");
+        }
+       
         
     });
         
@@ -229,7 +284,7 @@
             dataType: "json",
             data: { '': PONums },
             contentType: 'application/x-www-form-urlencoded',
-            cache: true,
+            cache: false,
             dataSrc: ""
         },
         columns: [
@@ -241,8 +296,72 @@
         select: "multiple"
     });
 
+    $(document).on("click", "#infobutton", function (e) {
+        //alert("hi");
+        var purchaseOrder = successPOTable.row($(this).parents('tr')).data().PurchaseOrderNo;
+        url = $("#detailsUrl").val();
+
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = url;
+
+        element1.value = purchaseOrder;
+        element1.name = "poNum";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+        
+
+    });
+
+    $('#successback').on('click', function (e) {
+        document.location.href = '/PurchaseOrder';
+    });
 
 
+    $(document).on("click", "#downloadselectedsuccess", function () {
+
+        var data = $('#successPoTable').DataTable().rows({ selected: true }).data().toArray();
+        alert(JSON.stringify(data));
+
+    });
+
+    $(document).on("click", "#ViewPrintButton", function () {
+
+        var data = $('#successPoTable').DataTable().rows({ selected: true }).data().toArray();
+        alert(JSON.stringify(data));
+
+    });
+
+    $('#generatePoTable tbody').on('change', '.supplier', function (e) {
+
+        
+        //var cell = generatePOTbl.row($(this).parents('tr')).cell(3);
+        var rowIdx = $(this).parents('tr');
+        var itemCode = generatePOTbl.row($(this).parents('tr')).data()[0];
+        var id = "supplier" + itemCode;
+        var priority = document.getElementById(id).value;
+
+        $.ajax({
+
+            type: "POST",
+            url: "/PurchaseOrder/getitemprice",
+            dataType: "json",
+            data: JSON.stringify({ itemCode: itemCode , priority: priority}),
+            contentType: "application/json",
+            cache: true,
+            success: function (result) {
+                generatePOTbl.cell(rowIdx, 3).data(result.itemPrice).draw();
+              //  generatePOTbl.ajax.reload();
+
+            }
+        });
+
+    });
 
     
 

@@ -8,9 +8,11 @@ $(document).ready(function(){
         else if (data == "Partially Delivered") {
             return '<select  class=" action form-control form-control-sm"><option value="-1">Action</option><option value="0">View Purchase Order details</option> <option value=1>View Related Delivery Orders</option><option value=2 > Receive Goods</ option></select>';
         }
-        else {
+        else if (data == "Awaiting Delivery") {
             return '<select class="action form-control form-control-sm"><option value="-1">Action</option><option value="0">View Purchase Order details</option> <option value=2 > Receive Goods</ option></select>';
         }
+        else
+            return '<select class="action form-control form-control-sm"><option value="-1">Action</option><option value="0">View Purchase Order details</option> </select>';
         }
        
         
@@ -54,7 +56,7 @@ $(document).ready(function(){
                     
                 ],
                 autowidth: true,
-                select: "single",
+                select: "multiple",
 
                 createdRow: function (row, data, dataIndex) {
                     if (data.Status == "Delivered") {
@@ -74,7 +76,7 @@ $(document).ready(function(){
                         var column = this;
                         var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
                             .prependTo($('.dataTables_filter')) 
-                        var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
+                        var download = $('<a id="downloadselected" class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
                         var select = $('#sel1').on('change', function () {
                            
                             var val = $(this).val() + '';
@@ -95,6 +97,13 @@ $(document).ready(function(){
                
         });
 
+    $(document).on("click", "#downloadselected", function () {
+
+        var data = $('#poTable').DataTable().rows({ selected: true }).data().toArray();
+        alert(JSON.stringify(data));
+
+    });
+
 
     $('#poTable tbody').on('change', '.action', function (e) {
 
@@ -104,8 +113,8 @@ $(document).ready(function(){
         var url;
 
         if (value == 0) { url = $("#detailsUrl").val(); }
-        else if (value == 1) { url = ''; }
-        else if (value == 2) { url = ''; }
+        else if (value == 1) { url = '$("#relDelOrdersUrl").val()'; }
+        else if (value == 2) { url = '$("#receiveGoodsUrl").val()'; }
         else { url = ''; }
 
       
@@ -129,19 +138,48 @@ $(document).ready(function(){
 
 
     var simple_cancel = function (data, type, row, meta) {
-        var podStatus = $("#podStatus").val();
+        var poStatus = $("#poStatus").val();
+
         var html = '<a class="cancelPODbtn btn-default btn disabled" ><i class="fa fa-close"></i></a>';
 
-        if (podStatus == "Partially Delivered") {
-            if (data == 0) {
-                html = '<a id="cancelAwaiting" class="cancelPODbtn btn-default btn"  ><i class="fa fa-close"></i></a>';
+        if (poStatus == "Partially Delivered") {
+            if (data == "Awaiting Delivery") {
+                html = '<a id="cancelPartially" class="cancelPODbtn btn-default btn"  ><i class="fa fa-close"></i></a>';
             }
         }
-
         return html;
         
     };
-   
+
+    $(document).on("click", "#cancelPartially", function () {
+
+        alert("Hi");
+        var pNum = $("#purchaseOrderNo").val();
+        var itemCode = poddatatbl.row($(this).parents('tr')).data().ItemCode;
+        alert(itemCode);
+
+        $.ajax({
+
+            type: "POST",
+            url: "/PurchaseOrder/cancelPODetail",
+            dataType: "json",
+            data: JSON.stringify({ purchaseOrderNum: pNum , itemCode: itemCode }),
+            contentType: "application/json",
+            cache: true,
+            success: function (data) {
+                if (data.amount == 0) {
+                    window.location.reload();
+                }
+
+                document.getElementById("amountLabel").innerHTML = "$ " + data.amount;
+                poddatatbl.ajax.reload();
+
+            }
+        });
+
+
+    });
+
 
     var podUrl = $("#purchaseOrderNo").val();
 
@@ -169,10 +207,12 @@ $(document).ready(function(){
                 },
                 {
                     data: "UnitPrice",
+                    render: $.fn.dataTable.render.number(',', '.', 2, '$'),
                     defaultContent: "<i>Not available</i>"
                 },
                 {
-                    data: "Amount"
+                    data: "Amount",
+                    render: $.fn.dataTable.render.number(',', '.', 2, '$')
                 },
                 {
                     data: "ReceivedQuantity"
@@ -181,13 +221,27 @@ $(document).ready(function(){
                     data: "RemainingQuantity"
                 },
                 {
-                    data: "ReceivedQuantity",
+                    data: "Status"
+                },
+                {
+                    data: "Status",
                     render: simple_cancel
                 }
-
+               
             ],
             autowidth: true,
-            select: "single"
+            select: "single",
+            createdRow: function (row, data, dataIndex) {
+                if (data.Status == "Delivered") {
+                    $('td', row).eq(7).addClass('delivered');
+                }
+                if (data.Status == "Partially Delivered") {
+                    $('td', row).eq(7).addClass('partially-delivered');
+                }
+                if (data.Status == "Awaiting Delivery") {
+                    $('td', row).eq(7).addClass('awaiting-delivery');
+                }
+            }
 
         });
 
@@ -227,11 +281,16 @@ $(document).ready(function(){
                     defaultContent: "<i>Not available</i>"
                 },
                 {
-                    data: "UnitPrice"
+                    data: "UnitPrice",
+                    render: $.fn.dataTable.render.number(',', '.', 2, '$')
                     
                 },
                 {
-                    data: "Amount"
+                    data: "Amount",
+                    render: $.fn.dataTable.render.number(',', '.', 2, '$')
+                },
+                {
+                    data: "Status"
                 },
                 {
                     defaultContent: '<a class="deletebtn btn-default btn " href="#" ><i class="fa fa-close"></i></a>'  
@@ -239,7 +298,19 @@ $(document).ready(function(){
                 
             ],
             autowidth: true,
-            select: "single"
+            select: "single",
+
+            createdRow: function (row, data, dataIndex) {
+                if (data.Status == "Delivered") {
+                    $('td', row).eq(5).addClass('delivered');
+                }
+                if (data.Status == "Partially Delivered") {
+                    $('td', row).eq(5).addClass('partially-delivered');
+                }
+                if (data.Status == "Awaiting Delivery") {
+                    $('td', row).eq(5).addClass('awaiting-delivery');
+                }
+            }
 
         });
 
@@ -269,13 +340,13 @@ $(document).ready(function(){
     });
 
 
-    $('#cancel').on('click', function (e) {
+    $('#cancelpurchaseorder').on('click', function (e) {
         var pNum = $("#purchaseOrderNo").val();
 
         $.ajax({
 
             type: "POST",
-            url: "/PurchaseOrder/cancel",
+            url: "/PurchaseOrder/cancelPO",
             dataType: "json",
             data: JSON.stringify({ purchaseOrderNum: pNum }),
             contentType: "application/json",
@@ -291,6 +362,28 @@ $(document).ready(function(){
 
     });
 
+
+    $('#viewRelatedDel').on('click', function (e) {
+        alert("Hi");
+        var pNum = $("#purchaseOrderNo").val();
+        var url = $("#viewRelDel").val();
+
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = url;
+
+        element1.value = poNum;
+        element1.name = "poNum";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+
+    });
 
     $('#backBtn').on('click', function (e) {
         document.location.href = '/PurchaseOrder';
@@ -345,9 +438,6 @@ $(document).ready(function(){
     });
    
 
-      
    
-   
-    
                        
 });

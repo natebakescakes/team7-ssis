@@ -15,7 +15,8 @@
         </div>
         <div class="col-md-4">
             @Html.Hidden("purchaseOrderNo", Model.PurchaseOrderNo)
-            @Html.Hidden("podStatus", Model.Status)
+            @Html.Hidden("poStatus", Model.Status)
+            @Html.Hidden("vieRelDel", Url.Action("", "DeliveryOrder"))
 
             @if (Model.Status != "Awaiting Delivery" && Model.Status != "Cancelled")
     {
@@ -87,7 +88,7 @@
 
     <div class="row mt-3" id="savebuttondiv">
         <div class="col-md-8" id="save">
-            <button id="backBtn" class="btn btn-default" >Back</button>
+            <button id="backBtn" class="btn btn-default" >Back to Manage Purchase Orders</button>
 
             @if(Model.Status == "Awaiting Delivery")
             {
@@ -98,7 +99,7 @@
         <div class="col-md-4">
             @if(Model.Status == "Awaiting Delivery")
             {
-        <a id="cancel" class=" btn btn-primary pull-right" href="#"><i class="fa fa-close" aria-hidden="true"></i>   Cancel Purchase Order</a>
+        <a id="cancelpurchaseorder" class=" btn btn-primary pull-right" href="#"><i class="fa fa-close" aria-hidden="true"></i>   Cancel Purchase Order</a>
             }
         </div>
     </div>
