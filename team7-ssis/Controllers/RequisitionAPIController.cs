@@ -23,6 +23,7 @@ namespace team7_ssis.Controllers
         ItemService itemService;
         DepartmentService departmentService;
         UserRepository userRepository;
+        StatusRepository statusRepository;
 
         public RequisitionAPIController()
         {
@@ -35,43 +36,64 @@ namespace team7_ssis.Controllers
             itemService = new ItemService(context);
             departmentService = new DepartmentService(context);
             userRepository = new UserRepository(context);
-
+            statusRepository = new StatusRepository(context);
             
         }
 
         public ApplicationDbContext Context { get { return context; } set { context = value; } }
 
-        [Route("api/reqdetail/all")]
+        //[Route("api/reqdetail/all")]
+        //[HttpGet]
+        //public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitionDetails()
+        //{
+        //    List<RequisitionDetail> reqDetailList = requisitionService.FindAllRequisitionDetail();
+        //    List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+
+        //    foreach (RequisitionDetail r in reqDetailList)
+        //    {
+        //        string status;
+        //        if (r.Status != null)
+        //        {
+        //            int statusId = r.Status.StatusId;
+        //            status = context.Status.Where(x => x.StatusId == statusId).First().Name;
+        //        } else
+        //        {
+        //            status = "";
+        //        }
+
+        //        viewModel.Add(new ManageRequisitionsViewModel
+        //        {
+        //            Requisition = r.RequisitionId,
+        //            ItemCode = r.ItemCode,
+        //            Description = r.Item.Description,
+        //            Quantity = r.Quantity,
+        //            Status = status
+        //        });
+        //    }
+
+        //    return viewModel;
+        //}
+
+        [Route("api/requisition")]
         [HttpGet]
-        public IEnumerable<ManageRequisitionsViewModel> Requisitions()
+        public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitions()
         {
-            List<RequisitionDetail> reqDetailList = requisitionService.FindAllRequisitionDetail();
+            List<Requisition> reqList = requisitionService.FindAllRequisitions();
             List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
 
-            foreach (RequisitionDetail r in reqDetailList)
+            foreach (Requisition r in reqList)
             {
-                string status;
-                if (r.Status != null)
-                {
-                    int statusId = r.Status.StatusId;
-                    status = context.Status.Where(x => x.StatusId == statusId).First().Name;
-                } else
-                {
-                    status = "";
-                }
-
                 viewModel.Add(new ManageRequisitionsViewModel
                 {
                     Requisition = r.RequisitionId,
-                    ItemCode = r.ItemCode,
-                    Description = r.Item.Description,
-                    Quantity = r.Quantity,
-                    Status = status
+                    Status = r.Status.Name
                 });
             }
 
             return viewModel;
         }
+
+
         [Route("api/processrequisitions")]
         [HttpPost]
         public IHttpActionResult ProcessRequisitions(List<string> reqIdList)

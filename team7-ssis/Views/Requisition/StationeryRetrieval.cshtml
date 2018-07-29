@@ -157,11 +157,6 @@
 
         $(document).on('click', '#updateRetrievalBtn', function () {
             var rowData = table.rows().data().toArray();
-            //var data = [];
-            //for (i = 0; i < data.length; i++) {
-            //    data[i] = { AllRetrieved: , ProductID: }
-            //};
-
             var json = {
                 RetrievalID: "@Request.QueryString["rid"]",
                 Data: rowData

@@ -17,7 +17,7 @@
     <div class="col-md-4">
         @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
         {
-            <a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>
+            <a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="/Requisition/CreateRequisition"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>
         }
         @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
         {
@@ -55,9 +55,6 @@
     <thead>
         <tr>
             <th>Requisition</th>
-            <th>Item Code</th>
-            <th>Description</th>
-            <th>Qty</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -66,18 +63,16 @@
 </table>
 
 <script>
+    var myTable;
     $(document).ready(function () {
-        var oTable = $('#myTable').DataTable({
+        myTable = $('#myTable').DataTable({
             ajax: {
-                url: "/api/reqdetail/all",
+                url: "/api/requisition",
                 dataSrc: ""
             },
             order: [[0, 'desc']],
             columns: [
                 { "data": "Requisition", "autoWidth": true },
-                { "data": "ItemCode", "autoWidth": true },
-                { "data": "Description", "autoWidth": true },
-                { "data": "Quantity", "autoWidth": true },
                 { "data": "Status", "autoWidth": true },
                 {
                     "render": function (data, type, row, meta) {
@@ -109,8 +104,8 @@
                         @if ( User.IsInRole("Department Head") || User.IsInRole("Admin") )
                         {
                             <text>
-                        html += '<button type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
-                            '<button type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
+                        html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
+                            '<button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
 
                             </text>
                         }
@@ -138,19 +133,39 @@
         });
     })
 
+    // Click "Accept" button
+    $(document).on("click", "#approveBtn", function (e) {
+        e.preventDefault();
+        console.log("Approved");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        post("/Requisition/Approve", { rid: data.Requisition, email: "", remarks: "" });
+    });
+
+    // Click "Reject" button
+    $(document).on("click", "#rejectBtn", function (e) {
+        e.preventDefault();
+        console.log("Rejected");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        post("/Requisition/Reject", { rid: data.Requisition, email: "", remarks: ""});
+    });
+
     // Click "Process All Requisitions" button
-    $('#processAllRequisitionButton').click(function (e) {
+    $(document).on("click", "#processAllRequisitionButton", function (e) {
         e.preventDefault();
         var data = $('#myTable').DataTable().rows().data().toArray();
         process(data);
-    })
+    });
 
-    // Click "Process All Requisitions" button
-    $('#processSelectedButton').click(function (e) {
+    // Click "Process Selected Requisitions" button
+    $(document).on("click", "#processSelectedButton", function (e) {
         e.preventDefault();
         var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
         process(data);
-    })
+    });
 
     function process(data) {
         var reqIdArray = [];

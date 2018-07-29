@@ -117,6 +117,21 @@ namespace team7_ssis.Controllers
             return View("../Requisition/CreateEditRequisition", viewModel);
         }
 
+        // POST: /Requisition/Approve
+        public ActionResult Approve(string rid, string email, string remarks)
+        {
+            requisitionService.ApproveRequisition(rid, email, remarks);
+            return View("../Requisition/ManageRequisitions");
+        }
+
+        // POST: /Requisition/Reject
+        public ActionResult Reject(string rid, string email, string remarks)
+        {
+            requisitionService.RejectRequisition(rid, email, remarks);
+            return View("../Requisition/ManageRequisitions");
+        }
+
+
         private CreateRequisitionViewModel CreateReqViewModel(string action)
         {
             CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
@@ -132,5 +147,6 @@ namespace team7_ssis.Controllers
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
             return viewModel;
         }
+        
     }
 }
