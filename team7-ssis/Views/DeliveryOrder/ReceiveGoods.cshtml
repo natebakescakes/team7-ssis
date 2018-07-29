@@ -1,0 +1,33 @@
+﻿@section scripts
+{
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
+}
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Receive Goods</title>
+    </head>
+
+    <body>
+        <div style="width:90%; margin:0 auto" class="container">
+            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">View Purchase Order Form</a>
+            <table id="myTable" class="hover">
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Description</th>
+                        <th>Outstanding Qty</th>
+                        <th>Received Qty</th>
+                        <th>Remaining Qty</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </body>
+</html>

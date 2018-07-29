@@ -43,8 +43,15 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = deliveryOrderRepository.FindById("TEST");
+            var result = deliveryOrderRepository.FindById("DOREPOTEST");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(DeliveryOrder));
@@ -53,31 +60,40 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = deliveryOrderRepository.ExistsById("TEST");
+            var result = deliveryOrderRepository.ExistsById("DOREPOTEST");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeStatus()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
+            // Arrange - Initialize
             var status = new StatusRepository(context).FindById(14);
-            var deliveryOrder = deliveryOrderRepository.FindById("TEST");
-            var original = deliveryOrder.Status;
-            deliveryOrder.Status = status;
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Arrange - Get Existing
+            var expected = deliveryOrderRepository.FindById("DOREPOTEST");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = deliveryOrderRepository.Save(deliveryOrder);
+            var result = deliveryOrderRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(status, result.Status);
-
-            // Tear Down
-            deliveryOrder.Status = original;
-            deliveryOrderRepository.Save(deliveryOrder);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
@@ -87,7 +103,7 @@ namespace team7_ssis.Tests.Repositories
             // Arrange
             var deliveryOrder = new DeliveryOrder
             {
-                DeliveryOrderNo = "UNIT TEST",
+                DeliveryOrderNo = "DOREPOTEST",
                 CreatedDateTime = DateTime.Now
             };
 
@@ -102,19 +118,32 @@ namespace team7_ssis.Tests.Repositories
             deliveryOrderRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(deliveryOrderRepository.FindById("UNIT TEST"));
+            Assert.IsNull(deliveryOrderRepository.FindById("DOREPOTEST"));
         }
 
         [TestMethod]
         public void FindByCreatedDateTimeTestNotNull()
         {
             // Arrange
+            deliveryOrderRepository.Save(new DeliveryOrder()
+            {
+                DeliveryOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var result = deliveryOrderRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
 
             // Assert
             Assert.IsTrue(result.Count() >= 1);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (deliveryOrderRepository.ExistsById("DOREPOTEST"))
+                deliveryOrderRepository.Delete(deliveryOrderRepository.FindById("DOREPOTEST"));
+
         }
     }
 }

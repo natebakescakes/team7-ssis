@@ -10,6 +10,7 @@ namespace team7_ssis.Tests.Repositories
     public class RequisitionDetailRepositoryTests
     {
         ApplicationDbContext context;
+        RequisitionRepository disbursementRepository;
         RequisitionDetailRepository requisitionDetailRepository;
 
         [TestInitialize]
@@ -17,6 +18,7 @@ namespace team7_ssis.Tests.Repositories
         {
             // Arrange
             context = new ApplicationDbContext();
+            disbursementRepository = new RequisitionRepository(context);
             requisitionDetailRepository = new RequisitionDetailRepository(context);
         }
 
@@ -43,8 +45,21 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            var expected = new RequisitionDetail()
+            {
+                RequisitionId = "RQDREPOTEST",
+                ItemCode = "E030",
+            };
+            disbursementRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            requisitionDetailRepository.Save(expected);
+
             // Act
-            var result = requisitionDetailRepository.FindById("TEST", "E032");
+            var result = requisitionDetailRepository.FindById("RQDREPOTEST", "E030");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(RequisitionDetail));
@@ -53,55 +68,109 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            var expected = new RequisitionDetail()
+            {
+                RequisitionId = "RQDREPOTEST",
+                ItemCode = "E030",
+            };
+            disbursementRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            requisitionDetailRepository.Save(expected);
+
             // Act
-            var result = requisitionDetailRepository.ExistsById("TEST", "E032");
+            var result = requisitionDetailRepository.ExistsById("RQDREPOTEST", "E030");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeQuantity()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var requisitionDetail = requisitionDetailRepository.FindById("TEST", "E032");
-            var original = requisitionDetail.Quantity;
-            requisitionDetail.Quantity = 999999;
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            disbursementRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            requisitionDetailRepository.Save(new RequisitionDetail()
+            {
+                RequisitionId = "RQDREPOTEST",
+                Status = status,
+                ItemCode = "E030",
+            });
+
+            // Arrange - Get Existing
+            var expected = requisitionDetailRepository.FindById("RQDREPOTEST", "E030");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = requisitionDetailRepository.Save(requisitionDetail);
+            var result = requisitionDetailRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(999999, result.Quantity);
-
-            // Tear Down
-            requisitionDetail.Quantity = original;
-            requisitionDetailRepository.Save(requisitionDetail);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
-        public void SaveAndDeleteTestNew()
+        public void Save_InstanceOfType()
         {
-            // Save new object into DB
             // Arrange
             var requisitionDetail = new RequisitionDetail
             {
-                RequisitionId = "TEST",
+                RequisitionId = "RQDREPOTEST",
                 ItemCode = "P030"
             };
+            disbursementRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var saveResult = requisitionDetailRepository.Save(requisitionDetail);
 
             // Assert
             Assert.IsInstanceOfType(saveResult, typeof(RequisitionDetail));
+        }
 
-            // Delete saved object from DB
+        [TestMethod]
+        public void Delete_CannotFind()
+        {
+            // Arrange
+            disbursementRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            var saveResult = requisitionDetailRepository.Save(new RequisitionDetail()
+            {
+                RequisitionId = "RQDREPOTEST",
+                ItemCode = "E030",
+            });
+
             // Act
             requisitionDetailRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(requisitionDetailRepository.FindById("TEST", "P030"));
+            Assert.IsNull(requisitionDetailRepository.FindById("RQDREPOTEST", "E030"));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (requisitionDetailRepository.ExistsById("RQDREPOTEST", "E030"))
+                requisitionDetailRepository.Delete(requisitionDetailRepository.FindById("RQDREPOTEST", "E030"));
+
+            if (requisitionDetailRepository.ExistsById("RQDREPOTEST", "P030"))
+                requisitionDetailRepository.Delete(requisitionDetailRepository.FindById("RQDREPOTEST", "P030"));
+
+            if (disbursementRepository.ExistsById("RQDREPOTEST"))
+                disbursementRepository.Delete(disbursementRepository.FindById("RQDREPOTEST"));
+
         }
     }
 }

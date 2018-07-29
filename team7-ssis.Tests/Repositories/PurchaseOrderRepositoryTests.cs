@@ -6,7 +6,7 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
+    [TestClass]
     public class PurchaseOrderRepositoryTests
     {
         ApplicationDbContext context;
@@ -43,8 +43,15 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            purchaseOrderRepository.Save(new PurchaseOrder()
+            {
+                PurchaseOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = purchaseOrderRepository.FindById("TEST");
+            var result = purchaseOrderRepository.FindById("DOREPOTEST");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(PurchaseOrder));
@@ -53,31 +60,40 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            purchaseOrderRepository.Save(new PurchaseOrder()
+            {
+                PurchaseOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = purchaseOrderRepository.ExistsById("TEST");
+            var result = purchaseOrderRepository.ExistsById("DOREPOTEST");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeStatus()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var status = new StatusRepository(context).FindById(15);
-            var purchaseOrder = purchaseOrderRepository.FindById("TEST");
-            var original = purchaseOrder.Status;
-            purchaseOrder.Status = status;
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            purchaseOrderRepository.Save(new PurchaseOrder()
+            {
+                PurchaseOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Arrange - Get Existing
+            var expected = purchaseOrderRepository.FindById("DOREPOTEST");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = purchaseOrderRepository.Save(purchaseOrder);
+            var result = purchaseOrderRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(status, result.Status);
-
-            // Tear Down
-            purchaseOrder.Status = original;
-            purchaseOrderRepository.Save(purchaseOrder);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
@@ -87,7 +103,7 @@ namespace team7_ssis.Tests.Repositories
             // Arrange
             var purchaseOrder = new PurchaseOrder
             {
-                PurchaseOrderNo = "UNIT TEST",
+                PurchaseOrderNo = "DOREPOTEST",
                 CreatedDateTime = DateTime.Now
             };
 
@@ -102,19 +118,32 @@ namespace team7_ssis.Tests.Repositories
             purchaseOrderRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(purchaseOrderRepository.FindById("UNIT TEST"));
+            Assert.IsNull(purchaseOrderRepository.FindById("DOREPOTEST"));
         }
 
         [TestMethod]
         public void FindByCreatedDateTimeTestNotNull()
         {
             // Arrange
+            purchaseOrderRepository.Save(new PurchaseOrder()
+            {
+                PurchaseOrderNo = "DOREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var result = purchaseOrderRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
 
             // Assert
             Assert.IsTrue(result.Count() >= 1);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (purchaseOrderRepository.ExistsById("DOREPOTEST"))
+                purchaseOrderRepository.Delete(purchaseOrderRepository.FindById("DOREPOTEST"));
+
         }
     }
 }

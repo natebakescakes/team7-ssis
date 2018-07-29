@@ -22,6 +22,23 @@ namespace team7_ssis.Services
             statusRepository = new StatusRepository(context);
         }
 
+        public Notification ReadNotification(int notificationId)
+        {
+            var notification = FindNotificationById(notificationId);
+
+            if (notification.Status.StatusId == 15)
+                throw new ArgumentException("Notification already read");
+
+            notification.Status = statusRepository.FindById(15);
+
+            return Save(notification);
+        }
+
+        public Notification FindNotificationById(int notificationId)
+        {
+            return notificationRepository.FindById(notificationId);
+        }
+
         private Notification InstantiateNotification(ApplicationUser recipient)
         {
             //instantiate new notification object and populating the fields
@@ -67,6 +84,8 @@ namespace team7_ssis.Services
        
         public List<Notification> FindNotificationsByUser(ApplicationUser user)
         {
+            if (user == null) return new List<Notification>();
+
             return notificationRepository.FindByUser(user).ToList();
         }
 

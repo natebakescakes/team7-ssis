@@ -1,0 +1,67 @@
+﻿
+
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+</head>
+
+<body>
+
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Supplier</a>
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>Supplier Code</th>
+                    <th>Company Name</th>
+                    <th>Contact Name</th>
+                    <th>Phone Number</th>
+                    <th>Fax Number</th>
+                    <th>Address</th>
+
+
+
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#myTable').DataTable({
+               
+                "ajax": {
+                    "url": '/Supplier/loaddata',
+                    "type": "get",
+                    "datatype": "json"
+                },
+                select:'single',
+                "columns": [
+                    { "data": "SupplierCode", "autoWidth": true },
+                    { "data": "Name", "autoWidth": true },
+                    { "data": "ContactName", "autoWidth": true },
+                    { "data": "PhoneNumber", "autoWidth": true },
+                    { "data": "FaxNumber", "autoWidth": true },
+                    { "data": "Address", "autoWidth": true },
+
+
+                ]
+
+            });
+          
+
+        
+        })
+
+    </script>
+
+</body>
