@@ -380,6 +380,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Custom\GeneratePurchaseOrder.js" />
+    <Content Include="Scripts\Custom\InventoryShortfall.js" />
     <Content Include="Scripts\Custom\NewStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -524,6 +525,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\PurchaseOrder\Success.cshtml" />
+    <Content Include="Views\Inventory\Shortfall.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

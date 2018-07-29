@@ -152,9 +152,17 @@ namespace team7_ssis.Controllers
             return new JsonResult { Data = new { status = "Cancelled" } };
         }
 
+        [HttpGet]
         public ActionResult Generate()
         {
             return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult GeneratePost(List<string> poNums)
+        {
+            return View("Generate", poNums);
         }
 
 

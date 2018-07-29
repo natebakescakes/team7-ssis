@@ -16,6 +16,8 @@ namespace team7_ssis.ViewModels
         public string Uom { get; set; }
         public int Quantity { get; set; }
         public string UnitPrice { get; set; }
+        public int AmountToReorder { get; set; }
+
     }
 
     public class ItemPriceViewModel
