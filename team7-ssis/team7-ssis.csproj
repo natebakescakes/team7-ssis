@@ -393,7 +393,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\pencil1.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -565,6 +564,7 @@
     <Content Include="Views\Report\DepartmentUsageMobile.cshtml" />
     <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
+    <Content Include="Views\Inventory\Create.cshtml" />
     <Content Include="Views\StockAdjustment\StoreManagerView.cshtml" />
     <Content Include="Views\StockAdjustment\StoreClerkView.cshtml" />
     <Content Include="Views\StockAdjustment\Process.cshtml" />
@@ -573,6 +573,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="Views\Notification\" />
   </ItemGroup>
   <ItemGroup>
