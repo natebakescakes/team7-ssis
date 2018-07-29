@@ -398,6 +398,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\AcceptRejectButtons.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
     <Content Include="Scripts\Custom\CreateEditRequisition.js" />
@@ -408,7 +409,6 @@
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
     <Content Include="Scripts\Custom\StockAdjustment_Clerk.js" />
-    <Content Include="Scripts\Custom\RequisitionDetails.js" />
     <Content Include="Scripts\Custom\StockAdjustmentDetail.js" />
     <Content Include="Scripts\Custom\StockAdjustment_ManagerProcess.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
@@ -569,6 +569,8 @@
     <Content Include="Views\StockAdjustment\Process.cshtml" />
     <Content Include="Views\StockAdjustment\DetailsEdit.cshtml" />
     <Content Include="Views\StockAdjustment\DetailsNoEdit.cshtml" />
+    <Content Include="Views\Retrieval\Manage.cshtml" />
+    <Content Include="Views\Disbursement\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

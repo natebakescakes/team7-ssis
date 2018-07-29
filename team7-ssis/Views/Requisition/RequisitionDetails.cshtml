@@ -1,5 +1,9 @@
 ﻿@model team7_ssis.ViewModels.RequisitionDetailViewModel
 
+@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+}
+
 @{
     ViewBag.Title = "RequisitionDetails";
 }
@@ -60,8 +64,8 @@
         @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
         {
             <button type="button" class="btn btn-secondary">Cancel</button>
-            <button type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
-            <button type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
+            <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
+            <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
         }
         else
         {
@@ -70,6 +74,35 @@
     </div>
 </div>
 
-@section Scripts {
-    <script src="~/Scripts/Custom/RequisitionDetails.js"></script>
-}
+<script>
+    // Load Datatable
+    $(document).ready(function () {
+        var oTable = $('#myTable').DataTable({
+            ajax: {
+                url: "/api/reqdetail/all",
+                dataSrc: ""
+            },
+            columns: [
+                { "data": "ItemCode", "autoWidth": true },
+                { "data": "Description", "autoWidth": true },
+                { "data": "Quantity", "autoWidth": true },
+                { "data": "Status", "autoWidth": true },
+            ],
+            select: "api"
+        });
+    })
+
+    // Click "Accept" button
+    $(document).on("click", "#approveBtn", function (e) {
+        e.preventDefault();
+        console.log("Approved");
+        post("/Requisition/Approve", { rid: "@Model.RequisitionID", email: "", remarks: "" });
+    });
+
+    // Click "Reject" button
+    $(document).on("click", "#rejectBtn", function (e) {
+        e.preventDefault();
+        console.log("Rejected");
+        post("/Requisition/Reject", { rid: "@Model.RequisitionID", email: "", remarks: "" });
+    });
+</script>

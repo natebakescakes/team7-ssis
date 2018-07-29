@@ -20,6 +20,12 @@ namespace team7_ssis.Controllers
             disbursementService = new DisbursementService(context);
         }
 
+        // GET: Disbursement/Manage
+        public ActionResult Manage()
+        {
+            return View();
+        }
+
         // GET: Disbursement/DisbursementDetails
         public ActionResult DisbursementDetails(string did)
         {
