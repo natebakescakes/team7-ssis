@@ -428,6 +428,42 @@ namespace team7_ssis.Controllers
                 }).ToList(),
             }));
         }
+
+        [Route("api/stockadjustment/supervisor/approve")]
+        public IHttpActionResult ApproveStockAdjustment([FromBody] StockAdjustmentIdViewModel model)
+        {
+            try
+            {
+                new StockAdjustmentService(Context).ApproveStockAdjustment(model.StockAdjustmentId, model.Email);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully approved"
+            });
+        }
+
+        [Route("api/stockadjustment/supervisor/reject")]
+        public IHttpActionResult RejectStockAdjustment([FromBody] StockAdjustmentIdViewModel model)
+        {
+            try
+            {
+                new StockAdjustmentService(Context).RejectStockAdjustment(model.StockAdjustmentId, model.Email);
+            }
+            catch (ArgumentException e) 
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully rejected"
+            });
+        }
     }
 }
 

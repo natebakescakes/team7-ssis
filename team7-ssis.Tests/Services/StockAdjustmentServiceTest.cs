@@ -413,6 +413,7 @@ namespace team7_ssis.Tests.Services
                     {
                         StockAdjustmentId = "ADJAPPROVETEST",
                         ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
                         OriginalQuantity = 10,
                         AfterQuantity = 10,
                     }
@@ -454,6 +455,7 @@ namespace team7_ssis.Tests.Services
                     {
                         StockAdjustmentId = "ADJAPPROVETEST",
                         ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
                         OriginalQuantity = 10,
                         AfterQuantity = 10,
                     }
@@ -482,6 +484,7 @@ namespace team7_ssis.Tests.Services
                     {
                         StockAdjustmentId = "ADJAPPROVETEST",
                         ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
                         OriginalQuantity = 10,
                         AfterQuantity = 10,
                     }
@@ -523,6 +526,7 @@ namespace team7_ssis.Tests.Services
                     {
                         StockAdjustmentId = "ADJAPPROVETEST",
                         ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
                         OriginalQuantity = 10,
                         AfterQuantity = 10,
                     }
