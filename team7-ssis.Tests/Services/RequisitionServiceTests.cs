@@ -32,23 +32,23 @@ namespace team7_ssis.Tests.Services
             populateRequisitions();
         }
 
-        //[TestMethod]
-        //public void FindByDepartmentTest()
-        //{
-        //    // Arrange
-        //    requisitionService.Save(new Requisition()
-        //    {
-        //        RequisitionId = "RQSERVTEST",
-        //        Department = new DepartmentRepository(context).FindById("ENGL"),
-        //        CreatedDateTime = DateTime.Now,
-        //    });
+        [TestMethod]
+        public void FindByDepartmentTest()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "RQSERVTEST",
+                Department = new DepartmentRepository(context).FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+            });
 
-        //    // Act
-        //    var result = requisitionService.FindRequisitionsByDepartment(new DepartmentRepository(context).FindById("ENGL"));
+            // Act
+            var result = requisitionService.FindRequisitionsByDepartment(new DepartmentRepository(context).FindById("ENGL"));
 
-        //    // Assert
-        //    result.ToList().ForEach(r => Assert.AreEqual("ENGL", r.Department.DepartmentCode));
-        //}
+            // Assert
+            result.ToList().ForEach(r => Assert.AreEqual("ENGL", r.Department.DepartmentCode));
+        }
 
         [TestCleanup]
         public void TestCleanup()
@@ -65,243 +65,243 @@ namespace team7_ssis.Tests.Services
                 requisitionRepository.Delete(requisitionRepository.FindById("APPROVETEST"));
         }
 
-        //[TestMethod]
-        //public void FindRequisitionsByStatusTest()
-        //{
-        //    // Arrange
-        //    List<Status> statusList = new List<Status>();
-        //    statusList.Add(context.Status.Where(x => x.StatusId == 8).First());
-        //    statusList.Add(context.Status.Where(x => x.StatusId == 9).First());
-        //    statusList.Add(context.Status.Where(x => x.StatusId == 10).First());
+        [TestMethod]
+        public void FindRequisitionsByStatusTest()
+        {
+            // Arrange
+            List<Status> statusList = new List<Status>();
+            statusList.Add(context.Status.Where(x => x.StatusId == 8).First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 9).First());
+            statusList.Add(context.Status.Where(x => x.StatusId == 10).First());
 
-        //    // Act
-        //    List<Requisition> result = requisitionService.FindRequisitionsByStatus(statusList);
+            // Act
+            List<Requisition> result = requisitionService.FindRequisitionsByStatus(statusList);
 
-        //    // Assert - All Requisitions in the list should have a Status which is in the statusList
-        //    foreach (Requisition req in result)
-        //    {
-        //        Assert.IsTrue(statusList.Contains(req.Status));
-        //    }
-        //}
-        //[TestMethod]
-        //public void GetRequisitionDetailsTest()
-        //{
-        //    // Arrange
-        //    string reqId = "REQ-201807-001";
+            // Assert - All Requisitions in the list should have a Status which is in the statusList
+            foreach (Requisition req in result)
+            {
+                Assert.IsTrue(statusList.Contains(req.Status));
+            }
+        }
+        [TestMethod]
+        public void GetRequisitionDetailsTest()
+        {
+            // Arrange
+            string reqId = "REQ-201807-001";
 
-        //    // Act
-        //    List<RequisitionDetail> reqList = requisitionService.GetRequisitionDetails(reqId);
+            // Act
+            List<RequisitionDetail> reqList = requisitionService.GetRequisitionDetails(reqId);
 
-        //    // Assert - Should return a List<Requistion> where Requisition.RequisitionId equals the one passed in
-        //    foreach (RequisitionDetail rd in reqList)
-        //    {
-        //        Assert.AreEqual(rd.RequisitionId, reqId);
-        //    }
-        //}
+            // Assert - Should return a List<Requistion> where Requisition.RequisitionId equals the one passed in
+            foreach (RequisitionDetail rd in reqList)
+            {
+                Assert.AreEqual(rd.RequisitionId, reqId);
+            }
+        }
 
-        //[TestMethod()]
-        //public void ProcessRequisitionsTest_CreatesRetrieval()
-        //{
-        //    // Arrange
-        //    List<Requisition> reqList = new List<Requisition>();
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
+        [TestMethod()]
+        public void ProcessRequisitionsTest_CreatesRetrieval()
+        {
+            // Arrange
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
 
-        //    // Act
-        //    string retrievalId = requisitionService.ProcessRequisitions(reqList);
+            // Act
+            string retrievalId = requisitionService.ProcessRequisitions(reqList);
 
-        //    // Assert - the Retrieval ID that ProcessRequisitions returns should return a Requisition
-        //    Retrieval result = context.Retrieval.Where(x => x.RetrievalId == retrievalId).ToList().First();
-        //    Assert.IsNotNull(result);
+            // Assert - the Retrieval ID that ProcessRequisitions returns should return a Requisition
+            Retrieval result = context.Retrieval.Where(x => x.RetrievalId == retrievalId).ToList().First();
+            Assert.IsNotNull(result);
 
-        //    // Cleanup
-        //    var disb = context.Disbursement.Where(x => x.Retrieval.RetrievalId == result.RetrievalId).AsEnumerable();
-        //    context.Disbursement.RemoveRange(disb);
+            // Cleanup
+            var disb = context.Disbursement.Where(x => x.Retrieval.RetrievalId == result.RetrievalId).AsEnumerable();
+            context.Disbursement.RemoveRange(disb);
 
-        //    context.Retrieval.Remove(result);
-        //    context.SaveChanges();
-        //}
+            context.Retrieval.Remove(result);
+            context.SaveChanges();
+        }
 
-        //[TestMethod]
-        //public void ProcessRequisitionsTest_AddQuantity()
-        //{
-        //    // ARRANGE
-        //    List<Requisition> reqList = new List<Requisition>();
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First()); // department is COMM
+        [TestMethod]
+        public void ProcessRequisitionsTest_AddQuantity()
+        {
+            // ARRANGE
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First()); // department is COMM
 
-        //    Requisition r1 = new Requisition();
-        //    r1.RequisitionId = "TEST1";
-        //    r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
-        //    r1.RequisitionDetails = new List<RequisitionDetail>();
-        //    r1.EmployeeRemarks = "From AddDisbursementDetailsFromEachDepartmentTest_AddQuantity";
-        //    r1.CreatedDateTime = DateTime.Now;
+            Requisition r1 = new Requisition();
+            r1.RequisitionId = "TEST1";
+            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
+            r1.RequisitionDetails = new List<RequisitionDetail>();
+            r1.EmployeeRemarks = "From AddDisbursementDetailsFromEachDepartmentTest_AddQuantity";
+            r1.CreatedDateTime = DateTime.Now;
 
-        //    RequisitionDetail rd1 = new RequisitionDetail();
-        //    rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
-        //    rd1.Quantity = 20;
+            RequisitionDetail rd1 = new RequisitionDetail();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.Quantity = 20;
 
-        //    r1.RequisitionDetails.Add(rd1);
+            r1.RequisitionDetails.Add(rd1);
 
-        //    reqList.Add(r1);
+            reqList.Add(r1);
 
-        //    //// ACT
-        //    string retrievalId = requisitionService.ProcessRequisitions(reqList);
+            //// ACT
+            string retrievalId = requisitionService.ProcessRequisitions(reqList);
 
-        //    //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 30 items.
-        //    var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
+            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 30 items.
+            var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
 
-        //    Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
-        //    var dd = query.First().DisbursementDetails.First();
-        //    Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
-        //    Assert.IsTrue(dd.PlanQuantity == 30); // DisbursementDetail's PlanQuantity is 30
+            Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
+            var dd = query.First().DisbursementDetails.First();
+            Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
+            Assert.IsTrue(dd.PlanQuantity == 30); // DisbursementDetail's PlanQuantity is 30
 
-        //    //// CLEANUP
-        //    // remove Disbursement which has the generated DisbursementId
-        //    // will remove DisbursementDetails as well
-        //    var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
-        //    context.Disbursement.Remove(d.First());
+            //// CLEANUP
+            // remove Disbursement which has the generated DisbursementId
+            // will remove DisbursementDetails as well
+            var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
+            context.Disbursement.Remove(d.First());
 
-        //    // remove the Retrieval with the generated retrievalId
-        //    context.Retrieval.Remove(context.Retrieval.Where(x => x.RetrievalId == retrievalId).First());
-        //    context.SaveChanges();
-        //}
+            // remove the Retrieval with the generated retrievalId
+            context.Retrieval.Remove(context.Retrieval.Where(x => x.RetrievalId == retrievalId).First());
+            context.SaveChanges();
+        }
 
-        //[TestMethod()]
-        //public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
-        //{
-        //    // Arrange
-        //    List<Requisition> reqList = new List<Requisition>();
+        [TestMethod()]
+        public void AddDisbursementDetailsForEachDepartmentTest_CorrectDepts()
+        {
+            // Arrange
+            List<Requisition> reqList = new List<Requisition>();
 
-        //    // Add Requisitions to List<Requisition>
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
+            // Add Requisitions to List<Requisition>
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
 
-        //    // Act
-        //    List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
+            // Act
+            List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
 
-        //    //// Assert - There should be 3 Disbursements created, one for each department
-        //    Assert.AreEqual(disbList.Count, 3);
-        //    Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
-        //                    .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
-        //}
+            //// Assert - There should be 3 Disbursements created, one for each department
+            Assert.AreEqual(disbList.Count, 3);
+            Assert.IsTrue(new HashSet<string>(disbList.Select(x => x.Department.DepartmentCode).ToList())
+                            .SetEquals(new HashSet<string> { "COMM", "CPSC", "ENGL" }));
+        }
 
-        //[TestMethod()]
-        //public void CreateDisbursementForEachDepartmentTest()
-        //{
-        //    // Arrange
+        [TestMethod()]
+        public void CreateDisbursementForEachDepartmentTest()
+        {
+            // Arrange
 
-        //    List<Requisition> reqList = new List<Requisition>();
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").First());
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").First());
-        //    reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").First());
+            List<Requisition> reqList = new List<Requisition>();
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").First());
 
-        //    //// Act
-        //    HashSet<Department> expected = new HashSet<Department>
-        //    {
-        //        context.Department.Where(x => x.DepartmentCode == "COMM").First(),
-        //        context.Department.Where(x => x.DepartmentCode == "CPSC").First(),
-        //        context.Department.Where(x => x.DepartmentCode == "ENGL").First()
-        //    };
+            //// Act
+            HashSet<Department> expected = new HashSet<Department>
+            {
+                context.Department.Where(x => x.DepartmentCode == "COMM").First(),
+                context.Department.Where(x => x.DepartmentCode == "CPSC").First(),
+                context.Department.Where(x => x.DepartmentCode == "ENGL").First()
+            };
 
-        //    List<Disbursement> result = requisitionService.CreateDisbursementForEachDepartment(reqList);
+            List<Disbursement> result = requisitionService.CreateDisbursementForEachDepartment(reqList);
 
-        //    //// Assert
-        //    HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
+            //// Assert
+            HashSet<Department> depts = new HashSet<Department>(result.Select(x => x.Department));
 
-        //    Assert.IsTrue(depts.SetEquals(expected));
-        //}
+            Assert.IsTrue(depts.SetEquals(expected));
+        }
 
-        //[TestMethod]
-        //public void ApproveRequisition_Valid()
-        //{
-        //    // Arrange
-        //    requisitionService.Save(new Requisition()
-        //    {
-        //        RequisitionId = "APPROVETEST",
-        //        Status = statusService.FindStatusByStatusId(4),
-        //        CreatedDateTime = DateTime.Now,
-        //    });
-        //    var expected = statusService.FindStatusByStatusId(6);
+        [TestMethod]
+        public void ApproveRequisition_Valid()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(4),
+                CreatedDateTime = DateTime.Now,
+            });
+            var expected = statusService.FindStatusByStatusId(6);
 
-        //    // Act
-        //    requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
+            // Act
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
 
-        //    // Assert
-        //    Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
-        //}
+            // Assert
+            Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
+        }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(ArgumentException))]
-        //public void ApproveRequisition_AlreadyApproved_ThrowsException()
-        //{
-        //    // Arrange
-        //    requisitionService.Save(new Requisition()
-        //    {
-        //        RequisitionId = "APPROVETEST",
-        //        Status = statusService.FindStatusByStatusId(6),
-        //        CreatedDateTime = DateTime.Now,
-        //    });
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ApproveRequisition_AlreadyApproved_ThrowsException()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(6),
+                CreatedDateTime = DateTime.Now,
+            });
 
-        //    // Act
-        //    requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
-        //}
+            // Act
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
+        }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(ArgumentException))]
-        //public void ApproveRequisition_Invalid_ThrowException()
-        //{
-        //    // Arrange
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ApproveRequisition_Invalid_ThrowException()
+        {
+            // Arrange
 
-        //    // Act
-        //    requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
-        //}
+            // Act
+            requisitionService.ApproveRequisition("APPROVETEST", "root@admin.com", "I APPROVE THIS");
+        }
 
-        //[TestMethod]
-        //public void RejectRequisition_Valid()
-        //{
-        //    // Arrange
-        //    requisitionService.Save(new Requisition()
-        //    {
-        //        RequisitionId = "APPROVETEST",
-        //        Status = statusService.FindStatusByStatusId(4),
-        //        CreatedDateTime = DateTime.Now,
-        //    });
-        //    var expected = statusService.FindStatusByStatusId(5);
+        [TestMethod]
+        public void RejectRequisition_Valid()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(4),
+                CreatedDateTime = DateTime.Now,
+            });
+            var expected = statusService.FindStatusByStatusId(5);
 
-        //    // Act
-        //    requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
+            // Act
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
 
-        //    // Assert
-        //    Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
-        //}
+            // Assert
+            Assert.AreEqual(expected.StatusId, requisitionRepository.FindById("APPROVETEST").Status.StatusId);
+        }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(ArgumentException))]
-        //public void RejectRequisition_AlreadyRejected_ThrowsException()
-        //{
-        //    // Arrange
-        //    requisitionService.Save(new Requisition()
-        //    {
-        //        RequisitionId = "APPROVETEST",
-        //        Status = statusService.FindStatusByStatusId(6),
-        //        CreatedDateTime = DateTime.Now,
-        //    });
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RejectRequisition_AlreadyRejected_ThrowsException()
+        {
+            // Arrange
+            requisitionService.Save(new Requisition()
+            {
+                RequisitionId = "APPROVETEST",
+                Status = statusService.FindStatusByStatusId(6),
+                CreatedDateTime = DateTime.Now,
+            });
 
-        //    // Act
-        //    requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
-        //}
+            // Act
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
+        }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(ArgumentException))]
-        //public void RejectRequisition_Invalid_ThrowException()
-        //{
-        //    // Arrange
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RejectRequisition_Invalid_ThrowException()
+        {
+            // Arrange
 
-        //    // Act
-        //    requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
-        //}
+            // Act
+            requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
+        }
 
         private void populateRequisitions()
         {
