@@ -123,7 +123,7 @@ namespace team7_ssis.Tests.Services
         [TestMethod]
         public void DeleteItemPriceTest()
         {
-            //Arrage
+            //Arrange
             Item it = new Item
             {
                 ItemCode = "BBB",
@@ -131,21 +131,40 @@ namespace team7_ssis.Tests.Services
             };
             new ItemRepository(context).Save(it);
 
-            ItemPrice p = new ItemPrice
+            ItemPrice i = new ItemPrice
             {
-                ItemCode = it.ItemCode
+                ItemCode = it.ItemCode,
+                SupplierCode = "ALPA",
+                PrioritySequence = 3,
+                Price = 20.30M,
+                CreatedDateTime = DateTime.Now
             };
 
             //Act
-            var result = itemPriceService.DeleteItemPrice(p);
+            var result1 = itemPriceService.Save(i);
 
-            //Assert
-            CollectionAssert.AllItemsAreInstancesOfType(result, typeof(ItemPrice));
-            foreach (ItemPrice element in result)
-            {
-                Assert.AreEqual("Disabled", element.Status.Name);
-            }
+            //Act2
+            itemPriceService.DeleteItemPrice(i);
+
+            //Arrange
+            Assert.AreEqual(itemPriceService.FindItemPriceByItemCode(it.ItemCode).Count,0);
+
+            //clean
+            //itemPriceRepository.Delete(i);
             itemRepository.Delete(it);
+        }
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            string[] ids = new string[]
+           { "BBB","CCC","DDD","EEE","GGG","FFF" };
+
+            foreach (string id in ids)
+            {
+                Item i = itemRepository.FindById(id);
+                if (i != null)
+                    itemRepository.Delete(i);
+            }
         }
 
     }
