@@ -49,7 +49,15 @@
         </button>
     </div>
 }
-
+@if (ViewBag.Cancel != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        Requisition #@ViewBag.Cancel cancelled.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
 
 @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
 {
@@ -95,7 +103,7 @@
                         var editDetailsHtml = '<a class="dropdown-item editDetails"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
                         var createNewDraftWithHtml = '<a class="dropdown-item" href="#"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
                         var cancelHtml = '<div class="dropdown-divider"></div>' +
-                            '<a class="dropdown-item" href="#"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
+                            '<a class="dropdown-item" id="cancel"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
 
                          html += '<div class="dropdown">' +
                             '<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
@@ -183,6 +191,16 @@
             .row($(this).parents('tr'))
             .data();
         window.location.href = "/Requisition/EditRequisition?rid=" + data.Requisition;
+    });
+
+    // Click "Cancel" link
+    $(document).on("click", "#cancel", function (e) {
+        e.preventDefault();
+        console.log("Cancel");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        post("/Requisition/Cancel", { rid: data.Requisition });
     });
 
     // Click "Process All Requisitions" button

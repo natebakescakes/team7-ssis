@@ -36,8 +36,12 @@ namespace team7_ssis.Controllers
         }
 
         // GET: /Requisition/ManageRequisitions
-        public ActionResult ManageRequisitions(string update, string create)
+        public ActionResult ManageRequisitions(string msg)
         {
+            if (TempData["cancel"] != null)
+            {
+                ViewBag.Cancel = TempData["cancel"];
+            }
             return View();
         }
 
@@ -161,6 +165,20 @@ namespace team7_ssis.Controllers
         {
             requisitionService.RejectRequisition(rid, email, remarks);
             return View("../Requisition/ManageRequisitions");
+        }
+
+        // POST: /Requisition/Cancel
+        public ActionResult Cancel(string rid, string email)
+        {
+            try
+            {
+                requisitionService.UpdateRequisitionStatus(rid, 2, "");
+                TempData["cancel"] = rid;
+            } catch
+            {
+                return RedirectToAction("ManageRequisitions", "EditRequisition", new { rid });
+            }
+            return RedirectToAction("ManageRequisitions", "Requisition");
         }
 
     }
