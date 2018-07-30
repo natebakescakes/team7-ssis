@@ -35,87 +35,136 @@ namespace team7_ssis.Controllers
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
-        // GET: /Requisition
-        public ActionResult ManageRequisitions()
+        // GET: /Requisition/ManageRequisitions
+        public ActionResult ManageRequisitions(string update, string create)
         {
             return View();
         }
 
         // GET: /Requisiton/RequisitionDetails
-        public ActionResult RequisitionDetails(string reqId)
+        public ActionResult RequisitionDetails(string rid)
         {
-            Requisition r = requisitionRepository.FindById(reqId);
-            if (reqId == null)
-            {
+            Requisition r = requisitionRepository.FindById(rid);
+            RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
+            try {
+                viewModel.RequisitionID = r.RequisitionId;
+                viewModel.Department = r.Department == null ? "" : r.Department.Name;
+                viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
+                viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
+                viewModel.CreatedTime = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
+                viewModel.UpdatedBy = r.UpdatedBy == null ? "" : String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
+                viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
+                viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
+                viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
+            } catch {
                 return new HttpStatusCodeResult(400);
             }
-
-            RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
-            
-            viewModel.RequisitionID = r.RequisitionId;
-            viewModel.Department = r.Department == null ? "" : r.Department.Name;
-            viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
-            viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
-            viewModel.CreatedTime = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
-            viewModel.UpdatedBy = r.UpdatedBy == null ? "" : String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
-            viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
-            viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
-            viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
-
             return View(viewModel);
         }
         // GET: /Requisiton/StationeryRetrieval
         [Route("/Requisition/StationeryRetrieval")]
-        public ActionResult StationeryRetrieval(string rid)
+        public ActionResult StationeryRetrieval(string rid, string message)
+        {
+            Retrieval r = retrievalService.FindRetrievalById(rid);
+            StationeryRetrievalViewModel viewModel = new StationeryRetrievalViewModel();
+            ViewBag.Message = message;
+
+            try
+            {
+                viewModel.RetrievalID = r.RetrievalId;
+
+                try { viewModel.CreatedBy = String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName); }
+                catch { viewModel.CreatedBy = ""; }
+                viewModel.CreatedOn = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
+                try
+                {
+                    viewModel.UpdatedBy = String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
+                }
+                catch
+                {
+                    viewModel.UpdatedBy = "";
+                }
+                try
+                {
+                    viewModel.UpdatedOn = String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
+                }
+                catch
+                {
+                    viewModel.UpdatedOn = "";
+                }
+            } catch {
+                return new HttpStatusCodeResult(400);
+            }
+            return View(viewModel);
+        }
+        // GET: /Requisiton/StationeryDisbursement
+        public ActionResult StationeryDisbursement(string rid)
+        {
+            if (rid == null)
+            {
+                return new HttpStatusCodeResult(400);
+            }
+            ViewBag.RetrievalID = rid;
+            return View();
+        }
+
+        // GET: /Requisiton/CreateRequisition
+        public ActionResult CreateRequisition()
+        {
+            CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
+            viewModel.Action = "Create";
+            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
+
+            try
+            {
+                viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
+            }
+            catch
+            {
+                viewModel.Representative = "";
+            }
+
+            return View(viewModel);
+        }
+
+        // GET: /Requisiton/EditRequisition
+        public ActionResult EditRequisition(string rid)
         {
             if (rid == null)
             {
                 return new HttpStatusCodeResult(400);
             }
 
-            Retrieval r = retrievalService.FindRetrievalById(rid);
-            StationeryRetrievalViewModel viewModel = new StationeryRetrievalViewModel();
-            viewModel.RetrievalID = r.RetrievalId;
+            EditRequisitionViewModel viewModel = new EditRequisitionViewModel();
+            viewModel.Action = "Edit";
+            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
+            viewModel.RequisitionId = rid;
 
-            try { viewModel.CreatedBy = String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName); }
-            catch { viewModel.CreatedBy = ""; }
-            viewModel.CreatedOn = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
-            try
-            {
-                viewModel.UpdatedBy = String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
-            } catch
-            {
-                viewModel.UpdatedBy = "";
-            }
-            try
-            {
-                viewModel.UpdatedOn = String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
-            } catch
-            {
-                viewModel.UpdatedOn = "";
-            }
-
-            return View(viewModel);
-        }
-        // GET: /Requisiton/StationeryDisbursement
-        public ActionResult StationeryDisbursement(string rid)
-        {
-            ViewBag.RetrievalID = rid;
-            return View();
-        }
-        
-        public ActionResult CreateRequisition()
-        {
-            CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
             try
             {
                 viewModel.Representative = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).ContactName;
-            } catch
+            }
+            catch
             {
                 viewModel.Representative = "";
             }
-            viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
+            
             return View(viewModel);
         }
+
+        // POST: /Requisition/Approve
+        public ActionResult Approve(string rid, string email, string remarks)
+        {
+            requisitionService.ApproveRequisition(rid, email, remarks);
+            return View("../Requisition/ManageRequisitions");
+        }
+
+        // POST: /Requisition/Reject
+        public ActionResult Reject(string rid, string email, string remarks)
+        {
+            requisitionService.RejectRequisition(rid, email, remarks);
+            return View("../Requisition/ManageRequisitions");
+        }
+        
     }
 }

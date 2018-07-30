@@ -25,8 +25,8 @@ namespace team7_ssis.Tests.Controllers
             retrievalService = new RetrievalService(context);
         }
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        [TestInitialize]
+        public void TestInitialize()
         {
             // Create needed Retrieval, Disbursement, and Disbursement Detail
             retrievalService.Save(new Retrieval
@@ -47,8 +47,8 @@ namespace team7_ssis.Tests.Controllers
             });
             disbursementService.Save(d);
         }
-        [ClassCleanup]
-        public static void TestCleanup()
+        [TestCleanup]
+        public void TestCleanup()
         {   if (new RetrievalRepository(context).ExistsById("TEST2"))
             {
                 context.Retrieval.Remove(retrievalService.FindRetrievalById("TEST2"));
@@ -67,7 +67,7 @@ namespace team7_ssis.Tests.Controllers
             // ARRANGE
 
             // ACT
-            ActionResult result = requisitionController.StationeryRetrieval("TEST");
+            ActionResult result = requisitionController.StationeryRetrieval("TEST", "");
 
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));
@@ -78,7 +78,6 @@ namespace team7_ssis.Tests.Controllers
         /// Tests that StationeryDisbursement view renders when a valid Retrieval ID is passed in
         /// </summary>
         [TestMethod]
-        [Ignore]
         public void StationeryDisbursementTest()
         {
             // ARRANGE
@@ -100,7 +99,7 @@ namespace team7_ssis.Tests.Controllers
             // ARRANGE
 
             // ACT
-            ActionResult result = requisitionController.RequisitionDetails("TEST");
+            ActionResult result = requisitionController.RequisitionDetails("TEST2");
 
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));
