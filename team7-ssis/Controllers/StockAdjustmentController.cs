@@ -26,15 +26,15 @@ namespace team7_ssis.Controllers
             catch (NullReferenceException) { }
   
         }
-       
+
 
         // GET: StockAdjustment
-        public ActionResult Index()
+        public ActionResult Index(string create)
         {
             return View();
         }
 
-   
+
 
         public ActionResult New()
         {
