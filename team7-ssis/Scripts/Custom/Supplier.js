@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 
     var table = $('#myTable').DataTable({
-
+       
         sAjaxSource: "/api/supplier/all",
         sAjaxDataProp: "",
         pageLength: '5',
