@@ -61,13 +61,16 @@ namespace team7_ssis.ViewModels
 
         public List<BreakdownByDepartment> List { get; set; }
     }
-
-    public class RetrievalMobileViewModel
+    public class ManageRetrievalsViewModel
     {
         public string RetrievalId { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedDate { get; set; }
         public string Status { get; set; }
+    }
+
+    public class RetrievalMobileViewModel : ManageRetrievalsViewModel
+    {
         public List<RetrievalDetailByDeptViewModel> RetrievalDetails { get; set; }
     }
 

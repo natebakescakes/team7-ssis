@@ -1,8 +1,8 @@
-﻿@model team7_ssis.ViewModels.CreateRequisitionViewModel
+﻿@model team7_ssis.ViewModels.EditRequisitionViewModel
 
 <div class="row mb-3">
     <div class="col-md-8">
-        <h2>Create Requisition</h2>
+        <h2>Edit Requisition</h2>
     </div>
     <div class="col-md-4">
         <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
@@ -128,10 +128,14 @@ $(document).ready(function () {
 
     // render main table
     var myTable = $('#myTable').DataTable({
+        ajax: {
+            url: "/api/reqdetail/@Model.RequisitionId",
+            dataSrc: ""
+        },
         columns: [
-            { title: "ItemCode" },
-            { title: "Description" },
-            { title: "Quantity" },
+            { data: "ItemCode" },
+            { data: "Description" },
+            { data: "Quantity" },
             { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
         ],
         select: "api"
@@ -170,7 +174,7 @@ $(document).ready(function () {
         var qty = parseInt($('#qtyInput').val());
 
         if ((data.length > 0) && (qty > 0)) {
-            myTable.row.add([data[0].ItemCode, data[0].Description, qty]).draw();
+            myTable.row.add({ ItemCode: data[0].ItemCode, Description: data[0].Description, Quantity: qty }).draw();
             $('#myModal').modal('hide');
             $('#modalMsg').html('');
         } else {
@@ -189,25 +193,25 @@ $(document).ready(function () {
     });
 
     // Click 'Confirm' button
-    $('#confirmBtn').click(function () {
+    $('#confirmChangeBtn').click(function () {
         var tableData = myTable.rows().data().toArray();
 
         if (tableData.length > 0) {
-            var data = [];
+            var data = { RequisitionId: "@Model.RequisitionId" , ItemList: [] };
 
             for (i = 0; i < tableData.length; i++) {
-                data[0] = { ItemCode: tableData[i][0], Qty: tableData[i][2] }
+                data.ItemList[i] = { ItemCode: tableData[i].ItemCode, Qty: tableData[i].Quantity }
             }
 
             $.ajax({
                 type: "POST",
                 contentType: 'application/json',
-                url: "/api/createrequisition",
+                url: "/api/editrequisition",
                 data: JSON.stringify(data),
                 dataType: "json",
                 success: function (rid) {
                     // redirect to ManageRetrieval with a msg
-                    window.location.replace("/Requisition/ManageRequisitions?create=" + encodeURIComponent(rid));
+                    window.location.replace("/Requisition/ManageRequisitions?update=" + encodeURIComponent(rid));
                 },
                 error: function (msg) {
                     $('#alert').html(
