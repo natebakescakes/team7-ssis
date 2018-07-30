@@ -86,6 +86,8 @@ namespace team7_ssis.Services
             {
                 disbursementDetail.Status = new StatusService(context).FindStatusByStatusId(18);
             });
+
+            retrievalRepository.Save(retrieval);
         }
         /// <summary>
         /// Sets Retrieval.Status to "Retrieved".
