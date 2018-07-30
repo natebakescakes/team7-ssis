@@ -28,7 +28,7 @@ namespace team7_ssis.ViewModels
         public int QtyOrdered { get; set; }
         public int ReceivedQty { get; set; }
         public int RemainingQuantity { get; set; }
-        public int CheckboxStatus { get; set; }
+        public string CheckboxStatus { get; set; }
         public string InvoiceFileName { get; set; }
         public string DeliveryOrderFileName { get; set; }
     }

@@ -84,7 +84,7 @@ namespace team7_ssis.Services
 
                 PurchaseOrderDetail purchaseOrderDetail = purchaseOrderService.FindPurchaseOrderDetailbyIdItem(deliveryOrder.PurchaseOrder.PurchaseOrderNo, dod.ItemCode);
 
-                if (dod.ActualQuantity == dod.PlanQuantity)
+                if (dod.ActualQuantity >= dod.PlanQuantity)
 
                     purchaseOrderDetail.Status = statusRepository.FindById(13);
 
@@ -106,6 +106,7 @@ namespace team7_ssis.Services
 
 
             PurchaseOrder po = deliveryOrder.PurchaseOrder;
+            int flag=0;
 
             foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
             {
@@ -116,12 +117,14 @@ namespace team7_ssis.Services
 
                     purchaseOrderRepository.Save(po);
 
+                    flag = 1;
+
                     break;
                 }
             }
 
 
-            if (po.Status.StatusId == 11)
+            if (flag!=1)
             {
                 po.Status = statusRepository.FindById(13);
                 purchaseOrderRepository.Save(po);
@@ -153,18 +156,6 @@ namespace team7_ssis.Services
         public void SaveDeliveryOrderDetails(DeliveryOrderDetail deliveryOrderDetail)
         {
             deliveryOrderDetailRepository.Save(deliveryOrderDetail);
-        }
-
-        public void SaveInvoiceFileToDeliveryOrder(string Filepath)
-        {
-            throw new NotImplementedException();
-          //  deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
-            //Need to send to Finance department
-        }
-
-        public List<PurchaseOrderDetail> FindPurchaseOrderDetailbyPurchaseOrderNumber(string purchaseordernumber)
-        {
-            return deliveryOrderRepository.FindPurchaseOrderDetailbyPurchaseOrderNumber(purchaseordernumber).ToList();
         }
     }
 }

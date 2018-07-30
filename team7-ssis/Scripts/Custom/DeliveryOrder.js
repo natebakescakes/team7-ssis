@@ -196,18 +196,7 @@ $(document).ready(function () {
         }
     });
 
-
-    $('#myOutstandingTable tbody').on("change", "#qty", function () {
-
-        alert("hi");
-        var cell = oTable.cell(this.parentElement);
-
-        // assign the cell with the value from the <input> element 
-
-        cell.data($(this).val()).draw();
-
-    });
-
+    
 
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
@@ -215,59 +204,60 @@ $(document).ready(function () {
             url: "/api/purchaseorder/details/" + pon,
             dataSrc: ""
         },
-
         columns:
             [
                 { data: "ItemCode" },
                 { data: "Description" },
                 { data: "QuantityOrdered" },
                 {
-                   defaultContent:'<input type="textbox" id="qty" />'
+                    data: "ReceivedQuantity",
+                    render: function (data, type, row, meta) {
+                        return '<input  type="number" id="received " class="qty" min="0" value="' + data + '"/>';
+                    }
                 },
-                { data: "RemainingQuantity" },
+                { defaultContent: '' },
                 {
                     defaultContent: '<input type="checkbox" id="vcheck" />'
                 }
             ],
         select: "single"
     });
+   
+    // change the value of the cell in the datatable with an input field
+    $(document).on("change", ".qty", function () {
+        var cell = oTable.cell(this.parentElement);
+        cell.data($(this).val()).draw();
+        if (cell.val()>0)
+        { $('#vcheck').attr('disabled', 'disabled'); }
 
-    var k = 0;
+    });
+
+    var k = new Array();
+
     //checkbox 
     $('#myOutstandingTable tbody').on('change', '#vcheck', function (e) {
         var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
-        
-        //if ($(this).is(":checked")) {
-        //    k = 1;
-        //}
-        //else {
-        //    k = 0;
-        //}
+
+        if (this.checked != true) {
+            var index = k.indexOf(rowSelected);
+            if (index > -1) {
+                k.splice(index, 1);
+            }
+        }
+        else {
+            k.push(rowSelected);
+        }
 
 
-        //alert(k);
     });
 
   
     $('#submitbtn').click(function () {
         var mydata = oTable.rows().data().toArray();
-
+  
         var details = new Array();
-        mydata[0].ReceivedQty = 12;
-        mydata[1].ReceivedQty = 0;
-        mydata[2].ReceivedQty = 2;
-
-
-        
+ 
         for (var i = 0; i < mydata.length; i++) {
-
-            if (mydata[i].ReceivedQty > mydata[i].QuantityOrdered) {
-                alert("Received Quantity cannot be greater than Quantity Ordered");
-            }
-        }
-
-        alert(k);
-
 
             var o = {
 
@@ -279,11 +269,11 @@ $(document).ready(function () {
 
                 "QtyOrdered": mydata[i].QuantityOrdered,
 
-                "ReceivedQty": mydata[i].ReceivedQty,
+                "ReceivedQty": mydata[i].ReceivedQuantity,
 
                 "RemainingQuantity": mydata[i].RemainingQuantity,
 
-                "CheckBoxStatus":k
+                "CheckBoxStatus":k[i]
             };
 
             details.push(o);
@@ -307,10 +297,8 @@ $(document).ready(function () {
             success: function (data) {
 
                 alert("Delivery Order information has been successfully saved");
-                //if (data == success)
-                //    window.location.href = "/DeliveryOrder/Index";
+                window.location.href = "/DeliveryOrder";
             }
-
         });
     });
 
@@ -337,8 +325,6 @@ $(document).ready(function () {
       
         var dno = pTable.row($(this).parents('tr')).data().DeliveryOrderNo;
 
-        alert(dno);
-
         var form = document.createElement("form");
 
         var element1 = document.createElement("input");
@@ -363,7 +349,7 @@ $(document).ready(function () {
 
     $('#confirm').click(function () {
         var mydata = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
-        alert(mydata[0].PurchaseOrderNo);
+
         var ponum = mydata[0].PurchaseOrderNo;
 
         var form = document.createElement("form");
@@ -389,8 +375,6 @@ $(document).ready(function () {
     });
 
     $('#VRDObtn').click(function () {
-
-        alert(pon);
 
         var form1 = document.createElement("form");
 
@@ -418,8 +402,6 @@ $(document).ready(function () {
     $('#myTable tbody').on('click', '#infobtn', function (e) {
 
         var pno = Table.row($(this).parents('tr')).data().PurchaseOrderNo;
-        alert(pno);
-
 
         var form = document.createElement("form");
 
@@ -444,8 +426,6 @@ $(document).ready(function () {
     });
 
     $('#Viewbtn').click(function () {
-
-        alert(pon);
 
         var form1 = document.createElement("form");
 

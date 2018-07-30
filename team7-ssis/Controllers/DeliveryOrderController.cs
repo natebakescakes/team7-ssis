@@ -100,7 +100,7 @@ namespace team7_ssis.Controllers
 
             string extension = Path.GetExtension(deliveryOrderDetailViewList[0].DeliveryOrderFileName);
 
-            fileName = Path.Combine(Server.MapPath("~/DOFiles/") + fileName);
+            fileName = Path.Combine(Server.MapPath("~/Images/DeliveryOrder/") + fileName);
 
             deliveryOrder.DeliveryOrderFileName = fileName;
 
@@ -109,7 +109,7 @@ namespace team7_ssis.Controllers
 
             string extension1 = Path.GetExtension(deliveryOrderDetailViewList[0].InvoiceFileName);
 
-            fileName1 = Path.Combine(Server.MapPath("~/DOFiles/") + fileName1);
+            fileName1 = Path.Combine(Server.MapPath("~/Images/InvoiceFile/") + fileName1);
 
             deliveryOrder.InvoiceFileName = fileName;
 
@@ -126,6 +126,14 @@ namespace team7_ssis.Controllers
 
             foreach (DeliveryOrderDetailsViewModel dovm in deliveryOrderDetailViewList)
             {
+                PurchaseOrderDetail purchaseOrderDetail = purchaseOrderService.FindPurchaseOrderDetailbyIdItem(deliveryOrder.PurchaseOrder.PurchaseOrderNo, dovm.ItemCode);
+
+                if (dovm.CheckboxStatus == dovm.ItemCode)
+                {
+                    purchaseOrderDetail.Status = statusService.FindStatusByStatusId(3);
+                    break;
+                }
+
                 if (dovm.ReceivedQty != 0)
                 { 
 

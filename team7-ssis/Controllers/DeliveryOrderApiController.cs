@@ -115,7 +115,7 @@ namespace team7_ssis.Controllers
 
                         QuantityOrdered = purchaseOrderService.FindRemainingQuantity(pod),
 
-                        ReceivedQuantity = pod.Quantity,
+                        ReceivedQuantity = 0,
 
                         //RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod) - pod.Quantity,
 
