@@ -80,9 +80,30 @@
 
 
     $(document).on("click", "#generatePOforall", function () {
+        poNumbers = [];
 
-        var data = $('#shortfallTable').DataTable().rows({ selected: true }).data().toArray();
-        alert(JSON.stringify(data));
+        shortfallTbl.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            var data = $('#shortfallTable').DataTable().rows().data();
+            poNumbers.push(data[rowIdx].ItemCode);
+
+        });
+        
+
+        generateUrl = $('#generateUrl').val();
+        
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = generateUrl;
+
+        element1.value = poNumbers;
+        element1.name = "poNums";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
 
     });
 

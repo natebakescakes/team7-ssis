@@ -49,7 +49,7 @@
             { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
         ],
         select: "api",
-        dom: "t",
+        dom: "tp",
         autoWidth: true,
         cache:true,
 
@@ -103,47 +103,7 @@
     });
 
 
-    //function to render a dropdown
-    //var simple_dropdown = function (data, type, row, meta) {
-    //    if (data != null) {
-    //        var dropdown = '<select class="supplier" id=supplier' + data + '></select>'
-    //        return dropdown;
-    //    }
-    //    else
-    //        return '';
-    //}
-
-    ////function to populate supplier dropdown
-    //var populate_dropbox = function (data,type,row,meta) {
-    //    var itemNo = data;
-    //    var id = "supplier" + itemNo;
-
-    //    $.ajax({
-
-    //        type: "POST",
-    //        url: "/api/purchaseOrder/getsupplier",
-    //        dataType: "json",
-    //        data: { '': itemNo },
-    //        contentType: 'application/x-www-form-urlencoded',
-    //        success: function (result) {
-
-    //            for (var supplier in result) {
-    //                if (result.hasOwnProperty(supplier)) {
-    //                    var s = result[supplier];
-    //                    var x = document.getElementById(id);
-    //                    var option = document.createElement("option");
-    //                    //alert(s.Name);
-    //                    option.text = s.Name;
-    //                    //alert(s.Priority);
-    //                    option.value = s.Priority;
-    //                    x.add(option);
-    //                    document.getElementById(id).value = 1;
-    //                }
-    //            }
-    //        }
-    //    });
-
-    //}
+ 
 
     //Add item popup datatable
     var addItemTable = $('#generateAddItem').DataTable({

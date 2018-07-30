@@ -14,17 +14,16 @@
         <div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <form action="/PurchaseOrder/generatepost" id="abc" method="POST"><input type="hidden" name="poNums" value="C005" /><input type="submit" /></form>
                     <h2>Inventory Shortfall</h2>
                     <h6>The following items have fallen below re-order level.</h6>
                 </div>
                 <div class="col-md-4">
-                    <a id="generatePOforall" class="popup btn btn-primary pull-right"><i class="fa fa-cart" aria-hidden="true"></i>Generate Purchase Order w/ All</a>
+                    <button id="generatePOforall" class="popup btn btn-primary pull-right"><i class="fa fa-cart" aria-hidden="true"></i>Generate Purchase Order w/ All</button>
                 </div>
             </div>
 
             <div>
-                <a id="generatePOforselected" class="btn btn-primary">Prepare Purchase Order with Selected</a>
+                <button id="generatePOforselected" class="popup btn btn-secondary">Prepare Purchase Order with Selected</button>
             </div>
 
             <div>
