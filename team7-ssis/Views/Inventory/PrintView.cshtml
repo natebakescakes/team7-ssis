@@ -1,0 +1,87 @@
+﻿
+@model  IEnumerable<team7_ssis.ViewModels.ItemPricesListViewModel>
+
+<br />
+<h2>Item Prices List</h2>
+
+<br/>
+
+<div style="width:90%; margin:0 auto" class="tablecontainer">
+    <form id="myform" method="post">
+        <table id="priceTable" class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr style="page-break-inside: avoid !important">
+                    <th rowspan="2">
+                        @Html.DisplayNameFor(model => model.ItemCode)
+                    </th>
+                    <th rowspan="2">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th colspan="2">Supplier1</th>
+                    <th colspan="2">Supplier2</th>
+                    <th colspan="2">Supplier3</th>
+                </tr>
+                <tr style="page-break-inside: avoid !important">
+                    <td>
+                        @Html.DisplayNameFor(model => model.Code1)
+                    </td>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Price1)
+                    </td>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Code2)
+                    </td>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Price2)
+                    </td>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Code3)
+                    </td>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Price3)
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr style="page-break-inside: avoid !important">
+                        <td>
+                            @Html.DisplayFor(model => item.ItemCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Description)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(model => item.Code1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Price1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Code2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Price2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Code3)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Price3)
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<script>
+    function firstLoad() {
+        $('#myNav').hide();
+    }
+    window.onload = firstLoad;
+</script>

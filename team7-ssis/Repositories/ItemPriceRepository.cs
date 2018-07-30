@@ -41,5 +41,12 @@ namespace team7_ssis.Repositories
             return context.ItemPrice
                 .Where(x => x.PrioritySequence == prioritySequence);
         }
+
+        public IQueryable<ItemPrice> findByItemAndSequence(Item i, int prioritySequence)
+        {
+            return context.ItemPrice
+                .Where(x => x.PrioritySequence == prioritySequence)
+                .Where(x => x.ItemCode == i.ItemCode);
+        }
     }
 }
