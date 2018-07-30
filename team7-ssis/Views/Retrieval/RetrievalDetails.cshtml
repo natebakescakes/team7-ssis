@@ -9,15 +9,15 @@
 
 <div class="row mb-3">
     <div class="col-md-3">
-        <div>Product ID</div>
+        <div class="label">Product ID</div>
         @Model.ProductID
     </div>
     <div class="col-md-6">
-        <div>Name</div>
+        <div class="label">Name</div>
         @Model.Name
     </div>
     <div class="col-md-3">
-        <div>Bin</div>
+        <div class="label">Bin</div>
         @Model.Bin
     </div>
 </div>
@@ -79,7 +79,7 @@
     });
 
     // change the value of the cell in the datatable with an input field
-    $(document).on("blur", ".actual", function () {
+    $(document).on("change", ".actual", function () {
         // grab the cell that the td refers to, which is the parent of the <input> element
         var cell = table.cell(this.parentElement);
         // assign the cell with the value from the <input> element

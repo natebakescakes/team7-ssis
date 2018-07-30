@@ -15,19 +15,19 @@
 
 <div class="row mb-4">
     <div class="col-md-4">
-        <div>Representative</div>
+        <div class="label">Representative</div>
         @Model.Representative
     </div>
     <div class="col-md-4">
-        <div>Department</div>
+        <div class="label">Department</div>
         @Model.Department
     </div>
     <div class="col-md-4">
-        <div>Order Time</div>
+        <div class="label">Order Time</div>
         @Model.OrderTime
     </div>
     <div class="col-md-12">
-        <div>Collection Point</div>
+        <div class="label">Collection Point</div>
         @Model.CollectionPoint
     </div>
 </div>
@@ -64,6 +64,10 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <button class="btn btn-default">Back</button>
+        @if (Model.Status == 11)
+        {
+            <button class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Confirm Delivery</button>
+        }
+        <button class="btn btn-default" onclick="window.history.go(-1)">Back</button>
     </div>
 </div>

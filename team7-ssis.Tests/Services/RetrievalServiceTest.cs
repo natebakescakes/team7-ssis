@@ -22,13 +22,14 @@ namespace team7_ssis.Tests.Services
         DisbursementRepository disbursementRepository;
         DisbursementDetailRepository disbursementdetailRepository;
         StockMovementRepository stockmovementRepository;
+        StatusRepository statusRepository;
 
-        
+
         [TestInitialize]
         public void TestInitialize()
         {
             context = new ApplicationDbContext();
-            
+
             retrievalService = new RetrievalService(context);
             itemService = new ItemService(context);
             disbursementService = new DisbursementService(context);
@@ -37,7 +38,7 @@ namespace team7_ssis.Tests.Services
             disbursementRepository = new DisbursementRepository(context);
             disbursementdetailRepository = new DisbursementDetailRepository(context);
             stockmovementRepository = new StockMovementRepository(context);
-
+            statusRepository = new StatusRepository(context);
 
             Retrieval retrieval = new Retrieval();
             if (retrievalRepository.FindById("TEST") == null)
@@ -66,9 +67,9 @@ namespace team7_ssis.Tests.Services
             DisbursementDetail detail = new DisbursementDetail()
             {
                 Disbursement = disbursement,
-                Item = context.Item.Where(x=>x.ItemCode=="C003").First(),
+                Item = context.Item.Where(x => x.ItemCode == "C003").First(),
                 PlanQuantity = 5,
-                ActualQuantity =5
+                ActualQuantity = 5
 
             };
             disbursementdetailRepository.Save(detail);
@@ -118,15 +119,15 @@ namespace team7_ssis.Tests.Services
             //Assert
             Assert.AreEqual(expected, result.RetrievalId);
 
-            
-           
+
+
         }
 
         [TestMethod]
         public void SaveEditTest()
         {
             //Arrange
-            Retrieval retrieval = context.Retrieval.Where(x=>x.RetrievalId=="TEST").First();
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
             Status status = context.Status.Where(x => x.StatusId == 1).First();
             retrieval.Status = status;
 
@@ -264,6 +265,48 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        public void ConfirmRetrieval_AllPickedTest()
+        {
+            // ARRANGE
+            // Get Retrieval with Disbursement Details
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
+            List<DisbursementDetail> ddList = retrieval.Disbursements.SelectMany(x => x.DisbursementDetails).ToList();
+            foreach (DisbursementDetail dd in ddList)
+            {
+                // set all to "Picked"
+                dd.Status = statusRepository.FindById(18);
+            }
+            retrievalRepository.Save(retrieval);
+
+            // ACT
+            retrievalService.ConfirmRetrieval(retrieval.RetrievalId, "");
+
+            // ASSERT
+            Assert.AreEqual(retrieval.Status.StatusId, 20);
+        }
+        [TestMethod]
+        public void ConfirmRetrieval_NotAllPickedTest()
+        {
+            // ARRANGE
+            // Get Retrieval with Disbursement Details
+            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
+            List<DisbursementDetail> ddList = retrieval.Disbursements.SelectMany(x => x.DisbursementDetails).ToList();
+            foreach (DisbursementDetail dd in ddList)
+            {
+                // set all to "Not Picked"
+                dd.Status = statusRepository.FindById(17);
+            }
+            retrievalRepository.Save(retrieval);
+
+            // ACT
+            retrievalService.ConfirmRetrieval(retrieval.RetrievalId, "");
+
+            // ASSERT
+            Assert.AreEqual(retrieval.Status.StatusId, 19);
+        }
+
+
+        [TestMethod]
         public void UpdateActualQuantity_Valid()
         {
             // Arrange
@@ -323,7 +366,7 @@ namespace team7_ssis.Tests.Services
             Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
 
             List<StockMovement> smlist = context.StockMovement.Where(x => x.DisbursementId == "TEST").ToList();
-               foreach(StockMovement sm in smlist)
+            foreach (StockMovement sm in smlist)
             {
                 stockmovementRepository.Delete(sm);
 

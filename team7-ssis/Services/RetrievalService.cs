@@ -14,6 +14,7 @@ namespace team7_ssis.Services
         RetrievalRepository retrievalRepository;
         ItemService itemService;
         StockMovementService stockmovementService;
+        StatusRepository statusRepository;
 
         public RetrievalService(ApplicationDbContext context)
         {
@@ -21,6 +22,8 @@ namespace team7_ssis.Services
             retrievalRepository = new RetrievalRepository(context);
             itemService = new ItemService(context);
             stockmovementService = new StockMovementService(context);
+
+            statusRepository = new StatusRepository(context);
 
         }
 
@@ -84,6 +87,29 @@ namespace team7_ssis.Services
                 disbursementDetail.Status = new StatusService(context).FindStatusByStatusId(18);
             });
         }
+        /// <summary>
+        /// Sets Retrieval.Status to "Retrieved" if all DisbursementDetails are "Picked"
+        /// </summary>
+        /// <param name="retId"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public bool ConfirmRetrieval(string retId, string email)
+        {
+            Retrieval r = retrievalRepository.FindById(retId);
+            // get list of Disbursement details
+            List<DisbursementDetail> ddList = r.Disbursements.SelectMany(x => x.DisbursementDetails).ToList();
+            // check if all of them are picked
+            bool allPicked = ddList.TrueForAll(x => x.Status.StatusId == 18);
+            if (allPicked)
+            {
+                r.Status = statusRepository.FindById(20);
+            } else {
+                r.Status = statusRepository.FindById(19);
+            }
+            retrievalRepository.Save(r);
+
+            return allPicked;
+        }
 
         public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)
         {
@@ -98,9 +124,6 @@ namespace team7_ssis.Services
             }
         }
 
-        public void ConfirmRetrieval(string retrievalId, string email)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

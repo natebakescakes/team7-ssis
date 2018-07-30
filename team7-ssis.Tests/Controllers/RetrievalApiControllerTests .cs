@@ -137,13 +137,15 @@ namespace team7_ssis.Tests.Controllers
         public void GetRetrievals_ContainsResult()
         {
             // Arrange
+            var statusService = new StatusService(context);
+            
             var expectedId = "RETCONTROLTEST";
             var expectedQuantity = 999999;
-            retrievalRepository.Save(new Retrieval()
+            new RetrievalRepository(context).Save(new Retrieval()
             {
                 RetrievalId = expectedId,
                 CreatedDateTime = DateTime.Now,
-                Status = new StatusService(context).FindStatusByStatusId(12),
+                Status = statusService.FindStatusByStatusId(12),
                 Disbursements = new List<Disbursement>()
                 {
                     new Disbursement()
@@ -151,7 +153,7 @@ namespace team7_ssis.Tests.Controllers
                         DisbursementId = expectedId,
                         Department = new DepartmentService(context).FindDepartmentByDepartmentCode("ENGL"),
                         CreatedDateTime = DateTime.Now,
-                        Status = new StatusService(context).FindStatusByStatusId(7),
+                        Status = statusService.FindStatusByStatusId(7),
                         DisbursementDetails = new List<DisbursementDetail>()
                         {
                             new DisbursementDetail()
@@ -161,7 +163,7 @@ namespace team7_ssis.Tests.Controllers
                                 Bin = "E78",
                                 PlanQuantity = 30,
                                 ActualQuantity = expectedQuantity,
-                                Status = new StatusService(context).FindStatusByStatusId(17),
+                                Status = statusService.FindStatusByStatusId(17),
                                 ItemCode = "E030",
                             }
                         }
