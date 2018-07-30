@@ -12,21 +12,22 @@ namespace team7_ssis.Controllers
 {
     public class DisbursementAPIController : ApiController
     {
-        ApplicationDbContext context;
         DisbursementService disbursementService;
 
         public DisbursementAPIController()
         {
-            context = new ApplicationDbContext();
-            disbursementService = new DisbursementService(context);
+            Context = new ApplicationDbContext();
+            disbursementService = new DisbursementService(Context);
         }
+
+        public ApplicationDbContext Context { get; set; }
 
         /// <summary>
         /// Retrieves all Disbursement Details for the Disbursement
         /// </summary>
         [Route("api/disbursement/{did}")]
         [HttpGet]
-        public IEnumerable<DisbursementFormTableViewModel> FindDisbursementDetailsByDisbursement (string did)
+        public IEnumerable<DisbursementFormTableViewModel> FindDisbursementDetailsByDisbursement(string did)
         {
             Disbursement d = disbursementService.FindDisbursementById(did);
             List<DisbursementFormTableViewModel> viewModel = new List<DisbursementFormTableViewModel>();
@@ -56,16 +57,37 @@ namespace team7_ssis.Controllers
             return Ok(disbursements.Select(disbursement => new DisbursementMobileViewModel()
             {
                 DisbursementId = disbursement.DisbursementId,
+                RetrievalId = disbursement.Retrieval.RetrievalId,
                 Department = disbursement.Department != null ? disbursement.Department.Name : "",
-                CollectionPoint = disbursement.Department != null ? disbursement.Retrieval.Requisitions.Where(r => r.Department.Name == disbursement.Department.Name).FirstOrDefault().CollectionPoint.Name : "",
+                CollectionPoint = disbursement.Department.CollectionPoint.Name,
+                CreatedDate = disbursement.CreatedDateTime.ToShortDateString(),
                 Status = disbursement.Status != null ? disbursement.Status.Name : "",
                 DisbursementDetails = disbursement.DisbursementDetails.Select(d => new DisbursementFormTableViewModel()
                 {
                     ItemCode = d.ItemCode,
                     Description = d.Item.Description,
-                    Qty = d.ActualQuantity
+                    Qty = d.ActualQuantity,
+                    Uom = d.Item.Uom,
                 }).ToList()
             }));
+        }
+
+        [Route("api/disbursement/collect")]
+        public IHttpActionResult ConfirmCollection([FromBody] DisbursementIdViewModel disbursementId)
+        {
+            try
+            {
+                new DisbursementService(Context).ConfirmCollection(disbursementId.DisbursementId);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Disbursement already collected!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Collection confirmed"
+            });
         }
     }
 }

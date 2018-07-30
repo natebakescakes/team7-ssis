@@ -16,13 +16,36 @@ namespace team7_ssis.Controllers
         private ItemService itemService;
         private ItemPriceService itemPriceService;
         private RequisitionService requisitionService;
+        private StockMovementService stkMovementService;
+        
 
         public InventoryApiController()
         {
             context = new ApplicationDbContext();
             itemService = new ItemService(context);
+            stkMovementService = new StockMovementService(context);
             itemPriceService = new ItemPriceService(context);
             requisitionService = new RequisitionService(context);
+        }
+
+        [Route("api/manage/stockhistory/{itemCode}")]
+        [HttpGet]
+        public IEnumerable<StockHistoryViewModel> FindStockHistoryByItem(string itemCode)
+        {
+           List<StockMovement> list = stkMovementService.FindStockMovementByItemCode(itemCode);
+           List<StockHistoryViewModel> items = new List<StockHistoryViewModel>();
+
+            foreach (StockMovement i in list)
+            {
+                items.Add(new StockHistoryViewModel
+                {
+                    theDate = i.CreatedDateTime,
+                    host = (i.DeliveryOrderDetailItemCode != null ? i.DeliveryOrderDetail.DeliveryOrder.Supplier.Name : i.DisbursementDetailItemCode != null ? i.DisbursementDetail.Disbursement.Department.Name : i.StockAdjustmentDetail.StockAdjustmentId),
+                    qty = i.AfterQuantity - i.OriginalQuantity,
+                    balance = i.AfterQuantity
+                });
+            }
+            return items;
         }
 
         [Route("api/manage/items")]
@@ -30,7 +53,8 @@ namespace team7_ssis.Controllers
         public IEnumerable<ItemViewModel> FindAllItems()
         {
             Console.WriteLine("Find All Items API");
-            List<Item> list = itemService.FindAllItems();
+            //List<Item> list = itemService.FindAllItems();
+            List<Item> list = itemService.FindAllActiveItems();
             List<ItemViewModel> items = new List<ItemViewModel>();
 
             foreach (Item i in list)
@@ -38,22 +62,78 @@ namespace team7_ssis.Controllers
                 items.Add(new ItemViewModel
                 {
                     ItemCode = i.ItemCode,
-                    ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name : "",
+                    ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name: "",
                     Description = i.Description,
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,
                     Uom = i.Uom,
                     Quantity = i.Inventory.Quantity,
-                    UnitPrice = itemPriceService.GetDefaultPrice(i, 1)
-
+                    UnitPrice =itemPriceService.GetDefaultPrice(i,1)
                 });
             }
             return items;
         }
 
+        [Route("api/manage/singleitem/{itemCode}")]
+        [HttpGet]
+        public ItemDetailModel FindItemSingle(string itemCode)
+        {
+            Item item = itemService.FindItemByItemCode(itemCode);
+            return new ItemDetailModel()
+            {
+                ItemCode = item.ItemCode,
+                Description = item.Description,
+                ItemCategoryName = item.ItemCategory.Name,
+                Bin = item.Bin,
+                Uom = item.Uom,
+                Quantity = item.Inventory.Quantity,
+                Status = item.Status.StatusId
+            };
+
+        }
+
+        [Route("api/manage/supplierInfo/{itemCode}")]
+        [HttpGet]
+        public List<ItemDetailsSupplierInfoViewModel> FindSupplierInfo(string itemCode)
+        {
+            int count = 0;
+            List<ItemPrice> itemPrices = itemPriceService.FindAllItemPriceByOrder(itemCode);
+            List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
+            foreach(ItemPrice i in itemPrices)
+            {
+                count++;
+                list.Add(new ItemDetailsSupplierInfoViewModel()
+                {
+                    Number= count,
+                    SupplierName = i.Supplier.Name,
+                    SupplierUnitPrice = (double)i.Price
+                });
+            }
+            return list;
+        }
+
+        [Route("api/manage/supplierInfoAll")]
+        [HttpGet]
+        public List<ItemDetailsSupplierInfoViewModel> FindAllSupplierInfo()
+        {
+            int count = 0;
+            List<Supplier> slist = new SupplierService(context).FindAllSuppliers();
+            List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
+            foreach (Supplier i in slist)
+            {
+                count++;
+                list.Add(new ItemDetailsSupplierInfoViewModel()
+                {
+                    Number = count,
+                    SupplierName = i.Name
+                });
+            }
+            return list;
+        }
+
         [Route("api/delete/items")]
         [HttpPost]
-        public HttpResponseMessage DeleteItems([FromBody]string[] itemCodes)
+        public Boolean DeleteItems([FromBody]string[] itemCodes)
         {
             Console.WriteLine("In API Controller" + itemCodes.Length);
             List<Item> list = new List<Item>();
@@ -66,17 +146,16 @@ namespace team7_ssis.Controllers
             {
                 for (int i = 0; i < list.Count; i++)
                 {
-                    itemService.DeleteItem(list[i]);
+                   itemService.DeleteItem(list[i]);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Console.WriteLine("In API Controller error" + e);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+                return false;
             }
 
             Console.WriteLine("In API Controller OK");
-            return Request.CreateResponse(HttpStatusCode.OK); ;
+            return true;
+
         }
 
         [Route("api/inventory/shortfall")]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using team7_ssis.Models;
 
 namespace team7_ssis.ViewModels
@@ -33,4 +34,20 @@ namespace team7_ssis.ViewModels
 
         public string SupplierCode { get; set; }
     }
+
+
+    public class ItemCategoryViewModel
+    {
+        public int ItemCategoryId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+        public int Status { get; set; }
+
+        public string StatusName { get; set; }
+
+        public IEnumerable<SelectListItem> Statuses { get; set; }
+
+    }
+    
 }

@@ -10,6 +10,7 @@ namespace team7_ssis.Tests.Repositories
     public class DisbursementDetailRepositoryTests
     {
         ApplicationDbContext context;
+        DisbursementRepository disbursementRepository;
         DisbursementDetailRepository disbursementDetailRepository;
 
         [TestInitialize]
@@ -17,6 +18,7 @@ namespace team7_ssis.Tests.Repositories
         {
             // Arrange
             context = new ApplicationDbContext();
+            disbursementRepository = new DisbursementRepository(context);
             disbursementDetailRepository = new DisbursementDetailRepository(context);
         }
 
@@ -43,8 +45,21 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            var expected = new DisbursementDetail()
+            {
+                DisbursementId = "DDREPOTEST",
+                ItemCode = "E030",
+            };
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            disbursementDetailRepository.Save(expected);
+
             // Act
-            var result = disbursementDetailRepository.FindById("TEST", "E030");
+            var result = disbursementDetailRepository.FindById("DDREPOTEST", "E030");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(DisbursementDetail));
@@ -53,56 +68,109 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            var expected = new DisbursementDetail()
+            {
+                DisbursementId = "DDREPOTEST",
+                ItemCode = "E030",
+            };
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            disbursementDetailRepository.Save(expected);
+
             // Act
-            var result = disbursementDetailRepository.ExistsById("TEST", "E030");
+            var result = disbursementDetailRepository.ExistsById("DDREPOTEST", "E030");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeUpdatedBy()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var user = new UserRepository(context).FindByEmail("root@admin.com");
-            var disbursementDetail = disbursementDetailRepository.FindById("TEST", "E030");
-            var original = disbursementDetail.UpdatedBy;
-            disbursementDetail.UpdatedBy = user;
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            disbursementDetailRepository.Save(new DisbursementDetail()
+            {
+                DisbursementId = "DDREPOTEST",
+                Status = status,
+                ItemCode = "E030",
+            });
+
+            // Arrange - Get Existing
+            var expected = disbursementDetailRepository.FindById("DDREPOTEST", "E030");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = disbursementDetailRepository.Save(disbursementDetail);
+            var result = disbursementDetailRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(user, result.UpdatedBy);
-
-            // Tear Down
-            disbursementDetail.UpdatedBy = original;
-            disbursementDetailRepository.Save(disbursementDetail);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
-        public void SaveAndDeleteTestNew()
+        public void Save_InstanceOfType()
         {
-            // Save new object into DB
             // Arrange
             var disbursementDetail = new DisbursementDetail
             {
-                DisbursementId = "TEST",
+                DisbursementId = "DDREPOTEST",
                 ItemCode = "P030"
             };
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var saveResult = disbursementDetailRepository.Save(disbursementDetail);
 
             // Assert
             Assert.IsInstanceOfType(saveResult, typeof(DisbursementDetail));
+        }
 
-            // Delete saved object from DB
+        [TestMethod]
+        public void Delete_CannotFind()
+        {
+            // Arrange
+            disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DDREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            var saveResult = disbursementDetailRepository.Save(new DisbursementDetail()
+            {
+                DisbursementId = "DDREPOTEST",
+                ItemCode = "E030",
+            });
+
             // Act
             disbursementDetailRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(disbursementDetailRepository.FindById("TEST", "P030"));
+            Assert.IsNull(disbursementDetailRepository.FindById("DDDREPOTEST", "E030"));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (disbursementDetailRepository.ExistsById("DDREPOTEST", "E030"))
+                disbursementDetailRepository.Delete(disbursementDetailRepository.FindById("DDREPOTEST", "E030"));
+
+            if (disbursementDetailRepository.ExistsById("DDREPOTEST", "P030"))
+                disbursementDetailRepository.Delete(disbursementDetailRepository.FindById("DDREPOTEST", "P030"));
+
+            if (disbursementRepository.ExistsById("DDREPOTEST"))
+                disbursementRepository.Delete(disbursementRepository.FindById("DDREPOTEST"));
+
         }
     }
 }

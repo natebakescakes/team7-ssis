@@ -21,6 +21,9 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             userService = new UserService(context);
             userRepository = new UserRepository(context);
+
+            if (userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"))
+                userService.RemoveDepartmentHeadRole("CommerceEmp@email.com");
         }
 
         [TestMethod]
@@ -128,6 +131,31 @@ namespace team7_ssis.Tests.Services
 
             // Assert
             Assert.IsTrue(result.Count == 0);
+        }
+
+        [TestMethod]
+        public void AddAndRemoveDepartmentHeadRole()
+        {
+            // Arrange
+
+            // Act
+            userService.AddDepartmentHeadRole("CommerceEmp@email.com");
+
+            // Assert
+            Assert.IsTrue(userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"));
+
+            // Act
+            userService.RemoveDepartmentHeadRole("CommerceEmp@email.com");
+
+            // Assert
+            Assert.IsTrue(!userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"))
+                userService.RemoveDepartmentHeadRole("CommerceEmp@email.com");
         }
     }
 }

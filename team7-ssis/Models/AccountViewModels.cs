@@ -131,4 +131,9 @@ namespace team7_ssis.Models
     {
         public List<string> Roles { get; set; }
     }
+
+    public class EmailViewModel
+    {
+        public string Email { get; set; }
+    }
 }

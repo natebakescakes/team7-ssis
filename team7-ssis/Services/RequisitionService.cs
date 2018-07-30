@@ -7,25 +7,34 @@ using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 
+using Microsoft.AspNet.Identity;
+
 namespace team7_ssis.Services
 {
     public class RequisitionService
     {
         ApplicationDbContext context;
+
         RetrievalService retrievalService;
         DisbursementService disbursementService;
 
         RequisitionRepository requisitionRepository;
         RequisitionDetailRepository requisitionDetailRepository;
+        StatusRepository statusRepository;
+        UserRepository userRepository;
         StatusService statusService;
 
         public RequisitionService(ApplicationDbContext context)
         {
             this.context = context;
+
             retrievalService = new RetrievalService(context);
             disbursementService = new DisbursementService(context);
+
             requisitionRepository = new RequisitionRepository(context);
             requisitionDetailRepository = new RequisitionDetailRepository(context);
+            statusRepository = new StatusRepository(context);
+            userRepository = new UserRepository(context);
             statusService = new StatusService(context);
         }
 
@@ -36,7 +45,8 @@ namespace team7_ssis.Services
             if (query == null)
             {
                 throw new Exception("No Requisitions contain given statuses.");
-            } else
+            }
+            else
             {
                 return requisitionRepository.FindRequisitionsByStatus(statusList).ToList();
             }
@@ -60,7 +70,8 @@ namespace team7_ssis.Services
             if (query == null)
             {
                 throw new Exception("No Requisition Details Found");
-            } else
+            }
+            else
             {
                 return query;
             }
@@ -72,11 +83,16 @@ namespace team7_ssis.Services
             {
                 throw new Exception("List of Requisitions cannot be null");
             }
-            
+
             // create one Retrieval
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);
             r.CreatedDateTime = DateTime.Now;
+            r.Status = statusRepository.FindById(17);
+            if (HttpContext.Current != null)
+            {
+                r.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
+            }
 
             // save the Retrieval
             retrievalService.Save(r);
@@ -91,6 +107,11 @@ namespace team7_ssis.Services
             {
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
+                d.Status = statusRepository.FindById(17);
+                if (HttpContext.Current != null)
+                {
+                    d.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
+                }
                 disbursementService.Save(d);
             }
 
@@ -161,6 +182,7 @@ namespace team7_ssis.Services
                                 DisbursementDetail newDD = new DisbursementDetail();
                                 newDD.Item = rd.Item;
                                 newDD.PlanQuantity = rd.Quantity;
+                                newDD.Bin = rd.Item.Bin;
 
                                 // Add to the Disbursement
                                 d.DisbursementDetails.Add(newDD);
@@ -227,5 +249,57 @@ namespace team7_ssis.Services
 
         }
 
+        public List<Requisition> FindRequisitionsByDepartment(Department department)
+        {
+            return requisitionRepository.FindByDepartment(department).ToList();
+        }
+
+        /// <summary>
+        /// Approves requisition if in the correct status
+        /// </summary>
+        /// <param name="requisitionId"></param>
+        public void ApproveRequisition(string requisitionId, string email, string remarks)
+        {
+            if (!requisitionRepository.ExistsById(requisitionId))
+                throw new ArgumentException("Requisition not found");
+
+            if (requisitionRepository.FindById(requisitionId).Status.StatusId == 5 ||
+                requisitionRepository.FindById(requisitionId).Status.StatusId == 6)
+                throw new ArgumentException("Requisition has already been approved or rejected");
+
+            // Change values
+            var requisition = requisitionRepository.FindById(requisitionId);
+            requisition.HeadRemarks = remarks;
+            requisition.Status = new StatusService(context).FindStatusByStatusId(6);
+            requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
+            requisition.ApprovedDateTime = DateTime.Now;
+
+            // Save
+            requisitionRepository.Save(requisition);
+        }
+
+        /// <summary>
+        /// Rejects requisition if in the correc status
+        /// </summary>
+        /// <param name="requisitionId"></param>
+        public void RejectRequisition(string requisitionId, string email, string remarks)
+        {
+            if (!requisitionRepository.ExistsById(requisitionId))
+                throw new ArgumentException("Requisition not found");
+
+            if (requisitionRepository.FindById(requisitionId).Status.StatusId == 5 ||
+                requisitionRepository.FindById(requisitionId).Status.StatusId == 6)
+                throw new ArgumentException("Requisition has already been approved or rejected");
+
+            // Change values
+            var requisition = requisitionRepository.FindById(requisitionId);
+            requisition.HeadRemarks = remarks;
+            requisition.Status = new StatusService(context).FindStatusByStatusId(5);
+            requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
+            requisition.ApprovedDateTime = DateTime.Now;
+
+            // Save
+            requisitionRepository.Save(requisition);
+        }
     }
 }

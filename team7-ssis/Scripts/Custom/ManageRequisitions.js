@@ -4,6 +4,7 @@
             url: "/api/reqdetail/all",
             dataSrc: ""
         },
+        order: [[0, 'desc']],
         columns: [
             { "data": "Requisition", "autoWidth": true },
             { "data": "ItemCode", "autoWidth": true },
@@ -11,19 +12,25 @@
             { "data": "Quantity", "autoWidth": true },
             { "data": "Status", "autoWidth": true },
         ],
-        select: 'single'
+        select: 'os'
     });
 })
 
-// See if DataTable selection works
-//$('#myTable').click(function () {
-//    var table = $('#myTable').DataTable();
-//    console.log(table.rows({ selected: true }).data().toArray());
-//})
+// Click "Process All Requisitions" button
+$('#processAllRequisitionButton').click(function (e) {
+    e.preventDefault();
+    var data = $('#myTable').DataTable().rows().data().toArray();
+    process(data);
+})
 
-$('#processAllRequisitionButton').click(function () {
-
+// Click "Process All Requisitions" button
+$('#processSelectedButton').click(function (e) {
+    e.preventDefault();
     var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
+    process(data);
+})
+
+function process(data) {
     var reqIdArray = [];
     for (i = 0; i < data.length; i++) {
         reqIdArray[i] = data[i].Requisition;
@@ -41,6 +48,4 @@ $('#processAllRequisitionButton').click(function () {
             window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
         }
     });
-
-    
-})
+}

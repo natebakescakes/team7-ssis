@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+
+
+
+    @*DataTables*@
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    @*DataTables plugins*@
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.19/pagination/simple_incremental_bootstrap.js"></script>
+
+
+
+    @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />*@
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.bootstrap4.min.css" />
+
+</head>
+<body>
+    <main role="main">
+        <div class="container-fluid">
+            @RenderBody()
+        </div>
+    </main>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/Custom/Notification.js")
+
+    @*For jQuery Validation*@
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

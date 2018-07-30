@@ -38,7 +38,19 @@ textarea {
 .partially-delivered {
     background-color: gold !important;
     text-align: center;
+    color: white;
 }
+.draft {
+    background-color: dodgerblue !important;
+    text-align: center;
+    color: white;
+}
+.cancel {
+    background-color:limegreen !important;
+    text-align: center;
+    color: white;
+}
+
 
 /* Find out more about the below naming convention, BEM Block-Element-Modifier at http://getbem.com/introduction/; the first word acts as a namespace*/
 .step__icon {
@@ -62,7 +74,7 @@ textarea {
     position: absolute;
 }
 
-@media-desktop
+
 .step__arrow {
     left: 50%;
     top: 50%;
@@ -95,9 +107,26 @@ textarea {
 .pointer {
     cursor: pointer;
 }
-}
+
 
 /* Find out more about the below naming convention, BEM Block-Element-Modifier at http://getbem.com/introduction/; the first word acts as a namespace*/
+.step__selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.step__selected .step__icon {
+    background-color: white;
+}
+
+.step__unselected {
+    border-color: #007bff;
+}
+
+.step__selected .step__icon i {
+    color: #007bff;
+}
+
 .step__icon {
     float: left;
     border: 1px solid rgba(0, 0, 0, 0.125);
@@ -119,7 +148,6 @@ textarea {
     position: absolute;
 }
 
-@media-desktop
 .step__arrow {
     left: 50%;
     top: 50%;
@@ -140,4 +168,9 @@ a.disabled:hover {
 
 .inputText{
     width: 100px;
+}
+}
+
+#modalMsg {
+    color: red;
 }
