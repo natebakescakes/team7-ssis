@@ -196,18 +196,17 @@ $(document).ready(function () {
         }
     });
 
-    var simple_cancel = function (data, type, row, meta) {
 
-        var html = '<a class="cancelPODbtn btn-default btn disabled" ><i class="fa fa-close"></i></a>';
+    $('#myOutstandingTable tbody').on("change", "#qty", function () {
 
-        if (data == "Awaiting Delivery") {
-            html = '<a id="cancelAwaiting" class="cancelPODbtn btn-default btn"  ><i class="fa fa-close"></i></a>';
+        alert("hi");
+        var cell = oTable.cell(this.parentElement);
 
-        }
+        // assign the cell with the value from the <input> element 
 
-        return html;
-    };
+        cell.data($(this).val()).draw();
 
+    });
 
 
     //for receivegoodsview-outstanding items
@@ -222,47 +221,52 @@ $(document).ready(function () {
                 { data: "ItemCode" },
                 { data: "Description" },
                 { data: "QuantityOrdered" },
-                { defaultContent: '<input type="textbox" class="recdqtytextbox" />' },
+                {
+                   defaultContent:'<input type="textbox" id="qty" />'
+                },
                 { data: "RemainingQuantity" },
                 {
-                    data: "Status",
-                    render: simple_cancel
+                    defaultContent: '<input type="checkbox" id="vcheck" />'
                 }
             ],
         select: "single"
     });
 
-   
+    var k = 0;
     //checkbox 
-
-    //Textbox change
-    $(document).on("change", ".recdqtytextbox", function () {
-
-        var cell = oTable.cell(this.parentElement);
-        cell.data($(this).val()).draw();
-        //var thisRow = oTable.row($(this).parents('tr'));
-        //var receivedCell = thisRow.cell(4);
-        //var outstandingCell = thisRow.cell(2);
-        //var remainingCell = thisRow.cell(3);
-        //alert(receivedCell);
-        // assign the cell with the value from the <input> element 
-
+    $('#myOutstandingTable tbody').on('change', '#vcheck', function (e) {
+        var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
         
+        //if ($(this).is(":checked")) {
+        //    k = 1;
+        //}
+        //else {
+        //    k = 0;
+        //}
 
-        //var remainingValue = outstandingCell.data() - receivedCell.data();
-        //alert(remainingValue);
-        //remainingCell.data(remainingValue).draw();
-        
 
+        //alert(k);
     });
 
+  
     $('#submitbtn').click(function () {
-
         var mydata = oTable.rows().data().toArray();
 
         var details = new Array();
+        mydata[0].ReceivedQty = 12;
+        mydata[1].ReceivedQty = 0;
+        mydata[2].ReceivedQty = 2;
 
+
+        
         for (var i = 0; i < mydata.length; i++) {
+
+            if (mydata[i].ReceivedQty > mydata[i].QuantityOrdered) {
+                alert("Received Quantity cannot be greater than Quantity Ordered");
+            }
+        }
+
+        alert(k);
 
 
             var o = {
@@ -275,13 +279,16 @@ $(document).ready(function () {
 
                 "QtyOrdered": mydata[i].QuantityOrdered,
 
-                "ReceivedQty": mydata[i].ReceivedQuantity,
+                "ReceivedQty": mydata[i].ReceivedQty,
 
-                "RemainingQuantity": mydata[i].RemainingQuantity
+                "RemainingQuantity": mydata[i].RemainingQuantity,
+
+                "CheckBoxStatus":k
             };
 
             details.push(o);
         }
+
 
         $.ajax({
 
@@ -300,7 +307,8 @@ $(document).ready(function () {
             success: function (data) {
 
                 alert("Delivery Order information has been successfully saved");
-
+                //if (data == success)
+                //    window.location.href = "/DeliveryOrder/Index";
             }
 
         });
@@ -461,3 +469,15 @@ $(document).ready(function () {
 
     });
 });
+
+ //    //var thisRow = oTable.row($(this).parents('tr'));
+    //    //var receivedCell = thisRow.cell(4);
+    //    //var outstandingCell = thisRow.cell(2);
+    //    //var remainingCell = thisRow.cell(3);
+    //    alert(cell);
+    //    // assign the cell with the value from the <input> element 
+
+    //    //var remainingValue = outstandingCell.data() - receivedCell.data();
+    //    //alert(remainingValue);
+    //    //remainingCell.data(remainingValue).draw();
+

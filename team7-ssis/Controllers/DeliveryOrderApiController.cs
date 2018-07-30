@@ -26,7 +26,7 @@ namespace team7_ssis.Controllers
             purchaseOrderService = new PurchaseOrderService(context);
         }
 
-
+        // From Main Menu
         [Route("api/receivegoods/all")]
         [HttpGet]
         public List<DeliveryOrderViewModel> DeliveryOrders()
@@ -85,7 +85,7 @@ namespace team7_ssis.Controllers
             {
                 ItemCode = x.ItemCode,
                 Description = x.Item.Description,
-                QtyOrdered = deliveryOrderService.FindPurchaseOrderDetailbyIdItem(po.PurchaseOrderNo,x.ItemCode).Quantity,
+                QtyOrdered = purchaseOrderService.FindPurchaseOrderDetailbyIdItem(po.PurchaseOrderNo,x.ItemCode).Quantity,
                 ReceivedQty = x.ActualQuantity
             }).ToList();
         }
@@ -97,26 +97,32 @@ namespace team7_ssis.Controllers
         public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseorderNo)
         {
             PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseorderNo);
-            
+            List<PurchaseOrderDetail> pod1 = new List<PurchaseOrderDetail>();
 
-            return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
+            int[] MyNewArray = { 11, 12 };
 
+            foreach (PurchaseOrderDetail pod2 in po.PurchaseOrderDetails)
             {
-                ItemCode = pod.Item.ItemCode,
+                pod1 = purchaseOrderService.FindPurchaseOrderDetailByStatus(MyNewArray);
+            }
+            
+            return pod1.Select(pod => new PurchaseOrderDetailsViewModel()
 
-                Description = pod.Item.Description,
+                    {
+                        ItemCode = pod.Item.ItemCode,
 
-                QuantityOrdered = purchaseOrderService.FindRemainingQuantity(pod),
+                        Description = pod.Item.Description,
 
-                ReceivedQuantity = 0,
+                        QuantityOrdered = purchaseOrderService.FindRemainingQuantity(pod),
 
-                RemainingQuantity = 0,
+                        ReceivedQuantity = pod.Quantity,
 
-                Status = pod.Status.Name
-                
+                        //RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod) - pod.Quantity,
 
-            }).ToList();
-        }
+                        Status = pod.Status.Name
+
+                    }).ToList();
+            }
 
 
         //Deliveryorder details for given purchase order

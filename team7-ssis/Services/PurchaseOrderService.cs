@@ -211,8 +211,15 @@ namespace team7_ssis.Services
             return pod.Quantity - receivedQuantity;
         }
 
-        
+        public PurchaseOrderDetail FindPurchaseOrderDetailbyIdItem(string id1, string id2)
+        {
+            return purchaseOrderDetailRepository.FindById(id1, id2);
+        }
 
+        public List<PurchaseOrderDetail> FindPurchaseOrderDetailByStatus(params int[] statusId)
+        {
+            return purchaseOrderRepository.FindPurchaseOrderDetailByStatus(statusId).ToList();
+        }
 
     }
 }

@@ -19,6 +19,7 @@ namespace team7_ssis.Services
         PurchaseOrderDetailRepository purchaseOrderDetailsRepository;
         ItemRepository itemRepository;
         StockMovementRepository stockMovementRepository;
+        PurchaseOrderService purchaseOrderService;
  
 
         public DeliveryOrderService(ApplicationDbContext context)
@@ -32,16 +33,12 @@ namespace team7_ssis.Services
             this.purchaseOrderDetailsRepository= new PurchaseOrderDetailRepository(context) ;
             this.itemRepository = new ItemRepository(context);
             this.deliveryOrderDetailRepository = new DeliveryOrderDetailRepository(context);
+            this.purchaseOrderService = new PurchaseOrderService(context);
         }
 
         public List<DeliveryOrder> FindAllDeliveryOrders()
         {
             return deliveryOrderRepository.FindAll().ToList();
-        }
-
-        public PurchaseOrderDetail FindPurchaseOrderDetailbyIdItem(string id1,string id2)
-        {
-            return purchaseOrderDetailsRepository.FindById(id1,id2);
         }
 
         public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
@@ -84,41 +81,53 @@ namespace team7_ssis.Services
         {
             foreach (DeliveryOrderDetail dod in deliveryOrder.DeliveryOrderDetails)
             {
-                PurchaseOrderDetail purchaseOrderDetail = FindPurchaseOrderDetailbyIdItem(deliveryOrder.PurchaseOrder.PurchaseOrderNo, dod.ItemCode);
+
+                PurchaseOrderDetail purchaseOrderDetail = purchaseOrderService.FindPurchaseOrderDetailbyIdItem(deliveryOrder.PurchaseOrder.PurchaseOrderNo, dod.ItemCode);
 
                 if (dod.ActualQuantity == dod.PlanQuantity)
+
                     purchaseOrderDetail.Status = statusRepository.FindById(13);
+
                 else
+
                     purchaseOrderDetail.Status = statusRepository.FindById(12);
 
+
                 purchaseOrderDetailsRepository.Save(purchaseOrderDetail);
+
                 deliveryOrderDetailRepository.Save(dod);
+
                 SaveInventory(itemRepository.FindById(dod.ItemCode), dod.ActualQuantity);
+
                 SaveStockMovement(dod);
             }
-
+            
             deliveryOrderRepository.Save(deliveryOrder);
 
 
             PurchaseOrder po = deliveryOrder.PurchaseOrder;
+
             foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
             {
-                if(pod.Status.StatusId==12)
+
+                if ((pod.Status.StatusId == 12) || (pod.Status.StatusId == 11))
                 {
                     po.Status = statusRepository.FindById(12);
+
                     purchaseOrderRepository.Save(po);
+
                     break;
-                }        
+                }
             }
+
 
             if (po.Status.StatusId == 11)
             {
                 po.Status = statusRepository.FindById(13);
                 purchaseOrderRepository.Save(po);
             }
-            
-
         }
+
 
         public Inventory SaveInventory(Item item, int receivedQuantity)
         {
@@ -146,21 +155,16 @@ namespace team7_ssis.Services
             deliveryOrderDetailRepository.Save(deliveryOrderDetail);
         }
 
-
-        public string UploadDeliveryOrderFile(HttpPostedFileBase file)
-        { 
-                var fileName = Path.GetFileName(file.FileName);
-                var path = System.Web.HttpContext.Current.Server.MapPath("~/DOFiles");
-
-                file.SaveAs(path + fileName);
-                return path;
-        }
-
         public void SaveInvoiceFileToDeliveryOrder(string Filepath)
         {
             throw new NotImplementedException();
           //  deliveryOrderRepository.SaveInvoiceFileToDeliveryOrder(Filepath);
             //Need to send to Finance department
-        } 
+        }
+
+        public List<PurchaseOrderDetail> FindPurchaseOrderDetailbyPurchaseOrderNumber(string purchaseordernumber)
+        {
+            return deliveryOrderRepository.FindPurchaseOrderDetailbyPurchaseOrderNumber(purchaseordernumber).ToList();
+        }
     }
 }

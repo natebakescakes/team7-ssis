@@ -29,12 +29,15 @@
     </div>
     <h1>Submit delivery order forms & invoices and update inventory</h1>
 
-    <div class="modal-footer">
 
-        <button id="VRDObtn" type="button" class="btn btn-default pull-right">View Related Delivery Order</button>
+    @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { @id = "deliveryorderdetails", enctype = "multipart/form-data" }))
+    {
+        <div class="modal-footer">
 
-    </div>
-   
+            <button id="VRDObtn" type="button" class="btn btn-default pull-right">View Related Delivery Order</button>
+
+        </div>
+
     <table class="table table-striped table-bordered" style="width: 100%">
         <thead>
             <tr>
@@ -62,13 +65,13 @@
         <tr>
             <td>Upload Delivery Order</td>
             <td>
-                <input type="file" name="DeliveryOrderFile" />
+                <input type="file" name="DeliveryOrderFile"  id="DeliveryOrderFile"/>
             </td>
         </tr>
         <tr>
             <td>Upload Invoice</td>
             <td>
-                <input type="file" name="InvoiceFileName" />
+                <input type="file" name="InvoiceFileName" id="InvoiceFileName"/>
             </td>
         </tr>
     </table>
@@ -78,19 +81,17 @@
                 <tr>
                     <td>
                         <div class="modal-footer">
-
                             <button id="submitbtn" type="button" class="btn btn-default pull-right">Submit</button>
-
                         </div>
                     </td>
                     <td>
-                        @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
-                        {<button class="btn btn-primary">Cancel</button>}
+                        <button class="btn btn-primary">Cancel</button>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
+    }
 </body>
 </html>
 

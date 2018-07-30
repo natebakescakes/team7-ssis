@@ -7,6 +7,7 @@ using team7_ssis.Services;
 using team7_ssis.Models;
 using team7_ssis.ViewModels;
 using Microsoft.AspNet.Identity;
+using System.IO;
 
 namespace team7_ssis.Controllers
 {
@@ -74,87 +75,86 @@ namespace team7_ssis.Controllers
         }
 
 
-        [HttpPost]
-
-        public ActionResult ImageUpload(HttpPostedFileBase file)
-        {
-            if (file != null && file.ContentLength > 0)
-                try
-                {
-                   string path = deliveryOrderService.UploadDeliveryOrderFile(file);
-                   string result = System.IO.Path.GetFileName(path);
-                }
-
-                catch (Exception ex)
-                {
-                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
-                }
-
-            else
-            {
-                ViewBag.Message = "You have not specified a file.";
-            }
-
-            return RedirectToAction("ReceiveGoodsView");
-        }
-
 
         [HttpPost]
 
         public ActionResult Save(List<DeliveryOrderDetailsViewModel> deliveryOrderDetailViewList)
         {
-           // purchaseOrderDetail = deliveryOrderService.FindPurchaseOrderDetailbyIdItem(dovm.PurchaseOrderNo, dovm.ItemCode);
-
-
             DeliveryOrder deliveryOrder = new DeliveryOrder();
+
             deliveryOrder.DeliveryOrderDetails = new List<DeliveryOrderDetail>();
 
             deliveryOrder.PurchaseOrder = purchaseOrderService.FindPurchaseOrderById(deliveryOrderDetailViewList[0].PurchaseOrderNo);
-            deliveryOrder.PurchaseOrder.DeliveryOrders.Add(deliveryOrder);
-
-           // PurchaseOrderDetail purchaseOrderDetail;
 
 
             deliveryOrder.DeliveryOrderNo = IdService.GetNewDeliveryOrderNo(context);
+            deliveryOrder.CreatedDateTime = DateTime.Now;
 
-            deliveryOrder.CreatedDateTime= DateTime.Now;
 
-            deliveryOrder.CreatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+            deliveryOrder.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
             deliveryOrder.Supplier = supplierService.FindSupplierById(deliveryOrder.PurchaseOrder.SupplierCode);
-            //deliveryOrder.InvoiceFileName = model.InvoiceFileName;
 
-            //deliveryOrder.DeliveryOrderFileName = model.DeliveryOrderFileName;
+
+            string fileName = Path.GetFileNameWithoutExtension(deliveryOrderDetailViewList[0].DeliveryOrderFileName);
+
+            string extension = Path.GetExtension(deliveryOrderDetailViewList[0].DeliveryOrderFileName);
+
+            fileName = Path.Combine(Server.MapPath("~/DOFiles/") + fileName);
+
+            deliveryOrder.DeliveryOrderFileName = fileName;
+
+
+            string fileName1 = Path.GetFileNameWithoutExtension(deliveryOrderDetailViewList[0].InvoiceFileName);
+
+            string extension1 = Path.GetExtension(deliveryOrderDetailViewList[0].InvoiceFileName);
+
+            fileName1 = Path.Combine(Server.MapPath("~/DOFiles/") + fileName1);
+
+            deliveryOrder.InvoiceFileName = fileName;
+
 
             deliveryOrder.Status = statusService.FindStatusByStatusId(1);
+
             deliveryOrderService.Save(deliveryOrder);
+
+            deliveryOrder.PurchaseOrder.DeliveryOrders.Add(deliveryOrder);
+
+            deliveryOrderService.Save(deliveryOrder);
+            
 
 
             foreach (DeliveryOrderDetailsViewModel dovm in deliveryOrderDetailViewList)
             {
-                
-
                 if (dovm.ReceivedQty != 0)
-                    {
+                { 
 
                     DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail();
 
                     deliveryOrderDetail.DeliveryOrderNo = deliveryOrder.DeliveryOrderNo;
+
                     deliveryOrderDetail.Item = itemService.FindItemByItemCode(dovm.ItemCode);
+
                     deliveryOrderDetail.ItemCode = dovm.ItemCode;
+
                     deliveryOrderDetail.PlanQuantity = dovm.QtyOrdered;
+
                     deliveryOrderDetail.ActualQuantity = dovm.ReceivedQty;
+
                     deliveryOrderDetail.Status = statusService.FindStatusByStatusId(1);
-                    deliveryOrderDetail.UpdatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+                    deliveryOrderDetail.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
+
                     deliveryOrderDetail.UpdatedDateTime = DateTime.Now;
+
                     deliveryOrder.DeliveryOrderDetails.Add(deliveryOrderDetail);
-                    
                 }
+
             }
 
             deliveryOrderService.CheckSave(deliveryOrder);
 
             return new JsonResult { Data = new { status = "Saved" } };
-
         }
 
         [HttpPost]
@@ -168,7 +168,7 @@ namespace team7_ssis.Controllers
 
             DOVM.SupplierName=deliveryOrder.Supplier.Name;
 
-            DOVM.Status = deliveryOrder.Status.Name;
+            DOVM.Status = deliveryOrder.PurchaseOrder.Status.Name;
 
             DOVM.DeliverOrderFileName = deliveryOrder.DeliveryOrderFileName;
 
