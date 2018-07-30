@@ -62,7 +62,7 @@ namespace team7_ssis.Tests.Controllers
            StockAdjustmentController controller = new StockAdjustmentController();
 
             // Act
-            ViewResult result = controller.Index() as ViewResult;
+            ViewResult result = controller.Index("he01") as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
