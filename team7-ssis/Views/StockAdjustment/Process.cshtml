@@ -97,6 +97,12 @@
 
         });
 
+        $(document).on("change", ".actual_1", function () {
+
+            var cell = oTable.cell(this.parentElement);
+            // assign the cell with the value from the <input> element
+            cell.data($(this).val()).draw();
+        });
      
 
         $('#backBtn').click(function () {
@@ -105,13 +111,28 @@
         });
 
         $('#rejectBtn').click(function () {
-            //alert(saUrl);
-            $.ajax({
-                type: "GET",
-                contentType: 'application/json',
-                url: '/api/stockadjustment/reject/?id=' + saUrl,
 
+            var data = oTable.data();
+            var reqIdArray = [];
+            for (i = 0; i < data.length; i++) {
+                var obj = {
+                    StockAdjustmentId: saUrl,
+                    ItemCode: data[i].ItemCode,
+                    Reason: data[i].Reason,
+                    Adjustment: data[i].Adjustment
+                };
+                reqIdArray[i] = obj;
+            }
+            // alert(data[0].Adjustment);
+            $.ajax({
+                url: '/api/stockadjustment/reject',
+                contentType: 'application/json',
+                data: JSON.stringify(reqIdArray),
+                dataType: "json",
+                type: "POST",
+                traditional: true,
                 success: function (responseJSON) {
+
                     window.location.replace("/StockAdjustment");
                 }
             });
@@ -119,13 +140,27 @@
 
 
         $('#approveBtn').click(function () {
-           // alert(saUrl);
+            var data = oTable.data();
+            var reqIdArray = [];
+            for (i = 0; i < data.length; i++) {
+                var obj = {
+                    StockAdjustmentId: saUrl,
+                    ItemCode: data[i].ItemCode,
+                    Reason: data[i].Reason,
+                    Adjustment: data[i].Adjustment
+                };
+                reqIdArray[i] = obj;
+            }
+           //  alert(data[0].Adjustment);
             $.ajax({
-                type: "GET",
+                url: '/api/stockadjustment/approve',
                 contentType: 'application/json',
-                url: '/api/stockadjustment/approve/?id=' + saUrl,
-
+                data: JSON.stringify(reqIdArray),
+                dataType: "json",
+                type: "POST",
+                traditional: true,
                 success: function (responseJSON) {
+
                     window.location.replace("/StockAdjustment");
                 }
             });
