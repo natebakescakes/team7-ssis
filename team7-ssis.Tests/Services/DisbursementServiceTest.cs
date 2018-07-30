@@ -144,6 +144,17 @@ namespace team7_ssis.Tests.Services
             a.CreatedDateTime = DateTime.Now;
             disbursementService.Save(a);
 
+            //include Disbursement detail object and save it
+            DisbursementDetail detail = new DisbursementDetail()
+            {
+                Disbursement = a,
+                Item = context.Item.First(),
+                PlanQuantity = 1,
+                ActualQuantity = 1
+                        
+            };
+            disbursementdetailRepository.Save(detail);
+
             Disbursement result = disbursementService.ConfirmCollection(a.DisbursementId);
             
 
