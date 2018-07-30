@@ -26,6 +26,18 @@
 
 <body>
     <h2>Manage Stock Adjustments</h2>
+
+        @if (Request.QueryString["create"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                StockAdjustment #@Request.QueryString["create"] created.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+
     @if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
     {
         @Html.Partial("StoreManagerView")
