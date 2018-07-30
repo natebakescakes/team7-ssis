@@ -107,49 +107,7 @@ namespace team7_ssis.Controllers
             return View(ip);
         }
 
-        //GET:New Item
-        public ActionResult Create()
-        {
-
-            //get data for Status dropdownlist
-            List<Status> list = new List<Status>();
-            list.Add(statusService.FindStatusByStatusId(0));
-            list.Add(statusService.FindStatusByStatusId(1));
-            //get data for Supplier dropdownlist
-            List<Supplier> list2 = new List<Supplier>();
-            List<Supplier> sAllList = supplierService.FindAllSuppliers();
-            //get data for Category dropdownlist
-            List<ItemCategory> list3 = new List<ItemCategory>();
-            List<ItemCategory> cAllList = categoryService.FindAllItemCategory();
-            foreach(ItemCategory i in cAllList)
-            {
-                list3.Add(i);
-            }
-            foreach (Supplier i in sAllList)
-            {
-                list2.Add(i);
-            }
-
-            return View(new EditItemFinalViewModel
-            {
-                Statuses = new SelectList(
-                    list.Select(x => new { Value = x.StatusId, Text = x.Name }),
-                     "Value",
-                    "Text"
-                ),
-                SupplierName = new SelectList(
-                    list2.Select(x => new { Value = x.SupplierCode, Text = x.Name }),
-                    "Value",
-                    "Text"
-                ),
-                Categories= new SelectList(
-                    list3.Select(x=>new { Value= x.ItemCategoryId, Text= x.Name }),
-                    "Value",
-                    "Text"
-                )
-            });
-        }
-
+        
         public ActionResult PrintView()
         {
             //ViewBag.myFlag = flag;
