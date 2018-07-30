@@ -33,6 +33,7 @@ namespace team7_ssis.Services
         {
             return itemRepository.FindAll().ToList();
         }
+        
 
         public List<Item> FindAllActiveItems()
         {
@@ -57,10 +58,23 @@ namespace team7_ssis.Services
             return itemRepository.FindQuantity().ToList();
         }
 
+        public Inventory FindInventoryByItemCode(string i)
+        {
+            return inventoryRepository.FindById(i);
+        }
+
         public Inventory SaveInventory(Item item,int quantity)
         {
             Inventory iv = new Inventory();
-            iv.ItemCode = item.ItemCode;
+            if (FindInventoryByItemCode(item.ItemCode) == null)
+            {
+                iv.ItemCode = item.ItemCode;
+            }
+            else
+            {
+                iv = FindInventoryByItemCode(item.ItemCode);
+            }
+
             iv.Quantity = quantity;
             return inventoryRepository.Save(iv);
         }

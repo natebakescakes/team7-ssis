@@ -8,6 +8,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace team7_ssis.Controllers
 {
@@ -20,6 +21,9 @@ namespace team7_ssis.Controllers
         DisbursementService disbursementService;
         StatusService statusService;
         ItemService itemService;
+        DepartmentService departmentService;
+        UserRepository userRepository;
+        StatusRepository statusRepository;
 
         public RequisitionAPIController()
         {
@@ -30,41 +34,55 @@ namespace team7_ssis.Controllers
             disbursementService = new DisbursementService(context);
             statusService = new StatusService(context);
             itemService = new ItemService(context);
+            departmentService = new DepartmentService(context);
+            userRepository = new UserRepository(context);
+            statusRepository = new StatusRepository(context);
+
         }
 
         public ApplicationDbContext Context { get { return context; } set { context = value; } }
 
-        [Route("api/reqdetail/all")]
+        [Route("api/reqdetail/{rid}")]
         [HttpGet]
-        public IEnumerable<ManageRequisitionsViewModel> Requisitions()
+        public IEnumerable<RequisitionDetailVTableiewModel> GetAllRequisitionDetails(string rid)
         {
-            List<RequisitionDetail> reqDetailList = requisitionService.FindAllRequisitionDetail();
-            List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+            List<RequisitionDetail> reqDetailList = requisitionService.GetRequisitionDetails(rid);
+            List<RequisitionDetailVTableiewModel> viewModel = new List<RequisitionDetailVTableiewModel>();
 
             foreach (RequisitionDetail r in reqDetailList)
             {
-                string status;
-                if (r.Status != null)
+                viewModel.Add(new RequisitionDetailVTableiewModel
                 {
-                    int statusId = r.Status.StatusId;
-                    status = context.Status.Where(x => x.StatusId == statusId).First().Name;
-                } else
-                {
-                    status = "";
-                }
-
-                viewModel.Add(new ManageRequisitionsViewModel
-                {
-                    Requisition = r.RequisitionId,
                     ItemCode = r.ItemCode,
                     Description = r.Item.Description,
                     Quantity = r.Quantity,
-                    Status = status
+                    Status = r.Status.Name
                 });
             }
 
             return viewModel;
         }
+
+        [Route("api/requisition")]
+        [HttpGet]
+        public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitions()
+        {
+            List<Requisition> reqList = requisitionService.FindAllRequisitions();
+            List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+
+            foreach (Requisition r in reqList)
+            {
+                viewModel.Add(new ManageRequisitionsViewModel
+                {
+                    Requisition = r.RequisitionId,
+                    Status = r.Status.Name
+                });
+            }
+
+            return viewModel;
+        }
+
+
         [Route("api/processrequisitions")]
         [HttpPost]
         public IHttpActionResult ProcessRequisitions(List<string> reqIdList)
@@ -78,7 +96,8 @@ namespace team7_ssis.Controllers
             try
             {
                 rid = requisitionService.ProcessRequisitions(reqList);
-            } catch
+            }
+            catch
             {
                 return BadRequest();
             }
@@ -98,14 +117,15 @@ namespace team7_ssis.Controllers
                 var clerk = d.Department.CollectionPoint.ClerkInCharge;
                 string disbursedBy = String.Format("{0} {1}", clerk.FirstName, clerk.LastName);
 
-                viewModel.Add(new StationeryDisbursementViewModel
-                {
-                    DisbursementID = d.DisbursementId,
-                    Department = d.Department.Name,
-                    //CollectionPoint = d.Department.CollectionPoint.Name,
-                    //DisbursedBy = disbursedBy,
-                    //Status = d.Status.Name
-                });
+                StationeryDisbursementViewModel vm = new StationeryDisbursementViewModel();
+                vm.DisbursementID = d.DisbursementId;
+                vm.Department = d.Department.Name;
+                vm.CollectionPoint = d.Department.CollectionPoint.Name;
+                vm.DisbursedBy = disbursedBy;
+                vm.Status = d.Status.Name;
+
+                viewModel.Add(vm);
+
             }
 
             return viewModel;
@@ -114,6 +134,8 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
         {
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
             if (itemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
@@ -124,6 +146,10 @@ namespace team7_ssis.Controllers
             r.RequisitionDetails = new List<RequisitionDetail>();
             r.Status = statusService.FindStatusByStatusId(4);
             r.CreatedDateTime = DateTime.Now;
+            r.Department = user.Department;
+            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CreatedBy = user;
+
             foreach (CreateRequisitionJSONViewModel dd in itemList)
             {
                 r.RequisitionDetails.Add(new RequisitionDetail
@@ -137,12 +163,53 @@ namespace team7_ssis.Controllers
             try
             {
                 requisitionService.Save(r);
-            } catch
+            }
+            catch
             {
                 return BadRequest("An unexpected error occured.");
             }
             return Ok(r.RequisitionId);
-            
+
+        }
+
+        [Route("api/editrequisition")]
+        [HttpPost]
+        public IHttpActionResult EditRequisition(UpdateRequisitionJSONViewModel json)
+        {
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
+            if (json.ItemList.Count < 1)
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+
+            try
+            {
+                Requisition r = requisitionRepository.FindById(json.RequisitionId);
+                List<RequisitionDetail> reqList = requisitionRepository.FindRequisitionDetails(json.RequisitionId).ToList();
+
+                // Load exisiting repository
+                requisitionRepository.FindRequisitionDetails(json.RequisitionId);
+                r.RequisitionDetails = new List<RequisitionDetail>();
+
+                foreach (CreateRequisitionJSONViewModel dd in json.ItemList)
+                {
+                    r.RequisitionDetails.Add(new RequisitionDetail
+                    {
+                        ItemCode = dd.ItemCode,
+                        Item = itemService.FindItemByItemCode(dd.ItemCode),
+                        Quantity = dd.Qty,
+                        Status = statusService.FindStatusByStatusId(4)
+                    });
+                }
+                requisitionService.Save(r);
+            }
+            catch
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+            return Ok(json.RequisitionId);
+
         }
 
         /// <summary>

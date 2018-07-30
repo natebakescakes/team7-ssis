@@ -23,7 +23,7 @@
     }
     window.onload = firstLoad;
 
-        var itemCode = '@(ViewBag.VB)';
+    var itemCode = '@(ViewBag.VB)';
         var oTable = $('#myTable').DataTable({
             sAjaxSource: "/api/manage/stockhistory/" + itemCode,
             sAjaxDataProp: "",
@@ -44,12 +44,21 @@
                 var i;
                 for (i in data) {
                     $('#itemdetails').find('[id="' + i + '"]').val(data[i]);
+
                 }
+
+                document.getElementById('itemcode').innerText = itemCode;
+                document.getElementById('itemcategoryname').innerText = data.ItemCategoryName;
+                document.getElementById('instock').innerText = data.Quantity;
+
             }
         })
+
+    
         var mine = @Html.Raw(Json.Encode(this.Model));
         var test = mine.SupplierName;
-        alert(test.length);
+        //alert(test.length);
+
         var pTable = $('#suppTable').DataTable({
             "searching": false,
             "paging": false,
@@ -60,33 +69,47 @@
             'order': [[1, 'asc']],
             "columns": [
                 {
+                    "data": "Number", "autoWidth": true
+                },
+                {
                     "data": "SupplierName", "autoWidth": true,
                     render: function (data, type, row) {
-                        var $select = $("<select id='SupplierName'></select>", {
-                            "id": m => m.SupplierName,
-                            "value": data
-                        });
-                        $.each(test, function (key, value) {
+                        var $select = $("<select id='SupplierName" + (row.Number) + "' name='SupplierName" + (row.Number) + "' disabled required></select>");
+                        $.each(test, function (i) {
                             var $option = $("<option></option>", {
-                                "text": value.Text,
-                                "value": value.Value
-                            });
-                            if (data === value) {
-                                $option.attr("selected", "selected")
-                            }
-                            $select.append($option);
+                            "text": test[i].Text,
+                            "value": test[i].Value
+                        });
+                        $select.append($option);
+
+                        if (row.SupplierName === test[i].Text) {
+                            $option.attr("selected", "selected")
+                        }
                         });
                         return $select.prop("outerHTML");
+
+                        @*@Html.DropDownListFor(m => m.Statuses, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })*@
                     }
                 },
                 {
                     "data": "SupplierUnitPrice", "autoWidth": true,
                     render: function (data, type, row) {
-                        return '<input class="form-control"  style="border:none" id=Price" type="number" disabled  min="0.01" step="0.01" max="2500" value = ' + row.SupplierUnitPrice + '  >';
+                        return "<input class='form-control'  style='border:none' id='SupplierUnitPrice'" + row.Number + "' name='SupplierUnitPrice" + row.Number + "' type='number' disabled  min='0.01' step='0.01' max='2500' value = " + row.SupplierUnitPrice + ">";
                     }
                 }
             ]
         })
+
+
+
+        $('#suppTable tbody').on('change', '#SupplierNameSelect', function (e) {
+            //var value = Number($(this).val();
+            var rowSelected = pTable.row($(this).parents('tr')).data().Number;
+            var dummy1 = $("#SupplierNameSelect option:selected").val();
+            alert(rowSelected);
+
+        })
+
 
         $('#itemEdit').on('click', function () {
             $('#itemEdit').hide();
@@ -104,6 +127,9 @@
             $('#itemdetails')
                 .find('select')
                 .prop('disabled', true);
+            $('#itemdetails')
+                .find('a')
+                .prop('disabled', true);
         }
         function enableInput() {
             $('#itemdetails')
@@ -114,6 +140,9 @@
                 .prop('disabled', false);
             $('#itemdetails')
                 .find('select')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('a')
                 .prop('disabled', false);
 
         }

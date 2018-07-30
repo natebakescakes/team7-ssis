@@ -308,7 +308,7 @@
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
     <Compile Include="ViewModels\RequisitionViewModels.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
-    <Compile Include="ViewModels\RetrivalViewModels.cs" />
+    <Compile Include="ViewModels\RetrievalViewModels.cs" />
     <Compile Include="ViewModels\StockHistoryViewModel.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -393,14 +393,13 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\pencil1.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Custom\AcceptRejectButtons.js" />
     <Content Include="Scripts\Custom\Department.js" />
     <Content Include="Scripts\Custom\ItemCategory.js" />
-    <Content Include="Scripts\Custom\CreateRequisition.js" />
     <Content Include="Scripts\Custom\MakeStockAdjustment.js" />
     <Content Include="Scripts\Custom\EditProfile.js" />
     <Content Include="Scripts\Custom\ManageRequisitions.js" />
@@ -408,7 +407,6 @@
     <Content Include="Scripts\Custom\Notification.js" />
     <Content Include="Scripts\Custom\Register.js" />
     <Content Include="Scripts\Custom\StockAdjustment_Clerk.js" />
-    <Content Include="Scripts\Custom\RequisitionDetail.js" />
     <Content Include="Scripts\Custom\StockAdjustmentDetail.js" />
     <Content Include="Scripts\Custom\StockAdjustment_ManagerProcess.js" />
     <Content Include="Scripts\Custom\Supplier.js" />
@@ -535,7 +533,6 @@
     <Content Include="Views\Requisition\StationeryRetrieval.cshtml" />
     <Content Include="Views\Requisition\StationeryDisbursement.cshtml" />
     <Content Include="Views\Retrieval\RetrievalDetails.cshtml" />
-    <Content Include="Views\Retrieval\_RetrievalDetailsTable.cshtml" />
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
@@ -565,14 +562,19 @@
     <Content Include="Views\Report\DepartmentUsageMobile.cshtml" />
     <Content Include="Views\Report\StoreOperationsMobile.cshtml" />
     <Content Include="Views\Requisition\ManageRequisitions.cshtml" />
+    <Content Include="Views\Inventory\Create.cshtml" />
     <Content Include="Views\StockAdjustment\StoreManagerView.cshtml" />
     <Content Include="Views\StockAdjustment\StoreClerkView.cshtml" />
     <Content Include="Views\StockAdjustment\Process.cshtml" />
     <Content Include="Views\StockAdjustment\DetailsEdit.cshtml" />
     <Content Include="Views\StockAdjustment\DetailsNoEdit.cshtml" />
+    <Content Include="Views\Retrieval\Manage.cshtml" />
+    <Content Include="Views\Disbursement\Manage.cshtml" />
+    <Content Include="Views\Requisition\EditRequisition.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="Views\Notification\" />
   </ItemGroup>
   <ItemGroup>
