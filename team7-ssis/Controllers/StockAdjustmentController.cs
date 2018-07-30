@@ -58,22 +58,6 @@ namespace team7_ssis.Controllers
         }      
 
 
-        public ActionResult AddItem()
-        {
-            string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            List<string> Session_list = new List<string>();
-            if (System.Web.HttpContext.Current.Session[user+"stock"] != null) //already has sessionID 
-            {
-                Session_list = (List<string>)System.Web.HttpContext.Current.Session[user+"stock"];
-            }
-            else
-            {
-                System.Web.HttpContext.Current.Session[user+"stock"] = Session_list;
-            }
-
-            return View();
-        }
-
         public ActionResult Process(string Id)
         {
             //get the stockadjustment
@@ -84,18 +68,6 @@ namespace team7_ssis.Controllers
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-            return View(sv);
-        }
-        public ActionResult Details(string id)
-        {
-            //get the stockadjustment
-            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
-            StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
-            sv.StockAdjustmentId = sa.StockAdjustmentId;
-            sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
-            sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
-            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
-                + sa.ApprovedBySupervisor.LastName;           
             return View(sv);
         }
 
