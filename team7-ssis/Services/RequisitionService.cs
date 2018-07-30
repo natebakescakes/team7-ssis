@@ -245,5 +245,17 @@ namespace team7_ssis.Services
             // Save
             requisitionRepository.Save(requisition);
         }
+        /// <summary>
+        /// Updates the Status of the Requisition
+        /// </summary>
+        /// <param name="retId"></param>
+        /// <param name="statusId"></param>
+        /// <param name="email"></param>
+        public void UpdateRequisitionStatus(string retId, int statusId, string email)
+        {
+            Requisition r = requisitionRepository.FindById(retId);
+            r.Status = statusRepository.FindById(statusId);
+            requisitionRepository.Save(r);
+        }
     }
 }

@@ -53,12 +53,12 @@ namespace team7_ssis.Tests.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            if (requisitionRepository.ExistsById("REQ-201807-001"))
-                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-001"));
-            if (requisitionRepository.ExistsById("REQ-201807-002"))
-                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-002"));
-            if (requisitionRepository.ExistsById("REQ-201807-003"))
-                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-003"));
+            if (requisitionRepository.ExistsById("GAB1"))
+                requisitionRepository.Delete(requisitionRepository.FindById("GAB1"));
+            if (requisitionRepository.ExistsById("GAB2"))
+                requisitionRepository.Delete(requisitionRepository.FindById("GAB2"));
+            if (requisitionRepository.ExistsById("GAB3"))
+                requisitionRepository.Delete(requisitionRepository.FindById("GAB3"));
             if (requisitionRepository.ExistsById("RQSERVTEST"))
                 requisitionRepository.Delete(requisitionRepository.FindById("RQSERVTEST"));
             if (requisitionRepository.ExistsById("APPROVETEST"))
@@ -303,6 +303,23 @@ namespace team7_ssis.Tests.Services
             requisitionService.RejectRequisition("APPROVETEST", "root@admin.com", "I REJECT THIS");
         }
 
+        [TestMethod]
+        public void UpdateRequisitionStatus_Test()
+        {
+            // ARRANGE
+            Requisition r = requisitionRepository.FindById("GAB1");
+            ;
+            // ACT
+            // Update StatusId to 6 ("Approved")
+            requisitionService.UpdateRequisitionStatus("GAB1", 6 , "");
+
+            // ASSERT
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                Assert.AreEqual(r.Status.StatusId, 6);
+            }
+        }
+
         private void populateRequisitions()
         {
             //// Create Requisition Details
@@ -330,7 +347,7 @@ namespace team7_ssis.Tests.Services
             //// Create Requisitions
 
             Requisition r1 = new Requisition();
-            r1.RequisitionId = "REQ-201807-001";
+            r1.RequisitionId = "GAB1";
             r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
             r1.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
             r1.RequisitionDetails = new List<RequisitionDetail>();
@@ -346,7 +363,7 @@ namespace team7_ssis.Tests.Services
             requisitionService.Save(r1);
 
             Requisition r2 = new Requisition();
-            r2.RequisitionId = "REQ-201807-002";
+            r2.RequisitionId = "GAB2";
             r2.Department = context.Department.Where(x => x.DepartmentCode == "CPSC").ToList().First();
             r2.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
             r2.RequisitionDetails = new List<RequisitionDetail>();
@@ -362,7 +379,7 @@ namespace team7_ssis.Tests.Services
             requisitionService.Save(r2);
 
             Requisition r3 = new Requisition();
-            r3.RequisitionId = "REQ-201807-003";
+            r3.RequisitionId = "GAB3";
             r3.Department = context.Department.Where(x => x.DepartmentCode == "ENGL").ToList().First();
             r3.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
             r3.RequisitionDetails = new List<RequisitionDetail>();
