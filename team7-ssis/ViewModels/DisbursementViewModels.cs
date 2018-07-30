@@ -12,6 +12,7 @@ namespace team7_ssis.ViewModels
         public string Department { get; set; }
         public string OrderTime { get; set; }
         public string CollectionPoint { get; set; }
+        public int Status { get; set; }
     }
 
     public class DisbursementFormTableViewModel
@@ -25,6 +26,7 @@ namespace team7_ssis.ViewModels
     {
         public string DisbursementID { get; set; }
         public string Department { get; set; }
+        public string Time { get; set; }
         public string CollectionPoint { get; set; }
         public string DisbursedBy { get; set; }
         public string Status { get; set; }
@@ -33,6 +35,7 @@ namespace team7_ssis.ViewModels
     public class DisbursementMobileViewModel
     {
         public string DisbursementId { get; set; }
+        public string RetrievalId { get; set; }
         public string Department { get; set; }
         public string CollectionPoint { get; set; }
         public string Status { get; set; }

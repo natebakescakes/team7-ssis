@@ -20,6 +20,12 @@ namespace team7_ssis.Controllers
             disbursementService = new DisbursementService(context);
         }
 
+        // GET: Disbursement/Manage
+        public ActionResult Manage()
+        {
+            return View();
+        }
+
         // GET: Disbursement/DisbursementDetails
         public ActionResult DisbursementDetails(string did)
         {
@@ -32,6 +38,7 @@ namespace team7_ssis.Controllers
                 viewModel.Department = d.Department.Name;
                 viewModel.OrderTime = String.Format("{0} {1}", d.CreatedDateTime.ToShortDateString(), d.CreatedDateTime.ToShortTimeString());
                 viewModel.CollectionPoint = d.Department.CollectionPoint.Name;
+                viewModel.Status = d.Status.StatusId;
             } catch
             {
                 return new HttpStatusCodeResult(400);
