@@ -215,9 +215,10 @@
                // alert(manager);
 
                 var data = $('#myTable').dataTable().fnGetData();
-               
-          
-                 
+                if (data.length == 0) { alert("Please Add Items before Submit"); }
+                else if (data.length > 0)
+                {
+
                     var reqIdArray = [];
                     for (i = 0; i < data.length; i++) {
                         var obj = {
@@ -243,7 +244,7 @@
                             window.location.replace("/StockAdjustment");
                         }
                     });
-                
+                }
              
 
             });
@@ -268,8 +269,9 @@
 
                 //save as pending and go to home page with message shows
                 var data = $('#myTable').dataTable().fnGetData();
+                if (data.length == 0) { alert("Please Add Items before Save"); }
 
-   
+                else if (data.length > 0) {
                     var reqIdArray = [];
                     for (i = 0; i < data.length; i++) {
                         var obj = {
@@ -291,11 +293,12 @@
                         dataType: "json",
                         type: "POST",
                         traditional: true,
-                        success: function (responseJSON) {
+                        success: function (rid) {
 
-                            window.location.replace("/StockAdjustment");
+                            window.location.replace("/StockAdjustment?create=" + encodeURIComponent(rid));
                         }
                     });
+                }
         });
 
 

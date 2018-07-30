@@ -79,14 +79,12 @@ namespace team7_ssis.Controllers
                 StockAdjustmentViewModel savm = new StockAdjustmentViewModel();
 
                 savm.StockAdjustmentId = s.StockAdjustmentId;
-                savm.CreatedBy = s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
+                savm.CreatedBy = s.CreatedBy == null?"" :s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
                 savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
                 savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
                 sadj.Add(savm);
             }
-
-
 
             return sadj;
         }
@@ -178,7 +176,7 @@ namespace team7_ssis.Controllers
         //create pending 
         [Route("api/stockadjustment/confirm")]
         [HttpPost]
-        public void CreatePendingStockAdjustment(List<ViewModelFromNew> list)
+        public string CreatePendingStockAdjustment(List<ViewModelFromNew> list)
         {
             userService = new UserService(Context);
             stockAdjustmentService = new StockAdjustmentService(Context);
@@ -228,6 +226,7 @@ namespace team7_ssis.Controllers
                 notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
             }
 
+            return s.StockAdjustmentId;
         }
 
 
