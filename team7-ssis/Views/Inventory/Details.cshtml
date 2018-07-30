@@ -74,7 +74,7 @@
                 {
                     "data": "SupplierName", "autoWidth": true,
                     render: function (data, type, row) {
-                        var $select = $("<select id='SupplierName" + (row.Number) + "' name='SupplierName" + (row.Number) + "' disabled required></select>");
+                        var $select = $("<select id='SupplierName" + (row.Number) + "' name='SupplierName" + (row.Number) + "' disabled></select>");
                         $.each(test, function (i) {
                             var $option = $("<option></option>", {
                             "text": test[i].Text,
@@ -87,8 +87,7 @@
                         }
                         });
                         return $select.prop("outerHTML");
-
-                        @*@Html.DropDownListFor(m => m.Statuses, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })*@
+                        
                     }
                 },
                 {
@@ -103,7 +102,6 @@
 
 
         $('#suppTable tbody').on('change', '#SupplierNameSelect', function (e) {
-            //var value = Number($(this).val();
             var rowSelected = pTable.row($(this).parents('tr')).data().Number;
             var dummy1 = $("#SupplierNameSelect option:selected").val();
             alert(rowSelected);
@@ -116,6 +114,12 @@
             $(".button-set").show();
            enableInput();
         });
+
+        $('#cancel-btn').on('click', function () {
+            $(".button-set").hide();
+            $("#itemEdit").show();
+            disableInput();
+        })  
 
         function disableInput() {
             $('#itemdetails')
@@ -130,6 +134,7 @@
             $('#itemdetails')
                 .find('a')
                 .prop('disabled', true);
+            $('#linkSet').hide();
         }
         function enableInput() {
             $('#itemdetails')
@@ -144,6 +149,7 @@
             $('#itemdetails')
                 .find('a')
                 .prop('disabled', false);
+            $('#linkSet').show();
 
         }
 
