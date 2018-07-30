@@ -6,14 +6,15 @@
 <body>
     @Html.Hidden("myURL", Url.Action("Details", "Inventory"))
     @Html.Hidden("mynewURL",Url.Action("Create","Inventory"))
+    @Html.Hidden("myURL2",Url.Action("GeneratePrice","Inventory"))
     <div style="width:90%; margin:0 auto" class="tablecontainer">
         <form id="myform" method="post">
             <input id="deletebtn" type="submit" class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;" value="Delete Selected" />
 
-            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px; margin-left:480px">Generate Prices List</a>
+            <input type="button" id="generatebtn" class="popup btn btn-primary" value="Generate Item Prices List" />
 
-            <input type="button"  id ="addnewbtn" class="popup btn btn-primary" value="+Add New Inventory Item"/>
-            
+            <input type="button" id="addnewbtn" class="popup btn btn-primary" value="+Add New Inventory Item" />
+
             <table id="itemTable" class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
@@ -124,6 +125,7 @@
             //alert('gotoViewItemDetail'+rs);
         }
 
+            //js for add new btn
         $('.tablecontainer #myform').on('click', '#addnewbtn', function (e) {
             var url = $("#mynewURL").val();
             var form = document.createElement("form");
@@ -135,6 +137,20 @@
 
             form.submit();
             //alert("go to new");
+        });
+
+            //js for generate price
+        $('.tablecontainer #myform').on('click', '#generatebtn', function (e) {
+            var url = $("#myURL2").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+
+            document.body.appendChild(form);
+
+            form.submit();
+            //alert("generate");
         });
 
         var selected = new Array();
