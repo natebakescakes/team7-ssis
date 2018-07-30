@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
+using team7_ssis.ViewModels;
 
 namespace team7_ssis.Services
 {
@@ -59,7 +60,7 @@ namespace team7_ssis.Services
             {
                 foreach (DisbursementDetail detail in d.DisbursementDetails)
                 {
-                   
+
                     //Create Stock Movement Transaction
                     stockmovementService.CreateStockMovement(detail);
                 }
@@ -69,6 +70,22 @@ namespace team7_ssis.Services
 
             return retrieval;
 
+        }
+
+        public void RetrieveItem(string retrievalId, string email, string itemCode)
+        {
+            if (!retrievalRepository.ExistsById(retrievalId))
+                throw new ArgumentException("Retrieval does not exist");
+
+            var retrieval = retrievalRepository.FindById(retrievalId);
+
+            if (retrievalRepository.FindById(retrievalId).Disbursements.SelectMany(d => d.DisbursementDetails.Where(dd => dd.ItemCode == itemCode)).Any(dd => dd.Status.StatusId == 18))
+                throw new ArgumentException("Item already retrieved");
+
+            retrieval.Disbursements.SelectMany(d => d.DisbursementDetails.Where(dd => dd.ItemCode == itemCode)).ToList().ForEach(disbursementDetail =>
+            {
+                disbursementDetail.Status = new StatusService(context).FindStatusByStatusId(18);
+            });
         }
         /// <summary>
         /// Sets Retrieval.Status to "Retrieved" if all DisbursementDetails are "Picked"
@@ -93,5 +110,20 @@ namespace team7_ssis.Services
 
             return allPicked;
         }
+
+        public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)
+        {
+            if (!retrievalRepository.ExistsById(retrievalId))
+                throw new ArgumentException("Retrieval does not exist");
+
+            foreach (BreakdownByDepartment breakdown in retrievalDetails)
+            {
+                var disbursement = FindRetrievalById(retrievalId).Disbursements.Where(d => d.Department.DepartmentCode == breakdown.DeptId).FirstOrDefault();
+
+                new DisbursementService(context).UpdateActualQuantityForDisbursementDetail(disbursement.DisbursementId, itemCode, breakdown.Actual, email);
+            }
+        }
+
+        
     }
 }

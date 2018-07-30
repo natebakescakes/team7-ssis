@@ -334,6 +334,110 @@ namespace team7_ssis.Tests.Services
             Assert.AreEqual(result.First().Status.StatusId, 10);
         }
 
+        [TestMethod]
+        public void UpdateActualQuantityForDisbursementDetail_Valid()
+        {
+            // Arrange
+            var requisitionRepository = new RequisitionRepository(context);
+            var departmentRepository = new DepartmentRepository(context);
+
+            var requisition = requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "DSERVICETEST",
+                CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
+                Department = departmentRepository.FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+            });
+            var retrieval = retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = "DSERVICETEST",
+                Requisitions = new List<Requisition>() { requisition },
+                CreatedDateTime = DateTime.Now,
+            });
+            var disbursement = disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DSERVICETEST",
+                Department = departmentRepository.FindById("ENGL"),
+                DisbursementDetails = new List<DisbursementDetail>()
+                {
+                    new DisbursementDetail()
+                    {
+                        DisbursementId = "DSERVICETEST",
+                        ItemCode = "E030",
+                        PlanQuantity = 30,
+                        ActualQuantity = 30,
+                        Status = new StatusService(context).FindStatusByStatusId(18),
+                    }
+                },
+                Retrieval = retrieval,
+                Status = new StatusService(context).FindStatusByStatusId(1),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            new DisbursementService(context).UpdateActualQuantityForDisbursementDetail("DSERVICETEST", "E030", 20, "StoreClerk1@email.com");
+
+            // Assert
+            Assert.AreEqual(20, new DisbursementDetailRepository(context).FindById("DSERVICETEST", "E030").ActualQuantity);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void UpdateActualQuantityForDisbursementDetail_DoesNotExist_ThrowsException()
+        {
+            // Arrange
+
+            // Act
+            new DisbursementService(context).UpdateActualQuantityForDisbursementDetail("FAKETEST", "E030", 2, "StoreClerk1@email.com");
+
+            // Assert
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void UpdateActualQuantityForDisbursementDetail_ActualQuantityMore_ThrowsException()
+        {
+            // Arrange
+            var requisitionRepository = new RequisitionRepository(context);
+            var departmentRepository = new DepartmentRepository(context);
+
+            var requisition = requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "DSERVICETEST",
+                CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
+                Department = departmentRepository.FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+            });
+            var retrieval = retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = "DSERVICETEST",
+                Requisitions = new List<Requisition>() { requisition },
+                CreatedDateTime = DateTime.Now,
+            });
+            var disbursement = disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "DSERVICETEST",
+                Department = departmentRepository.FindById("ENGL"),
+                DisbursementDetails = new List<DisbursementDetail>()
+                {
+                    new DisbursementDetail()
+                    {
+                        DisbursementId = "DSERVICETEST",
+                        ItemCode = "E030",
+                        PlanQuantity = 30,
+                        ActualQuantity = 30,
+                        Status = new StatusService(context).FindStatusByStatusId(18),
+                    }
+                },
+                Retrieval = retrieval,
+                Status = new StatusService(context).FindStatusByStatusId(1),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            new DisbursementService(context).UpdateActualQuantityForDisbursementDetail("DSERVICETEST", "E030", 40, "StoreClerk1@email.com");
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {
@@ -368,6 +472,12 @@ namespace team7_ssis.Tests.Services
 
             if (disbursementRepository.ExistsById("COLLECTIONTEST"))
                 disbursementRepository.Delete(disbursementRepository.FindById("COLLECTIONTEST"));
+            if (disbursementRepository.ExistsById("DSERVICETEST"))
+                disbursementRepository.Delete(disbursementRepository.FindById("DSERVICETEST"));
+            if (requisitionRepository.ExistsById("DSERVICETEST"))
+                requisitionRepository.Delete(requisitionRepository.FindById("DSERVICETEST"));
+            if (retrievalRepository.ExistsById("DSERVICETEST"))
+                retrievalRepository.Delete(retrievalRepository.FindById("DSERVICETEST"));
         }
 
     }
