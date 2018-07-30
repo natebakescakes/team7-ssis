@@ -1,8 +1,9 @@
-﻿@model IEnumerable<string>
-
+﻿
 @{
     ViewBag.Title = "Generate";
 }
+
+@Html.Hidden("successUrl", Url.Action("success", "PurchaseOrder"))
 
 @section scripts {
     <script src="~/Scripts/Custom/GeneratePurchaseOrder.js"></script>
@@ -15,8 +16,9 @@
 
 </div>
 
-@Html.Hidden("successUrl", Url.Action("success", "PurchaseOrder"))
-@Html.Hidden("inventoryUrl", Model)
+@Html.Hidden("inventory", (string)ViewBag.num)
+
+
 
 <button id="addItemButton" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 

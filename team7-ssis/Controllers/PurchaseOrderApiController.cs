@@ -31,13 +31,19 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<PurchaseOrderViewModel> PurchaseOrders()
         {
-            return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
+            if (purchaseOrderService.FindAllPurchaseOrders().Count != 0)
             {
-                PurchaseOrderNo = po.PurchaseOrderNo,
-                SupplierName=po.Supplier.Name,
-                CreatedDate=po.CreatedDateTime.ToShortDateString() + " "+ po.CreatedDateTime.ToShortTimeString(),
-                Status=po.Status.Name
-            }).ToList();
+                return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
+                {
+                    PurchaseOrderNo = po.PurchaseOrderNo,
+                    SupplierName = po.Supplier.Name,
+                    CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString(),
+                    Status = po.Status.Name
+                }).ToList();
+            }
+            else
+                return new List<PurchaseOrderViewModel>();
+            
         }
 
 

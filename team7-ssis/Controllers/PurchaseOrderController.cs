@@ -155,14 +155,17 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public ActionResult Generate()
         {
+            string s = "";
+            ViewBag.num = s;
             return View();
         }
 
 
         [HttpPost]
-        public ActionResult GeneratePost(List<string> poNums)
+        public ActionResult GeneratePost(string poNums)
         {
-            return View("Generate", poNums);
+            ViewBag.num = poNums;
+            return View("Generate");
         }
 
 

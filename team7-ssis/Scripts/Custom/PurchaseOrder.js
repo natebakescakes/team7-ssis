@@ -371,7 +371,7 @@ $(document).ready(function(){
         var form = document.createElement("form");
         var element1 = document.createElement("input");
         form.method = "POST";
-        form.action = url;
+        form.action = "/PurchaseOrder/GeneratePost/";
 
         element1.value = poNum;
         element1.name = "poNum";

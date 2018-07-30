@@ -56,7 +56,7 @@ namespace team7_ssis.Services
 
         public List<PurchaseOrder> FindAllPurchaseOrders()
         {
-            purchaseOrderDetailRepository.FindById("Hi", "Hello");
+            
             return purchaseOrderRepository.FindAll().ToList();
             
         }

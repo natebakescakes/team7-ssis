@@ -102,18 +102,20 @@ namespace team7_ssis.Controllers
 
         [Route("api/inventory/items")]
         [HttpPost]
-        public List<ItemViewModel> GeneratePO(List<string> itemNums)
+        public List<ItemViewModel> GeneratePO([FromBody]string itemNums)
         {
             List<ItemViewModel> itemView = new List<ItemViewModel>();
-            if (itemNums.Count == 0)
-            {
+            if (itemNums == null) {
+
                 return itemView;
             }
 
             else
             {
+                string[] itemArray = itemNums.Split(',');
                 List<Item> items = new List<Item>();
-                foreach (string i in itemNums)
+
+                foreach (string i in itemArray)
                 {
                     Item item =itemService.FindItemByItemCode(i);
                     items.Add(item);
@@ -125,13 +127,10 @@ namespace team7_ssis.Controllers
                     Description = item.Description,
                     Quantity = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
                                 requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity,
-                    UnitPrice=,
-                    Supplier
-                    AmountToReorder = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
-                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity
-
-
-
+                    UnitPriceDecimal=itemPriceService.FindSingleItemPriceByPriority(item,1).Price,
+                    TotalPrice = ((requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
+                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity)*
+                                itemPriceService.FindSingleItemPriceByPriority(item, 1).Price
                 }).ToList();
             }
 
