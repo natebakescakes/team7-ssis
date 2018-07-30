@@ -15,16 +15,21 @@ namespace team7_ssis.Services
         StatusRepository statusRepository;
         ItemService itemService;
         StockMovementService stockMovementService;
-
+        StatusService statusService;
+        RequisitionRepository requisitionRepository;
+      
 
         public DisbursementService(ApplicationDbContext context)
         {
             this.context = context;
             disbursementRepository = new DisbursementRepository(context);
             disbursementDetailRepository = new DisbursementDetailRepository(context);
-            statusRepository = new StatusRepository(context);
             itemService = new ItemService(context);
             stockMovementService = new StockMovementService(context);
+            statusService = new StatusService(context);
+            requisitionRepository = new RequisitionRepository(context);
+            
+
         }
 
         public List<Disbursement> FindAllDisbursements()
@@ -66,7 +71,7 @@ namespace team7_ssis.Services
             Disbursement disbursement = this.FindDisbursementById(DisbursementId);
 
             //update status of the disbursement to Items collected
-            disbursement.Status = statusRepository.FindById(10);
+            disbursement.Status = statusService.FindStatusByStatusId(10);
             disbursement.CollectedDateTime = DateTime.Now;
             disbursement.CollectedBy = disbursement.Retrieval.Requisitions.First().CreatedBy;
 
@@ -87,6 +92,57 @@ namespace team7_ssis.Services
             disbursement.DisbursementDetails.Find(x => x.ItemCode == ItemCode).ActualQuantity = quantity;
 
             return this.Save(disbursement);
+        }
+
+        public List<Requisition> UpdateRequisitionStatus(Disbursement disbursement)
+        {
+            int count = 0;
+            //get list of requisitions with the same retrieval id as the disbursement
+            List<Requisition> requisitions = disbursement.Retrieval.Requisitions;
+            List<Requisition> updated = new List<Requisition>();
+
+            foreach (DisbursementDetail d in disbursement.DisbursementDetails)
+            {
+                foreach (Requisition requisition in requisitions)
+                {
+                    count = 0;
+                    RequisitionDetail r = requisition.RequisitionDetails.Find(x => x.Item == d.Item);
+                  
+                        if (r.Item == d.Item)
+                        {
+                            if (r.Quantity > d.ActualQuantity)
+                            {
+                                //set requisition detail status to be partially fulfilled IF NOT ZERO
+                                r.Status = statusService.FindStatusByStatusId(9);
+                                
+                            }
+
+                            else if (r.Quantity < d.ActualQuantity)
+                            {
+                                //set requisition detail status to be fully delivered
+                                r.Status = statusService.FindStatusByStatusId(10);
+                                d.ActualQuantity -= r.Quantity;
+                                count++;
+                            }
+
+
+                        }
+
+                        if(count > 0 )
+                        {
+                            requisition.Status = statusService.FindStatusByStatusId(9);
+                        }
+                        if (count == requisition.RequisitionDetails.Count)
+                        {
+                            requisition.Status = statusService.FindStatusByStatusId(10);
+                        }
+                       
+
+                    updated.Add(requisitionRepository.Save(requisition));
+                }
+            }
+
+            return updated;
         }
 
     }
