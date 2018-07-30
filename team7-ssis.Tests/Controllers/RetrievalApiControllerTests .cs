@@ -191,6 +191,65 @@ namespace team7_ssis.Tests.Controllers
         }
 
         [TestMethod]
+        public void GetRetrieval_ContainsResult()
+        {
+            // Arrange
+            var statusService = new StatusService(context);
+
+            var expectedId = "RETCONTROLTEST";
+            var expectedQuantity = 999999;
+            new RetrievalRepository(context).Save(new Retrieval()
+            {
+                RetrievalId = expectedId,
+                CreatedDateTime = DateTime.Now,
+                Status = statusService.FindStatusByStatusId(12),
+                Disbursements = new List<Disbursement>()
+                {
+                    new Disbursement()
+                    {
+                        DisbursementId = expectedId,
+                        Department = new DepartmentService(context).FindDepartmentByDepartmentCode("ENGL"),
+                        CreatedDateTime = DateTime.Now,
+                        Status = statusService.FindStatusByStatusId(7),
+                        DisbursementDetails = new List<DisbursementDetail>()
+                        {
+                            new DisbursementDetail()
+                            {
+                                DisbursementId = expectedId,
+                                Item = new ItemService(context).FindItemByItemCode("E030"),
+                                Bin = "E78",
+                                PlanQuantity = 30,
+                                ActualQuantity = expectedQuantity,
+                                Status = statusService.FindStatusByStatusId(17),
+                                ItemCode = "E030",
+                            }
+                        }
+                    }
+                }
+            });
+
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.GetRetrieval(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = expectedId,
+            });
+
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<RetrievalDetailByDeptViewModel>>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.IsTrue(contentResult.Content.Select(x => x.ActualQuantity).Contains(expectedQuantity));
+        }
+
+        [TestMethod]
         public void RetrieveItem_Valid()
         {
             // Arrange
