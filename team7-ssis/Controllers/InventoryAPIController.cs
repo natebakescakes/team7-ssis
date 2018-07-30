@@ -128,6 +128,32 @@ namespace team7_ssis.Controllers
             return list;
         }
 
+        [Route("api/manage/itempricelist")]
+        [HttpGet]
+        public List<ItemPricesListViewModel> FindAllItemPriceList()
+        {
+            List<Item> iList = itemService.FindAllActiveItems();
+            List<ItemPricesListViewModel> ip = new List<ItemPricesListViewModel>();
+            ItemPricesListViewModel myModel = new ItemPricesListViewModel();
+            foreach (Item i in iList)
+            {
+                ip.Add(new ItemPricesListViewModel()
+                {
+                    ItemCode = i.ItemCode,
+                    Description = i.Description,
+                    Code1 = itemPriceService.FindOneByItemAndSequence(i, 1).SupplierCode,
+                    Code2 = itemPriceService.FindOneByItemAndSequence(i, 2).SupplierCode,
+                    Code3 = itemPriceService.FindOneByItemAndSequence(i, 3).SupplierCode,
+                    Price1 = itemPriceService.FindOneByItemAndSequence(i, 1).Price,
+                    Price2 = itemPriceService.FindOneByItemAndSequence(i, 2).Price,
+                    Price3 = itemPriceService.FindOneByItemAndSequence(i, 3).Price
+
+            });
+            }
+            return ip;
+        }
+
+
         [Route("api/delete/items")]
         [HttpPost]
         public Boolean DeleteItems([FromBody]string[] itemCodes)

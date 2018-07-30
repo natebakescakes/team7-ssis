@@ -239,6 +239,49 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        public void GetNewAutoGenerateRequisitionIdTest()
+        {
+            // Arrange
+            string expectedPrefix = $"SRQ-{DateTime.Now.Year}{DateTime.Now.Month:00}";
+
+            // Act
+            var result = IdService.GetNewAutoGenerateRequisitionId(context);
+            var serialNoParseResult = Int32.TryParse(result.Substring(result.Length - 3), out int serialNo);
+
+            // Assert
+            Assert.AreEqual(expectedPrefix, result.Substring(0, 10));
+            Assert.IsTrue(serialNoParseResult);
+        }
+
+        [TestMethod]
+        public void GetNewAutoGenerateRequisitionId_ExistingId_Valid()
+        {
+            // Arrange
+            string expectedPrefix = $"SRQ-{DateTime.Now.Year}{DateTime.Now.Month:00}";
+            var previous = IdService.GetNewAutoGenerateRequisitionId(context);
+            new RequisitionRepository(context).Save(new Requisition()
+            {
+                RequisitionId = previous,
+                EmployeeRemarks = "IDSERVICETEST",
+                CreatedDateTime = DateTime.Now.AddDays(1 - DateTime.Today.Day),
+            });
+
+            // Act
+            var current = IdService.GetNewAutoGenerateRequisitionId(context);
+            new RequisitionRepository(context).Save(new Requisition()
+            {
+                RequisitionId = current,
+                EmployeeRemarks = "IDSERVICETEST",
+                CreatedDateTime = DateTime.Now,
+            });
+            var previousSerialNoParseResult = Int32.TryParse(previous.Substring(previous.Length - 3), out int previousSerialNo);
+            var resultSerialNoParseResult = Int32.TryParse(current.Substring(current.Length - 3), out int resultSerialNo);
+
+            // Assert
+            Assert.AreEqual(1, resultSerialNo - previousSerialNo);
+        }
+
+        [TestMethod]
         public void GetNewRetrievalIdTest()
         {
             // Arrange

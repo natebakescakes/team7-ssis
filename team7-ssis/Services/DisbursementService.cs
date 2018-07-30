@@ -145,5 +145,24 @@ namespace team7_ssis.Services
             return updated;
         }
 
+        public void UpdateActualQuantityForDisbursementDetail(string disbursementId, string itemCode, int quantity, String email)
+        {
+            if (FindDisbursementById(disbursementId) == null)
+                throw new ArgumentException("Disbursement cannot be found");
+
+            if (disbursementDetailRepository.FindById(disbursementId, itemCode) == null)
+                throw new ArgumentException("Disbursement Detail cannot be found");
+
+            var disbursementDetail = FindDisbursementById(disbursementId).DisbursementDetails.Where(x => x.ItemCode == itemCode).FirstOrDefault();
+
+            if (quantity > disbursementDetail.PlanQuantity)
+                throw new ArgumentException("Plan quantity cannot be more than actual quantity");
+
+            disbursementDetail.ActualQuantity = quantity;
+            disbursementDetail.UpdatedBy = new UserService(context).FindUserByEmail(email);
+            disbursementDetail.UpdatedDateTime = DateTime.Now;
+
+            disbursementDetailRepository.Save(disbursementDetail);
+        }
     }
 }

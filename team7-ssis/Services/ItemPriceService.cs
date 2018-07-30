@@ -27,6 +27,7 @@ namespace team7_ssis.Services
             else
                 return "";
         }
+        
 
         public List<ItemPrice> FindAllItemPriceByOrder(string itemCode)
         {
@@ -60,6 +61,11 @@ namespace team7_ssis.Services
         public void  DeleteItemPrice(ItemPrice itemPrice)
         {
             itemPriceRepository.Delete(itemPrice);
+        }
+
+        public ItemPrice FindOneByItemAndSequence(Item i,int priority)
+        {
+            return itemPriceRepository.findByItemAndSequence(i, priority).First();
         }
     }
 }
