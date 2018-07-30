@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
@@ -11,13 +12,15 @@ namespace team7_ssis.Controllers
 {
     public class DisbursementController : Controller
     {
-        private ApplicationDbContext context;
-        private DisbursementService disbursementService;
+        ApplicationDbContext context;
+        DisbursementService disbursementService;
+        DisbursementRepository disbursementRepository;
 
         public DisbursementController()
         {
             context = new ApplicationDbContext();
             disbursementService = new DisbursementService(context);
+            disbursementRepository = new DisbursementRepository(context);
         }
 
         // GET: Disbursement/Manage
@@ -32,6 +35,11 @@ namespace team7_ssis.Controllers
             DisbursementFormViewModel viewModel = new DisbursementFormViewModel();
             try
             {
+                if (TempData["error"] != null)
+                {
+                    ViewBag.Error = (bool)TempData["error"];
+                }
+
                 Disbursement d = disbursementService.FindDisbursementById(did);
                 viewModel.DisbursementId = d.DisbursementId;
                 viewModel.Representative = d.CollectedBy == null ? "" : String.Format("{0} {1}", d.CollectedBy.FirstName, d.CollectedBy.LastName);
@@ -44,6 +52,25 @@ namespace team7_ssis.Controllers
                 return new HttpStatusCodeResult(400);
             }
             return View(viewModel);
+        }
+
+        // POST: Disbursement/Collect
+        [HttpPost]
+        public ActionResult Collect(string did)
+        {
+            Disbursement d;
+            try
+            {
+                disbursementService.ConfirmCollection(did);
+                d = disbursementRepository.FindById(did);
+                
+            } catch {
+                TempData["error"] = true;
+                return RedirectToAction("DisbursementDetails", "Disbursement", new { did } );
+            }
+            TempData["did"] = did;
+            return RedirectToAction("StationeryDisbursement", "Requisition", new { rid = d.Retrieval.RetrievalId });
+
         }
     }
 }

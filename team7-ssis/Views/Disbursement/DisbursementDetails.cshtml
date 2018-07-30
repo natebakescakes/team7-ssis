@@ -4,6 +4,17 @@
     ViewBag.Title = "Disbursement Details";
 }
 
+@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+}
+
+@if (ViewBag.Error == true)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        An unexpected error occured.
+    </div>
+}
+
 <div class="row">
     <div class="col-md-8">
         <h2 class="mb-3">Disbursement Form #@Model.DisbursementId</h2>
@@ -60,6 +71,10 @@
         });
     })
 
+    $(document).on('click', '#confirm', function () {
+        post("/Disbursement/Collect", { did : "@Model.DisbursementId" });
+    })
+
 </script>
 
 <div class="row mt-3">
@@ -67,7 +82,7 @@
         <button class="btn btn-default" onclick="window.history.go(-1)">Back</button>
         @if (Model.Status == 11)
         {
-            <button class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Confirm Delivery</button>
+            <button id="confirm" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Confirm Delivery</button>
         }
     </div>
 </div>

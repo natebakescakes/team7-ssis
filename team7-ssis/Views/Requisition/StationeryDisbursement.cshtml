@@ -4,10 +4,20 @@
 }
 <div id="alert"></div>
 
+@if (ViewBag.DisbursementId != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        #@ViewBag.DisbursementId successfully delivered.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
 <div class="row mb-3 step__container">
     <div class="step__arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
     <div class="col-md-6">
-        <a href="/Requisition/StationeryRetrieval?rid=@ViewBag.RetrievalId">
+        <a href="/Requisition/StationeryRetrieval?rid=@Request.QueryString["rid"]">
             <div class="card step__unselected">
                 <div class="card-body">
                     <div class="step__icon">

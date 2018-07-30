@@ -105,7 +105,10 @@ namespace team7_ssis.Controllers
             {
                 return new HttpStatusCodeResult(400);
             }
-            ViewBag.RetrievalID = rid;
+            else if (TempData["did"] != null)
+            {
+                ViewBag.DisbursementId = TempData["did"];
+            }
             return View();
         }
 
