@@ -75,6 +75,8 @@ namespace team7_ssis.Services
             disbursement.CollectedDateTime = DateTime.Now;
             disbursement.CollectedBy = disbursement.Retrieval.Requisitions.First().CreatedBy;
 
+            //Update requisition statuses related to this disbursement
+            this.UpdateRequisitionStatus(disbursement);
             return this.Save(disbursement);
 
          }
