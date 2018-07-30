@@ -113,11 +113,29 @@ namespace team7_ssis.Services
             string prefix = "REQ";
             int serialNo = new RequisitionRepository(context)
                 .FindByCreatedDateTime(DateTime.Now.Date.AddDays(1 - DateTime.Now.Date.Day), DateTime.Now.Date.AddDays(1))
-                .Where(x => x.RequisitionId.Length == 14)
+                .Where(x => x.RequisitionId.Length == 14 && x.RequisitionId.Substring(0, 3) == "REQ")
                 .Count() > 0 ?
                 new RequisitionRepository(context)
                     .FindByCreatedDateTime(DateTime.Now.Date.AddDays(1 - DateTime.Now.Date.Day), DateTime.Now.Date.AddDays(1))
-                    .Where(x => x.RequisitionId.Length == 14)
+                    .Where(x => x.RequisitionId.Length == 14 && x.RequisitionId.Substring(0, 3) == "REQ")
+                    .AsEnumerable()
+                    .Select(x => Int32.Parse(x.RequisitionId.Substring(x.RequisitionId.Length - 3)))
+                    .OrderByDescending(x => x)
+                    .FirstOrDefault() + 1 : 1;
+
+            return $"{prefix}-{DateTime.Now.Year}{DateTime.Now.Month:00}-{serialNo:000}";
+        }
+
+        public static string GetNewAutoGenerateRequisitionId(ApplicationDbContext context)
+        {
+            string prefix = "SRQ";
+            int serialNo = new RequisitionRepository(context)
+                .FindByCreatedDateTime(DateTime.Now.Date.AddDays(1 - DateTime.Now.Date.Day), DateTime.Now.Date.AddDays(1))
+                .Where(x => x.RequisitionId.Length == 14 && x.RequisitionId.Substring(0, 3) == "SRQ")
+                .Count() > 0 ?
+                new RequisitionRepository(context)
+                    .FindByCreatedDateTime(DateTime.Now.Date.AddDays(1 - DateTime.Now.Date.Day), DateTime.Now.Date.AddDays(1))
+                    .Where(x => x.RequisitionId.Length == 14 && x.RequisitionId.Substring(0, 3) == "SRQ")
                     .AsEnumerable()
                     .Select(x => Int32.Parse(x.RequisitionId.Substring(x.RequisitionId.Length - 3)))
                     .OrderByDescending(x => x)
