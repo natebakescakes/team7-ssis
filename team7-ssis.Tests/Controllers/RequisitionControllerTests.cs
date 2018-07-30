@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using team7_ssis.Controllers;
 using team7_ssis.Models;
+using team7_ssis.Repositories;
 using team7_ssis.Services;
 
 namespace team7_ssis.Tests.Controllers
@@ -48,10 +49,12 @@ namespace team7_ssis.Tests.Controllers
         }
         [ClassCleanup]
         public static void TestCleanup()
-        {
-            context.Retrieval.Remove(retrievalService.FindRetrievalById("TEST2"));
-            context.Disbursement.Remove(disbursementService.FindDisbursementById("TEST2"));
-            context.SaveChanges();
+        {   if (new RetrievalRepository(context).ExistsById("TEST2"))
+            {
+                context.Retrieval.Remove(retrievalService.FindRetrievalById("TEST2"));
+                context.Disbursement.Remove(disbursementService.FindDisbursementById("TEST2"));
+                context.SaveChanges();
+            }
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace team7_ssis.Tests.Controllers
             // ARRANGE
 
             // ACT
-            ActionResult result = requisitionController.StationeryRetrieval("TEST");
+            ActionResult result = requisitionController.StationeryRetrieval("TEST", "");
 
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));

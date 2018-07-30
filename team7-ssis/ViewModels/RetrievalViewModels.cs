@@ -68,4 +68,37 @@ namespace team7_ssis.ViewModels
         public string CreatedDate { get; set; }
         public string Status { get; set; }
     }
+
+    public class RetrievalMobileViewModel : ManageRetrievalsViewModel
+    {
+        public List<RetrievalDetailByDeptViewModel> RetrievalDetails { get; set; }
+    }
+
+    public class RetrievalDetailByDeptViewModel
+    {
+        public string Department { get; set; }
+        public string DepartmentCode { get; set; }
+        public string ItemCode { get; set; }
+        public string ItemName { get; set; }
+        public string Bin { get; set; }
+        public string Uom { get; set; }
+        public string Status { get; set; }
+        public int PlanQuantity { get; set; }
+        public int ActualQuantity { get; set; }
+    }
+
+    public class UpdateActualQuantityViewModel
+    {
+        public string RetrievalId { get; set; }
+        public string Email { get; set; }
+        public string ItemCode { get; set; }
+        public List<BreakdownByDepartment> RetrievalDetails { get; set; }
+    }
+
+    public class ConfirmRetrievalViewModel
+    {
+        public string RetrievalId { get; set; }
+        public string Email { get; set; }
+        public string ItemCode { get; set; }
+    }
 }

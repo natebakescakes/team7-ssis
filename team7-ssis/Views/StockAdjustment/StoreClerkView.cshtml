@@ -36,15 +36,12 @@
                     "targets": 5,
 
                     "render": function (data, type, full, meta) {
-                        if (data.StatusName == "Pending Approval")
 
-                            return "<button class='btn btn-warning' id='cancelBtn' ><i class='fa fa-delete'>Cancel</i></button>";
-
-                        else if (data.StatusName == "Draft" || data.StatusName=="Cancelled")
+                         if (data.StatusName == "Draft" || data.StatusName=="Cancelled")
 
                             return "<button class='btn btn-warning' id='editBtn' ><i class='fa fa-delete'>Edit</i></button>";
 
-                        else (data.StatusName == "Approved" || data.StatusName == "Rejected")
+                        else (data.StatusName == "Approved" || data.StatusName == "Rejected" || data.StatusName == "Pending Approval" )
 
                         return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
 
@@ -109,22 +106,13 @@
         });
 
 
-        $('#ClerkTable tbody').on("click", "#cancelBtn", function () {
+        //$('#ClerkTable tbody').on("click", "#pendingBtn", function () {
 
-            var row = $("table#ClerkTable tr").index($(this).closest("tr"));
-            var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+        //    var row = $("table#ClerkTable tr").index($(this).closest("tr"));
+        //    var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+        //    window.location.href = "/StockAdjustment/Pending/" + Id;
 
-            $.ajax({
-                type: "GET",
-                contentType: 'application/json',
-                url: '/api/stockadjustment/delete/?id=' + Id,
-
-                success: function (responseJSON) {
-                    window.location.replace("/StockAdjustment");
-                }
-            });
-
-        });
+        //});
 
 
         $('#ClerkTable tbody').on("click", "#viewBtn", function () {

@@ -93,12 +93,15 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<ItemDetailsSupplierInfoViewModel> FindSupplierInfo(string itemCode)
         {
-            List<ItemPrice> itemPrices = itemPriceService.FindItemPriceByItemCode(itemCode);
+            int count = 0;
+            List<ItemPrice> itemPrices = itemPriceService.FindAllItemPriceByOrder(itemCode);
             List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
             foreach(ItemPrice i in itemPrices)
             {
+                count++;
                 list.Add(new ItemDetailsSupplierInfoViewModel()
                 {
+                    Number= count,
                     SupplierName = i.Supplier.Name,
                     SupplierUnitPrice = (double)i.Price
                 });
@@ -106,9 +109,28 @@ namespace team7_ssis.Controllers
             return list;
         }
 
+        [Route("api/manage/supplierInfoAll")]
+        [HttpGet]
+        public List<ItemDetailsSupplierInfoViewModel> FindAllSupplierInfo()
+        {
+            int count = 0;
+            List<Supplier> slist = new SupplierService(context).FindAllSuppliers();
+            List<ItemDetailsSupplierInfoViewModel> list = new List<ItemDetailsSupplierInfoViewModel>();
+            foreach (Supplier i in slist)
+            {
+                count++;
+                list.Add(new ItemDetailsSupplierInfoViewModel()
+                {
+                    Number = count,
+                    SupplierName = i.Name
+                });
+            }
+            return list;
+        }
+
         [Route("api/delete/items")]
         [HttpPost]
-        public IHttpActionResult DeleteItems([FromBody]string[] itemCodes)
+        public Boolean DeleteItems([FromBody]string[] itemCodes)
         {
             Console.WriteLine("In API Controller" + itemCodes.Length);
             List<Item> list = new List<Item>();
@@ -121,16 +143,15 @@ namespace team7_ssis.Controllers
             {
                 for (int i = 0; i < list.Count; i++)
                 {
-                    itemService.DeleteItem(list[i]);
+                   itemService.DeleteItem(list[i]);
                 }
             } catch (Exception e) {
                 Console.WriteLine("In API Controller error" + e);
-                return BadRequest();
-
+                return false;
             }
 
             Console.WriteLine("In API Controller OK");
-            return Ok();
+            return true;
 
         }
     }
