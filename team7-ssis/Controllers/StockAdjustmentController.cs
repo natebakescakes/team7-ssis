@@ -12,18 +12,19 @@ namespace team7_ssis.Controllers
 {
     public class StockAdjustmentController : Controller
     {
-        ApplicationDbContext context;
+        public ApplicationDbContext context { get; set; }
         StockAdjustmentService stockAdjustmentService;
-        UserService userService;
-        
-        ItemPriceService itemPriceService;
+        UserService userService;        
+        public String CurrentUserName { get; set; }
         public StockAdjustmentController()
         {
             context =new ApplicationDbContext();
-            stockAdjustmentService = new StockAdjustmentService(context);
-            userService = new UserService(context);
-           
-            itemPriceService = new ItemPriceService(context);
+            try
+            {
+                CurrentUserName = System.Web.HttpContext.Current.User.Identity.Name;
+            }
+            catch (NullReferenceException) { }
+  
         }
        
 
@@ -37,9 +38,11 @@ namespace team7_ssis.Controllers
 
         public ActionResult New()
         {
+
+            userService = new UserService(context);
             StockAdjustmentViewModel viewmodel = new StockAdjustmentViewModel();
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
-            Department d = userService.FindUserByEmail(UserName).Department;
+         
+            Department d = userService.FindUserByEmail(CurrentUserName).Department;
 
             List<ApplicationUser> supervisors=new List<ApplicationUser>();
 
@@ -60,8 +63,9 @@ namespace team7_ssis.Controllers
 
         public ActionResult Process(string Id)
         {
-            //get the stockadjustment
-            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
+            stockAdjustmentService = new StockAdjustmentService(context);
+           //get the stockadjustment
+           StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
@@ -73,8 +77,9 @@ namespace team7_ssis.Controllers
 
         public ActionResult DetailsNoEdit(string id)
         {
-            //get the stockadjustment
-            StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
+            stockAdjustmentService = new StockAdjustmentService(context);
+           //get the stockadjustment
+           StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(id);
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
@@ -88,6 +93,8 @@ namespace team7_ssis.Controllers
 
         public ActionResult DetailsEdit(string Id)
         {
+            stockAdjustmentService = new StockAdjustmentService(context);
+            userService = new UserService(context);
             //get the stockadjustment
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(Id);
             StockAdjustmentViewModel sv = new StockAdjustmentViewModel();
@@ -98,8 +105,8 @@ namespace team7_ssis.Controllers
                 + sa.ApprovedBySupervisor.LastName;
 
 
-            string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
-            Department d = userService.FindUserByEmail(UserName).Department;
+            //string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
+            Department d = userService.FindUserByEmail(CurrentUserName).Department;
 
             List<ApplicationUser> supervisors = new List<ApplicationUser>();
 
