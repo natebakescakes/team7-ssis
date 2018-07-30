@@ -205,6 +205,20 @@
             })
         });
 
+        // Click 'Confirm Retrieval'
+        $(document).on('click', '#confirmRetrievalBtn', function () {
+            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
+                post("/Retrieval/Confirm", { retId: "@Model.RetrievalID" });
+            }
+        })
+
+        // Click 'Confirm Retrieval'
+        $(document).on('click', '#discardChangesBtn', function () {
+            if (confirm("Discard all changes?")) {
+                location.reload();
+            }
+        })
+
     });
 
 

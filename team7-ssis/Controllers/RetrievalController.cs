@@ -11,8 +11,16 @@ namespace team7_ssis.Controllers
 {
     public class RetrievalController : Controller
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        ItemService itemService = new ItemService(context);
+        ApplicationDbContext context;
+        ItemService itemService;
+        RetrievalService retrievalService;
+
+        public RetrievalController()
+        {
+            context = new ApplicationDbContext();
+            itemService = new ItemService(context);
+            retrievalService = new RetrievalService(context);
+        }
 
         // GET: Retrieval/RetrievalDetails
         public ActionResult RetrievalDetails(string retId, string itemId)
@@ -36,6 +44,22 @@ namespace team7_ssis.Controllers
         public ActionResult Manage()
         {
             return View();
+        }
+
+        // POST: Retrieval/Confirm
+        [HttpPost]
+        public ActionResult Confirm(string retId)
+        {
+            try
+            {
+                retrievalService.ConfirmRetrieval(retId, "");
+                TempData["message"] = String.Format("Requisition #{0} confirmed.", retId);
+            }
+            catch
+            {
+                return new HttpStatusCodeResult(400);
+            }
+            return RedirectToAction("StationeryRetrieval","Requisition", new { rid = retId });
         }
     }
 }

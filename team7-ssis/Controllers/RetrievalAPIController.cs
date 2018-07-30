@@ -172,9 +172,6 @@ namespace team7_ssis.Controllers
             List<Retrieval> retList = retrievalService.FindAllRetrievals();
             List<ManageRetrievalsViewModel> viewModel = new List<ManageRetrievalsViewModel>();
 
-            // TODO: Change this strange bug where r.Status.get is not returning anything without this line
-            Status s = Context.Status.Where(x => x.StatusId == 17).First();
-
             foreach(Retrieval r in retList)
             {
                 viewModel.Add(new ManageRetrievalsViewModel

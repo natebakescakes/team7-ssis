@@ -159,18 +159,11 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void ConfirmRetrieval_AllPickedTest()
+        public void ConfirmRetrieval_Test()
         {
             // ARRANGE
             // Get Retrieval with Disbursement Details
             Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
-            List<DisbursementDetail> ddList = retrieval.Disbursements.SelectMany(x => x.DisbursementDetails).ToList();
-            foreach( DisbursementDetail dd in ddList)
-            {
-                // set all to "Picked"
-                dd.Status = statusRepository.FindById(18);
-            }
-            retrievalRepository.Save(retrieval);
 
             // ACT
             retrievalService.ConfirmRetrieval(retrieval.RetrievalId, "");
@@ -178,28 +171,6 @@ namespace team7_ssis.Tests.Services
             // ASSERT
             Assert.AreEqual(retrieval.Status.StatusId, 20);
         }
-        [TestMethod]
-        public void ConfirmRetrieval_NotAllPickedTest()
-        {
-            // ARRANGE
-            // Get Retrieval with Disbursement Details
-            Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
-            List<DisbursementDetail> ddList = retrieval.Disbursements.SelectMany(x => x.DisbursementDetails).ToList();
-            foreach (DisbursementDetail dd in ddList)
-            {
-                // set all to "Not Picked"
-                dd.Status = statusRepository.FindById(17);
-            }
-            retrievalRepository.Save(retrieval);
-
-            // ACT
-            retrievalService.ConfirmRetrieval(retrieval.RetrievalId, "");
-
-            // ASSERT
-            Assert.AreEqual(retrieval.Status.StatusId, 19);
-        }
-
-
 
         [TestCleanup]
         public void TestCleanup()

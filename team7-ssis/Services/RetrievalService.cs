@@ -71,7 +71,7 @@ namespace team7_ssis.Services
 
         }
         /// <summary>
-        /// Sets Retrieval.Status to "Retrieved" if all DisbursementDetails are "Picked"
+        /// Sets Retrieval.Status to "Retrieved"
         /// </summary>
         /// <param name="retId"></param>
         /// <param name="email"></param>
@@ -79,19 +79,9 @@ namespace team7_ssis.Services
         public bool ConfirmRetrieval(string retId, string email)
         {
             Retrieval r = retrievalRepository.FindById(retId);
-            // get list of Disbursement details
-            List<DisbursementDetail> ddList = r.Disbursements.SelectMany(x => x.DisbursementDetails).ToList();
-            // check if all of them are picked
-            bool allPicked = ddList.TrueForAll(x => x.Status.StatusId == 18);
-            if (allPicked)
-            {
-                r.Status = statusRepository.FindById(20);
-            } else {
-                r.Status = statusRepository.FindById(19);
-            }
+            r.Status = statusRepository.FindById(20);
             retrievalRepository.Save(r);
-
-            return allPicked;
+            return true;
         }
     }
 }
