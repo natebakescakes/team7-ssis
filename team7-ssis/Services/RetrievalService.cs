@@ -87,11 +87,14 @@ namespace team7_ssis.Services
 
         public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)
         {
+            if (!retrievalRepository.ExistsById(retrievalId))
+                throw new ArgumentException("Retrieval does not exist");
+
             foreach (BreakdownByDepartment breakdown in retrievalDetails)
             {
                 var disbursement = FindRetrievalById(retrievalId).Disbursements.Where(d => d.Department.DepartmentCode == breakdown.DeptId).FirstOrDefault();
 
-                new DisbursementService(context).UpdateActualQuantityForDisbursementDetail(disbursement.DisbursementId, itemCode, breakdown.Actual);
+                new DisbursementService(context).UpdateActualQuantityForDisbursementDetail(disbursement.DisbursementId, itemCode, breakdown.Actual, email);
             }
         }
 

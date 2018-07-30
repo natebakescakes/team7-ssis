@@ -165,7 +165,59 @@ namespace team7_ssis.Controllers
                 })).ToList(),
             }));
         }
+
+        [Route("api/retrieval/retrieve")]
+        public IHttpActionResult RetrieveItem([FromBody] ConfirmRetrievalViewModel model)
+        {
+            try
+            {
+                new RetrievalService(context).RetrieveItem(model.RetrievalId, model.Email, model.ItemCode);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully retrieved"
+            });
+        }
+
+        [Route("api/retrieval/updatequantity")]
+        public IHttpActionResult UpdateActualQuantity([FromBody] UpdateActualQuantityViewModel model)
+        {
+            try
+            {
+                new RetrievalService(context).UpdateActualQuantity(model.RetrievalId, model.Email, model.ItemCode, model.RetrievalDetails);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully updated"
+            });
+        }
+
+        [Route("api/retrieval/confirm")]
+        public IHttpActionResult ConfirmRetrieval([FromBody] ConfirmRetrievalViewModel model)
+        {
+            try
+            {
+                new RetrievalService(context).ConfirmRetrieval(model.RetrievalId, model.Email);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully confirmed"
+            });
+        }
     }
-
-
 }
