@@ -18,6 +18,7 @@
     </div>
 }
 
+<div id="alert"></div>
 
 <div class="row mb-3 step__container">
     <div class="step__arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
@@ -98,17 +99,19 @@
     <div class="col-md-12">
         <div class="pull-right">
             <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
-            <button id="updateRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Update Retrieval Form</button>
+            <button id="saveRetrievalBtn" class="btn btn-default"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
+            <button id="confirmRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Confirm Retrieval Form</button>
         </div>
-
+        
     </div>
 </div>
 
 <script>
 
     // icons representing checked/unchecked
-    var checked = '<i class="fa fa-check-square-o" aria-hidden="true"></i>';
-    var unchecked = '<i class="fa fa-square-o" aria-hidden="true"></i>';
+    var picked = '<i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>';
+    var partiallyPicked = '<i class="fa fa-check-circle-o fa-lg" style="opacity:0.25" aria-hidden="true"></i>';
+    var awaitingPicking = '<i class="fa fa-circle-o fa-lg" style="opacity:0.25" aria-hidden="true"></i>';
 
     // load script
     $(document).ready(function () {
@@ -117,14 +120,21 @@
                 url: "/api/stationeryretrieval/@Model.RetrievalID",
                 dataSrc: ""
             },
-
             columns: [
                 //{ "defaultContent": '<i class="fa fa-square-o" aria-hidden="true"></i>', className : "checkmark" },
                 {
-                    "data": "AllRetrieved",
+                    "data": "RetrievedStatus",
                     "className": "checkmark pointer",
                     "render": function (data, type, row, meta) {
-                        return data ? checked : unchecked;
+                        var html;
+                        if (data == "Picked") {
+                            html = picked;
+                        } else if (data == "Awaiting Picking") {
+                            html = awaitingPicking;
+                        } else {
+                            html = partiallyPicked;
+                        }
+                        return html;
                     }
                 },
                 { "data": "ProductID", "autoWidth": true },
@@ -148,14 +158,15 @@
         $('#myTable tbody').on('click', '.checkmark', function () {
             console.log('clicked');
             var cell = table.cell(this);
-            if (cell.data() == true) {
-                cell.data(false).draw();
-            } else if (cell.data() == false) {
-                cell.data(true).draw();
+            if (cell.data() == "Awaiting Picking" || cell.data() == "Partially Picked") {
+                cell.data("Picked").draw();
+            } else if (cell.data() == "Picked") {
+                cell.data("Awaiting Picking").draw();
             }
         });
 
-        $(document).on('click', '#updateRetrievalBtn', function () {
+        // Click "Update Retrieval"
+        $(document).on('click', '#saveRetrievalBtn', function () {
             var rowData = table.rows().data().toArray();
             var json = {
                 RetrievalID: "@Request.QueryString["rid"]",
@@ -172,12 +183,24 @@
                 success: function (message) {
                     // create info DOM object
                     console.log(message);
-                    $('#alert').html('<div class="alert alert-info" role="alert">Disbursement information updated.</div >');
+                    $('#alert').html(
+                        '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
+                        'Disbursement information updated.' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>');
                 },
                 error: function (message) {
                     // show error message
                     console.log(message.statusText);
-                    $('#alert').html('<div class="alert alert-danger" role="alert">An unexpected error occured.</div >');
+                    $('#alert').html(
+                        '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        'An unexpected error occured.' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>');
                 }
             })
         });

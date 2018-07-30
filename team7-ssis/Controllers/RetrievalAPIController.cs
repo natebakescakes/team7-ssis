@@ -41,7 +41,8 @@ namespace team7_ssis.Controllers
             });
             List<StationeryRetrievalTableViewModel> viewModel = finalList.Select(y => new StationeryRetrievalTableViewModel
             {
-                AllRetrieved = (y.Sum(dd => dd.PlanQuantity)) == (y.Sum(dd => dd.ActualQuantity)) ? true : false,
+                RetrievedStatus = y.Sum(dd => dd.PlanQuantity) == y.Sum(dd => dd.ActualQuantity) ? "Picked" :
+                                    (y.Sum(dd => dd.ActualQuantity) == 0 ? "Awaiting Picking" : "Partially Picked"),
                 ProductID = y.Key.ItemCode,
                 Bin = y.Key.Bin,
                 QtyOrdered = y.Sum(dd => dd.PlanQuantity),
@@ -60,14 +61,14 @@ namespace team7_ssis.Controllers
                 List<DisbursementDetail> ddList = disbList.SelectMany(x => x.DisbursementDetails).ToList();
                 foreach (var row in viewModel.Data)
                 {
-                    if (row.AllRetrieved == true)
+                    if (row.RetrievedStatus == "Picked")
                     {
                         ddList
                         .Where(x => x.ItemCode == row.ProductID)
                         .ToList()
                         .ForEach(x => x.ActualQuantity = x.PlanQuantity);
                     }
-                    else
+                    else if (row.RetrievedStatus == "Awaiting Picking")
                     {
                         ddList
                         .Where(x => x.ItemCode == row.ProductID)
