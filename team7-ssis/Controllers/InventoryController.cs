@@ -9,6 +9,7 @@ using team7_ssis.Services;
 using team7_ssis.Models;
 using team7_ssis.ViewModels;
 using System.IO;
+using Rotativa;
 
 namespace team7_ssis.Controllers
 {
@@ -81,6 +82,65 @@ namespace team7_ssis.Controllers
             });
         }
 
+        
+
+        public ActionResult GeneratePrice()
+        {
+            //ViewBag.myFlag = flag;
+            List<Item> iList = itemService.FindAllActiveItems();
+            List<ItemPricesListViewModel> ip = new List<ItemPricesListViewModel>();
+            ItemPricesListViewModel myModel = new ItemPricesListViewModel();
+            foreach (Item i in iList)
+            {
+                ip.Add(new ItemPricesListViewModel()
+                {
+                    ItemCode = i.ItemCode,
+                    Description = i.Description,
+                    Code1 = itemPriceService.FindOneByItemAndSequence(i, 1).SupplierCode,
+                    Code2 = itemPriceService.FindOneByItemAndSequence(i, 2).SupplierCode,
+                    Code3 = itemPriceService.FindOneByItemAndSequence(i, 3).SupplierCode,
+                    Price1 = itemPriceService.FindOneByItemAndSequence(i, 1).Price,
+                    Price2 = itemPriceService.FindOneByItemAndSequence(i, 2).Price,
+                    Price3 = itemPriceService.FindOneByItemAndSequence(i, 3).Price
+                 });
+            }
+            return View(ip);
+        }
+
+        public ActionResult PrintView()
+        {
+            //ViewBag.myFlag = flag;
+            List<Item> iList = itemService.FindAllActiveItems();
+            List<ItemPricesListViewModel> ip = new List<ItemPricesListViewModel>();
+            ItemPricesListViewModel myModel = new ItemPricesListViewModel();
+            foreach (Item i in iList)
+            {
+                ip.Add(new ItemPricesListViewModel()
+                {
+                    ItemCode = i.ItemCode,
+                    Description = i.Description,
+                    Code1 = itemPriceService.FindOneByItemAndSequence(i, 1).SupplierCode,
+                    Code2 = itemPriceService.FindOneByItemAndSequence(i, 2).SupplierCode,
+                    Code3 = itemPriceService.FindOneByItemAndSequence(i, 3).SupplierCode,
+                    Price1 = itemPriceService.FindOneByItemAndSequence(i, 1).Price,
+                    Price2 = itemPriceService.FindOneByItemAndSequence(i, 2).Price,
+                    Price3 = itemPriceService.FindOneByItemAndSequence(i, 3).Price
+                });
+            }
+            return View(ip);
+        }
+
+        public ActionResult PrintAllPrices()
+        {
+            var a = new ActionAsPdf("PrintView") { FileName = "ItemPrices.pdf" };
+            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
+            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            a.CustomSwitches = "--load-error-handling ignore";
+            return a;
+        }
+
+
+
         //GET: Inventory Detail
         public ActionResult Details(string itemCode)
         {
@@ -121,7 +181,6 @@ namespace team7_ssis.Controllers
                     "Value",
                     "Text"
                 ),
-                //ImagePath = "~/Images/" + itemCode.ToString() +".JPG"
                 ImagePath= path
 
             });
