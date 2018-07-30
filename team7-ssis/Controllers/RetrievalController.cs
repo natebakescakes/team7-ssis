@@ -31,5 +31,11 @@ namespace team7_ssis.Controllers
 
             return View(viewModel);
         }
+
+        // GET: Retrieval/Manage
+        public ActionResult Manage()
+        {
+            return View();
+        }
     }
 }

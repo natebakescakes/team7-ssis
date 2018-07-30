@@ -5,14 +5,15 @@
 </head>
 <body>
     @Html.Hidden("myURL", Url.Action("Details", "Inventory"))
+    @Html.Hidden("mynewURL",Url.Action("Create","Inventory"))
     <div style="width:90%; margin:0 auto" class="tablecontainer">
         <form id="myform" method="post">
-            <input id="deletebtn" type="submit" class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;" value="Delete Selected" /> 
+            <input id="deletebtn" type="submit" class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;" value="Delete Selected" />
 
             <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px; margin-left:480px">Generate Prices List</a>
 
-            <a class="popup btn btn-primary" href="#" style="margin-bottom:20px; margin-top:20px;">Add New Inventory Item</a>
-
+            <input type="button"  id ="addnewbtn" class="popup btn btn-primary" value="+Add New Inventory Item"/>
+            
             <table id="itemTable" class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
@@ -49,15 +50,16 @@
                     url: '/api/delete/items',
                     contentType: "application/json",
                     data: JSON.stringify(selected),
-                    success: function (response) {
-                        table.ajax.reload();
+                    success: function (data) {
+                        //alert("Success");
+                        oTable.ajax.reload();
                     },
                     dataType: "json",
                     traditional: true
                 })
                 event.preventDefault();
             });
-            
+
 
             var oTable = $('#itemTable').DataTable({
                 sAjaxSource: "/api/manage/items",
@@ -98,7 +100,7 @@
 
                 default: console.log('default ddl')
             }
-        }) 
+        })
         function gotoMakeStockAdjustment(rs) {
             alert('MakeStockAdjustment'+rs);
             }
@@ -119,8 +121,21 @@
             document.body.appendChild(form);
 
             form.submit();
-            alert('gotoViewItemDetail'+rs);
+            //alert('gotoViewItemDetail'+rs);
         }
+
+        $('.tablecontainer #myform').on('click', '#addnewbtn', function (e) {
+            var url = $("#mynewURL").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+
+            document.body.appendChild(form);
+
+            form.submit();
+            //alert("go to new");
+        });
 
         var selected = new Array();
         //all about checkbox
@@ -137,7 +152,7 @@
                 selected.push(rowSelected);
             }
             //alert(selected.length);
-                
+
         })
         });
     </script>

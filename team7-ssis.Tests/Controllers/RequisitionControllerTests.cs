@@ -67,7 +67,7 @@ namespace team7_ssis.Tests.Controllers
             // ARRANGE
 
             // ACT
-            ActionResult result = requisitionController.StationeryRetrieval("TEST");
+            ActionResult result = requisitionController.StationeryRetrieval("TEST", "");
 
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));

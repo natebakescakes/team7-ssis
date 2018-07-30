@@ -20,7 +20,15 @@ namespace team7_ssis.Repositories
             return context.ItemPrice
                 .Where(x => x.ItemCode == itemCode);
         }
-        
+
+        public IQueryable<ItemPrice> FindOrderBySequence(string itemCode)
+        {
+            return context.ItemPrice
+                .OrderBy(x => x.PrioritySequence)
+                .Where(x => x.ItemCode == itemCode);
+        }
+
+
 
         public IQueryable<ItemPrice> FindBySupplierCode(string supplierCode)
         {

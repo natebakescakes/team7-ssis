@@ -12,17 +12,17 @@ namespace team7_ssis.Controllers
 {
     public class RetrievalAPIController : ApiController
     {
-
-        ApplicationDbContext context;
         DisbursementService disbursementService;
         RetrievalService retrievalService;
 
         public RetrievalAPIController()
         {
-            context = new ApplicationDbContext();
-            disbursementService = new DisbursementService(context);
-            retrievalService = new RetrievalService(context);
+            Context = new ApplicationDbContext();
+            disbursementService = new DisbursementService(Context);
+            retrievalService = new RetrievalService(Context);
         }
+
+        public ApplicationDbContext Context { get; set; }
 
         [Route("api/stationeryretrieval/{rId}")]
         [HttpGet]
@@ -45,14 +45,14 @@ namespace team7_ssis.Controllers
                 ProductID = y.Key.ItemCode,
                 Bin = y.Key.Bin,
                 QtyOrdered = y.Sum(dd => dd.PlanQuantity),
-                Description = context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description
+                Description = Context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description
             }).ToList();
 
             return viewModel;
         }
         [Route("api/stationeryretrieval")]
         [HttpPost]
-        public IHttpActionResult StationeryRetrieval(StationeryRetrievalJSONViewModel viewModel)
+        public IHttpActionResult UpdateStationeryRetrieval(StationeryRetrievalJSONViewModel viewModel)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace team7_ssis.Controllers
                         .ForEach(x => x.ActualQuantity = 0);
                     }
                 }
-                context.SaveChanges();
+                Context.SaveChanges();
             }
             catch
             {
@@ -116,6 +116,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public IHttpActionResult UpdateRetrievalForm(SaveJson json)
         {
+            var retrievalService = new RetrievalService(Context);
+            var disbursementService = new DisbursementService(Context);
+
             // string retId, string itemCode, List<BreakdownByDepartment> list
             try
             {
@@ -131,7 +134,57 @@ namespace team7_ssis.Controllers
             }
             return Ok();
         }
+
+        [Route("api/retrievals/")]
+        public IHttpActionResult GetRetrievals()
+        {
+            var retrievals = new RetrievalService(Context).FindAllRetrievals();
+
+            if (retrievals.Count == 0)
+                return NotFound();
+
+            return Ok(retrievals.Select(retrieval => new RetrievalMobileViewModel()
+            {
+                RetrievalId = retrieval.RetrievalId,
+                CreatedBy = retrieval.CreatedBy != null ? $"{retrieval.CreatedBy.FirstName} {retrieval.CreatedBy.LastName}" : "",
+                CreatedDate = retrieval.CreatedDateTime.ToShortDateString(),
+                Status = retrieval.Status.Name,
+                RetrievalDetails = retrieval.Disbursements.SelectMany(d => d.DisbursementDetails.Select(dd => new RetrievalDetailByDeptViewModel()
+                {
+                    Department = dd.Disbursement.Department.Name,
+                    DepartmentCode = dd.Disbursement.Department.DepartmentCode,
+                    ItemCode = dd.ItemCode,
+                    ItemName = dd.Item.Name,
+                    Bin = dd.Bin,
+                    PlanQuantity = dd.PlanQuantity,
+                    ActualQuantity = dd.ActualQuantity,
+                    Status = dd.Status.Name,
+                    Uom = dd.Item.Uom,
+                })).ToList(),
+            }));
+        }
+
+        [Route("api/retrieval")]
+        [HttpGet]
+        public IEnumerable<ManageRetrievalsViewModel> GetAllRetrievals()
+        {
+            List<Retrieval> retList = retrievalService.FindAllRetrievals();
+            List<ManageRetrievalsViewModel> viewModel = new List<ManageRetrievalsViewModel>();
+
+            // TODO: Change this strange bug where r.Status.get is not returning anything without this line
+            Status s = Context.Status.Where(x => x.StatusId == 17).First();
+
+            foreach(Retrieval r in retList)
+            {
+                viewModel.Add(new ManageRetrievalsViewModel
+                {
+                    RetrievalId = r.RetrievalId,
+                    CreatedBy = r.CreatedBy != null ? String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName) : "",
+                    CreatedDate = r.CreatedDateTime.ToShortDateString(),
+                    Status = r.Status.Name
+                });
+            }
+            return viewModel;
+        }
     }
-
-
 }
