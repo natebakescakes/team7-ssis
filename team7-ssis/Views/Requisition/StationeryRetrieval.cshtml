@@ -35,9 +35,28 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <a href="/Requisition/StationeryDisbursement?rid=@Model.RetrievalID">
-            <div class="card step__unselected">
+    @if (@Model.StatusId == 20)
+    {
+        <div class="col-md-6">
+            <a href="/Requisition/StationeryDisbursement?rid=@Model.RetrievalID">
+                <div class="card step__unselected">
+                    <div class="card-body">
+                        <div class="step__icon">
+                            <i class="fa fa-truck" aria-hidden="true"></i>
+                        </div>
+                        <div class="step__label">
+                            <h5>Stationery Disbursement</h5>
+                            Deliver items according to Disbursement Forms.
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-6">
+            <div class="card step__fade step__unselected">
                 <div class="card-body">
                     <div class="step__icon">
                         <i class="fa fa-truck" aria-hidden="true"></i>
@@ -48,8 +67,8 @@
                     </div>
                 </div>
             </div>
-        </a>
-    </div>
+        </div>
+    }
 </div>
 
 <div class="row mb-3">
@@ -89,22 +108,33 @@
             <th>Bin</th>
             <th>Description</th>
             <th>Qty Ordered</th>
-            <th>Edit</th>
+            @if (@Model.StatusId != 20)
+            {
+                <th>Edit</th>
+            }
+            else
+            {
+                <th>Details</th>
+            }
+
         </tr>
     </thead>
 
 </table>
 
-<div class="row mt-3">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
-            <button id="saveRetrievalBtn" class="btn btn-default"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
-            <button id="confirmRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Confirm Retrieval Form</button>
+@if (@Model.StatusId != 20)
+{
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
+                <button id="saveRetrievalBtn" class="btn btn-default"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
+                <button id="confirmRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Confirm Retrieval Form</button>
+            </div>
+
         </div>
-        
     </div>
-</div>
+}
 
 <script>
 
@@ -124,7 +154,12 @@
                 //{ "defaultContent": '<i class="fa fa-square-o" aria-hidden="true"></i>', className : "checkmark" },
                 {
                     "data": "RetrievedStatus",
+                    @if (@Model.StatusId != 20)
+                    {
+                        <text>
                     "className": "checkmark pointer",
+                        </text>
+                    }
                     "render": function (data, type, row, meta) {
                         var html;
                         if (data == "Picked") {
@@ -141,19 +176,31 @@
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
                 { "data": "QtyOrdered", "autoWidth": true },
-                { "defaultContent": "<button class='btn btn-primary editbutton'><i class='fa fa-pencil' aria-hidden='true'></i></button>" },
+                @if (Model.StatusId != 20)
+                {
+                    <text>
+                    { "defaultContent": "<button class='btn btn-primary detailbutton'><i class='fa fa-pencil' aria-hidden='true'></i></button>" }
+                    </text>
+                } else {
+                    <text>
+                    { "defaultContent": "<button class='btn btn-primary detailbutton'><i class='fa fa-info-circle' aria-hidden='true'></i></button>" }
+                    </text>
+                }
             ],
             select: 'api'
         });
 
-        // click edit button
-        $(document).on("click", ".editbutton", function () {
+        // click Edit/Detail button
+        $(document).on("click", ".detailbutton", function () {
             //console.log('clicked');
             var itemcode = $(this).parent().siblings('td:nth-of-type(2)').html();
             var redirectURL = "/Retrieval/RetrievalDetails?retId=@Request.QueryString["rid"]&itemId=" + itemcode;
             window.location.href = redirectURL;
         });
 
+        @if (@Model.StatusId != 20)
+        {
+            <text>
         // toggle checkboxes
         $('#myTable tbody').on('click', '.checkmark', function () {
             console.log('clicked');
@@ -164,6 +211,8 @@
                 cell.data("Awaiting Picking").draw();
             }
         });
+            </text>
+        }
 
         // Click "Update Retrieval"
         $(document).on('click', '#saveRetrievalBtn', function () {
@@ -212,7 +261,7 @@
             }
         })
 
-        // Click 'Confirm Retrieval'
+        // Click 'Discard Changes'
         $(document).on('click', '#discardChangesBtn', function () {
             if (confirm("Discard all changes?")) {
                 location.reload();

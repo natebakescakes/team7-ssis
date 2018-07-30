@@ -80,7 +80,13 @@ namespace team7_ssis.Services
         {
             Retrieval r = retrievalRepository.FindById(retId);
             r.Status = statusRepository.FindById(20);
+
+            foreach (Disbursement d in r.Disbursements)
+            {
+                d.Status = statusRepository.FindById(11);
+            }
             retrievalRepository.Save(r);
+
             return true;
         }
     }

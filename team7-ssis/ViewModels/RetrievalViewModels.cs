@@ -12,6 +12,7 @@ namespace team7_ssis.ViewModels
         public string CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public string UpdatedOn { get; set; }
+        public int StatusId { get; set; }
     }
     public class StationeryRetrievalTableViewModel
     {
