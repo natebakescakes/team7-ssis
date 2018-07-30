@@ -200,9 +200,9 @@
                 dataType: "json",
                 type: "POST",
                 traditional: true,
-                success: function (responseJSON) {
+                success: function (rid) {
 
-                    window.location.replace("/StockAdjustment");
+                    window.location.replace("/StockAdjustment?create=" + encodeURIComponent(rid));
                 }
             });
         });
