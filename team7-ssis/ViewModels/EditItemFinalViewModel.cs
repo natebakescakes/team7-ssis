@@ -29,17 +29,6 @@ namespace team7_ssis.ViewModels
         public int ReorderLevel { get; set; }
         public int ReorderQuantity { get; set; }
         public HttpPostedFileBase ImageFile { get; set; }
-        public string ImagePath
-        {
-            //    get
-            //    {
-            //        return "~/Images/";
-            //    }
-            //    set
-            //    {
-            //        value = this.ImagePath;
-            //    }
-            get;set;
-        }
+        public string ImagePath{ get; set;}
     }
 }

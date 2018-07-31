@@ -85,6 +85,7 @@ namespace team7_ssis.ViewModels
         public string Bin { get; set; }
         public string Uom { get; set; }
         public string Status { get; set; }
+        public string RetrievalStatus { get; set; }
         public int PlanQuantity { get; set; }
         public int ActualQuantity { get; set; }
     }

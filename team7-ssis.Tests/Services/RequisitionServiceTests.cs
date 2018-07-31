@@ -18,6 +18,7 @@ namespace team7_ssis.Tests.Services
         static RequisitionService requisitionService;
         static StatusService statusService;
         static RequisitionRepository requisitionRepository;
+        ItemRepository itemRepository;
 
         [TestInitialize]
         public void TestInitialize()
@@ -27,6 +28,7 @@ namespace team7_ssis.Tests.Services
             requisitionService = new RequisitionService(context);
             statusService = new StatusService(context);
             requisitionRepository = new RequisitionRepository(context);
+            itemRepository = new ItemRepository(context);
 
             //// Populate Data (if necessary)
             populateRequisitions();
@@ -53,6 +55,8 @@ namespace team7_ssis.Tests.Services
         [TestCleanup]
         public void TestCleanup()
         {
+            if (requisitionRepository.ExistsById("TEST1"))
+                requisitionRepository.Delete(requisitionRepository.FindById("TEST1"));
             if (requisitionRepository.ExistsById("GAB1"))
                 requisitionRepository.Delete(requisitionRepository.FindById("GAB1"));
             if (requisitionRepository.ExistsById("GAB2"))
@@ -63,6 +67,13 @@ namespace team7_ssis.Tests.Services
                 requisitionRepository.Delete(requisitionRepository.FindById("RQSERVTEST"));
             if (requisitionRepository.ExistsById("APPROVETEST"))
                 requisitionRepository.Delete(requisitionRepository.FindById("APPROVETEST"));
+            if (requisitionRepository.ExistsById("REQ-201807-004"))
+                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-004"));
+            if (requisitionRepository.ExistsById("REQ-201807-005"))
+                requisitionRepository.Delete(requisitionRepository.FindById("REQ-201807-005"));
+
+
+
         }
 
         [TestMethod]
@@ -139,6 +150,7 @@ namespace team7_ssis.Tests.Services
 
             RequisitionDetail rd1 = new RequisitionDetail();
             rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.ItemCode = "C001";
             rd1.Quantity = 20;
 
             r1.RequisitionDetails.Add(rd1);
@@ -148,20 +160,41 @@ namespace team7_ssis.Tests.Services
             //// ACT
             string retrievalId = requisitionService.ProcessRequisitions(reqList);
 
-            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 30 items.
+            //// ASSERT: RequisitionDetail & Department should result in a single DisbursementDetail with 30 items if C001 has enough inventory
+            
             var query = context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId);
+            var inventoryLevel = new ItemService(context).FindInventoryByItemCode("C001").Quantity;
 
-            Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
-            var dd = query.First().DisbursementDetails.First();
-            Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
-            Assert.IsTrue(dd.PlanQuantity == 30); // DisbursementDetail's PlanQuantity is 30
+            if (inventoryLevel >= 30)
+            {
+                Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
+                var dd = query.First().DisbursementDetails.First();
+                Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
+                Assert.IsTrue(dd.PlanQuantity == 30); // DisbursementDetail's PlanQuantity is 30
+
+                // remove Disbursement which has the generated DisbursementId
+                // will remove DisbursementDetails as well
+                var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
+                context.Disbursement.Remove(d.First());
+            }
+            else if (inventoryLevel > 0)
+            {
+                Assert.IsTrue(query.First().DisbursementDetails.Count() == 1); // single DisbursementDetail for 1 Department?
+                var dd = query.First().DisbursementDetails.First();
+                Assert.IsTrue(dd.ItemCode == "C001"); // DisbursementDetail's ItemCode is "C001"
+                Assert.IsTrue(dd.PlanQuantity > 0); // DisbursementDetail's PlanQuantity is 30
+
+                // remove Disbursement which has the generated DisbursementId
+                // will remove DisbursementDetails as well
+                var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
+                context.Disbursement.Remove(d.First());
+            }
+            else
+            {
+                Assert.IsTrue(context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId).Count() == 0);
+            }
 
             //// CLEANUP
-            // remove Disbursement which has the generated DisbursementId
-            // will remove DisbursementDetails as well
-            var d = context.Disbursement.Where(x => x.DisbursementId == dd.DisbursementId);
-            context.Disbursement.Remove(d.First());
-
             // remove the Retrieval with the generated retrievalId
             context.Retrieval.Remove(context.Retrieval.Where(x => x.RetrievalId == retrievalId).First());
             context.SaveChanges();
@@ -395,6 +428,56 @@ namespace team7_ssis.Tests.Services
             r3.RequisitionDetails.Add(rd5);
 
             requisitionService.Save(r3);
+        }
+
+
+        [TestMethod]
+        public void FindUnfulfilledQuantityRequestedTest()
+        {
+            //arrange
+            Requisition r1 = new Requisition();
+            r1.RequisitionId = "REQ-201807-004";
+            r1.Department = context.Department.Where(x => x.DepartmentCode == "COMM").ToList().First();
+            r1.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
+            r1.RequisitionDetails = new List<RequisitionDetail>();
+            r1.Retrieval = null;
+            r1.EmployeeRemarks = "Test by Gabriel";
+            r1.HeadRemarks = "Test by Gabriel Boss";
+            r1.Status = context.Status.Where(x => x.StatusId == 6).ToList().First(); ; // Approved
+            r1.CreatedBy = null;
+            r1.CreatedDateTime = DateTime.Now;
+
+            RequisitionDetail rd1 = new RequisitionDetail();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.Quantity = 10;
+
+            r1.RequisitionDetails.Add(rd1);
+            requisitionService.Save(r1);
+
+            Requisition r2 = new Requisition();
+            r2.RequisitionId = "REQ-201807-005";
+            r2.Department = context.Department.Where(x => x.DepartmentCode == "CPSC").ToList().First();
+            r2.CollectionPoint = context.CollectionPoint.Where(x => x.CollectionPointId == 1).ToList().First();
+            r2.RequisitionDetails = new List<RequisitionDetail>();
+            r2.Retrieval = null;
+            r2.EmployeeRemarks = "Test by Gabriel";
+            r2.HeadRemarks = "Test by Gabriel Boss";
+            r2.Status = context.Status.Where(x => x.StatusId == 7).ToList().First(); ; // Req Processed
+            r2.CreatedBy = null;
+            r2.CreatedDateTime = DateTime.Now;
+
+            RequisitionDetail rd2 = new RequisitionDetail();
+            rd2.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd2.Quantity = 15;
+
+            r2.RequisitionDetails.Add(rd2);
+            requisitionService.Save(r2);
+
+            //Act
+            var result = requisitionService.FindUnfulfilledQuantityRequested(itemRepository.FindById("C001"));
+
+            //Assert
+            Assert.AreEqual(result, 25);
         }
     }
 }

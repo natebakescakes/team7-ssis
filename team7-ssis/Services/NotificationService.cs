@@ -67,7 +67,7 @@ namespace team7_ssis.Services
             Notification notification = InstantiateNotification(recipient);
            
             notification.NotificationType = notificationtypeRepository.FindById(2);
-            notification.Contents = String.Format("New Stationary Requisition Request: {0} for your approval", requisition.RequisitionId);
+            notification.Contents = String.Format("New Stationery Requisition Request: {0} for your approval", requisition.RequisitionId);
             return this.Save(notification);
         }
 
