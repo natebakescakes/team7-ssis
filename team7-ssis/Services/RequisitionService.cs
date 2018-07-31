@@ -103,6 +103,17 @@ namespace team7_ssis.Services
 
             foreach (Disbursement d in filledDisbursements)
             {
+                // if disbursement details has plan quantity = 0, remove from disbursement
+                for (int i = 0; i < d.DisbursementDetails.Count(); i++)
+                {
+                    if (d.DisbursementDetails[i].PlanQuantity == 0)
+                        d.DisbursementDetails.Remove(d.DisbursementDetails[i]);
+                }
+
+                // if disbursement has no disbursement details, skip to next disbursement
+                if (d.DisbursementDetails.Count() == 0)
+                    continue;
+
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
                 d.Status = statusRepository.FindById(17);
@@ -168,26 +179,46 @@ namespace team7_ssis.Services
                 // prepare to populate DisbursementDetails
                 d.DisbursementDetails = new List<DisbursementDetail>();
 
-                // populate them
-                foreach (Requisition rq in requestList)
+                // Initialize inventory map
+                Dictionary<string, int> inventory = new Dictionary<string, int>();
+
+                // populate them based on CreatedDate first
+                foreach (Requisition rq in requestList.OrderBy(r => r.CreatedDateTime))
                 {
                     if (rq.Department == d.Department)
                     {
                         foreach (RequisitionDetail rd in rq.RequisitionDetails)
                         {
                             var query = d.DisbursementDetails.Where(x => x.ItemCode == rd.ItemCode);
+
+                            // Use quantity in inventory map if available, else get current inventory level in context
+                            int currentQuantity;
+                            if (inventory.ContainsKey(rd.ItemCode))
+                                currentQuantity = inventory[rd.ItemCode];
+                            else
+                            {
+                                inventory[rd.ItemCode] = new ItemService(context).FindInventoryByItemCode(rd.ItemCode).Quantity;
+                                currentQuantity = inventory[rd.ItemCode];
+                            }
+
                             // if a DisbursementDetail has the same ItemCode as the RequisitionDetail
                             if (query.Count() > 0)
                             {
                                 DisbursementDetail existingDD = query.ToList().First();
-                                existingDD.PlanQuantity += rd.Quantity;
+                                existingDD.PlanQuantity += Math.Min(rd.Quantity, inventory[rd.ItemCode]);
+
+                                // Deduct quantity
+                                inventory[rd.ItemCode] -= existingDD.PlanQuantity;
                             }
                             else // Create a DD with the RD
                             {
                                 DisbursementDetail newDD = new DisbursementDetail();
                                 newDD.Item = rd.Item;
-                                newDD.PlanQuantity = rd.Quantity;
+                                newDD.PlanQuantity = Math.Min(rd.Quantity, inventory[rd.ItemCode]);
                                 newDD.Bin = rd.Item.Bin;
+
+                                // Deduct quantity
+                                inventory[rd.ItemCode] -= newDD.PlanQuantity;
 
                                 // Add to the Disbursement
                                 d.DisbursementDetails.Add(newDD);
