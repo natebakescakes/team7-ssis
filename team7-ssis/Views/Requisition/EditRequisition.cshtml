@@ -1,5 +1,9 @@
 ﻿@model team7_ssis.ViewModels.EditRequisitionViewModel
 
+@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+}
+
 <div class="row mb-3">
     <div class="col-md-8">
         <h2>Edit Requisition</h2>
@@ -183,6 +187,11 @@ $(document).ready(function () {
         }
 
     })
+
+    // Click "Cancel Requisition"
+    $(document).on('click', '#cancelReqBtn', function () {
+        post("/Requisition/Cancel", { rid: "@Model.RequisitionId" });
+    });
 
     // Delete row
     $('#myTable tbody').on('click', 'i.fa.fa-times', function () {
