@@ -51,7 +51,7 @@
                 {
                     <li class="nav-item">@Html.ActionLink("View Catalogue", "Index", "Home", null, new { @class = "nav-link" })</li>
                 }
-                @if (User.IsInRole("Employee") || User.IsInRole("Department Head") || User.IsInRole("Admin"))
+                @if (User.IsInRole("Employee") || User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>

@@ -20,7 +20,7 @@
         {
             <a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="/Requisition/CreateRequisition"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>
         }
-        @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
+        @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
             <a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
         }
@@ -118,7 +118,7 @@
                         </text>
                         }
 
-                        @if ( User.IsInRole("Department Head") || User.IsInRole("Admin") )
+                        @if ( User.IsInRole("DepartmentHead") || User.IsInRole("Admin") )
                         {
                             <text>
                         html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
@@ -127,20 +127,18 @@
                             </text>
                         }
 
-                        @if ( User.IsInRole("Department Head") || User.IsInRole("Store Clerk") || User.IsInRole("Admin") )
+                        @if ( User.IsInRole("DepartmentHead") || User.IsInRole("Store Clerk") || User.IsInRole("Admin") )
                         {
                             <text>
                         html += '<button type="button" class="btn btn-secondary getInfo"><i class="fa fa-info-circle" aria-hidden="true"></i></button>';
 
                             </text>
                         }
-
-
                         return html;
                     }
                 }
             ],
-            @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
+            @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin") || User.IsInRole("Store Clerk"))
             {
             <text>
             select: true

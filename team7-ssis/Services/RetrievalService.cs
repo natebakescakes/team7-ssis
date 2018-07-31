@@ -106,11 +106,11 @@ namespace team7_ssis.Services
             retrieval.UpdatedBy = new UserService(context).FindUserByEmail(email);
             retrieval.UpdatedDateTime = DateTime.Now;
 
-            retrievalRepository.Save(retrieval);
-
             // Create outstanding requisitions
             foreach (var disbursement in retrieval.Disbursements)
             {
+                disbursement.Status = statusRepository.FindById(8);
+
                 bool outstandingRequisition = true;
 
                 var newRequisitionDetails = new List<RequisitionDetail>();
@@ -159,6 +159,8 @@ namespace team7_ssis.Services
                 if (outstandingRequisition)
                     new RequisitionRepository(context).Save(newRequisition);
             }
+
+            retrievalRepository.Save(retrieval);
         }
 
         public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)

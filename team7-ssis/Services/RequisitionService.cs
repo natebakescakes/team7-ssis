@@ -113,6 +113,13 @@ namespace team7_ssis.Services
                 disbursementService.Save(d);
             }
 
+            // update the status of the requisitions
+            foreach(Requisition req in requestList)
+            {
+                req.Status = statusRepository.FindById(7);
+                requisitionRepository.Save(req);
+            }
+
             return r.RetrievalId;
         }
 
