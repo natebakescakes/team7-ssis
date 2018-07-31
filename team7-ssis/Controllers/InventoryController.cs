@@ -341,6 +341,12 @@ namespace team7_ssis.Controllers
             }
             return true;
         }
+
+        public ActionResult ItemCategory()
+        {
+
+            return View();
+        }
     }
 
 
