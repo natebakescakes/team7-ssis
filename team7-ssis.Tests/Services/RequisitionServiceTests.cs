@@ -53,6 +53,8 @@ namespace team7_ssis.Tests.Services
         [TestCleanup]
         public void TestCleanup()
         {
+            if (requisitionRepository.ExistsById("TEST1"))
+                requisitionRepository.Delete(requisitionRepository.FindById("TEST1"));
             if (requisitionRepository.ExistsById("GAB1"))
                 requisitionRepository.Delete(requisitionRepository.FindById("GAB1"));
             if (requisitionRepository.ExistsById("GAB2"))
