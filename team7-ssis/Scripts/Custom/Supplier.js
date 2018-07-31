@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 
     var table = $('#myTable').DataTable({
-       
+
         sAjaxSource: "/api/supplier/all",
         sAjaxDataProp: "",
         pageLength: '5',
@@ -11,8 +11,8 @@
             { "data": "ContactName", "autoWidth": true },
             { "data": "PhoneNumber", "autoWidth": true },
             { "data": "FaxNumber", "autoWidth": true },
-            { "data": "Address", "autoWidth": true },
-      
+            { "data": "Address", "autoWidth": true }
+
         ],
         select: {
             style: 'single'
@@ -46,20 +46,27 @@
     });
 
     $(".addsupplier-form").submit(function (event) {
-        $.ajax({
-            type: "POST",
-            url: '/supplier/Save',
-            data: $('.addsupplier-form').serialize(),
-            success: function (data) {
-                if (data.status) {
-                    $('#myModal').modal('hide');
-                    table.ajax.reload();
-                }
+        if ($('#addsupplier-form').find('#SupplierCode') === '') {
+            alert("Supplier Code cannot be empty. Please enter Supplier Code.");
+            event.preventDefault();
+        }
+        else {
+                $.ajax({
+                    type: "POST",
+                    url: '/supplier/Save',
+                    data: $('.addsupplier-form').serialize(),
+                    success: function (data) {
+                        if (data.status) {
+                            $('#myModal').modal('hide');
+                            table.ajax.reload();
+                        }
+                    }
+                });
+
+                event.preventDefault();
             }
         });
 
-        event.preventDefault();
-    });
 
     $('#pricelist-btn').on('click', function () {
         var code = $('#SupplierCode').val();
@@ -110,6 +117,9 @@
         $('#supplierdetails')
             .find('select')
             .prop('disabled', false);
+        $('#supplierdetails')
+            .find('#SupplierCode')
+            .prop('disabled', true);
     }
 
     function disableInput() {
