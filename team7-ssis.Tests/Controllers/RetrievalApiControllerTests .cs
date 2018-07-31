@@ -137,13 +137,15 @@ namespace team7_ssis.Tests.Controllers
         public void GetRetrievals_ContainsResult()
         {
             // Arrange
+            var statusService = new StatusService(context);
+            
             var expectedId = "RETCONTROLTEST";
             var expectedQuantity = 999999;
-            retrievalRepository.Save(new Retrieval()
+            new RetrievalRepository(context).Save(new Retrieval()
             {
                 RetrievalId = expectedId,
                 CreatedDateTime = DateTime.Now,
-                Status = new StatusService(context).FindStatusByStatusId(12),
+                Status = statusService.FindStatusByStatusId(12),
                 Disbursements = new List<Disbursement>()
                 {
                     new Disbursement()
@@ -151,7 +153,7 @@ namespace team7_ssis.Tests.Controllers
                         DisbursementId = expectedId,
                         Department = new DepartmentService(context).FindDepartmentByDepartmentCode("ENGL"),
                         CreatedDateTime = DateTime.Now,
-                        Status = new StatusService(context).FindStatusByStatusId(7),
+                        Status = statusService.FindStatusByStatusId(7),
                         DisbursementDetails = new List<DisbursementDetail>()
                         {
                             new DisbursementDetail()
@@ -161,7 +163,7 @@ namespace team7_ssis.Tests.Controllers
                                 Bin = "E78",
                                 PlanQuantity = 30,
                                 ActualQuantity = expectedQuantity,
-                                Status = new StatusService(context).FindStatusByStatusId(17),
+                                Status = statusService.FindStatusByStatusId(17),
                                 ItemCode = "E030",
                             }
                         }
@@ -188,17 +190,427 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsTrue(contentResult.Content.Select(d => d.RetrievalDetails.Select(rd => rd.ActualQuantity)).FirstOrDefault().Contains(expectedQuantity));
         }
 
+        [TestMethod]
+        public void RetrieveItem_Valid()
+        {
+            // Arrange
+            var expectedId = "RETCONTROLTEST";
+            var expectedStatus = new StatusService(context).FindStatusByStatusId(18);
+            retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = expectedId,
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(12),
+                Disbursements = new List<Disbursement>()
+                {
+                    new Disbursement()
+                    {
+                        DisbursementId = expectedId,
+                        Department = new DepartmentService(context).FindDepartmentByDepartmentCode("ENGL"),
+                        CreatedDateTime = DateTime.Now,
+                        Status = new StatusService(context).FindStatusByStatusId(7),
+                        DisbursementDetails = new List<DisbursementDetail>()
+                        {
+                            new DisbursementDetail()
+                            {
+                                DisbursementId = expectedId,
+                                Item = new ItemService(context).FindItemByItemCode("E030"),
+                                Bin = "E78",
+                                PlanQuantity = 30,
+                                ActualQuantity = 30,
+                                Status = new StatusService(context).FindStatusByStatusId(17),
+                                ItemCode = "E030",
+                            }
+                        }
+                    }
+                }
+            });
+
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.RetrieveItem(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = expectedId,
+                Email = "StoreClerk1@email.com",
+                ItemCode = "E030",
+            });
+            var contentResult = actionResult as OkNegotiatedContentResult<MessageViewModel>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(contentResult.Content.Message, "Successfully retrieved");
+            var result = new DisbursementDetailRepository(context).FindById(expectedId, "E030");
+            Assert.AreEqual(expectedStatus.Name, result.Status.Name);
+        }
+
+        [TestMethod]
+        public void RetrieveItem_DoesNotExist_BadRequest()
+        {
+            // Arrange
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.RetrieveItem(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Email = "StoreClerk1@email.com",
+                ItemCode = "E030",
+            });
+            BadRequestErrorMessageResult badRequest = actionResult as BadRequestErrorMessageResult;
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("Retrieval does not exist", badRequest.Message);
+        }
+
+        [TestMethod]
+        public void RetrieveItem_AlreadyRetrieved_BadRequest()
+        {
+            // Arrange
+            var expectedId = "RETCONTROLTEST";
+            retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = expectedId,
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(12),
+                Disbursements = new List<Disbursement>()
+                {
+                    new Disbursement()
+                    {
+                        DisbursementId = expectedId,
+                        Department = new DepartmentService(context).FindDepartmentByDepartmentCode("ENGL"),
+                        CreatedDateTime = DateTime.Now,
+                        Status = new StatusService(context).FindStatusByStatusId(7),
+                        DisbursementDetails = new List<DisbursementDetail>()
+                        {
+                            new DisbursementDetail()
+                            {
+                                DisbursementId = expectedId,
+                                Item = new ItemService(context).FindItemByItemCode("E030"),
+                                Bin = "E78",
+                                PlanQuantity = 30,
+                                ActualQuantity = 30,
+                                Status = new StatusService(context).FindStatusByStatusId(18),
+                                ItemCode = "E030",
+                            }
+                        }
+                    }
+                }
+            });
+
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.RetrieveItem(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = expectedId,
+                Email = "StoreClerk1@email.com",
+                ItemCode = "E030",
+            });
+            BadRequestErrorMessageResult badRequest = actionResult as BadRequestErrorMessageResult;
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("Item already retrieved", badRequest.Message);
+        }
+
+        [TestMethod]
+        public void UpdateActualQuantity_Valid()
+        {
+            // Arrange
+            var expectedId = "RETCONTROLTEST";
+            var expectedQuantity = 20;
+            retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = expectedId,
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(12),
+                Disbursements = new List<Disbursement>()
+                {
+                    new Disbursement()
+                    {
+                        DisbursementId = expectedId,
+                        Department = new DepartmentService(context).FindDepartmentByDepartmentCode("ENGL"),
+                        CreatedDateTime = DateTime.Now,
+                        Status = new StatusService(context).FindStatusByStatusId(7),
+                        DisbursementDetails = new List<DisbursementDetail>()
+                        {
+                            new DisbursementDetail()
+                            {
+                                DisbursementId = expectedId,
+                                Item = new ItemService(context).FindItemByItemCode("E030"),
+                                Bin = "E78",
+                                PlanQuantity = 30,
+                                ActualQuantity = 30,
+                                Status = new StatusService(context).FindStatusByStatusId(17),
+                                ItemCode = "E030",
+                            }
+                        }
+                    }
+                }
+            });
+
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.UpdateActualQuantity(new UpdateActualQuantityViewModel()
+            {
+                Email = "StoreClerk1@email.com",
+                ItemCode = "E030",
+                RetrievalId = expectedId,
+                RetrievalDetails = new List<BreakdownByDepartment>()
+                {
+                    new BreakdownByDepartment()
+                    {
+                        DeptId = "ENGL",
+                        Actual = expectedQuantity,
+                    }
+                }
+
+            });
+            var contentResult = actionResult as OkNegotiatedContentResult<MessageViewModel>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(contentResult.Content.Message, "Successfully updated");
+            var result = new DisbursementDetailRepository(context).FindById(expectedId, "E030");
+            Assert.AreEqual(expectedQuantity, result.ActualQuantity);
+        }
+
+        [TestMethod]
+        public void UpdateActualQuantity_DoesNotExist_BadRequest()
+        {
+            // Arrange
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.RetrieveItem(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Email = "StoreClerk1@email.com",
+                ItemCode = "E030",
+            });
+            BadRequestErrorMessageResult badRequest = actionResult as BadRequestErrorMessageResult;
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("Retrieval does not exist", badRequest.Message);
+        }
+
+        [TestMethod]
+        public void ConfirmRetrieval_Valid()
+        {
+            // Arrange
+            var requisitionRepository = new RequisitionRepository(context);
+            var departmentRepository = new DepartmentRepository(context);
+
+            var requisition = requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RETCONTROLTEST",
+                CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
+                Department = departmentRepository.FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "RETCONTROLTEST",
+                        ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        Quantity = 30,
+                    }
+                }
+            });
+            var retrieval = retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Requisitions = new List<Requisition>() { requisition },
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(19),
+            });
+            var disbursement = disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "RETCONTROLTEST",
+                Department = departmentRepository.FindById("ENGL"),
+                DisbursementDetails = new List<DisbursementDetail>()
+                {
+                    new DisbursementDetail()
+                    {
+                        DisbursementId = "RETCONTROLTEST",
+                        ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        PlanQuantity = 30,
+                        ActualQuantity = 30,
+                        Status = new StatusService(context).FindStatusByStatusId(18),
+                    }
+                },
+                Retrieval = retrieval,
+                Status = new StatusService(context).FindStatusByStatusId(7),
+                CreatedDateTime = DateTime.Now,
+            });
+            var expectedStatus = new StatusService(context).FindStatusByStatusId(20);
+
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.ConfirmRetrieval(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Email = "StoreClerk1@email.com",
+            });
+            var contentResult = actionResult as OkNegotiatedContentResult<MessageViewModel>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(contentResult.Content.Message, "Successfully confirmed");
+            var result = new RetrievalRepository(context).FindById("RETCONTROLTEST");
+            Assert.AreEqual(expectedStatus.Name, result.Status.Name);
+        }
+
+        [TestMethod]
+        public void ConfirmRetrieval_AlreadyConfirmed_BadRequest()
+        {
+            // Arrange
+            var requisitionRepository = new RequisitionRepository(context);
+            var departmentRepository = new DepartmentRepository(context);
+
+            var requisition = requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RETCONTROLTEST",
+                CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
+                Department = departmentRepository.FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "RETCONTROLTEST",
+                        ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        Quantity = 30,
+                    }
+                }
+            });
+            var retrieval = retrievalRepository.Save(new Retrieval()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Requisitions = new List<Requisition>() { requisition },
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(20),
+            });
+            var disbursement = disbursementRepository.Save(new Disbursement()
+            {
+                DisbursementId = "RETCONTROLTEST",
+                Department = departmentRepository.FindById("ENGL"),
+                DisbursementDetails = new List<DisbursementDetail>()
+                {
+                    new DisbursementDetail()
+                    {
+                        DisbursementId = "RETCONTROLTEST",
+                        ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        PlanQuantity = 30,
+                        ActualQuantity = 30,
+                        Status = new StatusService(context).FindStatusByStatusId(18),
+                    }
+                },
+                Retrieval = retrieval,
+                Status = new StatusService(context).FindStatusByStatusId(7),
+                CreatedDateTime = DateTime.Now,
+            });
+            var expectedStatus = new StatusService(context).FindStatusByStatusId(20);
+
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.ConfirmRetrieval(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Email = "StoreClerk1@email.com",
+            });
+            BadRequestErrorMessageResult badRequest = actionResult as BadRequestErrorMessageResult;
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("Retrieval already confirmed", badRequest.Message);
+        }
+
+        [TestMethod]
+        public void ConfirmRetrieval_DoesNotExist()
+        {
+            // Arrange
+            var controller = new RetrievalAPIController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                Context = context,
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.ConfirmRetrieval(new ConfirmRetrievalViewModel()
+            {
+                RetrievalId = "RETCONTROLTEST",
+                Email = "StoreClerk1@email.com",
+            });
+            BadRequestErrorMessageResult badRequest = actionResult as BadRequestErrorMessageResult;
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("Retrieval does not exist", badRequest.Message);
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {
             var disbursementRepository = new DisbursementRepository(context);
             var retrievalRepository = new RetrievalRepository(context);
+            var requisitionRepository = new RequisitionRepository(context);
 
+            if (requisitionRepository.ExistsById("RETCONTROLTEST"))
+                requisitionRepository.Delete(requisitionRepository.FindById("RETCONTROLTEST"));
             if (disbursementRepository.ExistsById("RETCONTROLTEST"))
                 disbursementRepository.Delete(disbursementRepository.FindById("RETCONTROLTEST"));
             if (retrievalRepository.ExistsById("RETCONTROLTEST"))
                 retrievalRepository.Delete(retrievalRepository.FindById("RETCONTROLTEST"));
         }
     }
-
 }

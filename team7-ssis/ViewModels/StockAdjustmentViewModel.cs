@@ -83,5 +83,28 @@ namespace team7_ssis.ViewModels
 
     }
 
+    public class StockAdjustmentRequestViewModel
+    {
+        public string StockAdjustmentId { get; set; }
+        public string RequestorName { get; set; }
+        public string RequestedDate { get; set; }
+        public string Remarks { get; set; }
+        public string Status { get; set; }
+        public List<StockAdjustmentRequestDetailViewModel> StockAdjustmentRequestDetails { get; set; }
+    }
 
+    public class StockAdjustmentRequestDetailViewModel
+    {
+        public string ItemCode { get; set; }
+        public string ItemName { get; set; }
+        public string OriginalQuantity { get; set; }
+        public string AfterQuantity { get; set; }
+        public string Reason { get; set; }
+    }
+
+    public class StockAdjustmentIdViewModel
+    {
+        public string StockAdjustmentId { get; set; }
+        public string Email { get; set; }
+    }
 }

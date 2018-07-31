@@ -12,17 +12,18 @@ namespace team7_ssis.Controllers
 {
     public class RetrievalAPIController : ApiController
     {
+        ApplicationDbContext context;
         DisbursementService disbursementService;
         RetrievalService retrievalService;
 
         public RetrievalAPIController()
         {
-            Context = new ApplicationDbContext();
+            context = new ApplicationDbContext();
             disbursementService = new DisbursementService(Context);
             retrievalService = new RetrievalService(Context);
         }
 
-        public ApplicationDbContext Context { get; set; }
+        public ApplicationDbContext Context { get { return context; } set { context = value; } }
 
         [Route("api/stationeryretrieval/{rId}")]
         [HttpGet]
@@ -139,7 +140,7 @@ namespace team7_ssis.Controllers
         [Route("api/retrievals/")]
         public IHttpActionResult GetRetrievals()
         {
-            var retrievals = new RetrievalService(Context).FindAllRetrievals();
+            var retrievals = new RetrievalService(context).FindAllRetrievals();
 
             if (retrievals.Count == 0)
                 return NotFound();
@@ -163,6 +164,60 @@ namespace team7_ssis.Controllers
                     Uom = dd.Item.Uom,
                 })).ToList(),
             }));
+        }
+
+        [Route("api/retrieval/updatequantity")]
+        public IHttpActionResult UpdateActualQuantity([FromBody] UpdateActualQuantityViewModel model)
+        {
+            try
+            {
+                new RetrievalService(Context).UpdateActualQuantity(model.RetrievalId, model.Email, model.ItemCode, model.RetrievalDetails);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully updated"
+            });
+        }
+
+        [Route("api/retrieval/retrieveitem")]
+        public IHttpActionResult RetrieveItem([FromBody] ConfirmRetrievalViewModel model)
+        {
+            try
+            {
+                new RetrievalService(Context).RetrieveItem(model.RetrievalId, model.Email, model.ItemCode);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully retrieved"
+            });
+        }
+
+        [Route("api/retrieval/confirm")]
+        public IHttpActionResult ConfirmRetrieval([FromBody] ConfirmRetrievalViewModel model)
+        {
+            try
+            {
+                new RetrievalService(Context).ConfirmRetrieval(model.RetrievalId, model.Email);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully confirmed"
+            });
         }
 
         [Route("api/retrieval")]

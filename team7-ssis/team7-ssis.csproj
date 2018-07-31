@@ -73,6 +73,9 @@
     <Reference Include="Microsoft.Owin.Security.Jwt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Jwt.4.0.0\lib\net451\Microsoft.Owin.Security.Jwt.dll</HintPath>
     </Reference>
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -303,6 +306,7 @@
     <Compile Include="ViewModels\ItemDetailModel.cs" />
     <Compile Include="ViewModels\ItemDetailsSupplierInfoViewModel.cs" />
     <Compile Include="Services\DelegationService.cs" />
+    <Compile Include="ViewModels\ItemPricesListViewModel.cs" />
     <Compile Include="ViewModels\MiscViewModel.cs" />
     <Compile Include="ViewModels\RetrievalDetail.cs" />
     <Compile Include="ViewModels\DisbursementViewModels.cs" />
@@ -393,6 +397,10 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -449,6 +457,7 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="App_Browsers\qt.browser" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\StationeryShopDebug - Web Deploy.pubxml" />
     <Content Include="Scripts\esm\popper.min.js.map" />
@@ -571,6 +580,8 @@
     <Content Include="Views\Retrieval\Manage.cshtml" />
     <Content Include="Views\Disbursement\Manage.cshtml" />
     <Content Include="Views\Requisition\EditRequisition.cshtml" />
+    <Content Include="Views\Inventory\GeneratePrice.cshtml" />
+    <Content Include="Views\Inventory\PrintView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

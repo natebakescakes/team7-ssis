@@ -87,7 +87,7 @@ namespace team7_ssis.Tests.Services
         public void GetRequisitionDetailsTest()
         {
             // Arrange
-            string reqId = "REQ-201807-001";
+            string reqId = "GAB1";
 
             // Act
             List<RequisitionDetail> reqList = requisitionService.GetRequisitionDetails(reqId);
@@ -104,9 +104,9 @@ namespace team7_ssis.Tests.Services
         {
             // Arrange
             List<Requisition> reqList = new List<Requisition>();
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB1").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB2").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB3").ToList().First());
 
             // Act
             string retrievalId = requisitionService.ProcessRequisitions(reqList);
@@ -128,7 +128,7 @@ namespace team7_ssis.Tests.Services
         {
             // ARRANGE
             List<Requisition> reqList = new List<Requisition>();
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First()); // department is COMM
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB1").ToList().First()); // department is COMM
 
             Requisition r1 = new Requisition();
             r1.RequisitionId = "TEST1";
@@ -174,9 +174,9 @@ namespace team7_ssis.Tests.Services
             List<Requisition> reqList = new List<Requisition>();
 
             // Add Requisitions to List<Requisition>
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").ToList().First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB1").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB2").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB3").ToList().First());
 
             // Act
             List<Disbursement> disbList = requisitionService.CreateDisbursementForEachDepartment(reqList);
@@ -193,9 +193,9 @@ namespace team7_ssis.Tests.Services
             // Arrange
 
             List<Requisition> reqList = new List<Requisition>();
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-001").First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-002").First());
-            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "REQ-201807-003").First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB1").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB2").ToList().First());
+            reqList.Add(context.Requisition.Where(x => x.RequisitionId == "GAB3").ToList().First());
 
             //// Act
             HashSet<Department> expected = new HashSet<Department>
