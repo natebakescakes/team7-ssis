@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
@@ -34,15 +35,16 @@ namespace team7_ssis.Controllers
                 case 1:
                     // Ready for Collection
                     // Redirect to Requisition Details
-                    return RedirectToAction("Index", "Home");
+                    var requisitionId = Regex.Match(notification.Contents, @"REQ-\d{6}-\d{3}");
+                    return RedirectToAction("RequisitionDetails", "Requisition", new { rid = requisitionId });
                 case 2:
-                    // Awaiting Requisition Approval
                     // Redirect to Requisition Details
-                    return RedirectToAction("Index", "Home");
+                    requisitionId = Regex.Match(notification.Contents, @"REQ-\d{6}-\d{3}");
+                    return RedirectToAction("RequisitionDetails", "Requisition", new { rid = requisitionId });
                 case 3:
-                    // Awaiting Stock Adjustment Approval
                     // Redirect to Stock Adjustment Details
-                    return RedirectToAction("Index", "Home");
+                    var stockAdjustmentId = Regex.Match(notification.Contents, @"ADJ-\d{6}-\d{3}");
+                    return RedirectToAction("Process", "StockAdjustment", new { Id = stockAdjustmentId.Value });
                 default:
                     return RedirectToAction("Index", "Home");
             }

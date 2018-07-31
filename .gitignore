@@ -261,7 +261,4 @@ __pycache__/
 *.pyc
 /team7-ssis/Scripts/Custom/MakeStockAdjustment.js
 /team7-ssis/ViewModels/SupervisorViewModel.cs
-/team7-ssis/Images/A002.JPG
-/team7-ssis/Images/T1001.JPG
-/team7-ssis/Images/Test1.JPG
-/team7-ssis/Images/Z001.JPG
+/team7-ssis/ApplicationInsights.config
