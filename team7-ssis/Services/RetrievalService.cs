@@ -24,14 +24,12 @@ namespace team7_ssis.Services
             stockmovementService = new StockMovementService(context);
 
             statusRepository = new StatusRepository(context);
-
         }
 
         public List<Retrieval> FindAllRetrievals()
         {
             return retrievalRepository.FindAll().ToList();
         }
-
 
         public Retrieval FindRetrievalById(string id)
         {
@@ -65,11 +63,7 @@ namespace team7_ssis.Services
                     stockmovementService.CreateStockMovement(detail);
                 }
             }
-
-
-
             return retrieval;
-
         }
 
         public void RetrieveItem(string retrievalId, string email, string itemCode)
@@ -112,11 +106,11 @@ namespace team7_ssis.Services
             retrieval.UpdatedBy = new UserService(context).FindUserByEmail(email);
             retrieval.UpdatedDateTime = DateTime.Now;
 
-            retrievalRepository.Save(retrieval);
-
             // Create outstanding requisitions
             foreach (var disbursement in retrieval.Disbursements)
             {
+                disbursement.Status = statusRepository.FindById(8);
+
                 bool outstandingRequisition = true;
 
                 var newRequisitionDetails = new List<RequisitionDetail>();
@@ -165,6 +159,8 @@ namespace team7_ssis.Services
                 if (outstandingRequisition)
                     new RequisitionRepository(context).Save(newRequisition);
             }
+
+            retrievalRepository.Save(retrieval);
         }
 
         public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)
