@@ -33,6 +33,7 @@ namespace team7_ssis.ViewModels
         public IEnumerable<SelectListItem> CollectionPoints { get; set; }
         public string EmailHead { get; set; }
         public string EmailRep { get; set; }
+        public int CollectionPointId { get; set; }
 
         //Delegation properties
         public string Recipient { get; set; }
@@ -40,8 +41,7 @@ namespace team7_ssis.ViewModels
         public string EndDate { get; set; }
         public int DelegationId { get; set; }
         public int DelegationStatus { get; set; }
-
-
+     
     }
 
     public class DepartmentOptionsViewModel
