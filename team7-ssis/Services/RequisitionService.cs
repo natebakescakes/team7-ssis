@@ -113,6 +113,13 @@ namespace team7_ssis.Services
                 disbursementService.Save(d);
             }
 
+            // update the status of the requisitions
+            foreach(Requisition req in requestList)
+            {
+                req.Status = statusRepository.FindById(7);
+                requisitionRepository.Save(req);
+            }
+
             return r.RetrievalId;
         }
 
@@ -244,6 +251,18 @@ namespace team7_ssis.Services
 
             // Save
             requisitionRepository.Save(requisition);
+        }
+        /// <summary>
+        /// Updates the Status of the Requisition
+        /// </summary>
+        /// <param name="retId"></param>
+        /// <param name="statusId"></param>
+        /// <param name="email"></param>
+        public void UpdateRequisitionStatus(string retId, int statusId, string email)
+        {
+            Requisition r = requisitionRepository.FindById(retId);
+            r.Status = statusRepository.FindById(statusId);
+            requisitionRepository.Save(r);
         }
     }
 }

@@ -20,7 +20,7 @@
         {
             <a id="createNewRequisitionButton" class="popup btn btn-primary pull-right" href="/Requisition/CreateRequisition"><i class="fa fa-plus" aria-hidden="true"></i> Create New Requisition</a>
         }
-        @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
+        @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
             <a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
         }
@@ -49,7 +49,15 @@
         </button>
     </div>
 }
-
+@if (ViewBag.Cancel != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        Requisition #@ViewBag.Cancel cancelled.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
 
 @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
 {
@@ -95,7 +103,7 @@
                         var editDetailsHtml = '<a class="dropdown-item editDetails"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
                         var createNewDraftWithHtml = '<a class="dropdown-item" href="#"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
                         var cancelHtml = '<div class="dropdown-divider"></div>' +
-                            '<a class="dropdown-item" href="#"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
+                            '<a class="dropdown-item" id="cancel"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
 
                          html += '<div class="dropdown">' +
                             '<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
@@ -110,7 +118,7 @@
                         </text>
                         }
 
-                        @if ( User.IsInRole("Department Head") || User.IsInRole("Admin") )
+                        @if ( User.IsInRole("DepartmentHead") || User.IsInRole("Admin") )
                         {
                             <text>
                         html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
@@ -119,20 +127,18 @@
                             </text>
                         }
 
-                        @if ( User.IsInRole("Department Head") || User.IsInRole("Store Clerk") || User.IsInRole("Admin") )
+                        @if ( User.IsInRole("DepartmentHead") || User.IsInRole("Store Clerk") || User.IsInRole("Admin") )
                         {
                             <text>
                         html += '<button type="button" class="btn btn-secondary getInfo"><i class="fa fa-info-circle" aria-hidden="true"></i></button>';
 
                             </text>
                         }
-
-
                         return html;
                     }
                 }
             ],
-            @if (User.IsInRole("Department Head") || User.IsInRole("Admin"))
+            @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin") || User.IsInRole("Store Clerk"))
             {
             <text>
             select: true
@@ -183,6 +189,16 @@
             .row($(this).parents('tr'))
             .data();
         window.location.href = "/Requisition/EditRequisition?rid=" + data.Requisition;
+    });
+
+    // Click "Cancel" link
+    $(document).on("click", "#cancel", function (e) {
+        e.preventDefault();
+        console.log("Cancel");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        post("/Requisition/Cancel", { rid: data.Requisition });
     });
 
     // Click "Process All Requisitions" button

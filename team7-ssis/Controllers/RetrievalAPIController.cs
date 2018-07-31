@@ -42,7 +42,8 @@ namespace team7_ssis.Controllers
             });
             List<StationeryRetrievalTableViewModel> viewModel = finalList.Select(y => new StationeryRetrievalTableViewModel
             {
-                AllRetrieved = (y.Sum(dd => dd.PlanQuantity)) == (y.Sum(dd => dd.ActualQuantity)) ? true : false,
+                RetrievedStatus = y.Sum(dd => dd.PlanQuantity) == y.Sum(dd => dd.ActualQuantity) ? "Picked" :
+                                    (y.Sum(dd => dd.ActualQuantity) == 0 ? "Awaiting Picking" : "Partially Picked"),
                 ProductID = y.Key.ItemCode,
                 Bin = y.Key.Bin,
                 QtyOrdered = y.Sum(dd => dd.PlanQuantity),
@@ -61,14 +62,14 @@ namespace team7_ssis.Controllers
                 List<DisbursementDetail> ddList = disbList.SelectMany(x => x.DisbursementDetails).ToList();
                 foreach (var row in viewModel.Data)
                 {
-                    if (row.AllRetrieved == true)
+                    if (row.RetrievedStatus == "Picked")
                     {
                         ddList
                         .Where(x => x.ItemCode == row.ProductID)
                         .ToList()
                         .ForEach(x => x.ActualQuantity = x.PlanQuantity);
                     }
-                    else
+                    else if (row.RetrievedStatus == "Awaiting Picking")
                     {
                         ddList
                         .Where(x => x.ItemCode == row.ProductID)
@@ -251,10 +252,7 @@ namespace team7_ssis.Controllers
             List<Retrieval> retList = retrievalService.FindAllRetrievals();
             List<ManageRetrievalsViewModel> viewModel = new List<ManageRetrievalsViewModel>();
 
-            // TODO: Change this strange bug where r.Status.get is not returning anything without this line
-            Status s = Context.Status.Where(x => x.StatusId == 17).First();
-
-            foreach (Retrieval r in retList)
+            foreach(Retrieval r in retList)
             {
                 viewModel.Add(new ManageRetrievalsViewModel
                 {
