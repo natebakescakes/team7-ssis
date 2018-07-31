@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -52,7 +53,7 @@ namespace team7_ssis.Controllers
         {
             try
             {
-                retrievalService.ConfirmRetrieval(retId, "");
+                retrievalService.ConfirmRetrieval(retId, System.Web.HttpContext.Current.User.Identity.GetUserName());
                 TempData["message"] = String.Format("Requisition #{0} confirmed.", retId);
             }
             catch

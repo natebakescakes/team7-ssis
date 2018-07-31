@@ -162,6 +162,19 @@ textarea {
     position: relative;
 }
 
+a.disabled:hover {
+    cursor: not-allowed
+}
+
+.content {
+    max-width:900px;
+}
+
+.inputText{
+    width: 100px;
+}
+}
+
 #modalMsg {
     color: red;
 }
