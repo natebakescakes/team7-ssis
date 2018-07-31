@@ -36,8 +36,12 @@ namespace team7_ssis.Controllers
         }
 
         // GET: /Requisition/ManageRequisitions
-        public ActionResult ManageRequisitions(string update, string create)
+        public ActionResult ManageRequisitions(string msg)
         {
+            if (TempData["cancel"] != null)
+            {
+                ViewBag.Cancel = TempData["cancel"];
+            }
             return View();
         }
 
@@ -46,7 +50,8 @@ namespace team7_ssis.Controllers
         {
             Requisition r = requisitionRepository.FindById(rid);
             RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
-            try {
+            try
+            {
                 viewModel.RequisitionID = r.RequisitionId;
                 viewModel.Department = r.Department == null ? "" : r.Department.Name;
                 viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
@@ -56,43 +61,39 @@ namespace team7_ssis.Controllers
                 viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
                 viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
                 viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
-            } catch {
+            }
+            catch
+            {
                 return new HttpStatusCodeResult(400);
             }
             return View(viewModel);
         }
         // GET: /Requisiton/StationeryRetrieval
-        [Route("/Requisition/StationeryRetrieval")]
         public ActionResult StationeryRetrieval(string rid, string message)
         {
             Retrieval r = retrievalService.FindRetrievalById(rid);
             StationeryRetrievalViewModel viewModel = new StationeryRetrievalViewModel();
-            ViewBag.Message = message;
+
+            if (TempData["message"] != null)
+            {
+                ViewBag.Message = TempData["message"].ToString();
+            }
+            else
+            {
+                ViewBag.Message = message;
+            }
 
             try
             {
+                viewModel.StatusId = r.Status.StatusId;
                 viewModel.RetrievalID = r.RetrievalId;
-
-                try { viewModel.CreatedBy = String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName); }
-                catch { viewModel.CreatedBy = ""; }
+                viewModel.CreatedBy = r.CreatedBy != null ? String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName) : "";
                 viewModel.CreatedOn = String.Format("{0} {1}", r.CreatedDateTime.ToShortDateString(), r.CreatedDateTime.ToShortTimeString());
-                try
-                {
-                    viewModel.UpdatedBy = String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName);
-                }
-                catch
-                {
-                    viewModel.UpdatedBy = "";
-                }
-                try
-                {
-                    viewModel.UpdatedOn = String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
-                }
-                catch
-                {
-                    viewModel.UpdatedOn = "";
-                }
-            } catch {
+                viewModel.UpdatedBy = r.UpdatedBy != null ? String.Format("{0} {1}", r.UpdatedBy.FirstName, r.UpdatedBy.LastName) : "";
+                viewModel.UpdatedOn = r.UpdatedDateTime != null ? String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString()) : "";
+            }
+            catch
+            {
                 return new HttpStatusCodeResult(400);
             }
             return View(viewModel);
@@ -104,7 +105,10 @@ namespace team7_ssis.Controllers
             {
                 return new HttpStatusCodeResult(400);
             }
-            ViewBag.RetrievalID = rid;
+            else if (TempData["did"] != null)
+            {
+                ViewBag.DisbursementId = TempData["did"];
+            }
             return View();
         }
 
@@ -148,7 +152,7 @@ namespace team7_ssis.Controllers
             {
                 viewModel.Representative = "";
             }
-            
+
             return View(viewModel);
         }
 
@@ -165,6 +169,20 @@ namespace team7_ssis.Controllers
             requisitionService.RejectRequisition(rid, email, remarks);
             return View("../Requisition/ManageRequisitions");
         }
-        
+
+        // POST: /Requisition/Cancel
+        public ActionResult Cancel(string rid, string email)
+        {
+            try
+            {
+                requisitionService.UpdateRequisitionStatus(rid, 2, "");
+                TempData["cancel"] = rid;
+            } catch
+            {
+                return RedirectToAction("ManageRequisitions", "EditRequisition", new { rid });
+            }
+            return RedirectToAction("ManageRequisitions", "Requisition");
+        }
+
     }
 }
