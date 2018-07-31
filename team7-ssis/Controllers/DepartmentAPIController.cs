@@ -36,6 +36,7 @@ namespace team7_ssis.Controllers
                 DepartmentHead = department.Head.FirstName + " " + department.Head.LastName,
                 DepartmentRep = department.Representative != null ? department.Representative.FirstName + " " + department.Representative.LastName : "",
                 CollectionPoint = department.CollectionPoint != null ? department.CollectionPoint.Name : "",
+                CollectionPointId = department.CollectionPoint != null ? department.CollectionPoint.CollectionPointId : 0,
                 ContactName = department.ContactName,
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber,
@@ -58,7 +59,8 @@ namespace team7_ssis.Controllers
                 PhoneNumber = department.PhoneNumber,
                 FaxNumber = department.FaxNumber,
                 Status = department.Status.StatusId,
-                EmailHead = department.Head.Email
+                EmailHead = department.Head.Email,
+                EmailRep = department.Representative != null ? department.Representative.Email : ""
             };
         }
         [Route("api/delegation/all")]
