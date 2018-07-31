@@ -79,12 +79,6 @@
                         @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="Fax">Status</label><br />
-                        @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
-                    </div>
-                </div>
 
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -164,7 +158,7 @@
 
         //for image show
         function show(input) {
-            alert('Show');
+            //alert('Show');
             if (input.files && input.files[0]) {
                 var filerdr = new FileReader();
                 filerdr.onload = function (e) {
