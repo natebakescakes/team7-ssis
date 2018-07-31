@@ -582,7 +582,7 @@
     <Content Include="Views\Retrieval\Manage.cshtml" />
     <Content Include="Views\Disbursement\Manage.cshtml" />
     <Content Include="Views\Requisition\EditRequisition.cshtml" />
-    <Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />
+    <!--<Content Include="Views\StockAdjustment\StockAdjustment_List.cshtml" />-->
     <Content Include="Views\StockAdjustment\Create_StockAdjustment.cshtml" />
     <Content Include="Views\StockAdjustment\Details.cshtml" />
     <Content Include="Views\PurchaseOrder\_PurchaseOrderDetailsTable.cshtml" />
