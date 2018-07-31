@@ -19,6 +19,7 @@ namespace team7_ssis.Tests.Services
         DisbursementDetailRepository disbursementdetailRepository;
         RequisitionRepository requisitionRepository;
         RequisitionDetailRepository requisitiondetailRepository;
+        DepartmentRepository departmentRepository;
 
 
         [TestInitialize]
@@ -32,6 +33,7 @@ namespace team7_ssis.Tests.Services
             retrievalRepository = new RetrievalRepository(context);
             requisitionRepository = new RequisitionRepository(context);
             requisitiondetailRepository = new RequisitionDetailRepository(context);
+            departmentRepository = new DepartmentRepository(context);
 
             Retrieval retrieval = new Retrieval();
 
@@ -53,7 +55,6 @@ namespace team7_ssis.Tests.Services
                 disbursement.DisbursementId = "TEST";
                 disbursement.CreatedDateTime = DateTime.Now;
                 disbursement.Retrieval = retrieval;
-
             }
             else disbursement = disbursementRepository.FindById("TEST");
 
@@ -139,6 +140,7 @@ namespace team7_ssis.Tests.Services
             //create disbursement and save it into database
             Disbursement a = new Disbursement();
             a.DisbursementId = IdService.GetNewDisbursementId(context);
+            a.Department = departmentRepository.FindById("COMM");
             retrieval.Requisitions.Add(context.Requisition.First());
             a.Retrieval = retrieval;
             a.CreatedDateTime = DateTime.Now;

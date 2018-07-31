@@ -72,8 +72,7 @@ namespace team7_ssis.Services
             //update status of the disbursement to Items collected
             disbursement.Status = statusService.FindStatusByStatusId(10);
             disbursement.CollectedDateTime = DateTime.Now;
-            disbursement.CollectedBy = disbursement.Retrieval.Requisitions.First().CreatedBy;
-
+            disbursement.CollectedBy = disbursement.Department.Representative;
           
             return this.Save(disbursement);
 
