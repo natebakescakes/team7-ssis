@@ -72,6 +72,12 @@ namespace team7_ssis.Controllers
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
+            if (sa.UpdatedDateTime != null)
+            {
+                DateTime updatetime = (DateTime)sa.UpdatedDateTime;
+                sv.UpdateDateTime = updatetime.ToString("yyyy-MM-dd HH: mm:ss");
+            }
+            else { }
             return View(sv);
         }
 
@@ -86,7 +92,13 @@ namespace team7_ssis.Controllers
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-            
+            if (sa.UpdatedDateTime != null)
+            {
+                DateTime updatetime = (DateTime)sa.UpdatedDateTime;
+                sv.UpdateDateTime = updatetime.ToString("yyyy-MM-dd HH: mm:ss");
+            }
+            else { }
+
             return View(sv);
         }
 
@@ -103,7 +115,12 @@ namespace team7_ssis.Controllers
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
             sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
                 + sa.ApprovedBySupervisor.LastName;
-
+            if (sa.UpdatedDateTime != null)
+            {
+                DateTime updatetime = (DateTime)sa.UpdatedDateTime;
+                sv.UpdateDateTime = updatetime.ToString("yyyy-MM-dd HH: mm:ss");
+            }
+            else { }
 
             //string UserName = System.Web.HttpContext.Current.User.Identity.GetUserName();
             Department d = userService.FindUserByEmail(CurrentUserName).Department;

@@ -13,16 +13,36 @@
 <div>@Html.Hidden("StockAdjustmentId", Model.StockAdjustmentId)</div>
 
 
-<table border="1" bgcolor="lightgrey">
-    <tr>
-        <td width="100">Stock Adjustment ID # <br /> @Model.StockAdjustmentId </td>
-        <td width="400">Created By <br />  @Model.CreatedBy  </td>
-        <td width="400">Time Updated <br /> @Model.UpdateDateTime </td>
-    <tr>
-        <td width="400">   </td>
-        <td width="400"> Authorizing Supervisor <br /> @Model.ApprovedBySupervisor  </td>
-        <td width="400">Time Created <br /> @Model.CreatedBy   </td>
-    </tr>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th width="200">Stock Adjustment ID #</th>
+            <th width="200">Created By</th>
+            <th width="200"> Time Updated</th>
+            <th width="200">Authorizing Supervisor</th>
+            <th width="200">Time Created</th>
+        </tr>
+     </thead>
+    <tbody>
+        <tr>
+            <td>@Model.StockAdjustmentId</td>
+            <td> @Model.CreatedBy</td>
+            @if (@Model.UpdateDateTime == null)
+            {
+                <td>  -----</td>}
+            @if (@Model.UpdateDateTime != null)
+            {
+                <td>  @Model.UpdateDateTime </td>}
+            @if (@Model.ApprovedBySupervisor == null)
+            {
+                <td>  -----</td>}
+            @if (@Model.ApprovedBySupervisor != null)
+            {
+                <td>  @Model.ApprovedBySupervisor </td>}
+            <td> @Model.CreatedDateTime</td>
+
+        </tr>        
+   </tbody>
 </table>
 <table id="myTable" class="table table-striped table-bordered">
     <thead>
