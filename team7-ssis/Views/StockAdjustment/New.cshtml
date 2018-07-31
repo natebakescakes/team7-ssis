@@ -287,10 +287,23 @@
                             break;
                         }
                     }
-                   // alert(flag);
-                     
-                        
-               if (flag == 1)
+
+                    var ItemsArray = [];
+                    for (i = 0; i < data.length; i++) {
+                        var obj = {
+                            Itemcode: data[i][0],
+                        };
+                        ItemsArray[i] = obj;
+                    }
+                    for (i = 0; i < data.length-1; i++) {
+                        if (ItemsArray[i].Itemcode == ItemsArray[i + 1].Itemcode) {
+                            alert("Item " + ItemsArray[i].Itemcode + " is repeated.Please check.");
+                            flag = 0;
+                            break;
+                        }
+                    }
+
+                    if (flag == 1)
                     {
                         var reqIdArray = [];
                         for (i = 0; i < data.length; i++) {
@@ -303,9 +316,8 @@
                                 Manager: manager
                             };
                             reqIdArray[i] = obj;
-
                         }
-
+  
                         $.ajax({
                             url: '/api/stockadjustment/confirm',
                             contentType: 'application/json',
