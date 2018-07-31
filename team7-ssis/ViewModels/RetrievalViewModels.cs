@@ -24,6 +24,7 @@ namespace team7_ssis.ViewModels
     }
     public class StationeryRetrievalJSONViewModel
     {
+        public bool IsConfirmed { get; set; }
         public string RetrievalID { get; set; }
         public List<StationeryRetrievalTableRowJSONViewModel> Data { get; set; }
     }

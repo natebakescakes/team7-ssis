@@ -42,7 +42,7 @@ namespace team7_ssis.Services
             var query = requisitionRepository.FindRequisitionsByStatus(statusList);
             if (query == null)
             {
-                throw new Exception("No Requisitions contain given statuses.");
+                throw new ArgumentException("No Requisitions contain given statuses.");
             }
             else
             {
