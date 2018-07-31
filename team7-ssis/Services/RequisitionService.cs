@@ -22,6 +22,7 @@ namespace team7_ssis.Services
         RequisitionDetailRepository requisitionDetailRepository;
         StatusRepository statusRepository;
         UserRepository userRepository;
+        StatusService statusService;
 
         public RequisitionService(ApplicationDbContext context)
         {
@@ -34,6 +35,7 @@ namespace team7_ssis.Services
             requisitionDetailRepository = new RequisitionDetailRepository(context);
             statusRepository = new StatusRepository(context);
             userRepository = new UserRepository(context);
+            statusService = new StatusService(context);
         }
 
         public List<Requisition> FindRequisitionsByStatus(List<Status> statusList)
@@ -42,7 +44,7 @@ namespace team7_ssis.Services
             var query = requisitionRepository.FindRequisitionsByStatus(statusList);
             if (query == null)
             {
-                throw new Exception("No Requisitions contain given statuses.");
+                throw new ArgumentException("No Requisitions contain given statuses.");
             }
             else
             {
@@ -229,6 +231,33 @@ namespace team7_ssis.Services
             }
 
             return disbursementList;
+        }
+
+        public int FindUnfulfilledQuantityRequested(Item item)
+        {
+            int totalQuantity = 0;
+
+            List<Status> statusList = new List<Status>();
+            Status approved = statusService.FindStatusByStatusId(6);
+            Status reqProcessed = statusService.FindStatusByStatusId(7);
+
+            statusList.Add(approved);
+            statusList.Add(reqProcessed);
+            List<Requisition> outstandingReq= FindRequisitionsByStatus(statusList);
+
+            foreach(Requisition req in outstandingReq)
+            {
+                foreach(RequisitionDetail reqDetail in req.RequisitionDetails)
+                {
+                    if (reqDetail.ItemCode == item.ItemCode)
+                    {
+                        totalQuantity = totalQuantity + reqDetail.Quantity;
+                    }
+                }
+            }
+
+            return totalQuantity;
+
         }
 
         public List<Requisition> FindRequisitionsByDepartment(Department department)

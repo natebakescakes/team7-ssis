@@ -143,9 +143,11 @@
     var partiallyPicked = '<i class="fa fa-check-circle-o fa-lg" style="opacity:0.25" aria-hidden="true"></i>';
     var awaitingPicking = '<i class="fa fa-circle-o fa-lg" style="opacity:0.25" aria-hidden="true"></i>';
 
+    var table;
+
     // load script
     $(document).ready(function () {
-        var table = $('#myTable').DataTable({
+        table = $('#myTable').DataTable({
             ajax: {
                 url: "/api/stationeryretrieval/@Model.RetrievalID",
                 dataSrc: ""
@@ -216,10 +218,35 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
+            update(false);
+        });
+
+        // Click "Confirm"
+        $(document).on('click', '#confirmRetrievalBtn', function () {
+            update(true);
+        });
+
+        @*// Click 'Confirm Retrieval'
+        $(document).on('click', '#confirmRetrievalBtn', function () {
             var rowData = table.rows().data().toArray();
+            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
+                post("/Retrieval/Confirm", { RetrievalID: "@Model.RetrievalID", Data: rowData });
+            }
+        })*@
+
+        // Click 'Discard Changes'
+        $(document).on('click', '#discardChangesBtn', function () {
+            if (confirm("Discard all changes?")) {
+                location.reload();
+            }
+        })
+
+        function update(IsConfirmed) {
+        var rowData = table.rows().data().toArray();
             var json = {
                 RetrievalID: "@Request.QueryString["rid"]",
-                Data: rowData
+                Data: rowData,
+                IsConfirmed: IsConfirmed
             };
 
             console.log(json);
@@ -230,15 +257,20 @@
                 url: "/api/stationeryretrieval",
                 data: JSON.stringify(json),
                 success: function (message) {
-                    // create info DOM object
-                    console.log(message);
-                    $('#alert').html(
-                        '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
-                        'Disbursement information updated.' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '</div>');
+                    if (IsConfirmed) {
+                        var message = "Retrieval #@Model.RetrievalID confirmed."
+                        post("/Requisition/StationeryRetrieval?rid=@Model.RetrievalID", { message: message });
+                    } else {
+                        // create info DOM object
+                        console.log(message);
+                        $('#alert').html(
+                            '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
+                            'Disbursement information updated.' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>');
+                    }
                 },
                 error: function (message) {
                     // show error message
@@ -252,23 +284,10 @@
                         '</div>');
                 }
             })
-        });
-
-        // Click 'Confirm Retrieval'
-        $(document).on('click', '#confirmRetrievalBtn', function () {
-            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
-                post("/Retrieval/Confirm", { retId: "@Model.RetrievalID" });
-            }
-        })
-
-        // Click 'Discard Changes'
-        $(document).on('click', '#discardChangesBtn', function () {
-            if (confirm("Discard all changes?")) {
-                location.reload();
-            }
-        })
-
+        }
     });
 
+    
+    
 
 </script>

@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Shortfall";
+}
+
+@section scripts {
+    <script src="~/Scripts/Custom/InventoryShortfall.js"></script>
+   
+}
+
+    <body>
+        @Html.Hidden("generateUrl", Url.Action("GeneratePost", "PurchaseOrder"))
+
+        <div>
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <h2>Inventory Shortfall</h2>
+                    <h6>The following items have fallen below re-order level.</h6>
+                </div>
+                <div class="col-md-4">
+                    <button id="generatePOforall" class="popup btn btn-primary pull-right"><i class="fa fa-cart" aria-hidden="true"></i>Generate Purchase Order w/ All</button>
+                </div>
+            </div>
+
+            <div>
+                <button id="generatePOforselected" class="popup btn btn-secondary">Prepare Purchase Order with Selected</button>
+            </div>
+
+            <div>
+                <table id="shortfallTable" class="table table-striped table-bordered dataTable no-footer">
+                    <thead>
+
+
+                        <tr>
+                            <th>Item Number</th>
+                            <th>Description</th>
+                            <th>Qty on Hand</th>
+                            <th>Pre-set Reorder Level</th>
+                            <th>Pre-set Reorder Quantity</th>
+                            <th>Unit of Measure</th>
+                            <th>Amount to Reorder</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </body>
+
+
+

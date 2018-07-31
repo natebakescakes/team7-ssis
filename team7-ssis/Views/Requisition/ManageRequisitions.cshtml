@@ -1,4 +1,6 @@
-﻿@section Scripts {
+﻿@model List<int>
+
+@section Scripts {
     <script src="~/Scripts/Custom/RedirectPost.js"></script>
     <script src="~/Scripts/Custom/AcceptRejectButtons.js"></script>
 }
@@ -49,10 +51,19 @@
         </button>
     </div>
 }
-@if (ViewBag.Cancel != null)
+@if (ViewBag.Danger != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        Requisition #@ViewBag.Cancel cancelled.
+        Requisition #@ViewBag.Danger cancelled.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (ViewBag.Success != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewBag.Success
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -84,7 +95,13 @@
     $(document).ready(function () {
         myTable = $('#myTable').DataTable({
             ajax: {
-                url: "/api/requisition",
+                url: "/api/requisitions",
+                data: function (d) {
+                    return JSON.stringify(@Html.Raw(Json.Encode(Model)));
+                },
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
                 dataSrc: ""
             },
             order: [[0, 'desc']],
@@ -121,8 +138,10 @@
                         @if ( User.IsInRole("DepartmentHead") || User.IsInRole("Admin") )
                         {
                             <text>
-                        html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
-                            '<button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
+                        if (row.Status == "Pending Approval" ) {
+                            html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
+                                '<button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
+                        }
 
                             </text>
                         }
@@ -138,7 +157,7 @@
                     }
                 }
             ],
-            @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin") || User.IsInRole("Store Clerk"))
+            @if (User.IsInRole("Admin") || User.IsInRole("Store Clerk"))
             {
             <text>
             select: true

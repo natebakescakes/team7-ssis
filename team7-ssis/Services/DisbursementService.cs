@@ -163,5 +163,19 @@ namespace team7_ssis.Services
 
             disbursementDetailRepository.Save(disbursementDetail);
         }
+
+        public List<Disbursement> FindDisbursementsByStatus(List<Status> statusList)
+        {
+            // TODO: To be obseleted
+            var query = disbursementRepository.FindDisbursementsByStatus(statusList);
+            if (query == null)
+            {
+                throw new Exception("No Disbursements contain given statuses.");
+            }
+            else
+            {
+                return disbursementRepository.FindDisbursementsByStatus(statusList).ToList();
+            }
+        }
     }
 }

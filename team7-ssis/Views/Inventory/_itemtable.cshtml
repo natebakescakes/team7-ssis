@@ -40,6 +40,7 @@
         $(document).ready(function () {
             $('.tablecontainer #myform').on('click', '#deletebtn', function (e) {
                 var i;
+                if (selected.length == 0) {alert('Choose item first before deleting!')}
                 for (i = 0; i < selected.length; i++) {
                     console.log(selected[i]);
                 }
