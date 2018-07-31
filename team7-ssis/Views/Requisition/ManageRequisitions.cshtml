@@ -121,8 +121,10 @@
                         @if ( User.IsInRole("DepartmentHead") || User.IsInRole("Admin") )
                         {
                             <text>
-                        html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
-                            '<button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
+                        if (row.Status != "Requisition Processed") {
+                            html += '<button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>' +
+                                '<button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>';
+                        }
 
                             </text>
                         }

@@ -52,6 +52,7 @@ namespace team7_ssis.Controllers
             RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
             try
             {
+                viewModel.Status = r.Status.Name;
                 viewModel.RequisitionID = r.RequisitionId;
                 viewModel.Department = r.Department == null ? "" : r.Department.Name;
                 viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
