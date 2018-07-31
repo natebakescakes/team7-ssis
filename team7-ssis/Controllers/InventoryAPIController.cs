@@ -83,6 +83,8 @@ namespace team7_ssis.Controllers
                 ItemCategoryName = item.ItemCategory.Name,
                 Bin = item.Bin,
                 Uom = item.Uom,
+                ReorderLevel= item.ReorderLevel,
+                ReorderQuantity = item.ReorderQuantity,
                 Quantity = item.Inventory.Quantity,
                 Status = item.Status.StatusId
             };
