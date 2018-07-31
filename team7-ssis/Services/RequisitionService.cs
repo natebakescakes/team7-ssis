@@ -198,13 +198,10 @@ namespace team7_ssis.Services
         public int FindUnfulfilledQuantityRequested(Item item)
         {
             int totalQuantity = 0;
-            //int requestedQuantity = 0;
-            //int receivedQuantity = 0;
 
             List<Status> statusList = new List<Status>();
             Status approved = statusService.FindStatusByStatusId(6);
             Status reqProcessed = statusService.FindStatusByStatusId(7);
-            //Status pendingCollection = statusService.FindStatusByStatusId(8);
 
             statusList.Add(approved);
             statusList.Add(reqProcessed);
@@ -222,33 +219,6 @@ namespace team7_ssis.Services
             }
 
             return totalQuantity;
-
-            //Status partially = statusService.FindStatusByStatusId(9);
-            //statusList.Remove(approved);
-            //statusList.Add(reqProcessed);
-            //statusList.Add(pendingCollection);
-            //statusList.Add(partially);
-
-            //List<Disbursement> outstandingDisbursements = disbursementService.FindDisbursementsByStatus(statusList);
-
-            //foreach(Disbursement ds in outstandingDisbursements)
-            //{
-            //    foreach(DisbursementDetail dsDetail in ds.DisbursementDetails)
-            //    {
-            //        if (dsDetail.ItemCode == item.ItemCode)
-            //        {
-            //            requestedQuantity = requestedQuantity + dsDetail.PlanQuantity;
-            //            receivedQuantity = receivedQuantity + dsDetail.ActualQuantity;
-            //        }
-            //    }
-                
-            //}
-
-            //totalQuantity = totalQuantity + requestedQuantity - receivedQuantity;
-
-
-            //return totalQuantity;
-
 
         }
 
