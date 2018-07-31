@@ -45,6 +45,20 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
+                        <label for="phone">Reorder Level</label><br />
+                        @Html.TextBoxFor(m => m.ReorderLevel, new { @id = "ReorderLevel", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="phone">Reorder Quantity</label><br />
+                        @Html.TextBoxFor(m => m.ReorderQuantity, new { @id = "ReorderQuantity", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
                         <label for="phone">Bin No</label><br />
                         @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control" })
                     </div>
