@@ -168,6 +168,10 @@ namespace team7_ssis.Controllers
             {
                 return BadRequest("An unexpected error occured.");
             }
+
+            // Create Notification
+            new NotificationService(context).CreateNotification(r, user.Department.Head);
+
             return Ok(r.RequisitionId);
 
         }
