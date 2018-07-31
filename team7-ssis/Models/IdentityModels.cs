@@ -20,6 +20,7 @@ namespace team7_ssis.Models
         public virtual ApplicationUser Supervisor { get; set; }
         public virtual Department Department { get; set; }
         public virtual Status Status { get; set; }
+      
 
         [InverseProperty("CreatedBy")]
         public virtual List<ItemCategory> ItemCategoriesCreated { get; set; }

@@ -1,0 +1,274 @@
+﻿@model team7_ssis.ViewModels.StationeryRetrievalViewModel
+
+@section Scripts {
+    <script src="~/Scripts/Custom/RedirectPost.js"></script>
+}
+
+@{
+    ViewBag.Title = "StationeryRetrieval";
+}
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @ViewBag.Message
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div id="alert"></div>
+
+<div class="row mb-3 step__container">
+    <div class="step__arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+    <div class="col-md-6">
+        <div class="card step__selected">
+            <div class="card-body">
+                <div class="step__icon">
+                    <i class="fa fa-archive" aria-hidden="true"></i>
+                </div>
+                <div class="step__label">
+                    <h5>Stationery Retrieval</h5>
+                    Collect items below from store.
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (@Model.StatusId == 20)
+    {
+        <div class="col-md-6">
+            <a href="/Requisition/StationeryDisbursement?rid=@Model.RetrievalID">
+                <div class="card step__unselected">
+                    <div class="card-body">
+                        <div class="step__icon">
+                            <i class="fa fa-truck" aria-hidden="true"></i>
+                        </div>
+                        <div class="step__label">
+                            <h5>Stationery Disbursement</h5>
+                            Deliver items according to Disbursement Forms.
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-6">
+            <div class="card step__fade step__unselected">
+                <div class="card-body">
+                    <div class="step__icon">
+                        <i class="fa fa-truck" aria-hidden="true"></i>
+                    </div>
+                    <div class="step__label">
+                        <h5>Stationery Disbursement</h5>
+                        Deliver items according to Disbursement Forms.
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="label">Retrieval ID</div>
+        @Model.RetrievalID<br />
+        <i class="fa fa-print" aria-hidden="true"></i>
+
+    </div>
+    <div class="col-md-4">
+        <div class="col-md-12">
+            <div class="label">Created By</div>
+            @Model.CreatedBy
+        </div>
+        <div class="col-md-12">
+            <div class="label">Created On</div>
+            @Model.CreatedOn
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="col-md-12">
+            <div class="label">Updated By</div>
+            @Model.UpdatedBy
+        </div>
+        <div class="col-md-12">
+            <div class="label">Updated On</div>
+            @Model.UpdatedOn
+        </div>
+    </div>
+</div>
+
+<table id="myTable" class="table table-striped table-bordered" style="width: 100%">
+    <thead>
+        <tr>
+            <th>All Retrieved?</th>
+            <th>Product ID</th>
+            <th>Bin</th>
+            <th>Description</th>
+            <th>Qty Ordered</th>
+            @if (@Model.StatusId != 20)
+            {
+                <th>Edit</th>
+            }
+            else
+            {
+                <th>Details</th>
+            }
+
+        </tr>
+    </thead>
+
+</table>
+
+@if (@Model.StatusId != 20)
+{
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button id="discardChangesBtn" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> Discard Changes</button>
+                <button id="saveRetrievalBtn" class="btn btn-default"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
+                <button id="confirmRetrievalBtn" class="btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i> Confirm Retrieval Form</button>
+            </div>
+
+        </div>
+    </div>
+}
+
+<script>
+
+    // icons representing checked/unchecked
+    var picked = '<i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>';
+    var partiallyPicked = '<i class="fa fa-check-circle-o fa-lg" style="opacity:0.25" aria-hidden="true"></i>';
+    var awaitingPicking = '<i class="fa fa-circle-o fa-lg" style="opacity:0.25" aria-hidden="true"></i>';
+
+    // load script
+    $(document).ready(function () {
+        var table = $('#myTable').DataTable({
+            ajax: {
+                url: "/api/stationeryretrieval/@Model.RetrievalID",
+                dataSrc: ""
+            },
+            columns: [
+                //{ "defaultContent": '<i class="fa fa-square-o" aria-hidden="true"></i>', className : "checkmark" },
+                {
+                    "data": "RetrievedStatus",
+                    @if (@Model.StatusId != 20)
+                    {
+                        <text>
+                    "className": "checkmark pointer",
+                        </text>
+                    }
+                    "render": function (data, type, row, meta) {
+                        var html;
+                        if (data == "Picked") {
+                            html = picked;
+                        } else if (data == "Awaiting Picking") {
+                            html = awaitingPicking;
+                        } else {
+                            html = partiallyPicked;
+                        }
+                        return html;
+                    }
+                },
+                { "data": "ProductID", "autoWidth": true },
+                { "data": "Bin", "autoWidth": true },
+                { "data": "Description", "autoWidth": true },
+                { "data": "QtyOrdered", "autoWidth": true },
+                @if (Model.StatusId != 20)
+                {
+                    <text>
+                    { "defaultContent": "<button class='btn btn-primary detailbutton'><i class='fa fa-pencil' aria-hidden='true'></i></button>" }
+                    </text>
+                } else {
+                    <text>
+                    { "defaultContent": "<button class='btn btn-primary detailbutton'><i class='fa fa-info-circle' aria-hidden='true'></i></button>" }
+                    </text>
+                }
+            ],
+            select: 'api'
+        });
+
+        // click Edit/Detail button
+        $(document).on("click", ".detailbutton", function () {
+            //console.log('clicked');
+            var itemcode = $(this).parent().siblings('td:nth-of-type(2)').html();
+            var redirectURL = "/Retrieval/RetrievalDetails?retId=@Request.QueryString["rid"]&itemId=" + itemcode;
+            window.location.href = redirectURL;
+        });
+
+        @if (@Model.StatusId != 20)
+        {
+            <text>
+        // toggle checkboxes
+        $('#myTable tbody').on('click', '.checkmark', function () {
+            console.log('clicked');
+            var cell = table.cell(this);
+            if (cell.data() == "Awaiting Picking" || cell.data() == "Partially Picked") {
+                cell.data("Picked").draw();
+            } else if (cell.data() == "Picked") {
+                cell.data("Awaiting Picking").draw();
+            }
+        });
+            </text>
+        }
+
+        // Click "Save"
+        $(document).on('click', '#saveRetrievalBtn', function () {
+            var rowData = table.rows().data().toArray();
+            var json = {
+                RetrievalID: "@Request.QueryString["rid"]",
+                Data: rowData
+            };
+
+            console.log(json);
+
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json',
+                url: "/api/stationeryretrieval",
+                data: JSON.stringify(json),
+                success: function (message) {
+                    // create info DOM object
+                    console.log(message);
+                    $('#alert').html(
+                        '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
+                        'Disbursement information updated.' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>');
+                },
+                error: function (message) {
+                    // show error message
+                    console.log(message.statusText);
+                    $('#alert').html(
+                        '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        'An unexpected error occured.' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>');
+                }
+            })
+        });
+
+        // Click 'Confirm Retrieval'
+        $(document).on('click', '#confirmRetrievalBtn', function () {
+            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
+                post("/Retrieval/Confirm", { retId: "@Model.RetrievalID" });
+            }
+        })
+
+        // Click 'Discard Changes'
+        $(document).on('click', '#discardChangesBtn', function () {
+            if (confirm("Discard all changes?")) {
+                location.reload();
+            }
+        })
+
+    });
+
+
+</script>

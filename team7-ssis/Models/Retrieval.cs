@@ -12,7 +12,7 @@ namespace team7_ssis.Models
         [Key]
         [MaxLength(20)]
         public String RetrievalId { get; set; }
-        public Status Status { get; set; }
+        public virtual Status Status { get; set; }
         public virtual ApplicationUser CreatedBy { get; set; }
         public virtual ApplicationUser UpdatedBy { get; set; }
         public DateTime CreatedDateTime { get; set; }

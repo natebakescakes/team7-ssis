@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using team7_ssis.Models;
+using team7_ssis.Services;
 
 namespace team7_ssis.Controllers
 {
@@ -18,8 +17,18 @@ namespace team7_ssis.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        private ApplicationDbContext context;
+        private TitleService titleService;
+        private DepartmentService departmentService;
+        private UserService userService;
+
         public AccountController()
         {
+            context = new ApplicationDbContext();
+
+            titleService = new TitleService(context);
+            departmentService = new DepartmentService(context);
+            userService = new UserService(context);
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -139,7 +148,19 @@ namespace team7_ssis.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            return View(new RegisterViewModel()
+            {
+                Titles = new SelectList(
+                    titleService.FindAllTitles().Select(x => new { Value = x.TitleId, Text = x.Name }),
+                    "Value",
+                    "Text"
+                ),
+                Departments = new SelectList(
+                    departmentService.FindAllDepartments().Select(x => new { Value = x.DepartmentCode, Text = x.Name }),
+                    "Value",
+                    "Text"
+                )
+            });
         }
 
         //
@@ -151,12 +172,23 @@ namespace team7_ssis.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var context = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+
+                var user = new ApplicationUser {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Department = new DepartmentService(context).FindDepartmentByDepartmentCode(model.DepartmentCode),
+                    Supervisor = new UserService(context).FindUserByEmail(model.SupervisorEmail),
+                    Title = new TitleService(context).FindTitleByTitleId(Int32.Parse(model.TitleId)),
+                    Status = new StatusService(context).FindStatusByStatusId(1)
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -167,6 +199,17 @@ namespace team7_ssis.Controllers
                 }
                 AddErrors(result);
             }
+
+            model.Titles = new SelectList(
+                    titleService.FindAllTitles().Select(x => new { Value = x.TitleId, Text = x.Name }),
+                    "Value",
+                    "Text"
+                );
+            model.Departments = new SelectList(
+                    departmentService.FindAllDepartments().Select(x => new { Value = x.DepartmentCode, Text = x.Name }),
+                    "Value",
+                    "Text"
+                );
 
             // If we got this far, something failed, redisplay form
             return View(model);

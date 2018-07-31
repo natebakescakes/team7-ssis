@@ -1,0 +1,163 @@
+﻿
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Manage Inventory</title>
+</head>
+<body>
+    @Html.Hidden("myURL", Url.Action("Details", "Inventory"))
+    @Html.Hidden("mynewURL",Url.Action("Create","Inventory"))
+    @Html.Hidden("myURL2",Url.Action("GeneratePrice","Inventory"))
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <form id="myform" method="post">
+            <input id="deletebtn" type="submit" class="popup btn btn-danger" href="#" style="margin-bottom:20px; margin-top:20px;" value="Delete Selected" />
+
+            <input type="button" id="generatebtn" class="popup btn btn-primary" value="Generate Item Prices List" />
+
+            <input type="button" id="addnewbtn" class="popup btn btn-primary" value="+Add New Inventory Item" />
+
+            <table id="itemTable" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Item Number</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Reorder Level</th>
+                        <th>Reorder Quantity</th>
+                        <th>Unit of Measurement</th>
+                        <th>In Stock</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+            </table>
+
+        </form>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.tablecontainer #myform').on('click', '#deletebtn', function (e) {
+                var i;
+                for (i = 0; i < selected.length; i++) {
+                    console.log(selected[i]);
+                }
+                var postData = { values: selected };
+
+                console.log(postData);
+                $.ajax({
+                    type: "POST",
+                    url: '/api/delete/items',
+                    contentType: "application/json",
+                    data: JSON.stringify(selected),
+                    success: function (data) {
+                        //alert("Success");
+                        oTable.ajax.reload();
+                    },
+                    dataType: "json",
+                    traditional: true
+                })
+                event.preventDefault();
+            });
+
+
+            var oTable = $('#itemTable').DataTable({
+                sAjaxSource: "/api/manage/items",
+                sAjaxDataProp: "",
+                'columnDefs': [{
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                }],
+
+                'order': [[1, 'asc']],
+                "columns": [
+                    { "defaultContent": "<input type='checkbox' id='mycheck' value=''>"},
+                    { "data": "ItemCode", "autoWidth": true },
+                    { "data": "ItemCategoryName", "autoWidth": true },
+                    { "data": "Description", "autoWidth": true },
+                    { "data": "ReorderLevel", "autoWidth": true },
+                    { "data": "ReorderQuantity", "autoWidth": true },
+                    { "data": "Uom", "autoWidth": true },
+                    { "data": "Quantity", "autoWidth": true },
+                    {
+                        "defaultContent": "<input type='button' class='btn btn-primary' id='viewbtn' style='font-size: 12px' value='View Item Details'/>"
+                    }
+                ]
+
+            });
+            //view button
+            var rowedit = $('#itemTable tbody').on('click', '#viewbtn', function (e) {
+                var rowdata = oTable.row($(this).parents('tr')).data().ItemCode;
+                //alert(rowdata);
+                gotoViewItemDetail(rowdata);
+            });
+
+        function gotoViewItemDetail(rs) {
+            var url = $("#myURL").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+            element1.value = rs;
+            element1.name = "itemCode";
+            element1.type = "hidden";
+            form.appendChild(element1);
+
+            document.body.appendChild(form);
+
+            form.submit();
+            //alert('gotoViewItemDetail'+rs);
+        }
+
+            //js for add new btn
+        $('.tablecontainer #myform').on('click', '#addnewbtn', function (e) {
+            var url = $("#mynewURL").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+
+            document.body.appendChild(form);
+
+            form.submit();
+            //alert("go to new");
+        });
+
+            //js for generate price
+        $('.tablecontainer #myform').on('click', '#generatebtn', function (e) {
+            var url = $("#myURL2").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+
+            document.body.appendChild(form);
+
+            form.submit();
+            //alert("generate");
+        });
+
+        var selected = new Array();
+        //all about checkbox
+        $('#itemTable tbody').on('change', '#mycheck', function (e) {
+            var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
+            if (this.checked != true) {
+                var index = selected.indexOf(rowSelected);
+                if (index > -1) {
+                    selected.splice(index, 1);
+                }
+                //alert('you are unchecked this again!')
+            }
+            else {
+                selected.push(rowSelected);
+            }
+            //alert(selected.length);
+
+        })
+        });
+    </script>
+
+</body>
