@@ -11,7 +11,7 @@
             { "data": "ContactName", "autoWidth": true },
             { "data": "PhoneNumber", "autoWidth": true },
             { "data": "FaxNumber", "autoWidth": true },
-            { "data": "Address", "autoWidth": true },
+            { "data": "Address", "autoWidth": true }
       
         ],
         select: {
@@ -46,17 +46,27 @@
     });
 
     $(".addsupplier-form").submit(function (event) {
-        $.ajax({
-            type: "POST",
-            url: '/supplier/Save',
-            data: $('.addsupplier-form').serialize(),
-            success: function (data) {
-                if (data.status) {
-                    $('#myModal').modal('hide');
-                    table.ajax.reload();
+
+        
+        if ($('#supplierdetails').find('#SupplierCode').val() === '') {
+            alert("SupplierCode cannot be null");
+
+            event.preventDefault();
+        }
+
+        if ($('#supplierdetails').find('#SupplierCode').val() !== '') {
+            $.ajax({
+                type: "POST",
+                url: '/supplier/Save',
+                data: $('.addsupplier-form').serialize(),
+                success: function (data) {
+                    if (data.status) {
+                        $('#myModal').modal('hide');
+                        table.ajax.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         event.preventDefault();
     });
@@ -69,6 +79,7 @@
     });
 
     $('#supplierdetails').submit(function (event) {
+    
         $.ajax({
             type: "POST",
             url: '/supplier/Save',
@@ -110,6 +121,9 @@
         $('#supplierdetails')
             .find('select')
             .prop('disabled', false);
+        $('#supplierdetails')
+            .find('#SupplierCode')
+            .prop('disabled', true);
     }
 
     function disableInput() {
