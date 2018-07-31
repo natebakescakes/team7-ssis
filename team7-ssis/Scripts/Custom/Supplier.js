@@ -46,27 +46,24 @@
     });
 
     $(".addsupplier-form").submit(function (event) {
-        if ($('#addsupplier-form').find('#SupplierCode') === '') {
-            alert("Supplier Code cannot be empty. Please enter Supplier Code.");
+        if ($('.addsupplier-form').find('#SupplierCode').val() === '') {
+            alert("Supplier Code cannot be empty. Please enter a Supplier Code.");
             event.preventDefault();
         }
-        else {
-                $.ajax({
-                    type: "POST",
-                    url: '/supplier/Save',
-                    data: $('.addsupplier-form').serialize(),
-                    success: function (data) {
-                        if (data.status) {
-                            $('#myModal').modal('hide');
-                            table.ajax.reload();
-                        }
+        if ($('.addsupplier-form').find('#SupplierCode').val() !== '') {
+            $.ajax({
+                type: "POST",
+                url: '/supplier/Save',
+                data: $('.addsupplier-form').serialize(),
+                success: function (data) {
+                    if (data.status) {
+                        $('#myModal').modal('hide');
+                        table.ajax.reload();
                     }
-                });
-
-                event.preventDefault();
-            }
-        });
-
+                }
+            });
+        }
+    });
 
     $('#pricelist-btn').on('click', function () {
         var code = $('#SupplierCode').val();
