@@ -46,19 +46,23 @@
     });
 
     $(".addsupplier-form").submit(function (event) {
-        $.ajax({
-            type: "POST",
-            url: '/supplier/Save',
-            data: $('.addsupplier-form').serialize(),
-            success: function (data) {
-                if (data.status) {
-                    $('#myModal').modal('hide');
-                    table.ajax.reload();
+        if ($('.addsupplier-form').find('#SupplierCode').val() === '') {
+            alert("Supplier Code cannot be empty. Please enter a Supplier Code.");
+            event.preventDefault();
+        }
+        if ($('.addsupplier-form').find('#SupplierCode').val() !== '') {
+            $.ajax({
+                type: "POST",
+                url: '/supplier/Save',
+                data: $('.addsupplier-form').serialize(),
+                success: function (data) {
+                    if (data.status) {
+                        $('#myModal').modal('hide');
+                        table.ajax.reload();
+                    }
                 }
-            }
-        });
-
-        event.preventDefault();
+            });
+        }
     });
 
     $('#pricelist-btn').on('click', function () {
@@ -110,6 +114,9 @@
         $('#supplierdetails')
             .find('select')
             .prop('disabled', false);
+        $('#supplierdetails')
+            .find('#SupplierCode')
+            .prop('disabled', true);
     }
 
     function disableInput() {
