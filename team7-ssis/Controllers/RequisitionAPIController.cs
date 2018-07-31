@@ -8,125 +8,108 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace team7_ssis.Controllers
 {
     public class RequisitionAPIController : ApiController
     {
-        static ApplicationDbContext context = new ApplicationDbContext();
-        RequisitionService requisitionService = new RequisitionService(context);
-        RequisitionRepository requisitionRepository = new RequisitionRepository(context);
-        RetrievalService retrievalService = new RetrievalService(context);
-        DisbursementService disbursementService = new DisbursementService(context);
-        StatusService statusService = new StatusService(context);
+        ApplicationDbContext context;
+        RequisitionService requisitionService;
+        RequisitionRepository requisitionRepository;
+        RetrievalService retrievalService;
+        DisbursementService disbursementService;
+        StatusService statusService;
+        ItemService itemService;
+        DepartmentService departmentService;
+        UserRepository userRepository;
+        StatusRepository statusRepository;
 
-        [Route("api/reqdetail/all")]
-        [HttpGet]
-        public IEnumerable<ManageRequisitionsViewModel> Requisitions()
+        public RequisitionAPIController()
         {
-            List<RequisitionDetail> reqDetailList = requisitionService.FindAllRequisitionDetail();
-            List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+            context = new ApplicationDbContext();
+            requisitionService = new RequisitionService(context);
+            requisitionRepository = new RequisitionRepository(context);
+            retrievalService = new RetrievalService(context);
+            disbursementService = new DisbursementService(context);
+            statusService = new StatusService(context);
+            itemService = new ItemService(context);
+            departmentService = new DepartmentService(context);
+            userRepository = new UserRepository(context);
+            statusRepository = new StatusRepository(context);
+
+        }
+
+        public ApplicationDbContext Context { get { return context; } set { context = value; } }
+
+        [Route("api/reqdetail/{rid}")]
+        [HttpGet]
+        public IEnumerable<RequisitionDetailVTableiewModel> GetAllRequisitionDetails(string rid)
+        {
+            List<RequisitionDetail> reqDetailList = requisitionService.GetRequisitionDetails(rid);
+            List<RequisitionDetailVTableiewModel> viewModel = new List<RequisitionDetailVTableiewModel>();
 
             foreach (RequisitionDetail r in reqDetailList)
             {
-                string status;
-                if (r.Status != null)
+                viewModel.Add(new RequisitionDetailVTableiewModel
                 {
-                    int statusId = r.Status.StatusId;
-                    status = context.Status.Where(x => x.StatusId == statusId).First().Name;
-                } else
-                {
-                    status = "";
-                }
-
-                viewModel.Add(new ManageRequisitionsViewModel
-                {
-                    Requisition = r.RequisitionId,
                     ItemCode = r.ItemCode,
                     Description = r.Item.Description,
                     Quantity = r.Quantity,
-                    Status = status
+                    Status = r.Status.Name
                 });
             }
 
             return viewModel;
         }
+
+        [Route("api/requisition")]
+        [HttpGet]
+        public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitions()
+        {
+            List<Requisition> reqList = requisitionService.FindAllRequisitions();
+            List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+
+            foreach (Requisition r in reqList)
+            {
+                viewModel.Add(new ManageRequisitionsViewModel
+                {
+                    Requisition = r.RequisitionId,
+                    Status = r.Status.Name
+                });
+            }
+
+            return viewModel;
+        }
+
+
         [Route("api/processrequisitions")]
         [HttpPost]
         public IHttpActionResult ProcessRequisitions(List<string> reqIdList)
         {
             List<Requisition> reqList = new List<Requisition>();
-            string message;
+            string rid;
             foreach (string s in reqIdList)
             {
                 reqList.Add(requisitionRepository.FindById(s));
             }
             try
             {
-                message = requisitionService.ProcessRequisitions(reqList);
-            } catch
-            {
-                message = "Please select Requisitions to be processed.";
+                rid = requisitionService.ProcessRequisitions(reqList);
             }
-            return Ok( new { message = message });
-        }
-        [Route("api/stationeryretrieval/{rId}")]
-        [HttpGet]
-        public IEnumerable<StationeryRetrievalViewModel> StationeryRetrieval(string rId)
-        {
-            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
-
-            // get all the relevant Disbursement Details
-            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).ToList();
-
-            // group the Disbursement Details by Item Code, and sum the quantity ordered
-            var finalList = ddList.GroupBy(dd => new
+            catch
             {
-                dd.ItemCode,
-                dd.Bin
-            });
-            List<StationeryRetrievalViewModel> viewModel = finalList.Select(y => new StationeryRetrievalViewModel
-            {
-                ProductID = y.Key.ItemCode,
-                //Bin = y.Key.Bin,
-                Bin = "",
-                QtyOrdered = y.Sum(dd => dd.PlanQuantity),
-                Description = context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description
-            }).ToList();
-
-            return viewModel;
-        }
-        /// <summary>
-        /// Retrieves Disbursement Details linked to a given Retrieval and Item.
-        /// </summary>
-        /// <param name="retId"></param>
-        /// <param name="itemId"></param>
-        /// <returns></returns>
-        [Route("api/retrievaldetails")]
-        [HttpPost]
-        public IEnumerable<RetrievalDetail> RetrievalDetails(string retId, string itemId)
-        {
-            List<RetrievalDetail> viewModel = new List<RetrievalDetail>();
-
-            List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(retId);
-            List<DisbursementDetail> ddList = dList.SelectMany(x => x.DisbursementDetails).Where(x => x.ItemCode == itemId).ToList();
-
-            foreach(DisbursementDetail dd in ddList)
-            {
-                viewModel.Add(new RetrievalDetail
-                {
-                    DeptId = dd.Disbursement.Department.DepartmentCode,
-                    DeptName = dd.Disbursement.Department.Name,
-                    Needed = dd.PlanQuantity
-                });
+                return BadRequest();
             }
-            return viewModel;
+            return Ok(rid);
         }
 
         [Route("api/stationerydisbursement/{rId}")]
         [HttpGet]
         public IEnumerable<StationeryDisbursementViewModel> StationeryDisbursement(string rId)
         {
+            // TODO: Write Test
+
             List<StationeryDisbursementViewModel> viewModel = new List<StationeryDisbursementViewModel>();
             List<Disbursement> dList = disbursementService.FindDisbursementsByRetrievalId(rId);
             foreach (Disbursement d in dList)
@@ -134,17 +117,165 @@ namespace team7_ssis.Controllers
                 var clerk = d.Department.CollectionPoint.ClerkInCharge;
                 string disbursedBy = String.Format("{0} {1}", clerk.FirstName, clerk.LastName);
 
-                viewModel.Add(new StationeryDisbursementViewModel
-                {
-                    DisbursementID = d.DisbursementId,
-                    Department = d.Department.Name,
-                    //CollectionPoint = d.Department.CollectionPoint.Name,
-                    //DisbursedBy = disbursedBy,
-                    //Status = d.Status.Name
-                });
+                StationeryDisbursementViewModel vm = new StationeryDisbursementViewModel();
+                vm.DisbursementID = d.DisbursementId;
+                vm.Department = d.Department.Name;
+                vm.CollectionPoint = d.Department.CollectionPoint.Name;
+                vm.DisbursedBy = disbursedBy;
+                vm.Status = d.Status.Name;
+
+                viewModel.Add(vm);
+
             }
 
             return viewModel;
+        }
+        [Route("api/createrequisition")]
+        [HttpPost]
+        public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
+        {
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
+            if (itemList.Count < 1)
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+
+            Requisition r = new Requisition();
+            r.RequisitionId = IdService.GetNewRequisitionId(context);
+            r.RequisitionDetails = new List<RequisitionDetail>();
+            r.Status = statusService.FindStatusByStatusId(4);
+            r.CreatedDateTime = DateTime.Now;
+            r.Department = user.Department;
+            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CreatedBy = user;
+
+            foreach (CreateRequisitionJSONViewModel dd in itemList)
+            {
+                r.RequisitionDetails.Add(new RequisitionDetail
+                {
+                    ItemCode = dd.ItemCode,
+                    Item = itemService.FindItemByItemCode(dd.ItemCode),
+                    Quantity = dd.Qty,
+                    Status = statusService.FindStatusByStatusId(4)
+                });
+            }
+            try
+            {
+                requisitionService.Save(r);
+            }
+            catch
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+            return Ok(r.RequisitionId);
+
+        }
+
+        [Route("api/editrequisition")]
+        [HttpPost]
+        public IHttpActionResult EditRequisition(UpdateRequisitionJSONViewModel json)
+        {
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
+            if (json.ItemList.Count < 1)
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+
+            try
+            {
+                Requisition r = requisitionRepository.FindById(json.RequisitionId);
+                List<RequisitionDetail> reqList = requisitionRepository.FindRequisitionDetails(json.RequisitionId).ToList();
+
+                // Load exisiting repository
+                requisitionRepository.FindRequisitionDetails(json.RequisitionId);
+                r.RequisitionDetails = new List<RequisitionDetail>();
+
+                foreach (CreateRequisitionJSONViewModel dd in json.ItemList)
+                {
+                    r.RequisitionDetails.Add(new RequisitionDetail
+                    {
+                        ItemCode = dd.ItemCode,
+                        Item = itemService.FindItemByItemCode(dd.ItemCode),
+                        Quantity = dd.Qty,
+                        Status = statusService.FindStatusByStatusId(4)
+                    });
+                }
+                requisitionService.Save(r);
+            }
+            catch
+            {
+                return BadRequest("An unexpected error occured.");
+            }
+            return Ok(json.RequisitionId);
+
+        }
+
+        /// <summary>
+        /// Get requisitions requested by the caller's department for mobile view
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/requisition/department")]
+        public IHttpActionResult GetRelatedRequisitions([FromBody] EmailViewModel model)
+        {
+            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department);
+
+            if (requisitions.Count == 0) return NotFound();
+
+            return Ok(requisitions.Select(requisition => new RequisitionMobileViewModel()
+            {
+                RequisitionId = requisition.RequisitionId,
+                RequestorName = $"{requisition.CreatedBy.FirstName} {requisition.CreatedBy.LastName}",
+                RequestedDate = requisition.CreatedDateTime.ToShortDateString(),
+                Remarks = requisition.EmployeeRemarks == null ? "" : requisition.EmployeeRemarks,
+                HeadRemarks = requisition.HeadRemarks == null ? "" : requisition.HeadRemarks,
+                Status = requisition.Status != null ? requisition.Status.Name : "",
+                RequisitionDetails = requisition.RequisitionDetails.Select(d => new RequisitionDetailMobileViewModel()
+                {
+                    ItemCode = d.ItemCode,
+                    Description = d.Item.Description,
+                    Qty = d.Quantity,
+                    Uom = d.Item.Uom,
+                }).ToList()
+            }));
+        }
+
+        [Route("api/requisition/approve")]
+        public IHttpActionResult ApproveRequisition([FromBody] RequisitionIdViewModel model)
+        {
+            try
+            {
+                new RequisitionService(Context).ApproveRequisition(model.RequisitionId, model.Email, model.Remarks);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Requisition already approved!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully approved"
+            });
+        }
+
+        [Route("api/requisition/reject")]
+        public IHttpActionResult RejectRequisition([FromBody] RequisitionIdViewModel model)
+        {
+            try
+            {
+                new RequisitionService(Context).RejectRequisition(model.RequisitionId, model.Email, model.Remarks);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Requisition already approved!");
+            }
+
+            return Ok(new MessageViewModel()
+            {
+                Message = "Successfully rejected"
+            });
         }
     }
 }

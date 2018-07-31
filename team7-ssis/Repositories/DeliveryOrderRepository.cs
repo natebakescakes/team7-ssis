@@ -28,18 +28,16 @@ namespace team7_ssis.Repositories
                     x.CreatedDateTime.CompareTo(endDateRange) <= 0);
         }
 
-        public DeliveryOrder FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
+        public IQueryable<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
             return context.DeliveryOrder
-                .Where(x => x.PurchaseOrder.PurchaseOrderNo == purchaseOrderNo)
-                .FirstOrDefault();
+                .Where(x => x.PurchaseOrder.PurchaseOrderNo == purchaseOrderNo);
         }
 
-        public DeliveryOrder FindDeliveryOrderBySupplier(string supplierCode)
+        public IQueryable<DeliveryOrder> FindDeliveryOrderBySupplier(string supplierCode)
         {
             return context.DeliveryOrder
-                .Where(x => x.Supplier.SupplierCode == supplierCode)
-                .FirstOrDefault();
+                .Where(x => x.Supplier.SupplierCode == supplierCode);
         }
     }
 }

@@ -33,5 +33,13 @@ namespace team7_ssis.Repositories
             return context.Disbursement
                 .Where(x => x.Retrieval.RetrievalId == id);
         }
+
+        public IQueryable<Disbursement> FindDisbursementsByStatus(List<Status> statusList)
+        {
+
+            var statusIdList = statusList.Select(x => x.StatusId);
+
+            return context.Disbursement.Where(disbursement => statusIdList.Contains(disbursement.Status.StatusId));
+        }
     }
 }

@@ -11,6 +11,8 @@ using team7_ssis.ViewModels;
 
 namespace team7_ssis.Controllers
 {
+    [Authorize]
+    [RoutePrefix("api/Notification")]
     public class NotificationApiController : ApiController
     {
         private ApplicationDbContext context;
@@ -27,8 +29,8 @@ namespace team7_ssis.Controllers
 
         public String CurrentUserName { get; set; }
 
-        [Route("api/notifications")]
-        public IHttpActionResult GetNotificationsCurrentUser()
+        [Route("GetCurrentUser")]
+        public IHttpActionResult GetCurrentUser()
         {
             var user = new UserService(context).FindUserByEmail(CurrentUserName);
             var notifications = new NotificationService(context).FindNotificationsByUser(user);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -40,21 +41,52 @@ namespace team7_ssis.Services
 
             return userRepository.FindSupervisorByDepartment(department).ToList();
         }
+        
+        public ApplicationUser FindRepresentativeByDepartment(Department department)
+        {
+            return userRepository.FindRepByDepartment(department).FirstOrDefault();
+        }
 
         public ApplicationUser Save(ApplicationUser user)
         {
             return userRepository.Save(user);
         }
 
-        public List<ApplicationUser> listSupervisorsByUser(ApplicationUser user)
+        public List<string> FindRolesByEmail(string email)
         {
-            throw new NotImplementedException();
+            if (!userRepository.ExistsByEmail(email))
+                return new List<string>();
+
+            var roleRepository = new RoleRepository(context);
+
+            return FindUserByEmail(email).Roles
+                .Select(role => roleRepository.FindById(role.RoleId).Name)
+                .ToList();
         }
 
-        public List<ApplicationUser> listManagersByUser(ApplicationUser user)
+        public void AddDepartmentHeadRole(string email)
         {
-            throw new NotImplementedException();
+            if (FindRolesByEmail(email).Contains("DepartmentHead"))
+                throw new ArgumentException("User already has Department Head role");
+
+            var user = FindUserByEmail(email);
+            var role = new IdentityUserRole()
+            {
+                UserId = user.Id,
+                RoleId = "2",
+            };
+            user.Roles.Add(role);
+            userRepository.Save(user);
         }
 
+        public void RemoveDepartmentHeadRole(string email)
+        {
+            if (!FindRolesByEmail(email).Contains("DepartmentHead"))
+                throw new ArgumentException("User does not have Department Head role");
+
+            var user = FindUserByEmail(email);
+            user.Roles.Remove(user.Roles.Where(userRole => userRole.RoleId == "2").FirstOrDefault());
+            context.SaveChanges();
+        }
     }
 }

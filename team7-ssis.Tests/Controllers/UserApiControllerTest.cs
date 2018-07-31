@@ -107,5 +107,53 @@ namespace team7_ssis.Tests.Controllers
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
         }
+
+        [TestMethod]
+        public void GetRoles_ContainsResult()
+        {
+            // Arrange
+            var userService = new UserService(context);
+            var email = "root@admin.com";
+
+            var expected = "Admin";
+            var controller = new UserApiController
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.GetRoles(new EmailNameViewModel()
+            {
+                Email = email,
+            });
+            var contentResult = actionResult as OkNegotiatedContentResult<RoleViewModel>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(expected, contentResult.Content.Roles.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void GetRoles_ReturnsNotFound()
+        {
+            // Arrange
+            var email = "rooooooooooot@admin.com";
+            var controller = new UserApiController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
+
+            // Act
+            IHttpActionResult actionResult = controller.GetRoles(new EmailNameViewModel()
+            {
+                Email = email,
+            });
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
+        }
     }
 }

@@ -58,15 +58,25 @@ namespace team7_ssis.Tests.Services
 
 
         [TestMethod]
+        
         public void FindPurchaseOrderByIdTest()
         {
+            //Arrange
+            PurchaseOrder p = new PurchaseOrder();
+            p.PurchaseOrderNo = "PUR-1";
+            p.Supplier = supplierRepository.FindById("CHEP");
+            p.CreatedDateTime = DateTime.Now;
+            p.Status = statusRepository.FindById(11);
+
+            purchaseOrderRepository.Save(p);
+
             //Act
-            var result = purchaseOrderService.FindPurchaseOrderById("DUMMYYYYY");
+            var result = purchaseOrderService.FindPurchaseOrderById("PUR-1");
             var result2 = purchaseOrderService.FindPurchaseOrderById("TEST");
 
             //Assert
-            Assert.AreEqual("CHEP", result2.SupplierCode);
-            Assert.IsNull(result);
+            Assert.AreEqual("CHEP", result.SupplierCode);
+            Assert.IsNull(result2);
 
         }
 
@@ -77,20 +87,28 @@ namespace team7_ssis.Tests.Services
         public void FindPurchaseOrderBySupplierTest()
         {
             //Arrange
+            Supplier s1 = new Supplier();
+            s1.SupplierCode = "SUP1";
+            s1.CreatedDateTime = DateTime.Now;
+            supplierRepository.Save(s1);
+
             PurchaseOrder p1 = new PurchaseOrder();
-            p1.PurchaseOrderNo = "TEST10";
+            p1.PurchaseOrderNo = "PUR-3";
             p1.CreatedDateTime = DateTime.Now;
-            p1.Supplier = supplierRepository.FindById("CHEP");
+            p1.Supplier = s1;
             purchaseOrderRepository.Save(p1);
 
             //Act
-            var result = purchaseOrderService.FindPurchaseOrderBySupplier("ALPA");
+            var result = purchaseOrderService.FindPurchaseOrderBySupplier("SUP1");
+            var result1 = purchaseOrderService.FindPurchaseOrderBySupplier("SUP2");
             var result2 = purchaseOrderService.FindPurchaseOrderBySupplier("CHEP");
 
             //Assert
-            Assert.AreEqual(result.Any(), false);
+            Assert.AreEqual(result1.Any(), false);
+            Assert.AreEqual(result.Any(), true);
             CollectionAssert.AllItemsAreInstancesOfType(result2, typeof(PurchaseOrder));
-            result2.ForEach(x => Assert.AreEqual("CHEP", x.SupplierCode));
+            result.ForEach(x => Assert.AreEqual("SUP1", x.SupplierCode));
+            result2.ForEach(y => Assert.AreEqual("CHEP", y.SupplierCode));
 
 
         }
@@ -160,12 +178,12 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
             PurchaseOrder p1 = new PurchaseOrder();
-            p1.Status = statusRepository.FindById(11);
+            p1.Status = statusRepository.FindById(14);
             p1.PurchaseOrderNo = "DUMMYS1";
             p1.CreatedDateTime = DateTime.Now;
 
             PurchaseOrder p2 = new PurchaseOrder();
-            p2.Status = statusRepository.FindById(12);
+            p2.Status = statusRepository.FindById(15);
             p2.PurchaseOrderNo = "DUMMYS2";
             p2.CreatedDateTime = DateTime.Now;
 
@@ -178,19 +196,15 @@ namespace team7_ssis.Tests.Services
             purchaseOrderRepository.Save(p2);
             purchaseOrderRepository.Save(p3);
 
-            int[] statusId = new int[] { 11, 12 };
+            int[] statusId = new int[] { 14, 15 };
 
             //Act
             var result = purchaseOrderService.FindPurchaseOrderByStatus(statusId);
 
             //Assert
-            result.ForEach(x => Assert.IsTrue(x.Status.StatusId == 11 || x.Status.StatusId == 12));
+            result.ForEach(x => Assert.IsTrue(x.Status.StatusId == 14 || x.Status.StatusId == 15));
             Assert.AreEqual(result.Count(), 2);
 
-            //teardown
-            //purchaseOrderRepository.Delete(p1);
-            //purchaseOrderRepository.Delete(p2);
-            //purchaseOrderRepository.Delete(p3);
         }
 
         [TestMethod]
@@ -224,71 +238,30 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+       
         public void CreatePOForEachSupplierTest()
         {
             //Arrange
-            List<Item> items = new List<Item>();
-            items.Add(itemRepository.FindById("C001"));
-            items.Add(itemRepository.FindById("E005"));
-            items.Add(itemRepository.FindById("E006"));
-            items.Add(itemRepository.FindById("E007"));
-            items.Add(itemRepository.FindById("E008"));
-
+            List<Supplier> supplier = new List<Supplier>();
+            supplier.Add(supplierRepository.FindById("CHEP"));
+            supplier.Add(supplierRepository.FindById("ALPA"));
 
             //Act
-            var result = purchaseOrderService.CreatePOForEachSupplier(items);
+            var result = purchaseOrderService.CreatePOForEachSupplier(supplier);
+            foreach(PurchaseOrder p in result)
+            {
+                p.ApprovedDateTime = new DateTime(1993, 7, 9);
+                purchaseOrderRepository.Save(p);
+            }
 
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(PurchaseOrder));
-            Assert.AreEqual("CHEP", result.First().Supplier.SupplierCode);
-            Assert.AreEqual(result.Count(), 3);
-        }
-
-        [TestMethod]
-        public void AddItemsToPurchaseOrdersTest()
-        {
-            //Arrange
-            List<OrderItem> orderItems = new List<OrderItem>();
-
-            OrderItem o1 = new OrderItem();
-            o1.Item = itemRepository.FindById("E005");
-            o1.Quantity = 50;
-
-            OrderItem o2 = new OrderItem();
-            o2.Item = itemRepository.FindById("E007");
-            o2.Quantity = 10;
-
-            OrderItem o3 = new OrderItem();
-            o3.Item = itemRepository.FindById("C001");
-            o3.Quantity = 15;
-
-            orderItems.Add(o1);
-            orderItems.Add(o2);
-            orderItems.Add(o3);
-
-            List<PurchaseOrder> poList = new List<PurchaseOrder>();
-
-            PurchaseOrder p1 = new PurchaseOrder();
-            p1.PurchaseOrderNo = "P1";
-            p1.Supplier = supplierRepository.FindById("CHEP");
-
-            PurchaseOrder p2 = new PurchaseOrder();
-            p2.PurchaseOrderNo = "P2";
-            p2.Supplier = supplierRepository.FindById("BANE");
-
-            poList.Add(p1);
-            poList.Add(p2);
-
-            //Act
-            var result = purchaseOrderService.AddItemsToPurchaseOrders(orderItems, poList);
-
-            //Assert
-            Assert.AreEqual(result.First().PurchaseOrderDetails[0].Quantity, 50);
-            Assert.AreEqual(result.First().PurchaseOrderDetails[1].Quantity, 15);
-            Assert.AreEqual("C001", result.First().PurchaseOrderDetails[1].Item.ItemCode);
+            result.ForEach(x => Assert.IsTrue(x.Supplier.SupplierCode == "CHEP" || x.Supplier.SupplierCode == "ALPA"));
+            result.ForEach(y => Assert.IsTrue(y.Status.StatusId == 11));
             Assert.AreEqual(result.Count(), 2);
-
         }
+
+      
 
         [TestMethod]
         public void IsPurchaseOrderCreatedTest()
@@ -593,6 +566,8 @@ namespace team7_ssis.Tests.Services
 
         }
 
+   
+
         [TestMethod]
         public void FindRemainingQuantityTest()
         {
@@ -719,10 +694,95 @@ namespace team7_ssis.Tests.Services
 
         }
 
+        [TestMethod]
+        public void CancelItemFromPurchaseOrderTest()
+        {
+
+            //Arrange
+            Item i = new Item();
+            i.ItemCode = "IT9";
+            i.ReorderLevel = 100;
+            i.ReorderQuantity = 500;
+            i.CreatedDateTime = DateTime.Now;
+
+            Item i2 = new Item();
+            i2.ItemCode = "IT8";
+            i2.ReorderLevel = 100;
+            i2.ReorderQuantity = 500;
+            i2.CreatedDateTime = DateTime.Now;
+
+            itemRepository.Save(i);
+            itemRepository.Save(i2);
+
+            PurchaseOrder p1 = new PurchaseOrder();
+            p1.PurchaseOrderNo = "PUR-4";
+            p1.Status = statusRepository.FindById(12);
+            p1.Status.StatusId = 12;
+            p1.Supplier = supplierRepository.FindById("CHEP");
+            p1.CreatedDateTime = DateTime.Now;
+
+            PurchaseOrderDetail pd1 = new PurchaseOrderDetail();
+            pd1.PurchaseOrder = p1;
+            pd1.PurchaseOrderNo = "PUR-4";
+            pd1.Item = itemRepository.FindById("IT9");
+            pd1.ItemCode = i.ItemCode;
+            pd1.Quantity = 15;
+            pd1.Status = statusRepository.FindById(12);
+
+            PurchaseOrderDetail pd2 = new PurchaseOrderDetail();
+            pd2.PurchaseOrder = p1;
+            pd2.PurchaseOrderNo = "PUR-4";
+            pd2.Item = itemRepository.FindById("IT8");
+            pd2.ItemCode = i2.ItemCode;
+            pd2.Quantity = 50;
+            pd2.Status = statusRepository.FindById(11);
+
+            purchaseOrderRepository.Save(p1);
+            purchaseOrderDetailRepository.Save(pd1);
+            purchaseOrderDetailRepository.Save(pd2);
+
+            //Act
+            purchaseOrderService.CancelItemFromPurchaseOrder("PUR-4","IT9");
+            purchaseOrderService.CancelItemFromPurchaseOrder("PUR-4", "IT8");
+
+            //Assert
+            Assert.AreEqual(purchaseOrderDetailRepository.FindById("PUR-4", "IT9").Status.StatusId,12);
+            Assert.AreEqual(purchaseOrderDetailRepository.FindById("PUR-4", "IT8").Status.StatusId, 2);
+
+        }
+
 
         [TestCleanup]
         public void Cleanup()
         {
+            //1
+            bool check= purchaseOrderRepository.ExistsById("PUR-1");
+            if (check)
+                purchaseOrderRepository.Delete(purchaseOrderRepository.FindById("PUR-1"));
+
+            check = purchaseOrderRepository.ExistsById("PUR-3");
+            if (check)
+                purchaseOrderRepository.Delete(purchaseOrderRepository.FindById("PUR-3"));
+
+            check = supplierRepository.ExistsById("SUP1");
+            if (check)
+                supplierRepository.Delete(supplierRepository.FindById("SUP1"));
+
+            check = itemRepository.ExistsById("IT8");
+            if (check)
+                itemRepository.Delete(itemRepository.FindById("IT8"));
+
+            check = itemRepository.ExistsById("IT9");
+            if (check)
+                itemRepository.Delete(itemRepository.FindById("IT9"));
+
+            check = purchaseOrderRepository.ExistsById("PUR-4");
+            if (check)
+                purchaseOrderRepository.Delete(purchaseOrderRepository.FindById("PUR-4"));
+
+
+
+
             //3
             bool exist = purchaseOrderRepository.ExistsById("TEST10");
             if(exist)
@@ -833,6 +893,12 @@ namespace team7_ssis.Tests.Services
             if (exist)
                 itemRepository.Delete(itemRepository.FindById("IT6"));
 
+
+            List<PurchaseOrder> poLIST=context.PurchaseOrder.Where(x => x.ApprovedDateTime == new DateTime(1993,7,9)).ToList();
+            foreach(PurchaseOrder p in poLIST)
+            {
+                purchaseOrderRepository.Delete(p);
+            }
 
 
         }

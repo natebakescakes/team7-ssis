@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "ItemCategory";
+}
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Manage Item Categories</h2>
+    </div>
+    <div class="col-md-4">
+        <button class="popup btn btn-primary pull-right" value="Save" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i> Create New Item Category</button>
+    </div>
+</div>
+<br /><br />
+
+@Html.Partial("_ItemCategoryTable")
+
+
+
+<br />
+<div class="collapse">
+
+    @Html.Partial("_ItemCategoryDetails")
+
+</div>
+
+<div>
+
+    @Html.Partial("_AddItemCategory")
+    <br />
+
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/Custom/ItemCategory.js")
+}
+
+

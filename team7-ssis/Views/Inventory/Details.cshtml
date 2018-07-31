@@ -1,0 +1,162 @@
+﻿@model team7_ssis.ViewModels.EditItemFinalViewModel
+
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Item Details</h2>
+
+<br /><br />
+@Html.Partial("_ItemDetail")
+
+<br /><br />
+@Html.Partial("_StockHistoryTable")
+
+
+
+<script>
+    function firstLoad() {
+        $('#itemEdit').show();
+        $(".button-set").hide();
+        disableInput();
+    }
+    window.onload = firstLoad;
+
+    var itemCode = '@(ViewBag.VB)';
+        var oTable = $('#myTable').DataTable({
+            sAjaxSource: "/api/manage/stockhistory/" + itemCode,
+            sAjaxDataProp: "",
+            'order': [[1, 'asc']],
+            "columns": [
+                { "data": "theDate", "autoWidth": true },
+                { "data": "host", "autoWidth": true },
+                { "data": "qty", "autoWidth": true },
+                { "data": "balance", "autoWidth": true }
+            ]
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/manage/singleitem/' + itemCode,
+            dataType: 'json',
+            success: function (data) {
+                var i;
+                for (i in data) {
+                    $('#itemdetails').find('[id="' + i + '"]').val(data[i]);
+
+                }
+
+                document.getElementById('itemcode').innerText = itemCode;
+                document.getElementById('itemcategoryname').innerText = data.ItemCategoryName;
+                document.getElementById('instock').innerText = data.Quantity;
+
+            }
+        })
+
+    
+        var mine = @Html.Raw(Json.Encode(this.Model));
+        var test = mine.SupplierName;
+        //alert(test.length);
+
+        var pTable = $('#suppTable').DataTable({
+            "searching": false,
+            "paging": false,
+            "info": false,
+            "lengthChange": false,
+            sAjaxSource: "/api/manage/supplierInfo/" + itemCode,
+            sAjaxDataProp: "",
+            'order': [[1, 'asc']],
+            "columns": [
+                {
+                    "data": "Number", "autoWidth": true
+                },
+                {
+                    "data": "SupplierName", "autoWidth": true,
+                    render: function (data, type, row) {
+                        var $select = $("<select id='SupplierName" + (row.Number) + "' name='SupplierName" + (row.Number) + "' disabled></select>");
+                        $.each(test, function (i) {
+                            var $option = $("<option></option>", {
+                            "text": test[i].Text,
+                            "value": test[i].Value
+                        });
+                        $select.append($option);
+
+                        if (row.SupplierName === test[i].Text) {
+                            $option.attr("selected", "selected")
+                        }
+                        });
+                        $("select").change(function (e) {
+                            $("select option").removeAttr('disabled');
+                            $("select").each(function (i, s) {
+                                $("select").not(s).find("option[value=" + $(s).val() + "]").attr('disabled', 'disabled');
+                            });
+                        });
+                        return $select.prop("outerHTML");
+                        
+                    }
+                },
+                {
+                    "data": "SupplierUnitPrice", "autoWidth": true,
+                    render: function (data, type, row) {
+                        return "<input class='form-control'  style='border:none' id='SupplierUnitPrice'" + row.Number + "' name='SupplierUnitPrice" + row.Number + "' type='number' disabled  min='0.01' step='0.01' max='2500' value = " + row.SupplierUnitPrice + ">";
+                    }
+                }
+            ]
+        })
+
+
+
+        $('#suppTable tbody').on('change', '#SupplierNameSelect', function (e) {
+            var rowSelected = pTable.row($(this).parents('tr')).data().Number;
+            var dummy1 = $("#SupplierNameSelect option:selected").val();
+            alert(rowSelected);
+
+        })
+
+
+        $('#itemEdit').on('click', function () {
+            $('#itemEdit').hide();
+            $(".button-set").show();
+           enableInput();
+        });
+
+        $('#cancel-btn').on('click', function () {
+            $(".button-set").hide();
+            $("#itemEdit").show();
+            disableInput();
+        })  
+
+        function disableInput() {
+            $('#itemdetails')
+                .find('input')
+                .prop('disabled', true);
+            $('#itemdetails')
+                .find('textarea')
+                .prop('disabled', true);
+            $('#itemdetails')
+                .find('select')
+                .prop('disabled', true);
+            $('#itemdetails')
+                .find('a')
+                .prop('disabled', true);
+            $('#linkSet').hide();
+        }
+        function enableInput() {
+            $('#itemdetails')
+                .find('input')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('textarea')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('select')
+                .prop('disabled', false);
+            $('#itemdetails')
+                .find('a')
+                .prop('disabled', false);
+            $('#linkSet').show();
+
+        }
+
+</script>

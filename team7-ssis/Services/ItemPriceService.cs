@@ -19,7 +19,20 @@ namespace team7_ssis.Services
             itemPriceRepository = new ItemPriceRepository(context);
             statusRepository = new StatusRepository(context);
         }
+        public string GetDefaultPrice(Item item, int priority)
+        {
+            ItemPrice i = itemPriceRepository.FindByItemCode(item.ItemCode).Where(x => x.PrioritySequence == priority).First();
+            if (i != null)
+                return i.Price.ToString();
+            else
+                return "";
+        }
+        
 
+        public List<ItemPrice> FindAllItemPriceByOrder(string itemCode)
+        {
+            return itemPriceRepository.FindOrderBySequence(itemCode).ToList();
+        }
         public List<ItemPrice> FindAllItemPrice()
         {
             return itemPriceRepository.FindAll().ToList();
@@ -44,17 +57,15 @@ namespace team7_ssis.Services
         {
             return itemPriceRepository.Save(itemPrice);
         }
-
-        public List<ItemPrice> DeleteItemPrice(ItemPrice itemPrice)
+        
+        public void  DeleteItemPrice(ItemPrice itemPrice)
         {
-           List<ItemPrice> p = itemPriceRepository.FindByItemCode(itemPrice.ItemCode).ToList();
-            List<ItemPrice> q = new List<ItemPrice>();
-            foreach (ItemPrice element in p)
-            {
-                element.Status = statusRepository.FindById(0);
-                q.Add(itemPriceRepository.Save(element));
-            }
-            return q;
+            itemPriceRepository.Delete(itemPrice);
+        }
+
+        public ItemPrice FindOneByItemAndSequence(Item i,int priority)
+        {
+            return itemPriceRepository.findByItemAndSequence(i, priority).First();
         }
     }
 }

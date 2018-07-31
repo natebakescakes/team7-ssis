@@ -4,6 +4,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace team7_ssis.Tests.Services
 {
@@ -20,6 +21,9 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             userService = new UserService(context);
             userRepository = new UserRepository(context);
+
+            if (userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"))
+                userService.RemoveDepartmentHeadRole("CommerceEmp@email.com");
         }
 
         [TestMethod]
@@ -102,6 +106,56 @@ namespace team7_ssis.Tests.Services
 
             // Assert
             Assert.IsTrue(result.Count == 0);
+        }
+
+        [TestMethod]
+        public void FindRolesByEmail_Valid()
+        {
+            // Arrange
+            var expected = "Admin";
+
+            // Act
+            var result = userService.FindRolesByEmail("root@admin.com");
+
+            // Assert
+            Assert.IsTrue(result.Contains(expected));
+        }
+
+        [TestMethod]
+        public void FindRolesByEmail_NoResult()
+        {
+            // Arrange
+
+            // Act
+            var result = userService.FindRolesByEmail("roooooooot@admin.com");
+
+            // Assert
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [TestMethod]
+        public void AddAndRemoveDepartmentHeadRole()
+        {
+            // Arrange
+
+            // Act
+            userService.AddDepartmentHeadRole("CommerceEmp@email.com");
+
+            // Assert
+            Assert.IsTrue(userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"));
+
+            // Act
+            userService.RemoveDepartmentHeadRole("CommerceEmp@email.com");
+
+            // Assert
+            Assert.IsTrue(!userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (userService.FindRolesByEmail("CommerceEmp@email.com").Contains("DepartmentHead"))
+                userService.RemoveDepartmentHeadRole("CommerceEmp@email.com");
         }
     }
 }

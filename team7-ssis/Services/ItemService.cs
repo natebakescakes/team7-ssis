@@ -24,12 +24,20 @@ namespace team7_ssis.Services
 
         public Item FindItemByItemCode(string itemCode)
         {
+            Console.WriteLine("In findbyitemcode item" + itemCode.ToString());
+
             return itemRepository.FindById(itemCode);
         }
 
         public  List<Item> FindAllItems()
         {
             return itemRepository.FindAll().ToList();
+        }
+        
+
+        public List<Item> FindAllActiveItems()
+        {
+            return itemRepository.FindAllActive().ToList();
         }
 
 
@@ -50,10 +58,23 @@ namespace team7_ssis.Services
             return itemRepository.FindQuantity().ToList();
         }
 
+        public Inventory FindInventoryByItemCode(string i)
+        {
+            return inventoryRepository.FindById(i);
+        }
+
         public Inventory SaveInventory(Item item,int quantity)
         {
             Inventory iv = new Inventory();
-            iv.ItemCode = item.ItemCode;
+            if (FindInventoryByItemCode(item.ItemCode) == null)
+            {
+                iv.ItemCode = item.ItemCode;
+            }
+            else
+            {
+                iv = FindInventoryByItemCode(item.ItemCode);
+            }
+
             iv.Quantity = quantity;
             return inventoryRepository.Save(iv);
         }
@@ -74,14 +95,11 @@ namespace team7_ssis.Services
 
         public Item DeleteItem(Item item)
         {
+            Console.WriteLine("In delete item" + item.ItemCode.ToString());
             Item a = itemRepository.FindById(item.ItemCode);
             a.Status= statusRepository.FindById(0);
             return itemRepository.Save(a);
         }
-        
-        
-        
-
         public int UploadItemImage(HttpPostedFileBase file)
         {
             if (file != null)
