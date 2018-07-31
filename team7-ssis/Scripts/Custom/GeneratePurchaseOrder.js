@@ -113,7 +113,13 @@
         },
         pageLength: 5,
         columns: [
-            { defaultContent: '<div class="thumbnail__small"></div>' },
+            {
+                data:"ImagePath",
+                render: function (data,type,row,meta) {
+                    var html = '<img class="img-thumbnail img-responsive myImage" alt="Cinque Terre"" src="/Images/'+data+'.jpg" />';
+                    return html;
+                }
+            },
             { data: "ItemCode" },
             { data: "ItemCategoryName"},
             { data: "Description"},
@@ -126,7 +132,8 @@
                 render: $.fn.dataTable.render.number(',', '.', 2, '$')}
         ],
         select: "single",
-        dom: "ftp"
+        dom: "ftp",
+        pageLength:4
     });
 
 
@@ -199,6 +206,7 @@
         
     })
 
+    //cancel purchase order detail
     $('#generatePoTable tbody').on('click', 'i.fa.fa-times', function () {
         generatePOTbl
             .row($(this).parents('tr'))
@@ -208,7 +216,13 @@
 
     
 
+    //show item details on click of each row in add items popup page
     $('#generateAddItem tbody').on('click', 'tr', function () {
+
+        
+       // document.getElementById("imageAddItem").src = $($("#generateAddItem").DataTable().row(this)).find("img").attr('src');
+        document.getElementById("imageAddItem").src = $(this).find("img").attr("src");
+
         var unitPrice = addItemTable.row(this).data().UnitPrice;
         
         var data = addItemTable.row(this).data();
@@ -342,7 +356,7 @@
             { defaultContent: '<button id="infobutton" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' }
         ],
         dom: "t",
-        select: "multiple"
+        select: "single"
     });
 
     $(document).on("click", "#infobutton", function (e) {
@@ -375,14 +389,45 @@
     $(document).on("click", "#downloadselectedsuccess", function () {
 
         var data = $('#successPoTable').DataTable().rows({ selected: true }).data().toArray();
-        alert(JSON.stringify(data));
+     
+        ponum = data[0].PurchaseOrderNo;
+
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = "/PurchaseOrder/downloadselectedpdf";
+
+        element1.value = ponum;
+        element1.name = "purchaseOrderNum";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
 
     });
 
     $(document).on("click", "#ViewPrintButton", function () {
 
         var data = $('#successPoTable').DataTable().rows({ selected: true }).data().toArray();
-        alert(JSON.stringify(data));
+
+        ponum = data[0].PurchaseOrderNo;
+
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = "/PurchaseOrder/viewselectedpdf";
+
+        element1.value = ponum;
+        element1.name = "purchaseOrderNum";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
 
     });
 

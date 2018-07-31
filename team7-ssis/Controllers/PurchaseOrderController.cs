@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.ViewModels;
 using team7_ssis.Services;
+using Rotativa;
 using Microsoft.AspNet.Identity;
 
 
@@ -215,7 +216,7 @@ namespace team7_ssis.Controllers
             foreach (PurchaseOrderDetailsViewModel pod in purchaseOrderDetailList)
             {
                 Item item = itemService.FindItemByItemCode(pod.ItemCode);
-                ItemPrice itemPrice = itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
+                ItemPrice itemPrice = itemPriceService.FindOneByItemAndSequence(item, pod.SupplierPriority);
 
                 if (!supList.Contains(itemPrice.Supplier))
                 {
@@ -251,7 +252,7 @@ namespace team7_ssis.Controllers
                 {
 
                     Item item = itemService.FindItemByItemCode(pod.ItemCode);
-                    ItemPrice itemPrice = itemPriceService.FindSingleItemPriceByPriority(item, pod.SupplierPriority);
+                    ItemPrice itemPrice = itemPriceService.FindOneByItemAndSequence(item, pod.SupplierPriority);
                     if (itemPrice.SupplierCode == po.SupplierCode)
                     {
                         poDetail.PurchaseOrder = po;
@@ -290,14 +291,52 @@ namespace team7_ssis.Controllers
         public ActionResult GetItemPrice(string itemCode, int priority)
         {
             Item item = itemService.FindItemByItemCode(itemCode);
-            ItemPrice itemPrice = itemPriceService.FindSingleItemPriceByPriority(item, priority);
+            ItemPrice itemPrice = itemPriceService.FindOneByItemAndSequence(item, priority);
             decimal price = itemPrice.Price;
             return new JsonResult { Data = new { itemPrice = price } };
         }
 
 
-    }
+        [HttpPost]
+        public ActionResult DownloadSelectedPDF(string purchaseOrderNum)
+        {
+            var a = new ActionAsPdf("PODPrintView", new { PONumber = purchaseOrderNum })  { FileName = purchaseOrderNum + ".pdf" };
+            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
+            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            a.CustomSwitches = "--load-error-handling ignore";
+            return a;
+        }
 
-   
+        public ActionResult PODPrintView(string PONumber)
+        {
+            PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(PONumber);
+            List<PurchaseOrderDetailsViewModel> podViewlist = p.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
+            {
+                ItemCode = pod.Item.ItemCode,
+                Description = pod.Item.Description,
+                QuantityOrdered = pod.Quantity,
+                UnitPrice = purchaseOrderService.FindUnitPriceByPurchaseOrderDetail(pod),
+                Amount = purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod),
+                ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
+                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod),
+                Status = pod.Status.Name
+            }).ToList();
+
+            return View("GetPurchaseOrderDetails",podViewlist);
+
+        }
+
+
+        public ActionResult ViewSelectedPDF(string purchaseOrderNum)
+        {
+            var a = new ActionAsPdf("PODPrintView", new { PONumber = purchaseOrderNum });
+            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
+            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            a.CustomSwitches = "--load-error-handling ignore";
+            return a;
+        }
+
+    }
+    
 
 }

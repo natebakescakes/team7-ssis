@@ -56,7 +56,7 @@ $(document).ready(function(){
                     
                 ],
                 autowidth: true,
-                select: "multiple",
+                select: "single",
 
                 createdRow: function (row, data, dataIndex) {
                     if (data.Status == "Delivered") {
@@ -100,7 +100,22 @@ $(document).ready(function(){
     $(document).on("click", "#downloadselected", function () {
 
         var data = $('#poTable').DataTable().rows({ selected: true }).data().toArray();
-        alert(JSON.stringify(data));
+
+        ponum = data[0].PurchaseOrderNo;
+        
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = "/PurchaseOrder/downloadselectedpdf";
+
+        element1.value = ponum;
+        element1.name = "purchaseOrderNum";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
 
     });
 
