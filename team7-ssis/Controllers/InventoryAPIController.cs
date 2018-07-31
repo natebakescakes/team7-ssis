@@ -8,14 +8,18 @@ using team7_ssis.Models;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
 
+using System.IO;
+
 namespace team7_ssis.Controllers
 {
     public class InventoryApiController : ApiController
     {
         private ApplicationDbContext context;
-        ItemService itemService;
-        StockMovementService stkMovementService;
-        ItemPriceService itemPriceService;
+        private ItemService itemService;
+        private ItemPriceService itemPriceService;
+        private RequisitionService requisitionService;
+        private StockMovementService stkMovementService;
+        
 
         public InventoryApiController()
         {
@@ -23,6 +27,7 @@ namespace team7_ssis.Controllers
             itemService = new ItemService(context);
             stkMovementService = new StockMovementService(context);
             itemPriceService = new ItemPriceService(context);
+            requisitionService = new RequisitionService(context);
         }
 
         [Route("api/manage/stockhistory/{itemCode}")]
@@ -59,13 +64,14 @@ namespace team7_ssis.Controllers
                 items.Add(new ItemViewModel
                 {
                     ItemCode = i.ItemCode,
-                    ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name: "",
+                    ItemCategoryName = i.ItemCategory != null ? i.ItemCategory.Name : "",
                     Description = i.Description,
                     ReorderLevel = i.ReorderLevel,
                     ReorderQuantity = i.ReorderQuantity,
                     Uom = i.Uom,
                     Quantity = i.Inventory.Quantity,
-                    UnitPrice =itemPriceService.GetDefaultPrice(i,1)
+                    UnitPrice = itemPriceService.GetDefaultPrice(i, 1),
+                    ImagePath = (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("/Images/" + i.ItemCode.ToString() + ".JPG"))) ? i.ItemCode : "default"
                 });
             }
             return items;
@@ -83,6 +89,8 @@ namespace team7_ssis.Controllers
                 ItemCategoryName = item.ItemCategory.Name,
                 Bin = item.Bin,
                 Uom = item.Uom,
+                ReorderLevel= item.ReorderLevel,
+                ReorderQuantity = item.ReorderQuantity,
                 Quantity = item.Inventory.Quantity,
                 Status = item.Status.StatusId
             };
@@ -180,5 +188,65 @@ namespace team7_ssis.Controllers
             return true;
 
         }
+
+        [Route("api/inventory/shortfall")]
+        [HttpGet]
+        public List<ItemViewModel> Shortfall()
+        {
+            return itemService.FindItemQuantityLessThanReorderLevel().Select(item => new ItemViewModel()
+            {
+                ItemCode = item.ItemCode,
+                Description = item.Description,
+                Quantity = item.Inventory.Quantity,
+                ReorderLevel = item.ReorderLevel,
+                ReorderQuantity = item.ReorderQuantity,
+                Uom = item.Uom,
+                AmountToReorder = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
+                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity
+
+
+
+            }).ToList();
+
+        }
+
+        [Route("api/inventory/items")]
+        [HttpPost]
+        public List<ItemViewModel> GeneratePO([FromBody]string itemNums)
+        {
+            List<ItemViewModel> itemView = new List<ItemViewModel>();
+            if (itemNums == null) {
+
+                return itemView;
+            }
+
+            else
+            {
+                string[] itemArray = itemNums.Split(',');
+                List<Item> items = new List<Item>();
+
+                foreach (string i in itemArray)
+                {
+                    Item item =itemService.FindItemByItemCode(i);
+                    items.Add(item);
+                }
+
+                return items.Select(item => new ItemViewModel()
+                {
+                    ItemCode = item.ItemCode,
+                    Description = item.Description,
+                    Quantity = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
+                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity,
+                    UnitPriceDecimal=itemPriceService.FindOneByItemAndSequence(item,1).Price,
+                    TotalPrice = ((requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
+                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity)*
+                                itemPriceService.FindOneByItemAndSequence(item, 1).Price
+                }).ToList();
+            }
+
+            
+        }
+
+
     }
 }

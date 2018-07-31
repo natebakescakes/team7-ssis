@@ -15,42 +15,103 @@ namespace team7_ssis.Controllers
     {
         private ApplicationDbContext context;
         private PurchaseOrderService purchaseOrderService;
+        private ItemPriceService itemPriceService;
 
         public PurchaseOrderApiController()
         {
             context = new ApplicationDbContext();
             purchaseOrderService = new PurchaseOrderService(context);
+            itemPriceService = new ItemPriceService(context);
+
         }
+
+
 
         [Route("api/purchaseOrder/all")]
         [HttpGet]
         public List<PurchaseOrderViewModel> PurchaseOrders()
         {
-            return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
+            if (purchaseOrderService.FindAllPurchaseOrders().Count != 0)
             {
-                PurchaseOrderNo = po.PurchaseOrderNo,
-                SupplierName=po.Supplier.Name,
-                CreatedDate=po.CreatedDateTime.ToShortDateString() + " "+ po.CreatedDateTime.ToShortTimeString(),
-                Status=po.Status.Name
-            }).ToList();
+                return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
+                {
+                    PurchaseOrderNo = po.PurchaseOrderNo,
+                    SupplierName = po.Supplier.Name,
+                    CreatedDate = po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString(),
+                    Status = po.Status.Name
+                }).ToList();
+            }
+            else
+                return new List<PurchaseOrderViewModel>();
+            
         }
 
-        [Route("api/purchaseOrder/{id}")]
-        [HttpPost]
-        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string poNum)
+
+        [Route("api/purchaseOrder/details/{purchaseOrderNo}")]
+        [HttpGet]
+        public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseOrderNo)
         {
-            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNo);
+
             return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
                 ItemCode = pod.Item.ItemCode,
                 Description = pod.Item.Description,
                 QuantityOrdered = pod.Quantity,
-                UnitPrice = pod.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First().Price,
-                Amount = pod.Quantity * pod.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First().Price,
-                RemainingQuantity=0,
-               // ReceivedQuantity = po.DeliveryOrders.ForEach(x => x.DeliveryOrderDetails.Where(y=>y.Item.ItemCode==pod.Item.ItemCode).Select(z => z!=null?z.PlanQuantity:0),
-               // ReceivedQuantity = po.DeliveryOrders
+                UnitPrice = purchaseOrderService.FindUnitPriceByPurchaseOrderDetail(pod),
+                Amount = purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod),
+                ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
+                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod),
+                Status = pod.Status.Name
+
+
             }).ToList();
+
+        }
+
+        [Route("api/purchaseOrder/getsupplier")]
+        [HttpPost]
+        public List<SupplierViewModel> GetItemSupplier([FromBody]string itemCode)
+        {
+            List<SupplierViewModel> suppliers = new List<SupplierViewModel>();
+            List<ItemPrice> itemPriceList = itemPriceService.FindItemPriceByItemCode(itemCode);
+
+            foreach (ItemPrice i in itemPriceList)
+            {
+                suppliers.Add(new SupplierViewModel {Name=i.Supplier.Name, Priority=i.PrioritySequence });
+            }
+            
+            return suppliers;
+
+        }
+
+
+        [Route("api/purchaseOrder/success")]
+        [HttpPost]
+        public List<PurchaseOrderViewModel> Success([FromBody]string poNums)
+        {
+            List<PurchaseOrderViewModel> purchaseOrders = new List<PurchaseOrderViewModel>();
+
+            //string text=string.Join(",", poNums);
+            //string[] PONums = text.Split(',');
+
+            if (poNums != null)
+            {
+                string[] PONums = poNums.Split(',');
+
+                foreach (string s in PONums)
+                {
+                    PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(s);
+                    PurchaseOrderViewModel purchaseOrder = new PurchaseOrderViewModel();
+                    purchaseOrder.PurchaseOrderNo = s;
+                    purchaseOrder.SupplierName = p.Supplier.Name;
+
+                    purchaseOrders.Add(purchaseOrder);
+                }
+            }
+            
+            return purchaseOrders;
+
         }
     }
 }

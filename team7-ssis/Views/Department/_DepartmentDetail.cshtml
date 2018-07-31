@@ -7,7 +7,7 @@
 {
     <div class="form-group">
         <label for="DepartmentCode">Department Code</label><br />
-        @Html.TextBoxFor(m => m.DepartmentCode, new { @id = "DepartmentCode", @class = "form-control" })
+        @Html.TextBoxFor(m => m.DepartmentCode, new { @id = "DepartmentCode", @class = "form-control", @readonly = true })
     </div>
 
     <div class="row">
@@ -26,15 +26,15 @@
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="DepartmentRepresentative">Department Representative</label><br />
+                <label for="DepartmentRep">Department Representative</label><br />
                
-                @Html.LabelFor(m => m.DepartmentRep, new { @id = "DepartmentRepresentative", @class = "form-control" })
+                @Html.TextBoxFor(m => m.DepartmentRep, new { @id = "DepartmentRep", @class = "form-control", @readonly = true })
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="CollectionPoint">CollectionPoint</label><br />
-                @Html.LabelFor(m => m.CollectionPoint, new { @id = "CollectionPoint", @class = "form-control" })
+                <label for="CollectionPoint">Collection Point</label><br />
+                @Html.TextBoxFor(m => m.CollectionPoint, new { @id = "CollectionPoint", @class = "form-control", @readonly = true })
             </div>
         </div>
         <div class="col-sm-3">

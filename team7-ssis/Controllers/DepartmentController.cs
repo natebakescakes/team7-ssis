@@ -162,6 +162,7 @@ namespace team7_ssis.Controllers
             departmentService = new DepartmentService(context);
             collectionPointService = new CollectionPointService(context);
             userService = new UserService(context);
+            statusService = new StatusService(context);
 
             bool status = false;
             Department dpt = new Department();
@@ -190,11 +191,11 @@ namespace team7_ssis.Controllers
             dpt.Name = model.DepartmentName;
             dpt.Head = userService.FindUserByEmail(model.EmailHead);
             
-            dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPoint));
+            dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPointId));
             dpt.ContactName = model.ContactName;
             dpt.PhoneNumber = model.PhoneNumber;
-            dpt.FaxNumber = model.PhoneNumber;
-            dpt.Status = statusService.FindStatusByStatusId(1);
+            dpt.FaxNumber = model.FaxNumber;
+            dpt.Status = statusService.FindStatusByStatusId(model.Status);
             
             //save info to database
             if (departmentService.Save(dpt) != null) status = true;

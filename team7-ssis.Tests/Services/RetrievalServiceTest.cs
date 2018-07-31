@@ -48,6 +48,7 @@ namespace team7_ssis.Tests.Services
                 retrieval.RetrievalId = "TEST";
                 retrieval.CreatedDateTime = DateTime.Now;
                 retrievalRepository.Save(retrieval);
+                retrieval.Status = statusRepository.FindById(19);
             }
             else retrieval = retrievalRepository.FindById("TEST");
 

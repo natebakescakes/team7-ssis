@@ -148,6 +148,10 @@ textarea {
     position: absolute;
 }
 
+.step__fade {
+    opacity: 0.5;
+}
+
 .step__arrow {
     left: 50%;
     top: 50%;
@@ -156,6 +160,19 @@ textarea {
 
 .step__container {
     position: relative;
+}
+
+a.disabled:hover {
+    cursor: not-allowed
+}
+
+.content {
+    max-width:900px;
+}
+
+.inputText{
+    width: 100px;
+}
 }
 
 #modalMsg {

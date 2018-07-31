@@ -72,8 +72,7 @@ namespace team7_ssis.Services
             //update status of the disbursement to Items collected
             disbursement.Status = statusService.FindStatusByStatusId(10);
             disbursement.CollectedDateTime = DateTime.Now;
-            disbursement.CollectedBy = disbursement.Retrieval.Requisitions.First().CreatedBy;
-
+            disbursement.CollectedBy = disbursement.Department.Representative;
           
             return this.Save(disbursement);
 
@@ -163,6 +162,20 @@ namespace team7_ssis.Services
             disbursementDetail.UpdatedDateTime = DateTime.Now;
 
             disbursementDetailRepository.Save(disbursementDetail);
+        }
+
+        public List<Disbursement> FindDisbursementsByStatus(List<Status> statusList)
+        {
+            // TODO: To be obseleted
+            var query = disbursementRepository.FindDisbursementsByStatus(statusList);
+            if (query == null)
+            {
+                throw new Exception("No Disbursements contain given statuses.");
+            }
+            else
+            {
+                return disbursementRepository.FindDisbursementsByStatus(statusList).ToList();
+            }
         }
     }
 }
