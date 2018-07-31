@@ -20,16 +20,25 @@
     @*DataTables plugins*@
     <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.19/pagination/simple_incremental_bootstrap.js"></script>
+    <script src="https://cdn.datatables.net/scroller/1.5.1/js/dataTables.scroller.min.js"></script>
+    @*DateTime Picker*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+
+
+
 
 
 
     @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />*@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/1.5.1/css/scroller.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.min.css">
+
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary" id="myNav">
         <div class="navbar-header">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -42,24 +51,24 @@
                 {
                     <li class="nav-item">@Html.ActionLink("View Catalogue", "Index", "Home", null, new { @class = "nav-link" })</li>
                 }
-                @if (User.IsInRole("Employee") || User.IsInRole("Department Head") || User.IsInRole("Admin"))
+                @if (User.IsInRole("Employee") || User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            @Html.ActionLink("Manage Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Create Requisition", "CreateRequisition", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
-                    <li class="nav-item">@Html.ActionLink("View Catalogue", "Index", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Department Options", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Department Options", "DepartmentOptions", "Department", null, new { @class = "nav-link" })</li>
                 }
                 @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown02">
-                            @Html.ActionLink("Outstanding Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Requisitions", "Index", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Outstanding Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -70,17 +79,17 @@
                             @Html.ActionLink("Receive Goods", "Index", "Home", null, new { @class = "dropdown-item" })
                             <hr />
                             @Html.ActionLink("Manage Inventory", "Index", "Inventory", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Item Categories", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Item Categories", "Index", "ItemCategory", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Manage Stock Adjustments", "Index", "StockAdjustment", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                     <li class="nav-item">@Html.ActionLink("Suppliers", "Index", "Supplier", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Department", null, new { @class = "nav-link" })</li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Forms</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            @Html.ActionLink("View Stationery Retrieval Forms", "Index", "Home", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("View Disbursement Forms", "Index", "Home", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("View Stationery Retrieval Forms", "Manage", "Retrieval", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("View Disbursement Forms", "Manage", "Disbursement", null, new { @class = "dropdown-item" })
                             <hr />
                             @Html.ActionLink("Manage Purchase Orders", "Index", "Home", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Generate Purchase Order Form", "Index", "Home", null, new { @class = "dropdown-item" })
@@ -115,7 +124,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Scripts/Custom/Notification.js")
 
-    @*For jQuery Validation*@
     @RenderSection("scripts", required: false)
     
 </body>

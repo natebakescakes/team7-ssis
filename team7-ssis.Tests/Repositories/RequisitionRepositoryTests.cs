@@ -6,7 +6,7 @@ using team7_ssis.Repositories;
 
 namespace team7_ssis.Tests.Repositories
 {
-    [TestClass()]
+    [TestClass]
     public class RequisitionRepositoryTests
     {
         ApplicationDbContext context;
@@ -43,8 +43,15 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void FindByIdTestNotNull()
         {
+            // Arrange
+            requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = requisitionRepository.FindById("TEST");
+            var result = requisitionRepository.FindById("RQREPOTEST");
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Requisition));
@@ -53,31 +60,40 @@ namespace team7_ssis.Tests.Repositories
         [TestMethod]
         public void ExistsByIdTestIsTrue()
         {
+            // Arrange
+            requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             // Act
-            var result = requisitionRepository.ExistsById("TEST");
+            var result = requisitionRepository.ExistsById("RQREPOTEST");
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void SaveTestExistingChangeStatus()
+        public void Save_ChangeStatus_Valid()
         {
-            // Arrange
-            var status = new StatusRepository(context).FindById(3);
-            var requisition = requisitionRepository.FindById("TEST");
-            var original = requisition.Status;
-            requisition.Status = status;
+            // Arrange - Initialize
+            var status = new StatusRepository(context).FindById(14);
+            requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Arrange - Get Existing
+            var expected = requisitionRepository.FindById("RQREPOTEST");
+            expected.Status = new StatusRepository(context).FindById(15);
 
             // Act
-            var result = requisitionRepository.Save(requisition);
+            var result = requisitionRepository.Save(expected);
 
             // Assert
-            Assert.AreEqual(status, result.Status);
-
-            // Tear Down
-            requisition.Status = original;
-            requisitionRepository.Save(requisition);
+            Assert.AreEqual(expected.Status, result.Status);
         }
 
         [TestMethod]
@@ -87,7 +103,7 @@ namespace team7_ssis.Tests.Repositories
             // Arrange
             var requisition = new Requisition
             {
-                RequisitionId = "UNIT TEST",
+                RequisitionId = "RQREPOTEST",
                 CreatedDateTime = DateTime.Now
             };
 
@@ -102,19 +118,50 @@ namespace team7_ssis.Tests.Repositories
             requisitionRepository.Delete(saveResult);
 
             // Assert
-            Assert.IsNull(requisitionRepository.FindById("UNIT TEST"));
+            Assert.IsNull(requisitionRepository.FindById("RQREPOTEST"));
         }
 
         [TestMethod]
         public void FindByCreatedDateTimeTestNotNull()
         {
             // Arrange
+            requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQREPOTEST",
+                CreatedDateTime = DateTime.Now,
+            });
 
             // Act
             var result = requisitionRepository.FindByCreatedDateTime(DateTime.Now.Date.AddYears(-1), DateTime.Now.Date.AddDays(1));
 
             // Assert
             Assert.IsTrue(result.Count() >= 1);
+        }
+
+        [TestMethod]
+        public void FindByDepartmentTest()
+        {
+            // Arrange
+            requisitionRepository.Save(new Requisition()
+            {
+                RequisitionId = "RQREPOTEST",
+                Department = new DepartmentRepository(context).FindById("ENGL"),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            // Act
+            var result = requisitionRepository.FindByDepartment(new DepartmentRepository(context).FindById("ENGL"));
+
+            // Assert
+            result.ToList().ForEach(r => Assert.AreEqual("ENGL", r.Department.DepartmentCode));
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if (requisitionRepository.ExistsById("RQREPOTEST"))
+                requisitionRepository.Delete(requisitionRepository.FindById("RQREPOTEST"));
+
         }
     }
 }

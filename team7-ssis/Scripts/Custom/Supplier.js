@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 
     var table = $('#myTable').DataTable({
-
+       
         sAjaxSource: "/api/supplier/all",
         sAjaxDataProp: "",
         pageLength: '5',
@@ -11,7 +11,8 @@
             { "data": "ContactName", "autoWidth": true },
             { "data": "PhoneNumber", "autoWidth": true },
             { "data": "FaxNumber", "autoWidth": true },
-            { "data": "Address", "autoWidth": true }
+            { "data": "Address", "autoWidth": true },
+      
         ],
         select: {
             style: 'single'

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace team7_ssis.Tests.Services
         ApplicationDbContext context;
         DepartmentService departmentService;
         DepartmentRepository departmentRepository;
+        UserService userService;
 
         [TestInitialize]
         public void TestInitialize()
@@ -24,15 +26,16 @@ namespace team7_ssis.Tests.Services
             context = new ApplicationDbContext();
             departmentService = new DepartmentService(context);
             departmentRepository = new DepartmentRepository(context);
+            userService = new UserService(context);
         }
-        
+
         [TestMethod]
         public void FindUsersByDepartmentTest()
         {
             //Arrange
             int expected = context.Users.Where(x => x.Department.DepartmentCode == "COMM").Count();
             Department departmentvar = context.Department.Where(x => x.DepartmentCode == "COMM").FirstOrDefault();
-           
+
             //Act
             var result = departmentService.FindUsersByDepartment(departmentvar).Count();
             //Assert
@@ -110,5 +113,49 @@ namespace team7_ssis.Tests.Services
         //    //Assert
         //    Assert.AreEqual(expected, result);
         //}
+
+        [TestMethod]
+        public void ChangeRepresentative_Valid()
+        {
+            // Arrange
+            var expected = "CommerceEmp@email.com";
+            if (!userService.FindRolesByEmail("CommerceHead@email.com").Contains("DepartmentHead"))
+                userService.AddDepartmentHeadRole("CommerceHead@email.com");
+
+            // Act
+            departmentService.ChangeRepresentative(expected, "CommerceHead@email.com");
+
+            // Assert
+            Assert.AreEqual(expected, new UserRepository(context).FindByEmail("CommerceHead@email.com").Department.Representative.Email);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ChangeRepresentative_NotSameDepartment_ThrowsException()
+        {
+            // Arrange
+
+            // Act
+            departmentService.ChangeRepresentative("CommerceEmp@email.com", "RegistraHead@email.com");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ChangeRepresentative_NotManager_ThrowException()
+        {
+            // Arrange
+
+            // Act
+            departmentService.ChangeRepresentative("CommerceEmp@email.com", "CommerceEmp@email.com");
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            // Change back representative
+            var department = departmentService.FindDepartmentByUser(new UserRepository(context).FindByEmail("CommerceHead@email.com"));
+            department.Representative = new UserRepository(context).FindByEmail("CommerceRep@email.com");
+            departmentService.Save(department);
+        }
     }
 }

@@ -41,6 +41,19 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        public void FindAllActiveItemTest()
+        {
+            //Act
+            var result = itemService.FindAllActiveItems();
+
+            //Assert
+            foreach(Item i in result)
+            {
+                Assert.AreEqual(1, i.Status.StatusId);
+            }
+        }
+
+        [TestMethod]
         public void FindItemByItemCodeTest() 
         {
             //Arrange
@@ -67,6 +80,23 @@ namespace team7_ssis.Tests.Services
             //Assert
             CollectionAssert.AllItemsAreInstancesOfType(result, typeof(Item));
             
+        }
+
+        [TestMethod]
+        public void FindInventoryByItemCodeTest()
+        {
+            //Arrange
+            Item k = new Item();
+            k.ItemCode = "MMM";
+            k.CreatedDateTime = DateTime.Now;
+            itemService.Save(k,10);
+
+            //Act
+            var result = itemService.FindInventoryByItemCode("MMM");
+
+            //Assert
+            Assert.AreEqual("MMM", result.ItemCode);
+            itemRepository.Delete(k);
         }
 
         [TestMethod]
@@ -119,6 +149,8 @@ namespace team7_ssis.Tests.Services
             //Assert.AreEqual(40, result.Quantity);
             itemRepository.Delete(i);
         }
+
+        
 
 
         [TestMethod]
@@ -186,7 +218,7 @@ namespace team7_ssis.Tests.Services
         public void MyTestCleanup()
         {
             string[] ids = new string[]
-           { "BBB","CCC","DDD","EEE","GGG","FFF" };
+           { "BBB","CCC","DDD","EEE","GGG","FFF","MMM" };
 
             foreach (string id in ids)
             {

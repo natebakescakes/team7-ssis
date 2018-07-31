@@ -12,10 +12,15 @@ namespace team7_ssis.Controllers
 { 
     public class PurchaseOrderController : Controller
     {
-        public static ApplicationDbContext context = new ApplicationDbContext();
-        PurchaseOrderService purchaseOrderService = new PurchaseOrderService(context);
+        private ApplicationDbContext context;
+        private PurchaseOrderService purchaseOrderService;
 
-     
+        public PurchaseOrderController()
+        {
+            context = new ApplicationDbContext();
+            purchaseOrderService = new PurchaseOrderService(context);
+        }
+
         public ActionResult Index()
         {
             return View("Manage");

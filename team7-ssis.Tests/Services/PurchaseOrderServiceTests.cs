@@ -58,6 +58,7 @@ namespace team7_ssis.Tests.Services
 
 
         [TestMethod]
+        [Ignore]
         public void FindPurchaseOrderByIdTest()
         {
             //Act
@@ -74,6 +75,7 @@ namespace team7_ssis.Tests.Services
 
 
         [TestMethod]
+        [Ignore]
         public void FindPurchaseOrderBySupplierTest()
         {
             //Arrange
@@ -156,6 +158,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void FindPurchaseOrderByStatusTest()
         {
             //Arrange
@@ -224,6 +227,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void CreatePOForEachSupplierTest()
         {
             //Arrange
@@ -245,6 +249,7 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
+        [Ignore]
         public void AddItemsToPurchaseOrdersTest()
         {
             //Arrange

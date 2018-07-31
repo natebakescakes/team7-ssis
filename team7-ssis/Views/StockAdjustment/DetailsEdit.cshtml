@@ -1,0 +1,214 @@
+﻿@model team7_ssis.ViewModels.StockAdjustmentViewModel
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" type="text/css" href="Editor-1.7.4/css/editor.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="~/Content/Site.css">
+
+</head>
+
+<h2>View Stock Adjustment Details</h2>
+<div>@Html.Hidden("StockAdjustmentId", Model.StockAdjustmentId)</div>
+
+
+<table border="1" bgcolor="lightgrey">
+    <tr>
+        <td width="100">Stock Adjustment ID # <br /> @Model.StockAdjustmentId </td>
+        <td width="400">Created By <br />  @Model.CreatedBy  </td>
+        <td width="400">Time Updated <br /> @Model.UpdateDateTime </td>
+    <tr>
+        <td width="400">   </td>
+        <td width="400"> Authorizing Supervisor <br /> @Model.ApprovedBySupervisor  </td>
+        <td width="400">Time Created <br /> @Model.CreatedBy   </td>
+    </tr>
+</table>
+<table id="myTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th width="200">Item Code</th>
+            <th width="200">Description</th>
+            <th width="200"> Reason</th>
+            <th width="200">Unit Price</th>
+            <th width="200">Adjustment</th>
+        </tr>
+    </thead>
+</table>
+
+
+
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <h3>Authorising Supervisor</h3>
+        <form id="form1" name="form1">
+            <select id="ChosenSupervisor" name="ChosenSupervisor" class="custom-select" onChange="chose1()">
+                @foreach (var supervisor in Model.supervisors)
+                {
+                    <option value="@supervisor.UserName">@supervisor.FirstName @supervisor.LastName</option>
+                }
+            </select>
+
+            <h3>Authorising Manager</h3>
+            <select id="ChosenManager" name="ChosenManager" class="custom-select" onChange="chose2()">
+                @foreach (var manager in Model.managers)
+                {
+                    <option value="@manager.UserName">@manager.FirstName @manager.LastName</option>
+                }
+            </select>
+        </form>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <button class="btn btn-default" id="cancelBtn">Back</button>
+        <button class="btn btn-primary" id="saveBtn">SaveAsDraft</button>
+        <button class="btn btn-primary" id="submitBtn">SubmitAsPending</button>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var saUrl = $("#StockAdjustmentId").val();
+
+        var oTable = $('#myTable').DataTable({
+
+            ajax: {
+                url: "/api/stockadjustment/detail/" + saUrl,
+                dataSrc: ""
+            },
+
+            columns: [
+                {
+                    "data": "ItemCode"
+                },
+                {
+                    "data": "Description"
+                },
+                {
+                    "data": "Reason",
+                    "render": function (data, type, row, meta) {
+                        var html = '<input class="actual_1" type="textbox" ' +
+                            'value="' + data + '"/>';
+                        return html;
+                    }
+                },
+                {
+                    "data": "UnitPrice"
+                },
+                {
+                    "data": "Adjustment",
+                    "render": function (data, type, row, meta) {
+                        var html = '<input class="actual" type="number" ' +
+                            'value="' + data + '"/>';
+                        return html;
+                    }
+                }
+            ],
+            createdRow: function (row, data, index) {
+                if (data['UnitPrice'] < 250) {//操作次数大于1000的变红显示
+                    $('td', row).eq(3).css('font-weight', "bold").css("color", "green");
+                }
+            },
+            autowidth: true,
+            select: 'api'
+
+        });
+
+
+        $(document).on("change", ".actual", function () {
+
+            var cell = oTable.cell(this.parentElement);
+            // assign the cell with the value from the <input> element
+            cell.data($(this).val()).draw();
+        });
+
+
+        $(document).on("change", ".actual_1", function () {
+
+            var cell = oTable.cell(this.parentElement);
+            // assign the cell with the value from the <input> element
+            cell.data($(this).val()).draw();
+        });
+
+
+
+
+        $('#cancelBtn').click(function () {
+            //direct to home page
+            window.location.href = "/StockAdjustment";
+        });
+
+        $('#saveBtn').click(function () {
+            // var data = $('#myTable').dataTable().fnGetData();
+            // var data=oTable.rows().data().toArray();
+            var data = oTable.data();
+            var reqIdArray = [];
+            for (i = 0; i < data.length; i++) {
+                var obj = { StockAdjustmentId: saUrl, ItemCode: data[i].ItemCode, Reason: data[i].Reason, Adjustment: data[i].Adjustment };
+                reqIdArray[i] = obj;
+            }
+            // alert(data[0].Adjustment);
+            $.ajax({
+                url: '/api/stockadjustment/update_to_draft',
+                contentType: 'application/json',
+                data: JSON.stringify(reqIdArray),
+                dataType: "json",
+                type: "POST",
+                traditional: true,
+                success: function (responseJSON) {
+
+                    window.location.replace("/StockAdjustment");
+                }
+            });
+        });
+
+        $('#submitBtn').click(function () {
+            var myselect1 = document.getElementById("ChosenSupervisor");
+            var index1 = myselect1.selectedIndex;
+            var supervisor = myselect1.options[index1].value;
+          // alert(supervisor);
+
+            var myselect2 = document.getElementById("ChosenManager");
+            var index2 = myselect2.selectedIndex;
+            var manager = myselect2.options[index2].value;
+           // alert(manager);
+
+            var data = oTable.data();
+            var reqIdArray = [];
+            for (i = 0; i < data.length; i++) {
+                var obj = {
+                    StockAdjustmentId: saUrl,
+                    ItemCode: data[i].ItemCode,
+                    Reason: data[i].Reason,
+                    Adjustment: data[i].Adjustment,
+                    Unitprice: data[i].UnitPrice,
+                    Supervisor: supervisor,
+                    Manager: manager
+                };
+                reqIdArray[i] = obj;
+            }
+            // alert(data[0].Adjustment);
+            $.ajax({
+                url: '/api/stockadjustment/update_to_pending',
+                contentType: 'application/json',
+                data: JSON.stringify(reqIdArray),
+                dataType: "json",
+                type: "POST",
+                traditional: true,
+                success: function (responseJSON) {
+
+                    window.location.replace("/StockAdjustment");
+                }
+            });
+        });
+
+
+    });
+
+
+</script>
