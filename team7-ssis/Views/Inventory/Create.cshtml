@@ -3,12 +3,34 @@
     ViewBag.Title = "NewItem";
 }
 
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        //validation
+        jQuery.validator.setDefaults({
+            debug: true,
+            success: "valid"
+        });
+        $("#form1").validate({
+            rules: {
+                ItemCode: {
+                    required: true
+                },
+                SupplierName: {
+                    required: true
+                }
+            }
+        });
+    </script>
+}*@
+
 <h2>Add New Inventory Item</h2>
 
 
 @model team7_ssis.ViewModels.EditItemFinalViewModel
 
-@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id="itemdetails", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @id = "itemdetails", enctype = "multipart/form-data" }))
 {
     <div style="border-color:black" id="detail1">
         <form id="form1">
@@ -49,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -84,11 +106,10 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Category">Item Image</label><br />
-                        @*<img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">*@
-                        <input type="file" name="ImageFile" id="ImageFile" onchange="show(this)" accept="image/*"/>
+                        <input type="file" name="ImageFile" id="ImageFile" onchange="show(this)" accept="image/*" />
                     </div>
                     <div class="form-group">
-                        <img id="user_img" height="130" width="130" src="~/Images/default.jpg"/>
+                        <img id="user_img" height="130" width="130" src="~/Images/default.jpg" />
                     </div>
                 </div>
 
@@ -109,12 +130,13 @@
             <div class="row">
                 <div class="button-set">
                     <div class="form-row pull-right">
+                        @Html.Hidden("myURL", Url.Action("Index", "Inventory"))
                         <div style="padding: 10px;">
-                            <input type="button" id="cancel-btn" class="btn btn-danger fa-pull-right" value="Cancel">
+                            <input type="button" id="cancel-btn" class="btn btn-danger fa-pull-right" name="cancel-btn" value="Cancel">
                         </div>
 
                         <div style="padding: 10px;">
-                            <input type="submit" id="submit" class="btn btn-success fa-pull-right" value="Create">
+                            <input type="submit" id="submit" class="btn btn-success fa-pull-right" name="submit" value="Create">
                         </div>
                     </div>
                 </div>
@@ -124,6 +146,22 @@
     </div>
 
     <script>
+        
+
+
+
+        //for cancel
+        $('#cancel-btn').on('click', function () {
+            var url = $("#myURL").val();
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "GET";
+            form.action = url;
+            document.body.appendChild(form);
+            form.submit();
+        })
+
+
         //for image show
         function show(input) {
             alert('Show');
@@ -156,7 +194,7 @@
                 {
                     "data": "SupplierName", "autoWidth": true,
                     render: function (data, type, row) {
-                        var $select = $("<select id='SupplierName" + (row.Number) + "' name='SupplierName" + (row.Number) + "' required></select>");
+                        var $select = $("<select id='SupplierName' name='SupplierName" + (row.Number) + "'></select>");
 
                         var optionhtml1 = $("<option></option>", {
                             "text":"----Select Supplier----",
@@ -172,6 +210,12 @@
                             });
                             $select.append($option);
 
+                        });
+                        $("select").change(function (e) {
+                            $("select option").removeAttr('disabled');
+                            $("select").each(function (i, s) {
+                                $("select").not(s).find("option[value=" + $(s).val() + "]").attr('disabled', 'disabled');
+                            });
                         });
                         return $select.prop("outerHTML");
 

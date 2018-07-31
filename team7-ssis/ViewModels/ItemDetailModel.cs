@@ -15,5 +15,7 @@ namespace team7_ssis.ViewModels
         public string Uom { get; set; }
         public int Quantity { get; set; }
         public int Status { get; set; }
+        public int ReorderLevel { get; set; }
+        public int ReorderQuantity { get; set; }
     }
 }

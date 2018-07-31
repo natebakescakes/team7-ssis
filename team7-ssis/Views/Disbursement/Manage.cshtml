@@ -27,8 +27,26 @@
             },
 
             columns: [
-                { "data": "DisbursementId", "autoWidth": true },
-                { "data": "RetrievalId", "autoWidth": true },
+                {
+                    "data": "DisbursementId",
+                    "autoWidth": true,
+                    "render": function (data, type, row, meta) {
+                        var html =
+                            '<a href="/Disbursement/DisbursementDetails?did=' + data + '">' + data +
+                            '</a>';
+                        return html;
+                    }
+                },
+                {
+                    "data": "RetrievalId",
+                    "autoWidth": true,
+                    "render": function (data, type, row, meta) {
+                        var html =
+                            '<a href="/Requisition/StationeryRetrieval?rid=' + data + '">' + data +
+                            '</a>';
+                        return html;
+                    }
+                },
                 { "data": "Department", "autoWidth": true },
                 { "data": "CreatedDate", "autoWidth": true },
                 { "data": "Status", "autoWidth": true },

@@ -201,14 +201,17 @@ namespace team7_ssis.Controllers
 
         public void SaveImage(EditItemFinalViewModel model)
         {
-            Console.WriteLine(model.ImageFile);
-            string fileName = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
-            string extension = Path.GetExtension(model.ImageFile.FileName);
-            //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-            fileName = model.ItemCode.ToString() + ".JPG";
-            model.ImagePath = "~/Images/" + fileName;
-            fileName = Path.Combine(Server.MapPath("~/Images/") + fileName);
-            model.ImageFile.SaveAs(fileName);
+            if (model.ImageFile != null)
+            {
+                Console.WriteLine(model.ImageFile);
+                string fileName = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
+                string extension = Path.GetExtension(model.ImageFile.FileName);
+                //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                fileName = model.ItemCode.ToString() + ".JPG";
+                model.ImagePath = "~/Images/" + fileName;
+                fileName = Path.Combine(Server.MapPath("~/Images/") + fileName);
+                model.ImageFile.SaveAs(fileName);
+            }
 
         }
 
@@ -260,6 +263,8 @@ namespace team7_ssis.Controllers
                         itemPriceService.DeleteItemPrice(i);
                     }
                     current.Description = model.Description;
+                    current.ReorderLevel = model.ReorderLevel;
+                    current.ReorderQuantity = model.ReorderQuantity;
                     current.Bin = model.Bin;
                     current.Uom = model.Uom;
                     current.Status = statusService.FindStatusByStatusId(model.Status);
