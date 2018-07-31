@@ -220,6 +220,31 @@ namespace team7_ssis.Controllers
             });
         }
 
+        [Route("api/retrieval/{id}")]
+        public IHttpActionResult GetRetrieval([FromBody] ConfirmRetrievalViewModel model)
+        {
+            var retrieval = new RetrievalService(context).FindRetrievalById(model.RetrievalId);
+
+            if (retrieval == null)
+                return NotFound();
+
+            return Ok(retrieval.Disbursements
+                .SelectMany(d => d.DisbursementDetails
+                    .Select(dd => new RetrievalDetailByDeptViewModel()
+                    {
+                        Department = dd.Disbursement.Department.Name,
+                        DepartmentCode = dd.Disbursement.Department.DepartmentCode,
+                        ItemCode = dd.ItemCode,
+                        ItemName = dd.Item.Name,
+                        Bin = dd.Bin,
+                        PlanQuantity = dd.PlanQuantity,
+                        ActualQuantity = dd.ActualQuantity,
+                        Status = dd.Status.Name,
+                        Uom = dd.Item.Uom,
+                    })
+                ));
+        }
+
         [Route("api/retrieval")]
         [HttpGet]
         public IEnumerable<ManageRetrievalsViewModel> GetAllRetrievals()
