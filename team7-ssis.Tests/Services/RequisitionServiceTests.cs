@@ -182,7 +182,7 @@ namespace team7_ssis.Tests.Services
             }
             else
             {
-
+                Assert.IsTrue(context.Disbursement.Where(x => x.Retrieval.RetrievalId == retrievalId).Count() == 0);
             }
 
             //// CLEANUP
