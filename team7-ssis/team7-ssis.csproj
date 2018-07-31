@@ -604,6 +604,7 @@
     <Content Include="Views\Inventory\GeneratePrice.cshtml" />
     <Content Include="Views\Inventory\PrintView.cshtml" />
     <Content Include="Views\PurchaseOrder\GetPurchaseOrderDetails.cshtml" />
+    <Content Include="Views\Shared\_NavBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
