@@ -215,7 +215,7 @@
                // alert(manager);
 
                 var data = $('#myTable').dataTable().fnGetData();
-                if (data.length == 0) { alert("Please Add Items before Submit"); }
+                if (data.length == 0) { alert("Please Add Items before Save"); }
                 else if (data.length > 0)
                 {
 
@@ -269,36 +269,58 @@
 
                 //save as pending and go to home page with message shows
                 var data = $('#myTable').dataTable().fnGetData();
-                if (data.length == 0) { alert("Please Add Items before Save"); }
-
-                else if (data.length > 0) {
-                    var reqIdArray = [];
-                    for (i = 0; i < data.length; i++) {
-                        var obj = {
-                            Itemcode: data[i][0],
-                            Unitprice: data[i][2],
-                            Reason: data[i][3],
-                            Adjustment: data[i][4],
-                            Supervisor: supervisor,
-                            Manager: manager
-                        };
-                        reqIdArray[i] = obj;
-
-                    }
-
-                    $.ajax({
-                        url: '/api/stockadjustment/confirm',
-                        contentType: 'application/json',
-                        data: JSON.stringify(reqIdArray),
-                        dataType: "json",
-                        type: "POST",
-                        traditional: true,
-                        success: function (rid) {
-
-                            window.location.replace("/StockAdjustment?create=" + encodeURIComponent(rid));
-                        }
-                    });
+                var flag = 1;
+                if (data.length == 0)
+                {
+                    alert("Please Add Items before Submit");
                 }
+                else
+                {
+
+                   // alert(data[0][4]);
+                    for (i = 0; i < data.length; i++)
+                    {
+                        if (isNaN(data[i][4]) || (data[i][4] == null) || (data[i][4] == 0))
+                        {
+                            flag = 0;
+                            alert("Please input Adjustment(can't be 0)");
+                            break;
+                        }
+                    }
+                   // alert(flag);
+                     
+                        
+               if (flag == 1)
+                    {
+                        var reqIdArray = [];
+                        for (i = 0; i < data.length; i++) {
+                            var obj = {
+                                Itemcode: data[i][0],
+                                Unitprice: data[i][2],
+                                Reason: data[i][3],
+                                Adjustment: data[i][4],
+                                Supervisor: supervisor,
+                                Manager: manager
+                            };
+                            reqIdArray[i] = obj;
+
+                        }
+
+                        $.ajax({
+                            url: '/api/stockadjustment/confirm',
+                            contentType: 'application/json',
+                            data: JSON.stringify(reqIdArray),
+                            dataType: "json",
+                            type: "POST",
+                            traditional: true,
+                            success: function (rid) {
+
+                                window.location.replace("/StockAdjustment?create=" + encodeURIComponent(rid));
+                            }
+                        });
+                    }
+              }
+                
         });
 
 

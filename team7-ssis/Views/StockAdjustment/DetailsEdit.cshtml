@@ -199,32 +199,43 @@
            // alert(manager);
 
             var data = oTable.data();
-            var reqIdArray = [];
+            var flag = 1;
             for (i = 0; i < data.length; i++) {
-                var obj = {
-                    StockAdjustmentId: saUrl,
-                    ItemCode: data[i].ItemCode,
-                    Reason: data[i].Reason,
-                    Adjustment: data[i].Adjustment,
-                    Unitprice: data[i].UnitPrice,
-                    Supervisor: supervisor,
-                    Manager: manager
-                };
-                reqIdArray[i] = obj;
-            }
-            // alert(data[0].Adjustment);
-            $.ajax({
-                url: '/api/stockadjustment/update_to_pending',
-                contentType: 'application/json',
-                data: JSON.stringify(reqIdArray),
-                dataType: "json",
-                type: "POST",
-                traditional: true,
-                success: function (rid) {
-
-                    window.location.replace("/StockAdjustment?create=" + encodeURIComponent(rid));
+                if (isNaN(data[i].Adjustment) || (data[i].Adjustment == null) || (data[i].Adjustment == 0))
+                {
+                    flag = 0;
+                    alert("Please input Adjustment(can't be 0)");
+                    break;
                 }
-            });
+            }
+            if (flag == 1) {
+                var reqIdArray = [];
+                for (i = 0; i < data.length; i++) {
+                    var obj = {
+                        StockAdjustmentId: saUrl,
+                        ItemCode: data[i].ItemCode,
+                        Reason: data[i].Reason,
+                        Adjustment: data[i].Adjustment,
+                        Unitprice: data[i].UnitPrice,
+                        Supervisor: supervisor,
+                        Manager: manager
+                    };
+                    reqIdArray[i] = obj;
+                }
+                // alert(data[0].Adjustment);
+                $.ajax({
+                    url: '/api/stockadjustment/update_to_pending',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reqIdArray),
+                    dataType: "json",
+                    type: "POST",
+                    traditional: true,
+                    success: function (rid) {
+
+                        window.location.replace("/StockAdjustment?create=" + encodeURIComponent(rid));
+                    }
+                });
+            }
         });
 
 
