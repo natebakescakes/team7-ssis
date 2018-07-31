@@ -42,6 +42,7 @@
             @*From: <input type="text" id="Enddate" />*@
         </div>
     </div>
+    }
     <div class="row button-set ">
         <div class="col-sm-1"></div>
         <div class="col-lg-6">
@@ -52,7 +53,8 @@
     <br /><br />
 
 
-
+    if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
+    {
 
 <div style="width:90%; margin:0 auto" class="container">
     <table id="delgTable" class="table table-striped table-bordered">
