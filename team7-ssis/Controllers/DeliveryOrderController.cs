@@ -74,6 +74,15 @@ namespace team7_ssis.Controllers
             return View(POVM);
         }
 
+        [HttpPost]
+
+        public ActionResult ChangeStatus(DeliveryOrderDetailsViewModel model)
+        {
+            PurchaseOrderDetail purchaseOrderDetail = purchaseOrderDetailService.FindPurchaseOrderDetailbyIdItem(model.PurchaseOrderNo, model.ItemCode);
+            purchaseOrderDetail.Status = statusService.FindStatusByStatusId(2);
+            purchaseOrderService.SavePurchaseOrderDetails(purchaseOrderDetail);
+            return new JsonResult { Data = new { status = "Saved" } };
+        }
 
 
         [HttpPost]
@@ -95,23 +104,9 @@ namespace team7_ssis.Controllers
 
             deliveryOrder.Supplier = supplierService.FindSupplierById(deliveryOrder.PurchaseOrder.SupplierCode);
 
+            deliveryOrder.DeliveryOrderFileName = Path.GetFileName(deliveryOrderDetailViewList[0].DeliveryOrderFileName);
 
-            string fileName = Path.GetFileNameWithoutExtension(deliveryOrderDetailViewList[0].DeliveryOrderFileName);
-
-            string extension = Path.GetExtension(deliveryOrderDetailViewList[0].DeliveryOrderFileName);
-
-            fileName = Path.Combine(Server.MapPath("~/Images/DeliveryOrder/") + fileName);
-
-            deliveryOrder.DeliveryOrderFileName = fileName;
-
-
-            string fileName1 = Path.GetFileNameWithoutExtension(deliveryOrderDetailViewList[0].InvoiceFileName);
-
-            string extension1 = Path.GetExtension(deliveryOrderDetailViewList[0].InvoiceFileName);
-
-            fileName1 = Path.Combine(Server.MapPath("~/Images/InvoiceFile/") + fileName1);
-
-            deliveryOrder.InvoiceFileName = fileName;
+            deliveryOrder.InvoiceFileName = Path.GetFileName(deliveryOrderDetailViewList[0].InvoiceFileName);
 
 
             deliveryOrder.Status = statusService.FindStatusByStatusId(1);
@@ -134,7 +129,7 @@ namespace team7_ssis.Controllers
                     break;
                 }
 
-                if (dovm.ReceivedQty != 0)
+               if (dovm.ReceivedQty != 0) 
                 { 
 
                     DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail();
@@ -178,7 +173,7 @@ namespace team7_ssis.Controllers
 
             DOVM.Status = deliveryOrder.PurchaseOrder.Status.Name;
 
-            DOVM.DeliverOrderFileName = deliveryOrder.DeliveryOrderFileName;
+            DOVM.DeliveryOrderFileName = deliveryOrder.DeliveryOrderFileName;
 
             DOVM.InvoiceFileName = deliveryOrder.InvoiceFileName;
 

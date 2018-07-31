@@ -28,15 +28,12 @@
 
     </div>
     <h1>Submit delivery order forms & invoices and update inventory</h1>
+    <div class="col-md-4">
 
+            <a id="VRDObtn" class="popup btn btn-primary pull-right"><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</a>
 
-    @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { @id = "deliveryorderdetails", enctype = "multipart/form-data" }))
-    {
-        <div class="modal-footer">
+    </div>
 
-            <button id="VRDObtn" type="button" class="btn btn-default pull-right">View Related Delivery Order</button>
-
-        </div>
 
     <table class="table table-striped table-bordered" style="width: 100%">
         <thead>
@@ -65,16 +62,17 @@
         <tr>
             <td>Upload Delivery Order</td>
             <td>
-                <input type="file" name="DeliveryOrderFile"  id="DeliveryOrderFile"/>
+                <input type="file" name="DeliveryOrderFileName" id="DeliveryOrderFileName" />
             </td>
         </tr>
         <tr>
             <td>Upload Invoice</td>
             <td>
-                <input type="file" name="InvoiceFileName" id="InvoiceFileName"/>
+                <input type="file" name="InvoiceFileName" id="InvoiceFileName" />
             </td>
         </tr>
     </table>
+
     <div class="row mt-3">
         <div class="col-md-12">
             <table>
@@ -85,14 +83,21 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-primary">Cancel</button>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
+                                {<button class="btn btn-primary">Back</button>}
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
-    }
+
 </body>
 </html>
+
+
 
 

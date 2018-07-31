@@ -43,32 +43,17 @@ namespace team7_ssis.Services
 
         public DeliveryOrder FindDeliveryOrderById(string deliveryOrderNo)
         {
-            //    // Exceptions
-            //    if (deliveryOrderRepository.FindById(deliveryOrderNo)==null)
-            //    {
-            //        throw new ArgumentException();
-            //    }
             return deliveryOrderRepository.FindById(deliveryOrderNo);
         }
 
         
         public List<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
-            //// Exceptions
-            //if (deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo) == null)
-            //{
-            //    throw new ArgumentException();
-            //}
             return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo).ToList();
         }
 
         public List<DeliveryOrder> FindDeliveryOrderBySupplier(string supplierCode)
         {
-            //// Exceptions
-            //if (deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode) == null)
-            //{
-            //    throw new ArgumentException();
-            //}
             return deliveryOrderRepository.FindDeliveryOrderBySupplier(supplierCode).ToList();
         }
 
@@ -150,12 +135,13 @@ namespace team7_ssis.Services
             sm.AfterQuantity = sm.OriginalQuantity + deliveryOrderDetail.ActualQuantity;
             sm.CreatedDateTime = DateTime.Now;
             sm.StockMovementId = IdService.GetNewStockMovementId(context);
+           // sm.DisbursementDetailItemCode = "DUMMY";
             return stockMovementRepository.Save(sm);
         }
 
-        public void SaveDeliveryOrderDetails(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail SaveDeliveryOrderDetails(DeliveryOrderDetail deliveryOrderDetail)
         {
-            deliveryOrderDetailRepository.Save(deliveryOrderDetail);
+            return deliveryOrderDetailRepository.Save(deliveryOrderDetail);
         }
     }
 }

@@ -50,7 +50,7 @@ $(document).ready(function () {
 
                     var val = $(this).val() + '';
 
-                    column.search(val != '' ? '^' + val.split(',').join('$|^') + '$' : '', true, false).draw();
+                    column.search(val !== '' ? '^' + val.split(',').join('$|^') + '$' : '', true, false).draw();
 
                 });
 
@@ -115,7 +115,7 @@ $(document).ready(function () {
 
                 var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
 
-                var select = $('#sel1').on('change', function () {
+                select = $('#sel1').on('change', function () {
 
                     var val = $(this).val() + '';
 
@@ -217,7 +217,18 @@ $(document).ready(function () {
                 },
                 { defaultContent: '' },
                 {
-                    defaultContent: '<input type="checkbox" id="vcheck" />'
+                    data: "CheckBoxStatus",
+                    render: function (data, type, row, meta) {
+                        var html = '<a class="cancelPOD btn btn-default btn disabled" ><i class="fa fa-close"></i></a>';
+
+                        if (data == 0) {
+
+                            html = '<a  class="cancelPOD btn btn-default btn "  ><i class="fa fa-close"></i></a>';
+
+                        }
+
+                        return html;
+                    }
                 }
             ],
         select: "single"
@@ -227,33 +238,44 @@ $(document).ready(function () {
     $(document).on("change", ".qty", function () {
         var cell = oTable.cell(this.parentElement);
         cell.data($(this).val()).draw();
-        if (cell.val()>0)
-        { $('#vcheck').attr('disabled', 'disabled'); }
-
+        //var QtyOrdered = oTable.row($(this).parents('tr')).data().QuantityOrdered;
+        //cell.data($(RemainingQuantity).val()).draw();
     });
 
-    var k = new Array();
+    // cancel button
+    $(document).on("click", ".cancelPOD", function () {
 
-    //checkbox 
-    $('#myOutstandingTable tbody').on('change', '#vcheck', function (e) {
-        var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
+        var itemCode = oTable.row($(this).parents('tr')).data().ItemCode;
+        
+        $.ajax({
 
-        if (this.checked != true) {
-            var index = k.indexOf(rowSelected);
-            if (index > -1) {
-                k.splice(index, 1);
+            type: "POST",
+
+            url: "/DeliveryOrder/ChangeStatus",
+
+            dataType: "json",
+
+            data: JSON.stringify({ PurchaseOrderNo: pon, itemCode: itemCode }),
+
+            contentType: "application/json",
+
+            cache: true,
+
+            success: function (data) {
+                alert("Purchase Order Detail Cancelled");
+                oTable.ajax.reload();
             }
-        }
-        else {
-            k.push(rowSelected);
-        }
-
-
+        });
     });
 
   
     $('#submitbtn').click(function () {
+
         var mydata = oTable.rows().data().toArray();
+
+        var DOFN = document.getElementById("DeliveryOrderFileName").value;
+       
+        var IFN = document.getElementById("InvoiceFileName").value;
   
         var details = new Array();
  
@@ -273,7 +295,9 @@ $(document).ready(function () {
 
                 "RemainingQuantity": mydata[i].RemainingQuantity,
 
-                "CheckBoxStatus":k[i]
+                "DeliveryOrderFileName": DOFN,
+
+                "InvoiceFileName": IFN
             };
 
             details.push(o);
@@ -449,15 +473,3 @@ $(document).ready(function () {
 
     });
 });
-
- //    //var thisRow = oTable.row($(this).parents('tr'));
-    //    //var receivedCell = thisRow.cell(4);
-    //    //var outstandingCell = thisRow.cell(2);
-    //    //var remainingCell = thisRow.cell(3);
-    //    alert(cell);
-    //    // assign the cell with the value from the <input> element 
-
-    //    //var remainingValue = outstandingCell.data() - receivedCell.data();
-    //    //alert(remainingValue);
-    //    //remainingCell.data(remainingValue).draw();
-

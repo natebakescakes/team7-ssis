@@ -13,10 +13,10 @@ namespace team7_ssis.ViewModels
         public string SupplierName { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Status { get; set; }
-        public string DeliverOrderFileName { get; set; }
         public string CreatedBy { get; set; }
         public string InvoiceFileName { get; set; }
         public string DeliveryOrderFileName { get; set; }
+
     }
 
     public class DeliveryOrderDetailsViewModel
@@ -31,5 +31,6 @@ namespace team7_ssis.ViewModels
         public string CheckboxStatus { get; set; }
         public string InvoiceFileName { get; set; }
         public string DeliveryOrderFileName { get; set; }
+    
     }
 }

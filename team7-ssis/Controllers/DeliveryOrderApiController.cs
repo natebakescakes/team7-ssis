@@ -117,7 +117,7 @@ namespace team7_ssis.Controllers
 
                         ReceivedQuantity = 0,
 
-                        //RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod) - pod.Quantity,
+                        CheckBoxStatus = pod.Quantity - purchaseOrderService.FindRemainingQuantity(pod) ,
 
                         Status = pod.Status.Name
 

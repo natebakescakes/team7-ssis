@@ -589,6 +589,7 @@
     <Content Include="Views\Requisition\EditRequisition.cshtml" />
     <Content Include="Views\Inventory\GeneratePrice.cshtml" />
     <Content Include="Views\Inventory\PrintView.cshtml" />
+    <Content Include="Views\DOConfirmationPrintView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
