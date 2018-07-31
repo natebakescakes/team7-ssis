@@ -106,7 +106,6 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Category">Item Image</label><br />
-                        @*<img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">*@
                         <input type="file" name="ImageFile" id="ImageFile" onchange="show(this)" accept="image/*" />
                     </div>
                     <div class="form-group">
@@ -211,6 +210,12 @@
                             });
                             $select.append($option);
 
+                        });
+                        $("select").change(function (e) {
+                            $("select option").removeAttr('disabled');
+                            $("select").each(function (i, s) {
+                                $("select").not(s).find("option[value=" + $(s).val() + "]").attr('disabled', 'disabled');
+                            });
                         });
                         return $select.prop("outerHTML");
 

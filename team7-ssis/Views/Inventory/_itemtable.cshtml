@@ -82,32 +82,19 @@
                     { "data": "ReorderQuantity", "autoWidth": true },
                     { "data": "Uom", "autoWidth": true },
                     { "data": "Quantity", "autoWidth": true },
-                    { "defaultContent": "<select id='ddl'><option value='-1'>Action</option><option value='0'>Make Stock Adjustment</option><option value='1'>Edit Reorder Level & Quantity</option><option value='2'>View Item Details</option></select>" }
+                    {
+                        "defaultContent": "<input type='button' class='btn btn-primary' id='viewbtn' style='font-size: 12px' value='View Item Details'/>"
+                    }
                 ]
 
             });
-            //all about dropdownlist
-            $('#itemTable tbody').on('change', '#ddl', function (e) {
-                var value = Number($(this).val());
-                var rowSelected = oTable.row($(this).parents('tr')).data().ItemCode;
-                //alert(rowSelected);
-                switch (value) {
-                    case 0: gotoMakeStockAdjustment(rowSelected);
-                        break;
-                    case 1: gotoEditReorderLevelAndQuantity(rowSelected);
-                        break;
-                    case 2: gotoViewItemDetail(rowSelected);
-                    break;
+            //view button
+            var rowedit = $('#itemTable tbody').on('click', '#viewbtn', function (e) {
+                var rowdata = oTable.row($(this).parents('tr')).data().ItemCode;
+                //alert(rowdata);
+                gotoViewItemDetail(rowdata);
+            });
 
-                default: console.log('default ddl')
-            }
-        })
-        function gotoMakeStockAdjustment(rs) {
-            alert('MakeStockAdjustment'+rs);
-            }
-        function gotoEditReorderLevelAndQuantity(rs) {
-            alert('EditReorderLevelAndQuantity'+rs);
-        }
         function gotoViewItemDetail(rs) {
             var url = $("#myURL").val();
             var form = document.createElement("form");

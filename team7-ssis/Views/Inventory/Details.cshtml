@@ -86,6 +86,12 @@
                             $option.attr("selected", "selected")
                         }
                         });
+                        $("select").change(function (e) {
+                            $("select option").removeAttr('disabled');
+                            $("select").each(function (i, s) {
+                                $("select").not(s).find("option[value=" + $(s).val() + "]").attr('disabled', 'disabled');
+                            });
+                        });
                         return $select.prop("outerHTML");
                         
                     }
