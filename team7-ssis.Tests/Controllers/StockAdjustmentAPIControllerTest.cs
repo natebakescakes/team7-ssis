@@ -59,7 +59,9 @@ namespace team7_ssis.Tests.Controllers
             MobileSADViewModel VM = new MobileSADViewModel() {
                 ItemCode = item.ItemCode,
                 UserName = "StoreClerk1@email.com",
-                QuantityAdjusted = 5,
+                OriginalQuantity = "5",
+                AfterQuantity = "6",
+
                 Reason = "API Controller TEST"
 
             };

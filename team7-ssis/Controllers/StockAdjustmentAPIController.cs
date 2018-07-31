@@ -119,8 +119,8 @@ namespace team7_ssis.Controllers
                         StockAdjustment = SA,
                         ItemCode = m.ItemCode,
                         Item = item,
-                        OriginalQuantity = item.Inventory.Quantity,
-                        AfterQuantity = item.Inventory.Quantity + m.QuantityAdjusted,
+                        OriginalQuantity = Int32.Parse(m.OriginalQuantity),
+                        AfterQuantity = Int32.Parse(m.AfterQuantity),
                         Reason = m.Reason
 
                     });
