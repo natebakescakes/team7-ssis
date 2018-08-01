@@ -1,0 +1,58 @@
+﻿@section scripts {
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Custom/DeliveryOrder.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+    |}
+
+@model team7_ssis.ViewModels.DeliveryOrderViewModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delivery Order</title>
+    @Html.Hidden("doNo", Model.DeliveryOrderNo)
+</head>
+
+<body>
+    <div class="col-md-8">
+
+        <h2>Deliver Order #DEL @Model.DeliveryOrderNo </h2>
+
+    </div>
+    <div style="width:90%; margin:0 auto" class="container">
+        <table class="table table-striped table-bordered" style="width: 100%">
+            <thead>
+                <tr>
+                    <td>Purchase Order #</td>
+                    <td> Supplier Name</td>
+                    <td> Status</td>
+                    <td> Delivery Order</td>
+                    <td> Invoice</td>
+                    <td> Created By</td>
+                    <td>CreatedDate</td>
+
+                </tr>
+            </thead>
+            <tr>
+                <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
+                <td>@Html.DisplayFor(model => model.SupplierName)</td>
+                <td>@Html.DisplayFor(model => model.Status)</td>
+                <td>@Html.DisplayFor(model => model.DeliveryOrderFileName)</td>
+                <td>@Html.DisplayFor(model => model.InvoiceFileName)</td>
+                <td>@Html.DisplayFor(model => model.CreatedBy)</td>
+                <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+            </tr>
+        </table>
+    </div>
+
+    <br /><br />
+    @Html.Partial("_DOConfirmationViewTable")
+
+</body>
+</html>

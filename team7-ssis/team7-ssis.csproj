@@ -536,7 +536,7 @@
     <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
-    <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
+    <Content Include="Views\DeliveryOrder\_OutstandingItemsTable.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Inventory\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
@@ -566,6 +566,11 @@
     <Content Include="Views\Inventory\Details.cshtml" />
     <Content Include="Views\Inventory\_ItemDetail.cshtml" />
     <Content Include="Views\Inventory\_StockHistoryTable.cshtml" />
+    <Content Include="Views\DeliveryOrder\_DOConfirmationViewTable.cshtml" />
+    <Content Include="Views\DeliveryOrder\Index.cshtml" />
+    <Content Include="Views\DeliveryOrder\ReceiveGoodsView.cshtml" />
+    <Content Include="Views\DeliveryOrder\DOConfirmationView.cshtml" />
+    <Content Include="Views\DeliveryOrder\ReceivedGoodsPurchaseOrderView.cshtml" />
     <Content Include="Views\Department\Index.cshtml" />
     <Content Include="Views\Department\_DepartmentTable.cshtml" />
     <Content Include="Views\Department\_AddDepartment.cshtml" />

@@ -6,15 +6,15 @@
     <link rel="stylesheet" type="text/css" href="Editor-1.7.4/css/editor.dataTables.css">
 </head>
 <body>
-<div class="row mb-3">
-    <div class="col-md-8">
-        <h2>Make Stock Adjustment</h2>
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <h2>Make Stock Adjustment</h2>
+        </div>
+        <div class="col-md-4">
+            <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
+        </div>
     </div>
-    <div class="col-md-4">
-        <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
-    </div>
-</div>
-<button id="addItemBtn" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
+    <button id="addItemBtn" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 
 
     <table id="myTable" class="table table-striped table-bordered">
@@ -30,7 +30,7 @@
         </thead>
 
     </table>
-    
+
 
     @*<table class="table table-striped table-bordered">
             <tr>
@@ -96,6 +96,7 @@
                             <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
                                 <thead>
                                     <tr>
+                                        <th>Thumbnail</th>
                                         <th>Item Code</th>
                                         <th>Category</th>
                                         <th>Description</th>
@@ -110,23 +111,53 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-2">
+                        <div id="addItemImage"><img class="img-thumbnail img-responsive" id="imageAddItem" /></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="label">Item Number</div>
+                        <div id="itemnumber"></div>
+                        <br />
+                        <div class="label">In Stock</div>
+                        <div id="instock"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="label">Description</div>
+                        <div id="description"></div>
+                        <br />
+                        <div class="label">Reorder Level</div>
+                        <div id="reorderlevel"></div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="label">Reorder Quantity</div>
+                        <div id="reorderquantity"></div>
+                        <div class="label">Unit of Measure</div>
+                        <div id="uom"></div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="label">Category</div>
+                        <div id="category"></div>
+                    </div>
 
-                <div class="col-md-1">
-                    <label>Adjustment</label>
 
-                    <input id="AdjustmentInput" type="number" />
+
                 </div>
-                <div class="col-md-1">
+           
+       
+                <div class="modal-footer">
+                    <div id="modalMsg"></div>
+                    <label>Adjustment</label>
+                    <input id="AdjustmentInput" type="number" min="1" style="width:100px"/>
                     <label>Reason</label>
                     <input id="ReasonInput" type="text" />
-                </div>
-                <div class="modal-footer">
                     <button id="addToReq" type="button" class="btn btn-primary">Add to StockAdjustment</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
-            </div>
-        </div>
     </div>
+ </div>
+</div>
+
 
 
     <script>
@@ -163,7 +194,7 @@
                     },
                     {
                         title: "Adjustment",
-                         render: function (data, type, row, meta) {
+                        render: function (data, type, row, meta) {
                             var html = '<input class="edit2" type="number" ' +
                                 'value="' + data + '"/>';
                             return html;
@@ -181,9 +212,15 @@
                     url: "/api/manage/items",
                     dataSrc: ""
                 },
-                pageLength: 5,
+                pageLength: 3,
                 columns: [
-
+                    {
+                        data: "ImagePath",
+                        render: function (data, type, row, meta) {
+                            var html = '<img class="img-thumbnail img-responsive myImage" alt="Cinque Terre"" src="/Images/' + data + '.jpg" />';
+                            return html;
+                        }
+                    },
                     { "data": "ItemCode", "autoWidth": true },
                     { "data": "ItemCategoryName", "autoWidth": true },
                     { "data": "Description", "autoWidth": true },
@@ -212,12 +249,11 @@
                 var myselect2 = document.getElementById("ChosenManager");
                 var index2 = myselect2.selectedIndex;
                 var manager = myselect2.options[index2].value;
-               // alert(manager);
+                // alert(manager);
 
                 var data = $('#myTable').dataTable().fnGetData();
                 if (data.length == 0) { alert("Please Add Items before Save"); }
-                else if (data.length > 0)
-                {
+                else if (data.length > 0) {
 
                     var reqIdArray = [];
                     for (i = 0; i < data.length; i++) {
@@ -245,7 +281,7 @@
                         }
                     });
                 }
-             
+
 
             });
 
@@ -259,29 +295,25 @@
                 var myselect1 = document.getElementById("ChosenSupervisor");
                 var index1 = myselect1.selectedIndex;
                 var supervisor = myselect1.options[index1].value;
-               // alert(supervisor);
+                // alert(supervisor);
 
                 var myselect2 = document.getElementById("ChosenManager");
                 var index2 = myselect2.selectedIndex;
                 var manager = myselect2.options[index2].value;
-               // alert(manager);
+                // alert(manager);
 
 
                 //save as pending and go to home page with message shows
                 var data = $('#myTable').dataTable().fnGetData();
                 var flag = 1;
-                if (data.length == 0)
-                {
+                if (data.length == 0) {
                     alert("Please Add Items before Submit");
                 }
-                else
-                {
+                else {
 
-                   // alert(data[0][4]);
-                    for (i = 0; i < data.length; i++)
-                    {
-                        if (isNaN(data[i][4]) || (data[i][4] == null) || (data[i][4] == 0))
-                        {
+                    // alert(data[0][4]);
+                    for (i = 0; i < data.length; i++) {
+                        if (isNaN(data[i][4]) || (data[i][4] == null) || (data[i][4] == 0)) {
                             flag = 0;
                             alert("Please input Adjustment(can't be 0)");
                             break;
@@ -290,21 +322,19 @@
 
                     var ItemsArray = [];
                     for (i = 0; i < data.length; i++) {
-                        var obj = {
-                            Itemcode: data[i][0],
-                        };
-                        ItemsArray[i] = obj;
+                        ItemsArray[i] = data[i][0];
+
                     }
-                    for (i = 0; i < data.length-1; i++) {
-                        if (ItemsArray[i].Itemcode == ItemsArray[i + 1].Itemcode) {
-                            alert("Item " + ItemsArray[i].Itemcode + " is repeated.Please check.");
+                    ItemsArray.sort();
+                    for (i = 0; i < data.length - 1; i++) {
+                        if (ItemsArray[i]== ItemsArray[i + 1]) {
+                            alert("Item " + ItemsArray[i] + " is repeated.Please check.");
                             flag = 0;
                             break;
                         }
                     }
 
-                    if (flag == 1)
-                    {
+                    if (flag == 1) {
                         var reqIdArray = [];
                         for (i = 0; i < data.length; i++) {
                             var obj = {
@@ -317,7 +347,7 @@
                             };
                             reqIdArray[i] = obj;
                         }
-  
+
                         $.ajax({
                             url: '/api/stockadjustment/confirm',
                             contentType: 'application/json',
@@ -331,12 +361,35 @@
                             }
                         });
                     }
-              }
-                
-        });
+                }
+
+            });
 
 
+            //show item details on click of each row in add items popup page
+            $('#addItemTable tbody').on('click', 'tr', function () {
 
+
+                // document.getElementById("imageAddItem").src = $($("#generateAddItem").DataTable().row(this)).find("img").attr('src');
+                document.getElementById("imageAddItem").src = $(this).find("img").attr("src");
+
+               // var unitPrice = addItemTable.row(this).data().UnitPrice;
+
+                var data = addItemTable.row(this).data();
+
+                //document.getElementById("generateUnitPrice").value = unitPrice;
+                //document.getElementById("generateQty").value = 0;
+                //document.getElementById("generateAmount").value = 0;
+
+                document.getElementById("itemnumber").innerHTML = data.ItemCode;
+                document.getElementById("instock").innerHTML = data.Quantity;
+                document.getElementById("description").innerHTML = data.Description;
+                document.getElementById("reorderlevel").innerHTML = data.ReorderLevel;
+                document.getElementById("reorderquantity").innerHTML = data.ReorderQuantity;
+                document.getElementById("category").innerHTML = data.ItemCategoryName;
+                document.getElementById("uom").innerHTML = data.Uom;
+
+            });
 
             $('#addToReq').click(function () {
                 var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
@@ -359,7 +412,7 @@
             $(document).on("change", ".edit1", function () {
 
                 var cell = myTable.cell(this.parentElement);
-                // assign the cell with the value from the <input> element 
+                // assign the cell with the value from the <input> element
                 cell.data($(this).val()).draw();
             });
 
@@ -367,7 +420,7 @@
             $(document).on("change", ".edit2", function () {
 
                 var cell = myTable.cell(this.parentElement);
-                // assign the cell with the value from the <input> element 
+                // assign the cell with the value from the <input> element
                 cell.data($(this).val()).draw();
             });
         })
