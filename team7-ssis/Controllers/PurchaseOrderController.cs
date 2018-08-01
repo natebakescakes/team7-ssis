@@ -233,6 +233,7 @@ namespace team7_ssis.Controllers
             {
                 pOrder.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
                 pOrder.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
+                pOrder.DeliveryOrders = new List<DeliveryOrder>();
                 purchaseOrderService.Save(pOrder);
                 purchaseOrderIds.Add(pOrder.PurchaseOrderNo);
             }

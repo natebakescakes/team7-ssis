@@ -47,11 +47,13 @@ $(document).ready(function(){
                         defaultContent: "<i>Not available</i>"
                     },
                     {
-                        data: "Status"  
+                        data: "Status"  ,
+                        defaultContent: "<i>Not available</i>"
                     },
                     {
                         data: "Status",
-                        render: action_dropbox
+                        render: action_dropbox,
+                        defaultContent: "<i>Not available</i>"
                     }
                     
                 ],
