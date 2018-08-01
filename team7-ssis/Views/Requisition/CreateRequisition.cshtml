@@ -196,7 +196,7 @@ $(document).ready(function () {
             var data = [];
 
             for (i = 0; i < tableData.length; i++) {
-                data[0] = { ItemCode: tableData[i][0], Qty: tableData[i][2] }
+                data[i] = { ItemCode: tableData[i][0], Qty: tableData[i][2] }
             }
 
             $.ajax({

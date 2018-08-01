@@ -166,9 +166,21 @@
             <text>
             select: "api"
             </text>}
-
         });
+
+        // initialize column filtering
+        yadcf.init(myTable, [
+            {
+                column_number: 1,
+                style_class: 'form-control-sm ml-1',
+                reset_button_style_class: 'btn btn-link btn-sm',
+                filter_default_label: 'Filter',
+                filter_reset_button_text: '<i class="fa fa-times text-secondary" aria-hidden="true"></i>'
+            }
+        ]);
     })
+
+    
 
     // Click "Accept" button
     $(document).on("click", "#approveBtn", function (e) {
