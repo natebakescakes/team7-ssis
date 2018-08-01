@@ -11,6 +11,7 @@ namespace team7_ssis.ViewModels
         public string SupplierName { get; set; }
         public string CreatedDate { get; set; }
         public string Status { get; set; }
+
     }
 
     public class PurchaseOrderDetailsViewModel
@@ -26,9 +27,7 @@ namespace team7_ssis.ViewModels
         public string Status { get; set; }
         public int SupplierPriority { get; set; }
         public string SupplierName { get; set; }
-
-       
-
+        public int CheckBoxStatus { get; set; }
 
     }
 
