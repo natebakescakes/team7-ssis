@@ -109,12 +109,29 @@ namespace team7_ssis.Services
                 for (int i = 0; i < d.DisbursementDetails.Count(); i++)
                 {
                     if (d.DisbursementDetails[i].PlanQuantity == 0)
+                    {
                         d.DisbursementDetails.Remove(d.DisbursementDetails[i]);
+
+                        // Change Requisition Detail Status to Unable to fulfill when no quantity is disbursed
+                        d.Retrieval.Requisitions.SelectMany(requisition => requisition.RequisitionDetails.Where(detail => detail.ItemCode == d.DisbursementDetails[i].ItemCode)).ToList().ForEach(detail =>
+                        {
+                            detail.Status = statusRepository.FindById(21);
+                        });
+                    }
                 }
 
                 // if disbursement has no disbursement details, skip to next disbursement
                 if (d.DisbursementDetails.Count() == 0)
+                {
+                    // Change Requisition Status to Unable to fulfill when no items are disbursed
+                    d.Retrieval.Requisitions.Where(requisition => requisition.Department.DepartmentCode == d.Department.DepartmentCode).ToList().ForEach(requisition =>
+                    {
+                        requisition.Status = statusRepository.FindById(21);
+                        requisitionRepository.Save(requisition);
+                    });
                     continue;
+                }
+                    
 
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
@@ -130,6 +147,7 @@ namespace team7_ssis.Services
             foreach(Requisition req in requestList)
             {
                 req.Status = statusRepository.FindById(7);
+                req.Retrieval = r;
                 requisitionRepository.Save(req);
             }
 
@@ -257,7 +275,6 @@ namespace team7_ssis.Services
             }
 
             return totalQuantity;
-
         }
 
         public List<Requisition> FindRequisitionsByDepartment(Department department)
