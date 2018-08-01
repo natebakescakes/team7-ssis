@@ -9,7 +9,7 @@ $(document).ready(function () {
             url: api,
             dataSrc:''
         },
-     
+        deferRender: true,
         columns: [
             { "data": "ItemCode", "autoWidth": true },
             { "data": "ItemCategoryName", "autoWidth": true },
