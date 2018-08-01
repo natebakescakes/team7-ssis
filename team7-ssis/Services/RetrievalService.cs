@@ -147,6 +147,15 @@ namespace team7_ssis.Services
                     };
 
                     newRequisitionDetails.Add(newRequisitionDetail);
+
+                    // Change requisition detail status if no actual quantity disbursed
+                    if (totalDisbursedQuantity == 0)
+                    {
+                        retrieval.Requisitions.SelectMany(requisition => requisition.RequisitionDetails.Where(detail => detail.ItemCode == disbursementDetail.ItemCode)).ToList().ForEach(detail =>
+                        {
+                            detail.Status = statusRepository.FindById(21);
+                        });
+                    }
                 });
 
                 // Create new outstanding requisition
@@ -164,6 +173,19 @@ namespace team7_ssis.Services
 
                 if (outstandingRequisition)
                     new RequisitionRepository(context).Save(newRequisition);
+            }
+
+            // Update all requisition statuses that are not Unable to Fulfilled
+            foreach (var requisition in retrieval.Requisitions)
+            {
+                if (requisition.Status.StatusId != 21)
+                    requisition.Status = statusRepository.FindById(8);
+
+                foreach (var detail in requisition.RequisitionDetails)
+                {
+                    if (detail.Status.StatusId != 21)
+                        detail.Status = statusRepository.FindById(8);
+                }
             }
 
             retrievalRepository.Save(retrieval);
