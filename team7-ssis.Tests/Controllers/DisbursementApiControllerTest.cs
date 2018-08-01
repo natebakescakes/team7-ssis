@@ -40,6 +40,18 @@ namespace team7_ssis.Tests.Controllers
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = new StatusRepository(context).FindById(7),
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "DAPICONTROLTEST",
+                        ItemCode = "E030",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        Quantity = 30,
+                        Status = new StatusRepository(context).FindById(7),
+                    }
+                }
             });
             var retrieval = retrievalRepository.Save(new Retrieval()
             {
