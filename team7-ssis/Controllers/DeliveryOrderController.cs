@@ -80,7 +80,7 @@ namespace team7_ssis.Controllers
         {
             PurchaseOrderDetail purchaseOrderDetail = purchaseOrderDetailService.FindPurchaseOrderDetailbyIdItem(model.PurchaseOrderNo, model.ItemCode);
             purchaseOrderDetail.Status = statusService.FindStatusByStatusId(2);
-            purchaseOrderService.SavePurchaseOrderDetails(purchaseOrderDetail);
+            purchaseOrderService.SavePurchaseOrderDetail(purchaseOrderDetail);
             return new JsonResult { Data = new { status = "Saved" } };
         }
 
