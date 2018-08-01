@@ -33,6 +33,8 @@
     </div>
 </div>
 
+<div id="alert"></div>
+
 @if (Request.QueryString["create"] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -259,10 +261,20 @@
             url: "/api/processrequisitions",
             data: JSON.stringify(reqIdArray),
             dataType: "json",
-            success: function (rid) {
-                message = reqIdArray.length + " Requisitions processed. Retrieval Form #" + rid + " created.";
-                post("/Requisition/StationeryRetrieval?rid=" + rid, { message: message });
-                //window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
+            success: function (data) {
+                var requisition = data.count == 1 ? "Requisition" : "Requisitions";
+                var message = data.count + " " + requisition + " processed. Retrieval Form #" + data.rid + " created.";
+                post("/Requisition/StationeryRetrieval?rid=" + data.rid, { message: message });
+            },
+            error: function (data) {
+                $('#alert').html(
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    data.responseJSON.Message +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '</div>'
+                );
             }
         });
     }
