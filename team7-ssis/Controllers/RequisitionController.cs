@@ -53,8 +53,8 @@ namespace team7_ssis.Controllers
             }
 
             // pass the statuses for the appropriate Role
-            HashSet<int> adminSet = new HashSet<int> { 3, 4, 5, 6, 7, 8, 9, 10 };
-            HashSet<int> empSet = new HashSet<int> { 3, 4, 5, 6, 7, 8, 9, 10 };
+            HashSet<int> adminSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            HashSet<int> empSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             HashSet<int> deptHeadSet = new HashSet<int> { 3, 4, 5, 6 };
             HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10 };
 
@@ -93,6 +93,12 @@ namespace team7_ssis.Controllers
             {
                 viewModel.Status = r.Status.Name;
                 viewModel.RequisitionID = r.RequisitionId;
+                try
+                {
+                    viewModel.DisbursementId = r.Retrieval.Disbursements.Where(x => x.Department.DepartmentCode == r.Department.DepartmentCode).First().DisbursementId;
+                } catch {
+                    viewModel.DisbursementId = "";
+                }
                 viewModel.Department = r.Department == null ? "" : r.Department.Name;
                 viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
                 viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
@@ -156,7 +162,6 @@ namespace team7_ssis.Controllers
         public ActionResult CreateRequisition()
         {
             CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
-            viewModel.Action = "Create";
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
 
             try
@@ -180,9 +185,9 @@ namespace team7_ssis.Controllers
             }
 
             EditRequisitionViewModel viewModel = new EditRequisitionViewModel();
-            viewModel.Action = "Edit";
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
             viewModel.RequisitionId = rid;
+            viewModel.StatusId = requisitionRepository.FindById(rid).Status.StatusId;
 
             try
             {
