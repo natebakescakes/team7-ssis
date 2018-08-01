@@ -14,13 +14,25 @@
         <div class="label">Requisition</div>
         @Model.RequisitionID
     </div>
+    @if (Model.DisbursementId != "")
+    {
+        <div class="col-md-8">
+            <div class="label">Fulfilled by Disbursement</div>
+            <a href="@Url.Action("DisbursementDetails", "Disbursement", new { did = Model.DisbursementId })">@Model.DisbursementId</a>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-8">
+        </div>
+    }
+    <div class="col-md-4">
+        <div class="label">Collection Point</div>
+        @Model.CollectionPoint
+    </div>
     <div class="col-md-8">
         <div class="label">Department</div>
         @Model.Department
-    </div>
-    <div class="col-md-12">
-        <div class="label">Collection Point</div>
-        @Model.CollectionPoint
     </div>
     <div class="col-md-4">
         <div class="label">Created By</div>
@@ -54,7 +66,6 @@
             <th>Item Code</th>
             <th>Description</th>
             <th>Qty</th>
-            <th>Status</th>
         </tr>
     </thead>
 </table>
@@ -83,7 +94,6 @@
                 { "data": "ItemCode", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
                 { "data": "Quantity", "autoWidth": true },
-                { "data": "Status", "autoWidth": true },
             ],
             select: "api"
         });

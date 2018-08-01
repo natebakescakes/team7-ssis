@@ -33,28 +33,12 @@
     </div>
 </div>
 
-@if (Request.QueryString["create"] != null)
-{
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        Requisition #@Request.QueryString["create"] created.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
-@if (Request.QueryString["update"] != null)
-{
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        Requisition #@Request.QueryString["update"] updated.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
+<div id="alert"></div>
+
 @if (ViewBag.Danger != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        Requisition #@ViewBag.Danger cancelled.
+        @ViewBag.Danger
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -127,9 +111,9 @@
                             'Actions' +
                             '</a>' +
                             '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">' +
-                            (row.Status == "Pending Approval" ? editDetailsHtml : viewDetailsHtml ) +
+                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? editDetailsHtml : viewDetailsHtml ) +
                             createNewDraftWithHtml +
-                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? cancelHtml : "" ) +
+                            ( ( row.Status == "Pending Approval" ) ? cancelHtml : "" ) +
                             '</div >' +
                             '</div >';
                         </text>
@@ -166,9 +150,21 @@
             <text>
             select: "api"
             </text>}
-
         });
+
+        // initialize column filtering
+        yadcf.init(myTable, [
+            {
+                column_number: 1,
+                style_class: 'form-control-sm ml-1',
+                reset_button_style_class: 'btn btn-link btn-sm',
+                filter_default_label: 'Filter',
+                filter_reset_button_text: '<i class="fa fa-times text-secondary" aria-hidden="true"></i>'
+            }
+        ]);
     })
+
+    
 
     // Click "Accept" button
     $(document).on("click", "#approveBtn", function (e) {
@@ -247,10 +243,20 @@
             url: "/api/processrequisitions",
             data: JSON.stringify(reqIdArray),
             dataType: "json",
-            success: function (rid) {
-                message = reqIdArray.length + " Requisitions processed. Retrieval Form #" + rid + " created.";
-                post("/Requisition/StationeryRetrieval?rid=" + rid, { message: message });
-                //window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
+            success: function (data) {
+                var requisition = data.count == 1 ? "Requisition" : "Requisitions";
+                var message = data.count + " " + requisition + " processed. Retrieval Form #" + data.rid + " created.";
+                post("/Requisition/StationeryRetrieval?rid=" + data.rid, { message: message });
+            },
+            error: function (data) {
+                $('#alert').html(
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    data.responseJSON.Message +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '</div>'
+                );
             }
         });
     }

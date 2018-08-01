@@ -23,6 +23,10 @@
     <script src="https://cdn.datatables.net/scroller/1.5.1/js/dataTables.scroller.min.js"></script>
     @*DateTime Picker*@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    
+    @*Yet Another DataTables Column Filter (yadcf)*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.3/jquery.dataTables.yadcf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.3/jquery.dataTables.yadcf.min.css" />
 
     @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />*@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
@@ -36,10 +40,10 @@
     @Html.Partial("_NavBar")
     <main role="main">
         <div class="container">
-            <div class="row" style="height: 40px;"></div>
+            <div class="row"  style="height: 40px;"></div>
             @RenderBody()
             <hr />
-            <footer>
+            <footer id="myFooter" >
                 <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
             </footer>
         </div>
