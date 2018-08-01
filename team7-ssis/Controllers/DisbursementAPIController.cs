@@ -52,7 +52,7 @@ namespace team7_ssis.Controllers
         {
             var disbursements = disbursementService.FindAllDisbursements();
 
-            if (disbursements.Count == 0) return NotFound();
+            //if (disbursements.Count == 0) return NotFound();
 
             return Ok(disbursements.Select(disbursement => new DisbursementMobileViewModel()
             {
