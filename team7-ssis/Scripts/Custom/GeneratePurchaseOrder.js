@@ -279,7 +279,47 @@
 
         var datatableData = generatePOTbl.rows().data().toArray();
 
-        if (datatableData.length > 0) {
+        var flag = 1;
+        if (datatableData.length == 0) {
+            flag = 0;
+            alert("Please add items to the purchase order!");
+        }
+        else
+        
+        {
+            for (i = 0; i < datatableData.length; i++) {
+                if (isNaN(datatableData[i].Quantity) || (datatableData[i].Quantity == null) || (datatableData[i].Quantity == 0)) {
+                    flag = 0;
+                    alert("Quantity cannot be 0");
+                    break;
+                }
+            }
+
+            var ItemsArray = [];
+            
+
+            for (i = 0; i < datatableData.length; i++) {
+                ItemsArray[i] = datatableData[i].ItemCode;
+            }
+
+            //alert(JSON.stringify(ItemsArray));
+            ItemsArray.sort();
+           // alert(JSON.stringify(ItemsArray));
+            
+
+            for (i = 0; i < datatableData.length; i++) {
+                if (ItemsArray[i] == ItemsArray[i + 1]) {
+                    alert("Item " + ItemsArray[i]+ " is repeated. Please check!");
+                    flag = 0;
+                    break;
+                }
+            }
+
+        }
+
+        if(flag == 1) {
+              
+            if (datatableData.length > 0) {
 
             var details = new Array();
 
@@ -312,7 +352,7 @@
                 cache: true,
                 success: function(result) {
 
-                    alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE    " + result.purchaseOrders);
+                    //alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE    " + result.purchaseOrders);
 
                     url = $("#successUrl").val();
                     alert(url);
@@ -339,11 +379,8 @@
 
             });
 
+            }
         }
-        else {
-            $('#errorAlert').removeAttr('hidden').html("Please add some items to your Purchase Order!.");
-        }
-       
         
     });
         
@@ -445,7 +482,7 @@
 
     $(document).on('change', '.supplier', function (e) {
 
-        alert("HELLO");
+        //alert("HELLO");
         var rowIdx = $(this).parents('tr');
         var itemCode = generatePOTbl.row($(this).parents('tr')).data().ItemCode;
         var id = "supplier" + itemCode;
@@ -460,7 +497,7 @@
             contentType: "application/json",
             cache: true,
             success: function (result) {
-                alert(result.itemPrice);
+               // alert(result.itemPrice);
                 generatePOTbl.cell(rowIdx, 3).data(result.itemPrice).draw();
                 var quantity=$('#generatePoTable').DataTable().row(document.getElementById(id).parentElement.parentElement).data().Quantity;
                // alert(generatePOTbl.row($(this).parentElement.parentElement).data().Quantity);
