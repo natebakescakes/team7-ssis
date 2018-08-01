@@ -73,6 +73,24 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
         }
 
+        [TestMethod]
+        public void SendNotificationTest()
+        {
+            //Arrange
+            var controller = new NotificationApiController
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                CurrentUserName = "root@admin.com"
+            };
+
+            //Act
+            IHttpActionResult actionResult = controller.SendNotification("8");
+
+            //Assert
+            Assert.IsNotNull(actionResult);
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {

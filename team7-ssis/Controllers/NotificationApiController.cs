@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using team7_ssis.Models;
 using team7_ssis.Services;
@@ -16,6 +20,8 @@ namespace team7_ssis.Controllers
     public class NotificationApiController : ApiController
     {
         private ApplicationDbContext context;
+        private static string AppKey= "c4rWWOQR6Ms:APA91bEaZlfPSZ6_P17Y-ZK5w1T0cIW6knoA8Vf8heX9NnNptP1sEIKVWJlXrEHb2_qiso1JQeQ02QUg78bhKwGXi2P5lip1UK0JZ39T5j8w7xTX8e6QkA8uH-i0Q3GL1GYQ3zYQw9BkQMG1iFhvyg7SpK0W-nJt1w";
+        private static string ServerKey = "AAAASdSX054:APA91bEPhId59S4Qtl00O3llHaXrPay5RjXDiMnip9ofs1IbIssamoFS20PrSOyC47wIFetCJyWwbxy0SzTIm0hvOh_titJu5OfNvXUpEMFZL2g4vVRY5n1B_bOBrgaZ5tUWQ-jQFJz4Xh7O3gw9seWV86p7Oon5Eg";
 
         public NotificationApiController()
         {
@@ -47,12 +53,48 @@ namespace team7_ssis.Controllers
             }));
         }
 
-        [Route("api/notification/send")]
-        [HttpPost]
-        public IHttpActionResult SendNotification()
+        [Route("api/notification/send/{id}")]
+        [HttpGet]
+        public IHttpActionResult SendNotification(string id)
         {
 
-            return Ok();
+            //get Notification object from db
+            NotificationService notificationService = new NotificationService(context);
+            Notification notification = notificationService.FindNotificationById(int.Parse(id));
+
+            string result;
+            var webAddr = "https://fcm.googleapis.com/fcm/send";
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(webAddr);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Headers.Add("Authorization:key=" + ServerKey);
+            httpWebRequest.Method = "POST";
+
+            FirebaseObject obj = new FirebaseObject()
+            {
+                to = AppKey,
+                notification = new NotificationDetail()
+                {
+                    body=notification.Contents,
+                    title = notification.NotificationType.Name
+                }
+            };
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = JsonConvert.SerializeObject(obj);
+      
+                streamWriter.Write(json);
+                streamWriter.Flush();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                 result = streamReader.ReadToEnd();
+            }
+
+            return Ok(result);
         }
+
     }
 }
