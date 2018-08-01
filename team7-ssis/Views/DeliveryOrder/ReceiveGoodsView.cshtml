@@ -23,15 +23,19 @@
 <body>
     <div class="col-md-8">
 
-        <h2>Receive Goods</h2>
+        <h1>Receive Goods</h1>
         @Html.Hidden("poNo", Model.PurchaseOrderNo)
 
     </div>
-    <h1>Submit delivery order forms & invoices and update inventory</h1>
-    <div class="col-md-4">
+    <h3>Submit delivery order forms & invoices and update inventory</h3>
+    <div class="col-md-12">
+        @if (Model.Status != "Awaiting Delivery")
+
+          {
 
             <a id="VRDObtn" class="popup btn btn-primary pull-right"><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</a>
 
+            }        
     </div>
 
 
@@ -56,7 +60,7 @@
     @Html.Partial("_OutstandingItemsTable")
 
     <h3>Submit forms to Bursar</h3>
-    <h2>Forms will be routed to Bursar's department for payment to vendor</h2>
+    Forms will be routed to Bursar's department for payment to vendor
 
     <table>
         <tr>
@@ -97,6 +101,8 @@
 
 </body>
 </html>
+
+
 
 
 
