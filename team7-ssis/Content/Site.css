@@ -178,3 +178,8 @@ a.disabled:hover {
 #modalMsg {
     color: red;
 }
+
+/* For Notifications Menu */
+#notification-dropdown-items {
+    width: 400px;
+}
