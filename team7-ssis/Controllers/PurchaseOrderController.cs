@@ -312,6 +312,7 @@ namespace team7_ssis.Controllers
             PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(PONumber);
             List<PurchaseOrderDetailsViewModel> podViewlist = p.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
+                PurchaseOrderNo=PONumber,
                 ItemCode = pod.Item.ItemCode,
                 Description = pod.Item.Description,
                 QuantityOrdered = pod.Quantity,
@@ -322,6 +323,7 @@ namespace team7_ssis.Controllers
                 Status = pod.Status.Name
             }).ToList();
 
+            ViewBag.PurchaseOrder = p;
             return View("GetPurchaseOrderDetails",podViewlist);
 
         }
