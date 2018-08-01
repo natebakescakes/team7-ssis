@@ -496,7 +496,9 @@
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\Custom\PurchaseOrder.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -534,7 +536,7 @@
     <Content Include="Views\DeliveryOrder\ReceiveGoods.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\_SupplierTable.cshtml" />
-    <Content Include="Views\DeliveryOrder\OutstandingItems.cshtml" />
+    <Content Include="Views\DeliveryOrder\_OutstandingItemsTable.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Inventory\_itemtable.cshtml" />
     <Content Include="Views\Manage\Profile.cshtml" />
@@ -564,6 +566,11 @@
     <Content Include="Views\Inventory\Details.cshtml" />
     <Content Include="Views\Inventory\_ItemDetail.cshtml" />
     <Content Include="Views\Inventory\_StockHistoryTable.cshtml" />
+    <Content Include="Views\DeliveryOrder\_DOConfirmationViewTable.cshtml" />
+    <Content Include="Views\DeliveryOrder\Index.cshtml" />
+    <Content Include="Views\DeliveryOrder\ReceiveGoodsView.cshtml" />
+    <Content Include="Views\DeliveryOrder\DOConfirmationView.cshtml" />
+    <Content Include="Views\DeliveryOrder\ReceivedGoodsPurchaseOrderView.cshtml" />
     <Content Include="Views\Department\Index.cshtml" />
     <Content Include="Views\Department\_DepartmentTable.cshtml" />
     <Content Include="Views\Department\_AddDepartment.cshtml" />
@@ -602,6 +609,7 @@
     <Content Include="Views\Inventory\GeneratePrice.cshtml" />
     <Content Include="Views\Inventory\PrintView.cshtml" />
     <Content Include="Views\PurchaseOrder\GetPurchaseOrderDetails.cshtml" />
+    <Content Include="Views\Shared\_NavBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

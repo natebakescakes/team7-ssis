@@ -37,6 +37,7 @@ namespace team7_ssis.Tests.Controllers
             {
                 NotificationId = notificationId,
                 NotificationType = new NotificationTypeRepository(context).FindById(1),
+                Contents = "REQ-201801-001",
                 Status = new StatusService(context).FindStatusByStatusId(14),
                 CreatedDateTime = DateTime.Now
             });
@@ -46,7 +47,7 @@ namespace team7_ssis.Tests.Controllers
 
             // Assert
             Assert.AreEqual(15, notificationService.FindNotificationById(notificationId).Status.StatusId);
-            result.AssertActionRedirect().ToAction("Index");
+            result.AssertActionRedirect().ToAction("RequisitionDetails");
         }
 
         [TestMethod]
@@ -62,6 +63,7 @@ namespace team7_ssis.Tests.Controllers
             {
                 NotificationId = notificationId,
                 NotificationType = new NotificationTypeRepository(context).FindById(1),
+                Contents = "REQ-201801-001",
                 Status = new StatusService(context).FindStatusByStatusId(15),
                 CreatedDateTime = DateTime.Now
             });
@@ -71,7 +73,7 @@ namespace team7_ssis.Tests.Controllers
 
             // Assert
             Assert.AreEqual(15, notificationService.FindNotificationById(notificationId).Status.StatusId);
-            result.AssertActionRedirect().ToAction("Index");
+            result.AssertActionRedirect().ToAction("RequisitionDetails");
         }
 
         [TestCleanup]

@@ -187,7 +187,7 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.IsTrue(contentResult.Content.Select(d => d.RetrievalId).Contains(expectedId));
-            Assert.IsTrue(contentResult.Content.Select(d => d.RetrievalDetails.Select(rd => rd.ActualQuantity)).FirstOrDefault().Contains(expectedQuantity));
+            Assert.IsTrue(contentResult.Content.SelectMany(d => d.RetrievalDetails.Select(rd => rd.ActualQuantity)).Contains(expectedQuantity));
         }
 
         [TestMethod]

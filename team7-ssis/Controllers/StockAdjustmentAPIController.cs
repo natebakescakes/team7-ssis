@@ -317,7 +317,7 @@ namespace team7_ssis.Controllers
         //update darft to pending 
         [Route("api/stockadjustment/update_to_pending")]
         [HttpPost]
-        public void UpdateStockAdjustmentAsPending(List<ViewModelFromEditDetail> list)
+        public string UpdateStockAdjustmentAsPending(List<ViewModelFromEditDetail> list)
         {
             stockAdjustmentService = new StockAdjustmentService(Context);
             userService = new UserService(Context);
@@ -360,6 +360,7 @@ namespace team7_ssis.Controllers
             {
                 notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
             }
+            return stockadjustmentid;
         }
 
         //show detail
