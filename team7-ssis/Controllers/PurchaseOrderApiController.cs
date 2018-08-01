@@ -89,11 +89,8 @@ namespace team7_ssis.Controllers
         [Route("api/purchaseOrder/success")]
         [HttpPost]
         public List<PurchaseOrderViewModel> Success([FromBody]string poNums)
-        {
+         {
             List<PurchaseOrderViewModel> purchaseOrders = new List<PurchaseOrderViewModel>();
-
-            //string text=string.Join(",", poNums);
-            //string[] PONums = text.Split(',');
 
             if (poNums != null)
             {
@@ -113,5 +110,9 @@ namespace team7_ssis.Controllers
             return purchaseOrders;
 
         }
-    }
+
+        
+
+        }
+    
 }
