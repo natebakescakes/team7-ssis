@@ -322,14 +322,13 @@
 
                     var ItemsArray = [];
                     for (i = 0; i < data.length; i++) {
-                        var obj = {
-                            Itemcode: data[i][0],
-                        };
-                        ItemsArray[i] = obj;
+                        ItemsArray[i] = data[i][0];
+
                     }
+                    ItemsArray.sort();
                     for (i = 0; i < data.length - 1; i++) {
-                        if (ItemsArray[i].Itemcode == ItemsArray[i + 1].Itemcode) {
-                            alert("Item " + ItemsArray[i].Itemcode + " is repeated.Please check.");
+                        if (ItemsArray[i]== ItemsArray[i + 1]) {
+                            alert("Item " + ItemsArray[i] + " is repeated.Please check.");
                             flag = 0;
                             break;
                         }
