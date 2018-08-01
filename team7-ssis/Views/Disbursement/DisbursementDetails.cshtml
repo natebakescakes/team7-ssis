@@ -67,7 +67,7 @@
                 { "data": "Description", "autoWidth": true },
                 { "data": "Qty", "autoWidth": true },
             ],
-            select: true
+            select: "api"
         });
     })
 
@@ -79,7 +79,6 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <button class="btn btn-default" onclick="window.history.go(-1)">Back</button>
         @if (Model.Status == 8)
         {
             <button id="confirm" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Confirm Delivery</button>
