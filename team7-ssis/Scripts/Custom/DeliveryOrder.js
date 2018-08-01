@@ -208,13 +208,13 @@ $(document).ready(function () {
                 { data: "ItemCode" },
                 { data: "Description" },
                 { data: "QuantityOrdered" },
-                {
-                    data: "ReceivedQuantity",
+                { data: "ReceivedQuantity",
                     render: function (data, type, row, meta) {
-                        return '<input  type="number" id="received " class="qty" min="0" value="' + data + '"/>';
+                        return '<input class="qty" id="' + row.ItemCode + '" type="number" min="0" value="' + data + '"/>';
                     }
                 },
-                { defaultContent: '' },
+                { data: "RemainingQuantity" },
+
                 {
                     data: "CheckBoxStatus",
                     render: function (data, type, row, meta) {
@@ -237,8 +237,19 @@ $(document).ready(function () {
     $(document).on("change", ".qty", function () {
         var cell = oTable.cell(this.parentElement);
         cell.data($(this).val()).draw();
-        //var QtyOrdered = oTable.row($(this).parents('tr')).data().QuantityOrdered;
-        //cell.data($(RemainingQuantity).val()).draw();
+   
+        var rowIdx = document.getElementById(this.id).parentElement.parentElement;
+        
+        var QuantityReceived = document.getElementById(this.id).value;
+
+        var QtyOrdered = $('#myOutstandingTable').DataTable().row(document.getElementById(this.id).parentElement.parentElement).data().QuantityOrdered;
+       // alert(QtyOrdered);
+
+        var RemainingQty = parseInt(QtyOrdered) - parseInt(QuantityReceived);
+        // alert(RemainingQty);
+
+        oTable.cell(rowIdx, 4).data(RemainingQty).draw();
+
     });
 
     // cancel button
@@ -376,7 +387,7 @@ $(document).ready(function () {
 
         var ponum = mydata[0].PurchaseOrderNo;
 
-        if (mydata.length) {
+        if (mydata.length ==0) {
             alert('Please select one purchase order!');
         }
 
@@ -439,11 +450,11 @@ $(document).ready(function () {
 
         form.method = "POST";
 
-        form.action = "/api/purchaseorder/details/" + pon;
+        form.action = "/purchaseorder/details/"
 
         element1.value = pno;
 
-        element1.name = "pno";
+        element1.name = "poNum";
 
         element1.type = "hidden";
 
@@ -461,13 +472,13 @@ $(document).ready(function () {
 
         var element1 = document.createElement("input");
 
-        form1.method = "POST";
+        form1.method = "GET";
 
-        form1.action = "/api/purchaseorder/details/" + pon;
+        form1.action = "/purchaseorder/details/";
 
         element1.value = pon;
 
-        element1.name = "pon";
+        element1.name = "poNum";
 
         element1.type = "hidden";
 
