@@ -73,7 +73,20 @@ namespace team7_ssis.Services
             disbursement.Status = statusService.FindStatusByStatusId(10);
             disbursement.CollectedDateTime = DateTime.Now;
             disbursement.CollectedBy = disbursement.Department.Representative;
-          
+
+            // Update Requisition statuses to Items collected
+            foreach (var requisition in disbursement.Retrieval.Requisitions)
+            {
+                foreach (var detail in requisition.RequisitionDetails)
+                {
+                    if (detail.Status.StatusId != 21)
+                        detail.Status = statusService.FindStatusByStatusId(10);
+                }
+
+                if (requisition.Status.StatusId != 21)
+                    requisition.Status = statusService.FindStatusByStatusId(10);
+            }
+
             return this.Save(disbursement);
 
          }
