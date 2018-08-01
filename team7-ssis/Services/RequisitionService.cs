@@ -285,6 +285,9 @@ namespace team7_ssis.Services
             requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
             requisition.ApprovedDateTime = DateTime.Now;
 
+            // Update Requisition Detail Status
+            requisition.RequisitionDetails.ForEach(rd => rd.Status = new StatusService(context).FindStatusByStatusId(6));
+
             // Save
             requisitionRepository.Save(requisition);
         }
@@ -308,6 +311,9 @@ namespace team7_ssis.Services
             requisition.Status = new StatusService(context).FindStatusByStatusId(5);
             requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
             requisition.ApprovedDateTime = DateTime.Now;
+
+            // Update Requisition Detail Status
+            requisition.RequisitionDetails.ForEach(rd => rd.Status = new StatusService(context).FindStatusByStatusId(5));
 
             // Save
             requisitionRepository.Save(requisition);
