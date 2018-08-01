@@ -252,34 +252,61 @@
                 // alert(manager);
 
                 var data = $('#myTable').dataTable().fnGetData();
+                var flag = 1;
                 if (data.length == 0) { alert("Please Add Items before Save"); }
-                else if (data.length > 0) {
+                else {
 
-                    var reqIdArray = [];
+                    // alert(data[0][4]);
                     for (i = 0; i < data.length; i++) {
-                        var obj = {
-                            Itemcode: data[i][0],
-                            Unitprice: data[i][2],
-                            Reason: data[i][3],
-                            Adjustment: data[i][4],
-                            Supervisor: supervisor,
-                            Manager: manager
-                        };
-                        reqIdArray[i] = obj;
+                        if (isNaN(data[i][4]) || (data[i][4] == null) || (data[i][4] == 0)) {
+                            flag = 0;
+                            alert("Please input Adjustment(can't be 0)");
+                            break;
+                        }
                     }
 
-                    $.ajax({
-                        url: '/api/stockadjustment/save',
-                        contentType: 'application/json',
-                        data: JSON.stringify(reqIdArray),
-                        dataType: "json",
-                        type: "POST",
-                        traditional: true,
-                        success: function (responseJSON) {
+                    var ItemsArray = [];
+                    for (i = 0; i < data.length; i++) {
+                        ItemsArray[i] = data[i][0];
 
-                            window.location.replace("/StockAdjustment");
+                    }
+                    ItemsArray.sort();
+                    for (i = 0; i < data.length - 1; i++) {
+                        if (ItemsArray[i] == ItemsArray[i + 1]) {
+                            alert("Item " + ItemsArray[i] + " is repeated.Please check.");
+                            flag = 0;
+                            break;
                         }
-                    });
+                    }
+
+
+                    if (flag == 1) {
+                        var reqIdArray = [];
+                        for (i = 0; i < data.length; i++) {
+                            var obj = {
+                                Itemcode: data[i][0],
+                                Unitprice: data[i][2],
+                                Reason: data[i][3],
+                                Adjustment: data[i][4],
+                                Supervisor: supervisor,
+                                Manager: manager
+                            };
+                            reqIdArray[i] = obj;
+                        }
+
+                        $.ajax({
+                            url: '/api/stockadjustment/save',
+                            contentType: 'application/json',
+                            data: JSON.stringify(reqIdArray),
+                            dataType: "json",
+                            type: "POST",
+                            traditional: true,
+                            success: function (responseJSON) {
+
+                                window.location.replace("/StockAdjustment");
+                            }
+                        });
+                    }
                 }
 
 
