@@ -16,8 +16,8 @@
         <div class="col-md-4">
             @Html.Hidden("purchaseOrderNo", Model.PurchaseOrderNo)
             @Html.Hidden("poStatus", Model.Status)
-            @Html.Hidden("relDelOrdersUrl", Url.Action("", "DeliveryOrder"))
-            @Html.Hidden("receiveGoodsUrl", Url.Action("", "DeliveryOrder"))
+            @Html.Hidden("viewRelDelUrl", Url.Action("ReceivedGoodsPurchaseOrderView", "DeliveryOrder"))
+           
 
             @if (Model.Status != "Awaiting Delivery" && Model.Status != "Cancelled")
     {
