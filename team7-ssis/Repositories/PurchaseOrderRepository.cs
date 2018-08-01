@@ -40,9 +40,9 @@ namespace team7_ssis.Repositories
             return context.PurchaseOrder.Where(x => statusId.Contains(x.Status.StatusId));
         }
 
-        public IQueryable<PurchaseOrderDetail> FindPurchaseOrderDetailByStatus(params int[] statusId)
+        public IQueryable<PurchaseOrderDetail> FindPurchaseOrderDetailByStatus(string purchaseOrderNumber,params int[] statusId)
         {
-            return context.PurchaseOrderDetail.Where(x => statusId.Contains(x.Status.StatusId));
+            return context.PurchaseOrderDetail.Where(x => (statusId.Contains(x.Status.StatusId) && purchaseOrderNumber.Contains(x.PurchaseOrderNo)));
         }
 
 
