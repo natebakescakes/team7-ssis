@@ -2,6 +2,54 @@
 
     var inventory = $("#inventory").val();
     //Generate purchase order datatable
+
+    var simple_dropdown = function (data, type, row, meta) {
+        //alert(data);
+        if (data != null) {
+            // $('td:eq(4)', row).html('<select class="supplier" id=supplier' + data.ItemCode + '></select>');
+            var html = '<select class="supplier" id="supplier' + data + '">';
+
+            var itemNo = data;
+            var id = "supplier" + itemNo;
+
+            $.ajax({
+
+                type: "POST",
+                url: "/api/purchaseOrder/getsupplier",
+                dataType: "json",
+                data: { '': itemNo },
+                contentType: 'application/x-www-form-urlencoded',
+                async: false,
+                success: function (result) {
+
+                    for (var supplier in result) {
+                        if (result.hasOwnProperty(supplier)) {
+                            var s = result[supplier];
+                            if (s.Priority == 1) {
+                                html += '<option value="' + s.Priority + '" selected="selected">' + s.Name + '</option>';
+                            }
+                            else {
+                                html += '<option value="' + s.Priority + '">' + s.Name + '</option>';
+                            }
+                            //var x = document.getElementById(id);
+                            //var option = document.createElement("option");
+                            //option.text = s.Name;
+                            //option.value = s.Priority;
+                            //x.add(option);
+                            // document.getElementById(id).value = 1;
+
+                        }
+                    }
+
+                    html += '</select>';
+                    
+                }
+
+            });
+            return html;
+        }
+    }
+
     var generatePOTbl = $('#generatePoTable').DataTable({
         ajax: {
             type: "POST",
@@ -26,7 +74,8 @@
                 title: "Quantity",
                 data: "Quantity",
                 render: function (data, type, row, meta) {
-                    var html = '<input class="edit" type="number" ' +
+                    //alert(row.ItemCode);
+                    var html = '<input class="edit" id="' + row.ItemCode + '"type="number" ' +
                         'value="' + data + '"/>';
                     return html;
                 } 
@@ -37,9 +86,9 @@
                 render: $.fn.dataTable.render.number(',', '.', 2, '$')
             },
             {
-                title: "Supplier",
-                data: "ItemCode"
-                //render: simple_dropdown
+                
+                data: "ItemCategoryName",
+                render: simple_dropdown
             },
             {
                 title: "Amount",
@@ -51,59 +100,14 @@
         select: "api",
         dom: "tp",
         autoWidth: true,
-        cache:true,
+        cache:true
 
-        rowCallback: function (row, data) {
-            if (data != null) {
-                //alert(data.ItemCode)
-                $('td:eq(4)', row).html('<select class="supplier" id=supplier' + data.ItemCode + '></select>');
-            }
-
-            var itemNo = data.ItemCode;
-            var id = "supplier" + itemNo;
-
-            $.ajax({
-
-                type: "POST",
-                url: "/api/purchaseOrder/getsupplier",
-                dataType: "json",
-                data: { '': itemNo },
-                contentType: 'application/x-www-form-urlencoded',
-                success: function (result) {
-
-                    for (var supplier in result) {
-                        if (result.hasOwnProperty(supplier)) {
-                            var s = result[supplier];
-                            var x = document.getElementById(id);
-                            var option = document.createElement("option");
-                            //alert(s.Name);
-                            option.text = s.Name;
-                            //alert(s.Priority);
-                            option.value = s.Priority;
-                            x.add(option);
-                            document.getElementById(id).value = 1;
-                        }
-                    }
-                }
-            });
-
-            
-        }
-
-        //initComplete: function () {
-        //    this.api().rows().every(function () {
-        //        var row = this;
-        //        var rowdata = row.data();
-        //       // alert(rowdata.ItemCode + "in init");
-
-        //    });
-        //}
-        
+       
 
     });
 
+   
 
- 
 
     //Add item popup datatable
     var addItemTable = $('#generateAddItem').DataTable({
@@ -150,33 +154,12 @@
     });
 
 
-    //var checkifExists = function (itemNo,check) {
-    //    $("#generatePoTable tr td:nth-child(0)").each(function () {
-    //        var itemCode = this.innerText.trim();
-    //        alert(itemCode + "HURRAY");
-    //        if (itemCode == itemNo) {
-    //            var alertMessage = "This item has already been added to the list!";
-    //            check = 'true';
-    //            return false;
-    //        }
-    //        return check;
-    //    });
-    //}
-    
     
     // Adds item to purchase order
     $('#addToPOBtn').click(function () {
-        //var data = $('#generateAddItem').DataTable().rows({ selected: true }).data().toArray();
-       // var itemNo = data[0].ItemCode.toString();
-        //var check = 'false';
-        
-        //if (checkifExists(itemNo, check)=='false') {
             var data = $('#generateAddItem').DataTable().rows({ selected: true }).data().toArray();
             
             var qty = parseInt($('#generateQty').val());
-        
-       
-
             
         if ((data.length > 0) && (qty > 0)) {
             var itemNo = data[0].ItemCode;
@@ -188,6 +171,7 @@
                     "Description": data[0].Description,
                     "Quantity": qty,
                     "UnitPriceDecimal": data[0].UnitPrice,
+                    "ItemCategoryName": data[0].ItemCode,
                     "TotalPrice": amount
                 }).draw();
             document.getElementById("generateAmount").value = 0;
@@ -258,6 +242,34 @@
         var cell = generatePOTbl.cell(this.parentElement);
         // assign the cell with the value from the <input> element 
         cell.data($(this).val()).draw();
+
+        //alert(this.id);
+        var rowIdx = document.getElementById(this.id).parentElement.parentElement;
+        
+        //works in console
+       // alert($('#generatePoTable').DataTable().rows().data()[0].TotalPrice);
+        //var quantity = parseInt(cell.data());
+
+        //alert(row(generatePOTbl.this.parentElement));
+
+        var quantity = document.getElementById(this.id).value;
+        var amount = $('#generatePoTable').DataTable().row(document.getElementById(this.id).parentElement.parentElement).data().UnitPriceDecimal;
+
+        
+
+       // alert("AMOUNT "+generatePOTbl.row($(this.id).closest('tr')).data().UnitPriceDecimal);
+       // var amount = parseFloat(generatePOTbl.row(this.parentElement).data().UnitPriceDecimal);
+
+        var totalAmount = parseInt(quantity) * parseFloat(amount);
+        generatePOTbl.cell(rowIdx, 5).data(totalAmount).draw();
+       
+
+
+        
+            //.draw();
+       // document.getElementById("")
+
+        
     });
 
 
@@ -431,12 +443,11 @@
 
     });
 
-    $('#generatePoTable tbody').on('change', '.supplier', function (e) {
+    $(document).on('change', '.supplier', function (e) {
 
-        
-        //var cell = generatePOTbl.row($(this).parents('tr')).cell(3);
+        alert("HELLO");
         var rowIdx = $(this).parents('tr');
-        var itemCode = generatePOTbl.row($(this).parents('tr')).data()[0];
+        var itemCode = generatePOTbl.row($(this).parents('tr')).data().ItemCode;
         var id = "supplier" + itemCode;
         var priority = document.getElementById(id).value;
 
@@ -449,8 +460,13 @@
             contentType: "application/json",
             cache: true,
             success: function (result) {
+                alert(result.itemPrice);
                 generatePOTbl.cell(rowIdx, 3).data(result.itemPrice).draw();
-              //  generatePOTbl.ajax.reload();
+                var quantity=$('#generatePoTable').DataTable().row(document.getElementById(id).parentElement.parentElement).data().Quantity;
+               // alert(generatePOTbl.row($(this).parentElement.parentElement).data().Quantity);
+
+                var newAmount = parseInt(quantity) * result.itemPrice;
+                generatePOTbl.cell(rowIdx, 5).data(newAmount).draw();
 
             }
         });
