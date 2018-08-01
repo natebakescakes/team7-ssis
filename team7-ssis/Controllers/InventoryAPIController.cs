@@ -19,6 +19,7 @@ namespace team7_ssis.Controllers
         private ItemPriceService itemPriceService;
         private RequisitionService requisitionService;
         private StockMovementService stkMovementService;
+        private PurchaseOrderService purchaseOrderService;
         
 
         public InventoryApiController()
@@ -28,6 +29,7 @@ namespace team7_ssis.Controllers
             stkMovementService = new StockMovementService(context);
             itemPriceService = new ItemPriceService(context);
             requisitionService = new RequisitionService(context);
+            purchaseOrderService = new PurchaseOrderService(context);
         }
 
         [Route("api/manage/stockhistory/{itemCode}")]
@@ -203,9 +205,7 @@ namespace team7_ssis.Controllers
                 Uom = item.Uom,
                 AmountToReorder = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
                                 requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity
-
-
-
+            
             }).ToList();
 
         }
@@ -238,6 +238,7 @@ namespace team7_ssis.Controllers
                     Quantity = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
                                 requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity,
                     UnitPriceDecimal=itemPriceService.FindOneByItemAndSequence(item,1).Price,
+                    ItemCategoryName=item.ItemCode,
                     TotalPrice = ((requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
                                 requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity)*
                                 itemPriceService.FindOneByItemAndSequence(item, 1).Price

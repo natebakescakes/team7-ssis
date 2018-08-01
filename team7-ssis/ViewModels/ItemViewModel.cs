@@ -23,6 +23,7 @@ namespace team7_ssis.ViewModels
         public decimal TotalPrice { get; set; }
 
         public string ImagePath { get; set; }
+       
     }
 
     public class ItemPriceViewModel

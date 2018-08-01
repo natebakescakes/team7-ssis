@@ -47,11 +47,13 @@ $(document).ready(function(){
                         defaultContent: "<i>Not available</i>"
                     },
                     {
-                        data: "Status"  
+                        data: "Status"  ,
+                        defaultContent: "<i>Not available</i>"
                     },
                     {
                         data: "Status",
-                        render: action_dropbox
+                        render: action_dropbox,
+                        defaultContent: "<i>Not available</i>"
                     }
                     
                 ],
@@ -128,8 +130,8 @@ $(document).ready(function(){
         var url;
 
         if (value == 0) { url = $("#detailsUrl").val(); }
-        else if (value == 1) { url = '$("#relDelOrdersUrl").val()'; }
-        else if (value == 2) { url = '$("#receiveGoodsUrl").val()'; }
+        else if (value == 1) { url = $("#relDelOrdersUrl").val(); }
+        else if (value == 2) { url = $("#receiveGoodsUrl").val(); }
         else { url = ''; }
 
       
@@ -381,7 +383,7 @@ $(document).ready(function(){
     $('#viewRelatedDel').on('click', function (e) {
         alert("Hi");
         var pNum = $("#purchaseOrderNo").val();
-        var url = $("#viewRelDel").val();
+        var url = $("#viewRelDelUrl").val();
 
         var form = document.createElement("form");
         var element1 = document.createElement("input");
