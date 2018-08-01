@@ -16,7 +16,7 @@ namespace team7_ssis.Services
         StockMovementService stockMovementService;
         StatusService statusService;
         RequisitionRepository requisitionRepository;
-      
+
 
         public DisbursementService(ApplicationDbContext context)
         {
@@ -27,7 +27,7 @@ namespace team7_ssis.Services
             stockMovementService = new StockMovementService(context);
             statusService = new StatusService(context);
             requisitionRepository = new RequisitionRepository(context);
-            
+
 
         }
 
@@ -53,11 +53,11 @@ namespace team7_ssis.Services
         {
 
             //Edit Disbursement and delete
-            foreach(var a in disbursements)
+            foreach (var a in disbursements)
             {
                 this.Save(a);
             }
-            
+
         }
 
         public Disbursement ConfirmCollection(string DisbursementId)
@@ -74,22 +74,11 @@ namespace team7_ssis.Services
             disbursement.CollectedDateTime = DateTime.Now;
             disbursement.CollectedBy = disbursement.Department.Representative;
 
-            // Update Requisition statuses to Items collected
-            foreach (var requisition in disbursement.Retrieval.Requisitions)
-            {
-                foreach (var detail in requisition.RequisitionDetails)
-                {
-                    if (detail.Status.StatusId != 21)
-                        detail.Status = statusService.FindStatusByStatusId(10);
-                }
-
-                if (requisition.Status.StatusId != 21)
-                    requisition.Status = statusService.FindStatusByStatusId(10);
-            }
+            // Update Requisition statuses to Partially Fulfilled or Items Collected
+            this.UpdateRequisitionStatus(disbursement);
 
             return this.Save(disbursement);
-
-         }
+        }
 
         public List<Disbursement> FindDisbursementsByRetrievalId(string Rid)
         {
@@ -119,38 +108,39 @@ namespace team7_ssis.Services
                 {
                     count = 0;
                     RequisitionDetail r = requisition.RequisitionDetails.Find(x => x.Item == d.Item);
-                  
-                        if (r.Item == d.Item)
+
+                    if (r == null)
+                        continue;
+
+                    if (r.Item == d.Item)
+                    {
+                        if (r.Quantity > d.ActualQuantity)
                         {
-                            if (r.Quantity > d.ActualQuantity)
-                            {
-                                //set requisition detail status to be partially fulfilled IF NOT ZERO
-                                r.Status = statusService.FindStatusByStatusId(9);
-                                
-                            }
-
-                            else if (r.Quantity < d.ActualQuantity)
-                            {
-                                //set requisition detail status to be fully delivered
-                                r.Status = statusService.FindStatusByStatusId(10);
-                                d.ActualQuantity -= r.Quantity;
-                                count++;
-                            }
-
+                            //set requisition detail status to be partially fulfilled IF NOT ZERO
+                            r.Status = statusService.FindStatusByStatusId(9);
 
                         }
 
-                        if(count > 0 )
+                        else if (r.Quantity < d.ActualQuantity)
                         {
-                            requisition.Status = statusService.FindStatusByStatusId(9);
+                            //set requisition detail status to be fully delivered
+                            r.Status = statusService.FindStatusByStatusId(10);
+                            d.ActualQuantity -= r.Quantity;
+                            count++;
                         }
-                        if (count == requisition.RequisitionDetails.Count)
-                        {
-                            requisition.Status = statusService.FindStatusByStatusId(10);
-                        }
-                       
+                    }
 
-                    updated.Add(requisitionRepository.Save(requisition));
+                    if (count > 0)
+                    {
+                        requisition.Status = statusService.FindStatusByStatusId(9);
+                    }
+                    if (count == requisition.RequisitionDetails.Count)
+                    {
+                        requisition.Status = statusService.FindStatusByStatusId(10);
+                    }
+
+
+                    updated.Add(requisition);
                 }
             }
 

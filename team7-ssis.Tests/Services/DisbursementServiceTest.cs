@@ -76,17 +76,7 @@ namespace team7_ssis.Tests.Services
                 RequisitionId = "TEST",
                 Retrieval = retrieval,
                 CreatedDateTime = DateTime.Now,
-                Status = new StatusService(context).FindStatusByStatusId(8),
-                RequisitionDetails = new List<RequisitionDetail>()
-                {
-                    new RequisitionDetail()
-                    {
-                        RequisitionId = "TEST",
-                        ItemCode = "E030",
-                        Status = new StatusService(context).FindStatusByStatusId(8),
-                    }
-                }
-
+                Status = new StatusService(context).FindStatusByStatusId(8)
             };
             requisitionRepository.Save(requisition);
 
@@ -107,12 +97,12 @@ namespace team7_ssis.Tests.Services
         public void FindDisbursementByIdTest()
         {
             //Arrange
-            
+
             string expected = "TEST";
 
             //Act
             var result = disbursementService.FindDisbursementById(expected);
-            
+
 
             //Assert
             Assert.AreEqual(expected, result.DisbursementId);
@@ -147,6 +137,16 @@ namespace team7_ssis.Tests.Services
             //get retrieval object
             Retrieval retrieval = context.Retrieval.Where(x => x.RetrievalId == "TEST").First();
 
+            retrieval.Requisitions.FirstOrDefault().RequisitionDetails = new List<RequisitionDetail>()
+            {
+                new RequisitionDetail()
+                {
+                    RequisitionId = retrieval.Requisitions.FirstOrDefault().RequisitionId,
+                    Item = new ItemService(context).FindItemByItemCode("E030"),
+                    Status = new StatusService(context).FindStatusByStatusId(8),
+                }
+            };
+
             //create disbursement and save it into database
             Disbursement a = new Disbursement();
             a.DisbursementId = IdService.GetNewDisbursementId(context);
@@ -163,12 +163,12 @@ namespace team7_ssis.Tests.Services
                 Item = context.Item.First(),
                 PlanQuantity = 1,
                 ActualQuantity = 1
-                        
+
             };
             disbursementdetailRepository.Save(detail);
 
             Disbursement result = disbursementService.ConfirmCollection(a.DisbursementId);
-            
+
 
             //Asert
             Assert.AreEqual(expected, result.Status.StatusId);
@@ -259,7 +259,7 @@ namespace team7_ssis.Tests.Services
             Requisition requisition = context.Requisition.Where(x => x.RequisitionId == "TEST").First();
 
             Item item = context.Item.First();
-            
+
 
             //make and save 2 multiple requisition detail objects
             RequisitionDetail rd1 = new RequisitionDetail()
@@ -270,7 +270,7 @@ namespace team7_ssis.Tests.Services
                 Quantity = 1
             };
             requisitiondetailRepository.Save(rd1);
-   
+
 
             RequisitionDetail rd2 = new RequisitionDetail()
             {
@@ -300,7 +300,7 @@ namespace team7_ssis.Tests.Services
             //Get test requisition object from db
             Disbursement disbursement = context.Disbursement.Where(x => x.DisbursementId == "TEST").First();
             Requisition requisition1 = context.Requisition.Where(x => x.RequisitionId == "TEST").First();
-            
+
 
             Item item = context.Item.First();
 
@@ -341,9 +341,9 @@ namespace team7_ssis.Tests.Services
             //Assert
             RequisitionDetail result1 = result.Find(x => x.RequisitionId == "TEST").RequisitionDetails.First();
             RequisitionDetail result2 = result.Find(x => x.RequisitionId == "TEST2").RequisitionDetails.First();
-            Assert.AreEqual(result1.Status.StatusId, 10);
-            Assert.AreEqual(result2.Status.StatusId, 9);
-            Assert.AreEqual(result.First().Status.StatusId, 10);
+            Assert.AreEqual(10, result1.Status.StatusId);
+            Assert.AreEqual(9, result2.Status.StatusId);
+            Assert.AreEqual(10, result.First().Status.StatusId);
         }
 
         [TestMethod]
@@ -465,7 +465,7 @@ namespace team7_ssis.Tests.Services
 
             //have to delete requisitions before retrievals
             List<Requisition> requisitionlist = context.Requisition.Where(x => x.RequisitionId == "TEST").ToList();
-            foreach(Requisition r in requisitionlist)
+            foreach (Requisition r in requisitionlist)
             {
                 //delete dummy requisition test objects
                 requisitionRepository.Delete(r);
