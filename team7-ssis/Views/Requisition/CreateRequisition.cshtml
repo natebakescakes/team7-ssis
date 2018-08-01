@@ -43,7 +43,6 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <button id="cancelBtn" class="btn btn-default">Cancel</button>
         <button id="confirmBtn" class="btn btn-primary">Confirm</button>
     </div>
 </div>
@@ -63,7 +62,7 @@
                         <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th>Thumbnail</th>
+                                    <th width="80px">Thumbnail</th>
                                     <th>Item Code</th>
                                     <th>Category</th>
                                     <th>Description</th>
@@ -78,12 +77,15 @@
                             <img id="thumbnail" class="thumbnail__regular" />
                         </div>
                         <div class="col-md-3">
-                            <div class="label">Item Number</div>
-                            <div id="itemNumber"></div>
-                            <br />
-                            <div class="label">In Stock</div>
-                            <div id="inStock"></div>
-                        </div>
+                            @if ( !(User.IsInRole("Employee") || User.IsInRole("DepartmentHead")) )
+                            {
+                                <div class="label">Item Number</div>
+                                <div id="itemNumber"></div>
+                                <br />
+                            }
+                                <div class="label">In Stock</div>
+                                <div id="inStock"></div>
+                            </div>
                         <div class="col-md-4">
                             <div class="label">Description</div>
                             <div id="description"></div>
@@ -115,7 +117,15 @@ $(document).ready(function () {
     // render main table
     var myTable = $('#myTable').DataTable({
         columns: [
-            { title: "ItemCode" },
+            {
+                title: "ItemCode",
+                @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
+                {
+                    <text>
+                    visible: false
+                    </text>
+                }
+            },
             { title: "Description" },
             { title: "Quantity" },
             { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
@@ -139,7 +149,16 @@ $(document).ready(function () {
                     return html;
                 }
             },
-            { "data": "ItemCode", "autoWidth": true },
+            {
+                "data": "ItemCode",
+                "autoWidth": true,
+                @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
+                {
+                    <text>
+                    visible: false
+                    </text>
+                }
+            },
             { "data": "ItemCategoryName", "autoWidth": true },
             { "data": "Description", "autoWidth": true },
             { "data": "Quantity", "autoWidth": true },
