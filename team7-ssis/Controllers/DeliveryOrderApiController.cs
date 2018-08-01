@@ -96,16 +96,10 @@ namespace team7_ssis.Controllers
 
         public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseorderNo)
         {
-            PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(purchaseorderNo);
-            List<PurchaseOrderDetail> pod1 = new List<PurchaseOrderDetail>();
-
             int[] MyNewArray = { 11, 12 };
 
-            foreach (PurchaseOrderDetail pod2 in po.PurchaseOrderDetails)
-            {
-                pod1 = purchaseOrderService.FindPurchaseOrderDetailByStatus(MyNewArray);
-            }
-            
+            List<PurchaseOrderDetail> pod1 = purchaseOrderService.FindPurchaseOrderDetailByStatus(purchaseorderNo,MyNewArray);
+
             return pod1.Select(pod => new PurchaseOrderDetailsViewModel()
 
                     {
