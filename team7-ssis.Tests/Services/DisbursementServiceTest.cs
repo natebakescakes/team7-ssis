@@ -75,7 +75,17 @@ namespace team7_ssis.Tests.Services
             {
                 RequisitionId = "TEST",
                 Retrieval = retrieval,
-                CreatedDateTime = DateTime.Now
+                CreatedDateTime = DateTime.Now,
+                Status = new StatusService(context).FindStatusByStatusId(8),
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "TEST",
+                        ItemCode = "E030",
+                        Status = new StatusService(context).FindStatusByStatusId(8),
+                    }
+                }
 
             };
             requisitionRepository.Save(requisition);
