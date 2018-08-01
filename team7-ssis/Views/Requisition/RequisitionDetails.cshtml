@@ -63,13 +63,10 @@
     <div class="col-md-12">
         @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
-            <button id="backBtn" type="button" class="btn btn-secondary" onclick="window.history.go(-1)">Cancel</button>
-            <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
-            <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
-        }
-        else
-        {
-            <button type="button" class="btn btn-secondary">Back</button>
+            if (Model.Status == "Pending Approval") {
+                <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
+                <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
+            }
         }
     </div>
 </div>

@@ -3,8 +3,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
@@ -38,11 +38,50 @@ namespace team7_ssis.Controllers
         // GET: /Requisition/ManageRequisitions
         public ActionResult ManageRequisitions(string msg)
         {
+            // To pass messages from another controller
             if (TempData["cancel"] != null)
             {
-                ViewBag.Cancel = TempData["cancel"];
+                ViewBag.Danger = TempData["cancel"];
             }
-            return View();
+            if (TempData["approve"] != null)
+            {
+                ViewBag.Success = TempData["approve"];
+            }
+            if (TempData["reject"] != null)
+            {
+                ViewBag.Danger = TempData["reject"];
+            }
+
+            // pass the statuses for the appropriate Role
+            HashSet<int> adminSet = new HashSet<int> { 4, 5, 6, 7, 8, 9, 10 };
+            HashSet<int> empSet = new HashSet<int> { 4, 5, 6, 7, 8, 9, 10 };
+            HashSet<int> deptHeadSet = new HashSet<int> { 4, 5, 6 };
+            HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10 };
+
+            HashSet<int> statuses = new HashSet<int>();
+            foreach( string role in userManager.GetRoles(User.Identity.GetUserId()))
+            {
+                if (role == "Employee")
+                {
+                    statuses.UnionWith(empSet);
+                }
+                if (role == "DepartmentHead")
+                {
+                    statuses.UnionWith(deptHeadSet);
+                }
+                if (role == "Store Clerk")
+                {
+                    statuses.UnionWith(storeClerkSet);
+                }
+                if (role == "Admin")
+                {
+                    statuses.UnionWith(adminSet);
+                }
+            }
+            // Convert to List to allow JS to easily parse
+            List<int> statusList = statuses.ToList();
+
+            return View(statusList);
         }
 
         // GET: /Requisiton/RequisitionDetails
@@ -52,6 +91,7 @@ namespace team7_ssis.Controllers
             RequisitionDetailViewModel viewModel = new RequisitionDetailViewModel();
             try
             {
+                viewModel.Status = r.Status.Name;
                 viewModel.RequisitionID = r.RequisitionId;
                 viewModel.Department = r.Department == null ? "" : r.Department.Name;
                 viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
@@ -68,7 +108,7 @@ namespace team7_ssis.Controllers
             }
             return View(viewModel);
         }
-        // GET: /Requisiton/StationeryRetrieval
+        // GET (or POST): /Requisiton/StationeryRetrieval
         public ActionResult StationeryRetrieval(string rid, string message)
         {
             Retrieval r = retrievalService.FindRetrievalById(rid);
@@ -160,14 +200,16 @@ namespace team7_ssis.Controllers
         public ActionResult Approve(string rid, string email, string remarks)
         {
             requisitionService.ApproveRequisition(rid, email, remarks);
-            return View("../Requisition/ManageRequisitions");
+            TempData["approve"] = String.Format("Requisition #{0} approved.", rid);
+            return RedirectToAction("ManageRequisitions", "Requisition" );
         }
 
         // POST: /Requisition/Reject
         public ActionResult Reject(string rid, string email, string remarks)
         {
             requisitionService.RejectRequisition(rid, email, remarks);
-            return View("../Requisition/ManageRequisitions");
+            TempData["reject"] = String.Format("Requisition #{0} rejected.", rid);
+            return RedirectToAction("ManageRequisitions", "Requisition");
         }
 
         // POST: /Requisition/Cancel
@@ -176,7 +218,7 @@ namespace team7_ssis.Controllers
             try
             {
                 requisitionService.UpdateRequisitionStatus(rid, 2, "");
-                TempData["cancel"] = rid;
+                TempData["cancel"] = String.Format("Requisition #{0} cancelled.", rid);
             } catch
             {
                 return RedirectToAction("ManageRequisitions", "EditRequisition", new { rid });

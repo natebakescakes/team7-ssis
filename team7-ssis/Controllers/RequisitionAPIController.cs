@@ -63,7 +63,7 @@ namespace team7_ssis.Controllers
             return viewModel;
         }
 
-        [Route("api/requisition")]
+        [Route("api/requisitions")]
         [HttpGet]
         public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitions()
         {
@@ -82,6 +82,39 @@ namespace team7_ssis.Controllers
             return viewModel;
         }
 
+        [Route("api/requisitions")]
+        [HttpPost]
+        public IHttpActionResult GetSelectedRequisitions(List<int> statusIdList)
+        {
+            List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+            List<Requisition> reqList;
+
+            // convert ID array to Statuses
+            List<Status> statusList = new List<Status>();
+            foreach (int i in statusIdList)
+            {
+                statusList.Add(statusRepository.FindById(i));
+
+            }
+            try
+            {
+                reqList = requisitionService.FindRequisitionsByStatus(statusList);
+            }
+            catch (ArgumentException)
+            {
+                return Ok();
+            }
+
+            foreach (Requisition r in reqList)
+            {
+                viewModel.Add(new ManageRequisitionsViewModel
+                {
+                    Requisition = r.RequisitionId,
+                    Status = r.Status.Name
+                });
+            }
+            return Ok(viewModel);
+        }
 
         [Route("api/processrequisitions")]
         [HttpPost]
