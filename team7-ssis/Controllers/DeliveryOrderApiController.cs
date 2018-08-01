@@ -91,7 +91,7 @@ namespace team7_ssis.Controllers
         }
 
 
-        [Route("api/purchaseorder/details/{purchaseorderno}")]
+        [Route("api/getpurchaseorderdetails/{purchaseorderno}")]
         [HttpGet]
 
         public List<PurchaseOrderDetailsViewModel> PurchaseOrderDetails(string purchaseorderNo)

@@ -68,6 +68,7 @@ $(document).ready(function () {
     });
 
     var pon = $("#poNo").val();
+    
     var don = $("#doNo").val();
 
     //Receive goods- View DeliveryOrders - purchaseordernumber
@@ -141,8 +142,6 @@ $(document).ready(function () {
 
         var dno = rgTable.row($(this).parents('tr')).data().DeliveryOrderNo;
 
-        alert(dno);
-
         var form = document.createElement("form");
 
         var element1 = document.createElement("input");
@@ -201,7 +200,7 @@ $(document).ready(function () {
     //for receivegoodsview-outstanding items
     var oTable = $('#myOutstandingTable').DataTable({
         ajax: {
-            url: "/api/purchaseorder/details/" + pon,
+            url: "/api/getpurchaseorderdetails/" + pon,
             dataSrc: ""
         },
         columns:
@@ -372,9 +371,16 @@ $(document).ready(function () {
 
 
     $('#confirm').click(function () {
+        
         var mydata = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
 
         var ponum = mydata[0].PurchaseOrderNo;
+
+        if (mydata.length) {
+            alert('Please select one purchase order!');
+        }
+
+
 
         var form = document.createElement("form");
 
@@ -433,7 +439,7 @@ $(document).ready(function () {
 
         form.method = "POST";
 
-        form.action = "/purchaseorder/doconfirmationview";
+        form.action = "/api/purchaseorder/details/" + pon;
 
         element1.value = pno;
 
@@ -457,7 +463,7 @@ $(document).ready(function () {
 
         form1.method = "POST";
 
-        form1.action = "/purchaseorder/ReceivedGoodsPurchaseOrderView";
+        form1.action = "/api/purchaseorder/details/" + pon;
 
         element1.value = pon;
 

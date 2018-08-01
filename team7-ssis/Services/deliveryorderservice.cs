@@ -135,7 +135,6 @@ namespace team7_ssis.Services
             sm.AfterQuantity = sm.OriginalQuantity + deliveryOrderDetail.ActualQuantity;
             sm.CreatedDateTime = DateTime.Now;
             sm.StockMovementId = IdService.GetNewStockMovementId(context);
-           // sm.DisbursementDetailItemCode = "DUMMY";
             return stockMovementRepository.Save(sm);
         }
 
