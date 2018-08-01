@@ -46,5 +46,13 @@ namespace team7_ssis.Controllers
                 CreatedDateTIme = notification.CreatedDateTime
             }));
         }
+
+        [Route("api/notification/send")]
+        [HttpPost]
+        public IHttpActionResult SendNotification()
+        {
+
+            return Ok();
+        }
     }
 }
