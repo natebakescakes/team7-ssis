@@ -448,13 +448,13 @@ $(document).ready(function () {
 
         var element1 = document.createElement("input");
 
-        form.method = "GET";
+        form.method = "POST";
 
-        form.action = "/api/purchaseorder/details/" + pno;
+        form.action = "/purchaseorder/details/"
 
         element1.value = pno;
 
-        element1.name = "pno";
+        element1.name = "poNum";
 
         element1.type = "hidden";
 
@@ -474,11 +474,11 @@ $(document).ready(function () {
 
         form1.method = "GET";
 
-        form1.action = "/api/purchaseorder/details/" + pon;
+        form1.action = "/purchaseorder/details/";
 
         element1.value = pon;
 
-        element1.name = "pon";
+        element1.name = "poNum";
 
         element1.type = "hidden";
 
