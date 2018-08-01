@@ -12,18 +12,24 @@ namespace team7_ssis.Services
     {
         ApplicationDbContext context;
         RetrievalRepository retrievalRepository;
+        StatusRepository statusRepository;
+        DisbursementRepository disbursementRepository;
+
         ItemService itemService;
         StockMovementService stockmovementService;
-        StatusRepository statusRepository;
+        DisbursementService disbursementService;
+
 
         public RetrievalService(ApplicationDbContext context)
         {
             this.context = context;
             retrievalRepository = new RetrievalRepository(context);
+            statusRepository = new StatusRepository(context);
+            disbursementRepository = new DisbursementRepository(context);
+
             itemService = new ItemService(context);
             stockmovementService = new StockMovementService(context);
-
-            statusRepository = new StatusRepository(context);
+            disbursementService = new DisbursementService(context);
         }
 
         public List<Retrieval> FindAllRetrievals()
@@ -176,6 +182,33 @@ namespace team7_ssis.Services
                 var disbursement = FindRetrievalById(retrievalId).Disbursements.Where(d => d.Department.DepartmentCode == breakdown.DeptId).FirstOrDefault();
 
                 new DisbursementService(context).UpdateActualQuantityForDisbursementDetail(disbursement.DisbursementId, itemCode, breakdown.Actual, email);
+            }
+        }
+
+        public void SaveRetrieval(StationeryRetrievalJSONViewModel json)
+        {
+            List<Disbursement> disbList = disbursementService.FindDisbursementsByRetrievalId(json.RetrievalID);
+            List<DisbursementDetail> ddList = disbList.SelectMany(x => x.DisbursementDetails).ToList();
+            foreach (var row in json.Data)
+            {
+                if (row.RetrievedStatus == "Picked")
+                {
+                    ddList
+                    .Where(x => x.ItemCode == row.ProductID)
+                    .ToList()
+                    .ForEach(x => x.ActualQuantity = x.PlanQuantity);
+                }
+                else if (row.RetrievedStatus == "Awaiting Picking")
+                {
+                    ddList
+                    .Where(x => x.ItemCode == row.ProductID)
+                    .ToList()
+                    .ForEach(x => x.ActualQuantity = 0);
+                }
+            }
+            foreach (Disbursement d in disbList)
+            {
+                disbursementRepository.Save(d);
             }
         }
     }
