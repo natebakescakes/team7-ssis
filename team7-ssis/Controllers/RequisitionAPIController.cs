@@ -122,19 +122,36 @@ namespace team7_ssis.Controllers
         {
             List<Requisition> reqList = new List<Requisition>();
             string rid;
-            foreach (string s in reqIdList)
-            {
-                reqList.Add(requisitionRepository.FindById(s));
-            }
+            List<string> errorList = new List<string>();
+
             try
             {
-                rid = requisitionService.ProcessRequisitions(reqList);
+                foreach (string s in reqIdList)
+                {
+                    Requisition req = requisitionRepository.FindById(s);
+                    if (req.Status.StatusId == 6)
+                    {
+                        reqList.Add(req);
+                    } else
+                    {
+                        errorList.Add(req.RequisitionId);
+                    }
+                }
+
+                // create retrieval only if there are Requisitions to be processed
+                if (reqList.Count > 0)
+                {
+                    rid = requisitionService.ProcessRequisitions(reqList);
+                } else
+                {
+                    throw new Exception("No Requisitions could be processed.");
+                } 
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            return Ok(rid);
+            return Ok( new { rid, count = reqList.Count } );
         }
 
         [Route("api/stationerydisbursement/{rId}")]

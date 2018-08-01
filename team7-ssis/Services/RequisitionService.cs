@@ -161,6 +161,7 @@ namespace team7_ssis.Services
             foreach (Requisition req in requestList)
             {
                 req.Status = statusRepository.FindById(7);
+                req.Retrieval = r;
                 requisitionRepository.Save(req);
             }
 
