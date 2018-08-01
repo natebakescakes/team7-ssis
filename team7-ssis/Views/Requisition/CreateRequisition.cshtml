@@ -42,24 +42,10 @@
 </div>
 
 <div class="row mt-3">
-
-    @if (Model.Action == "Create")
-    {
-        <div class="col-md-12">
-            <button id="cancelBtn" class="btn btn-default">Cancel</button>
-            <button id="confirmBtn" class="btn btn-primary">Confirm</button>
-        </div>
-    }
-    @if (Model.Action == "Edit")
-    {
-        <div class="col-md-8">
-            <button id="backBtn" class="btn btn-default">Back</button>
-            <button id="confirmChangeBtn" class="btn btn-success">Confirm Changes</button>
-        </div>
-        <div class="col-md-4">
-            <button id="cancelReqBtn" class="btn btn-danger pull-right"><i class="fa fa-trash" aria-hidden="true"></i> Cancel Requisition</button>
-        </div>
-    }
+    <div class="col-md-12">
+        <button id="cancelBtn" class="btn btn-default">Cancel</button>
+        <button id="confirmBtn" class="btn btn-primary">Confirm</button>
+    </div>
 </div>
 
 <div class="modal" id="myModal" tabindex="-1" role="dialog">

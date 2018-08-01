@@ -35,28 +35,10 @@
 
 <div id="alert"></div>
 
-@if (Request.QueryString["create"] != null)
-{
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        Requisition #@Request.QueryString["create"] created.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
-@if (Request.QueryString["update"] != null)
-{
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        Requisition #@Request.QueryString["update"] updated.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
 @if (ViewBag.Danger != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        Requisition #@ViewBag.Danger cancelled.
+        @ViewBag.Danger
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -129,9 +111,9 @@
                             'Actions' +
                             '</a>' +
                             '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">' +
-                            (row.Status == "Pending Approval" ? editDetailsHtml : viewDetailsHtml ) +
+                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? editDetailsHtml : viewDetailsHtml ) +
                             createNewDraftWithHtml +
-                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? cancelHtml : "" ) +
+                            ( ( row.Status == "Pending Approval" ) ? cancelHtml : "" ) +
                             '</div >' +
                             '</div >';
                         </text>
@@ -181,8 +163,6 @@
             }
         ]);
     })
-
-    
 
     // Click "Accept" button
     $(document).on("click", "#approveBtn", function (e) {

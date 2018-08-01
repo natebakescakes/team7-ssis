@@ -218,21 +218,18 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
-            update(false);
+            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
+                update(false);
+            }
+            
         });
 
         // Click "Confirm"
         $(document).on('click', '#confirmRetrievalBtn', function () {
-            update(true);
-        });
-
-        @*// Click 'Confirm Retrieval'
-        $(document).on('click', '#confirmRetrievalBtn', function () {
-            var rowData = table.rows().data().toArray();
             if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
-                post("/Retrieval/Confirm", { RetrievalID: "@Model.RetrievalID", Data: rowData });
+                update(true);
             }
-        })*@
+        });
 
         // Click 'Discard Changes'
         $(document).on('click', '#discardChangesBtn', function () {
