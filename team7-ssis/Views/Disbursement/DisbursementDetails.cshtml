@@ -63,7 +63,16 @@
                 dataSrc: ""
             },
             columns: [
-                { "data": "ItemCode", "autoWidth": true },
+                {
+                    "data": "ItemCode",
+                    "autoWidth": true,
+                    @if (User.IsInRole("Employee") || User.IsInRole("DepartmentHead"))
+                    {
+                        <text>
+                        "visible" : false
+                        </text>
+                    }
+                },
                 { "data": "Description", "autoWidth": true },
                 { "data": "Qty", "autoWidth": true },
             ],
