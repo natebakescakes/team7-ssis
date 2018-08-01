@@ -278,6 +278,7 @@ namespace team7_ssis.Tests.Services
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = statusRepository.FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -286,6 +287,7 @@ namespace team7_ssis.Tests.Services
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
                         Quantity = 20,
+                        Status = statusRepository.FindById(7),
                     }
                 }
             });
@@ -340,6 +342,7 @@ namespace team7_ssis.Tests.Services
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = statusRepository.FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -348,6 +351,7 @@ namespace team7_ssis.Tests.Services
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
                         Quantity = 30,
+                        Status = statusRepository.FindById(7),
                     }
                 }
             });
@@ -476,6 +480,7 @@ namespace team7_ssis.Tests.Services
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = statusRepository.FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -484,6 +489,7 @@ namespace team7_ssis.Tests.Services
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
                         Quantity = 30,
+                        Status = statusRepository.FindById(7),
                     }
                 }
             });
@@ -493,6 +499,7 @@ namespace team7_ssis.Tests.Services
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = statusRepository.FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -501,6 +508,7 @@ namespace team7_ssis.Tests.Services
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
                         Quantity = 30,
+                        Status = statusRepository.FindById(7),
                     }
                 }
             });
@@ -557,6 +565,7 @@ namespace team7_ssis.Tests.Services
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = statusRepository.FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -564,6 +573,7 @@ namespace team7_ssis.Tests.Services
                         RequisitionId = "RSERVICETEST1",
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
+                        Status = statusRepository.FindById(7),
                         Quantity = 30,
                     }
                 }
@@ -574,6 +584,7 @@ namespace team7_ssis.Tests.Services
                 CollectionPoint = departmentRepository.FindById("COMM").CollectionPoint,
                 Department = departmentRepository.FindById("COMM"),
                 CreatedDateTime = DateTime.Now,
+                Status = statusRepository.FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -581,6 +592,7 @@ namespace team7_ssis.Tests.Services
                         RequisitionId = "RSERVICETEST2",
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
+                        Status = statusRepository.FindById(7),
                         Quantity = 30,
                     }
                 }
