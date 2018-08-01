@@ -191,7 +191,13 @@ namespace team7_ssis.Services
             retrievalRepository.Save(retrieval);
 
             // Create Notification
-            retrieval.Requisitions.ForEach(r => new NotificationService(context).CreateNotification(r, r.CreatedBy));
+            foreach (var disbursement in retrieval.Disbursements)
+            {
+                foreach (var requisition in disbursement.Retrieval.Requisitions)
+                {
+                    new NotificationService(context).CreateNotification(disbursement, requisition.CreatedBy);
+                }
+            }
         }
 
         public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)
