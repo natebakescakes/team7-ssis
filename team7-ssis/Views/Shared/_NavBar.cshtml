@@ -17,10 +17,6 @@
                         {
                             @Html.ActionLink("Create Requisition", "CreateRequisition", "Requisition", null, new { @class = "dropdown-item" })
                         }
-                        @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
-                        {
-                            @Html.ActionLink("Outstanding Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
-                        }
                         @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
 
                     </div>
