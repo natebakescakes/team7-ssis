@@ -11,6 +11,7 @@ namespace team7_ssis.ViewModels
     {
         public string RequisitionID { get; set; }
         public string Department { get; set; }
+        public string DisbursementId { get; set; }
         public string CollectionPoint { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedTime { get; set; }

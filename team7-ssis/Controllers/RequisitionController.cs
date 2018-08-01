@@ -93,6 +93,12 @@ namespace team7_ssis.Controllers
             {
                 viewModel.Status = r.Status.Name;
                 viewModel.RequisitionID = r.RequisitionId;
+                try
+                {
+                    viewModel.DisbursementId = r.Retrieval.Disbursements.Where(x => x.Department.DepartmentCode == r.Department.DepartmentCode).First().DisbursementId;
+                } catch {
+                    viewModel.DisbursementId = "";
+                }
                 viewModel.Department = r.Department == null ? "" : r.Department.Name;
                 viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
                 viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
