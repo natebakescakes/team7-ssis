@@ -75,25 +75,25 @@
                     </div>
                     <div class="row">
                         <div class="col-md-2">
-                            <div class="thumbnail__regular"></div>
+                            <img id="thumbnail" class="thumbnail__regular" />
                         </div>
                         <div class="col-md-3">
                             <div class="label">Item Number</div>
-                            ALPA
+                            <div id="itemNumber"></div>
                             <br />
                             <div class="label">In Stock</div>
-                            20
+                            <div id="inStock"></div>
                         </div>
                         <div class="col-md-4">
                             <div class="label">Description</div>
-                            Clip Double 2"
+                            <div id="description"></div>
                             <br />
                             <div class="label">Unit of Measure</div>
-                            Dozen
+                            <div id="unitOfMeasure"></div>
                         </div>
                         <div class="col-md-3">
                             <div class="label">Category</div>
-                            Clip
+                            <div id="category"></div>
                         </div>
                     </div>
                 </div>
@@ -131,7 +131,14 @@ $(document).ready(function () {
         },
         pageLength: 5,
         columns: [
-            { "defaultContent": '<div class="thumbnail__small"></div>' },
+            {
+                data: "ImagePath",
+                width: "80px",
+                render: function (data, type, row, meta) {
+                    var html = '<img class="img-thumbnail img-responsive myImage" alt="Cinque Terre"" src="/Images/' + data + '.jpg" />';
+                    return html;
+                }
+            },
             { "data": "ItemCode", "autoWidth": true },
             { "data": "ItemCategoryName", "autoWidth": true },
             { "data": "Description", "autoWidth": true },
@@ -172,6 +179,18 @@ $(document).ready(function () {
             .row($(this).parents('tr'))
             .remove()
             .draw();
+    });
+
+    // Update things on tbody click
+    $('#addItemTable tbody').on('click', 'tr', function () {
+        var data = addItemTable.row(this).data();
+
+        $("#thumbnail").attr("src", $(this).find("img").attr("src"));
+        $("#itemNumber").html(data.ItemCode);
+        $("#description").html(data.Description);
+        $("#category").html(data.ItemCategoryName);
+        $("#inStock").html(data.Quantity);
+        $("#unitOfMeasure").html(data.Uom);
     });
 
     // Click 'Confirm' button
