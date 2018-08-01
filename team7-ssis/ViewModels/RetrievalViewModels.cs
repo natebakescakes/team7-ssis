@@ -43,6 +43,7 @@ namespace team7_ssis.ViewModels
         public string ProductID { get; set; }
         public string Name { get; set; }
         public string Bin { get; set; }
+        public int Status { get; set; }
     }
     public class RetrievalDetailsTableViewModel
     {
