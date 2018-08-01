@@ -549,7 +549,6 @@
     <Content Include="Views\Disbursement\DisbursementDetails.cshtml" />
     <Content Include="Views\Disbursement\_DisbursementDetailTable.cshtml" />
     <Content Include="Views\Requisition\CreateRequisition.cshtml" />
-    <Content Include="Views\Requisition\_CreateRequisitionTable.cshtml" />
     <Content Include="Views\StockAdjustment\New.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\Department\DepartmentOptions.cshtml" />
