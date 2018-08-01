@@ -32,10 +32,12 @@ namespace team7_ssis.Controllers
 
             RetrievalDetailsViewModel viewModel = new RetrievalDetailsViewModel();
             Item i = itemService.FindItemByItemCode(itemId);
+            Retrieval r = retrievalService.FindRetrievalById(retId);
 
             viewModel.ProductID = i.ItemCode;
             viewModel.Name = i.Name;
             viewModel.Bin = i.Bin;
+            viewModel.Status = i.Status.StatusId;
 
             return View(viewModel);
         }
