@@ -145,18 +145,21 @@
         });
     })
 
-    function addToTable(data, table, qty) {
+    function addToTable(addItemData, table, qty) {
         var itemExists = false;
         table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-            if (data[0].ItemCode == this.data().ItemCode) {
-                itemExists = true;
-                this.data().Quantity += qty;
+            if (addItemData[0].ItemCode == this.data().ItemCode) {
+                var data = this.data();
+                data.Quantity += qty;
+                this.data(data);
                 this.draw();
+
+                itemExists = true;
             }
         });
         var test = table.rows().data().toArray();
         if (itemExists == false) {
-            table.row.add({ ItemCode: data[0].ItemCode, Description: data[0].Description, Quantity: qty }).draw();
+            table.row.add({ ItemCode: addItemData[0].ItemCode, Description: addItemData[0].Description, Quantity: qty }).draw();
         }
     }
 </script>

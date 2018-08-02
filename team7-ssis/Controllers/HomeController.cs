@@ -21,7 +21,8 @@ namespace team7_ssis.Controllers
 
         public ActionResult Index()
         {
-            var representativeEmail = new UserService(Context).FindUserByEmail(User.Identity.Name).Department.Representative.Email;
+            var department = new UserService(Context).FindUserByEmail(User.Identity.Name).Department;
+            var representativeEmail = department.Representative != null ? department.Representative.Email : "";
             ViewBag.Representative = representativeEmail;
 
             // If not Employee role
