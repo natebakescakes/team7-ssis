@@ -355,8 +355,7 @@
                     //alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE    " + result.purchaseOrders);
 
                     url = $("#successUrl").val();
-                    alert(url);
-
+                    
                     var form = document.createElement("form");
                     var element1 = document.createElement("input");
                     form.method = "POST";

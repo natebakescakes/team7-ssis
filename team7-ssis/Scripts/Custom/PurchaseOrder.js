@@ -170,10 +170,10 @@ $(document).ready(function(){
 
     $(document).on("click", "#cancelPartially", function () {
 
-        alert("Hi");
+       // alert("Hi");
         var pNum = $("#purchaseOrderNo").val();
         var itemCode = poddatatbl.row($(this).parents('tr')).data().ItemCode;
-        alert(itemCode);
+       // alert(itemCode);
 
         $.ajax({
 
@@ -381,7 +381,7 @@ $(document).ready(function(){
 
 
     $('#viewRelatedDel').on('click', function (e) {
-        alert("Hi");
+       // alert("Hi");
         var pNum = $("#purchaseOrderNo").val();
         var url = $("#viewRelDelUrl").val();
 
@@ -409,7 +409,7 @@ $(document).ready(function(){
 
     $('.savebutton').on('click', function (e) {
 
-        alert("in save");
+       // alert("in save");
 
         var item = podAwaitingdatatbl.rows().data().toArray();
 
