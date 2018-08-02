@@ -105,18 +105,20 @@ namespace team7_ssis.Controllers
             var retrievalService = new RetrievalService(Context);
             var disbursementService = new DisbursementService(Context);
 
-            // string retId, string itemCode, List<BreakdownByDepartment> list
             try
             {
+                // find the Retrieval
                 Retrieval r = retrievalService.FindRetrievalById(json.RetId);
+
                 foreach (BreakdownByDepartment bd in json.List)
                 {
+                    // find the related Disbursement
                     Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == bd.DeptId).First();
                     disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, json.ItemCode, bd.Actual);
                 }
-            } catch
+            } catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             return Ok();
         }
