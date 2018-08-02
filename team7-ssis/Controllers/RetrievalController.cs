@@ -37,7 +37,7 @@ namespace team7_ssis.Controllers
             viewModel.ProductID = i.ItemCode;
             viewModel.Name = i.Name;
             viewModel.Bin = i.Bin;
-            viewModel.Status = i.Status.StatusId;
+            viewModel.Status = r.Status.StatusId;
 
             return View(viewModel);
         }
