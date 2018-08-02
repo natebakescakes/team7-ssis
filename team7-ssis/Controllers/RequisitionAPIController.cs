@@ -21,9 +21,11 @@ namespace team7_ssis.Controllers
         DisbursementService disbursementService;
         StatusService statusService;
         ItemService itemService;
-        DepartmentService departmentService;
+        DepartmentRepository departmentRepository;
         UserRepository userRepository;
         StatusRepository statusRepository;
+        CollectionPointRepository collectionPointRepository;
+        NotificationService notificationService;
 
         public RequisitionAPIController()
         {
@@ -34,9 +36,11 @@ namespace team7_ssis.Controllers
             disbursementService = new DisbursementService(context);
             statusService = new StatusService(context);
             itemService = new ItemService(context);
-            departmentService = new DepartmentService(context);
+            departmentRepository = new DepartmentRepository(context);
             userRepository = new UserRepository(context);
             statusRepository = new StatusRepository(context);
+            collectionPointRepository = new CollectionPointRepository(context);
+            notificationService = new NotificationService(context);
 
         }
 
@@ -63,7 +67,7 @@ namespace team7_ssis.Controllers
             return viewModel;
         }
 
-        [Route("api/requisition")]
+        [Route("api/requisitions")]
         [HttpGet]
         public IEnumerable<ManageRequisitionsViewModel> GetAllRequisitions()
         {
@@ -82,6 +86,46 @@ namespace team7_ssis.Controllers
             return viewModel;
         }
 
+        [Route("api/requisitions")]
+        [HttpPost]
+        public IHttpActionResult GetSelectedRequisitions(List<int> statusIdList)
+        {
+            // get current user
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
+            List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
+            List<Requisition> reqList;
+
+            // convert ID array to Statuses
+            List<Status> statusList = new List<Status>();
+            foreach (int i in statusIdList)
+            {
+                statusList.Add(statusRepository.FindById(i));
+            }
+            try
+            {
+                // find Requisition By Status
+                reqList = requisitionService.FindRequisitionsByStatus(statusList);
+
+                // if user is Employee or Department Head
+                if (user.Roles.Where(x => x.RoleId == "1" || x.RoleId == "2").Count() > 0) {
+                    reqList = reqList.Where(x => x.Department == user.Department).ToList();
+                }
+            }
+            catch (ArgumentException)
+            {
+                return Ok();
+            }
+            foreach (Requisition r in reqList)
+            {
+                viewModel.Add(new ManageRequisitionsViewModel
+                {
+                    Requisition = r.RequisitionId,
+                    Status = r.Status.Name
+                });
+            }
+            return Ok(viewModel);
+        }
 
         [Route("api/processrequisitions")]
         [HttpPost]
@@ -89,19 +133,36 @@ namespace team7_ssis.Controllers
         {
             List<Requisition> reqList = new List<Requisition>();
             string rid;
-            foreach (string s in reqIdList)
-            {
-                reqList.Add(requisitionRepository.FindById(s));
-            }
+            List<string> errorList = new List<string>();
+
             try
             {
-                rid = requisitionService.ProcessRequisitions(reqList);
+                foreach (string s in reqIdList)
+                {
+                    Requisition req = requisitionRepository.FindById(s);
+                    if (req.Status.StatusId == 6)
+                    {
+                        reqList.Add(req);
+                    } else
+                    {
+                        errorList.Add(req.RequisitionId);
+                    }
+                }
+
+                // create retrieval only if there are Requisitions to be processed
+                if (reqList.Count > 0)
+                {
+                    rid = requisitionService.ProcessRequisitions(reqList);
+                } else
+                {
+                    throw new Exception("No Requisitions could be processed.");
+                } 
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            return Ok(rid);
+            return Ok( new { rid, count = reqList.Count } );
         }
 
         [Route("api/stationerydisbursement/{rId}")]
@@ -132,25 +193,33 @@ namespace team7_ssis.Controllers
         }
         [Route("api/createrequisition")]
         [HttpPost]
-        public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
+        public IHttpActionResult CreateRequisition(UpdateRequisitionJSONViewModel json)
         {
             ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
 
-            if (itemList.Count < 1)
+            if (json.ItemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
             }
 
+            // create the requisition
             Requisition r = new Requisition();
             r.RequisitionId = IdService.GetNewRequisitionId(context);
             r.RequisitionDetails = new List<RequisitionDetail>();
-            r.Status = statusService.FindStatusByStatusId(4);
+            if (json.IsDraft == true)
+            {
+                r.Status = statusService.FindStatusByStatusId(3);
+            } else
+            {
+                r.Status = statusService.FindStatusByStatusId(4);
+            }
             r.CreatedDateTime = DateTime.Now;
             r.Department = user.Department;
-            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CollectionPoint = collectionPointRepository.FindById(json.CollectionPointId);
             r.CreatedBy = user;
 
-            foreach (CreateRequisitionJSONViewModel dd in itemList)
+            // create requisition details
+            foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
             {
                 r.RequisitionDetails.Add(new RequisitionDetail
                 {
@@ -170,17 +239,24 @@ namespace team7_ssis.Controllers
             }
 
             // Create Notification
-            new NotificationService(context).CreateNotification(r, user.Department.Head);
+            Notification n = new NotificationService(context).CreateNotification(r, user.Department.Head);
+            var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
 
             return Ok(r.RequisitionId);
 
         }
+
 
         [Route("api/editrequisition")]
         [HttpPost]
         public IHttpActionResult EditRequisition(UpdateRequisitionJSONViewModel json)
         {
             ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
+            // update the collection point
+            Department d = departmentRepository.FindById(user.Department.DepartmentCode);
+            d.CollectionPoint = collectionPointRepository.FindById(json.CollectionPointId);
+            departmentRepository.Save(d);
 
             if (json.ItemList.Count < 1)
             {
@@ -196,7 +272,7 @@ namespace team7_ssis.Controllers
                 requisitionRepository.FindRequisitionDetails(json.RequisitionId);
                 r.RequisitionDetails = new List<RequisitionDetail>();
 
-                foreach (CreateRequisitionJSONViewModel dd in json.ItemList)
+                foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
                 {
                     r.RequisitionDetails.Add(new RequisitionDetail
                     {
@@ -224,9 +300,9 @@ namespace team7_ssis.Controllers
         [Route("api/requisition/department")]
         public IHttpActionResult GetRelatedRequisitions([FromBody] EmailViewModel model)
         {
-            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department);
+            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department).OrderByDescending(r => r.CreatedDateTime);
 
-            if (requisitions.Count == 0) return NotFound();
+            if (requisitions.Count() == 0) return NotFound();
 
             return Ok(requisitions.Select(requisition => new RequisitionMobileViewModel()
             {

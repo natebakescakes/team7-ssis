@@ -58,32 +58,16 @@ namespace team7_ssis.Controllers
         {
             try
             {
-                List<Disbursement> disbList = disbursementService.FindDisbursementsByRetrievalId(viewModel.RetrievalID);
-                List<DisbursementDetail> ddList = disbList.SelectMany(x => x.DisbursementDetails).ToList();
-                foreach (var row in viewModel.Data)
+                retrievalService.SaveRetrieval(viewModel);
+                if (viewModel.IsConfirmed == true)
                 {
-                    if (row.RetrievedStatus == "Picked")
-                    {
-                        ddList
-                        .Where(x => x.ItemCode == row.ProductID)
-                        .ToList()
-                        .ForEach(x => x.ActualQuantity = x.PlanQuantity);
-                    }
-                    else if (row.RetrievedStatus == "Awaiting Picking")
-                    {
-                        ddList
-                        .Where(x => x.ItemCode == row.ProductID)
-                        .ToList()
-                        .ForEach(x => x.ActualQuantity = 0);
-                    }
+                    retrievalService.ConfirmRetrieval(viewModel.RetrievalID, "");
                 }
-                Context.SaveChanges();
-            }
-            catch
+            } catch
             {
                 return BadRequest();
             }
-            return Ok(viewModel.RetrievalID);
+            return Ok();
         }
 
         /// <summary>
@@ -121,18 +105,20 @@ namespace team7_ssis.Controllers
             var retrievalService = new RetrievalService(Context);
             var disbursementService = new DisbursementService(Context);
 
-            // string retId, string itemCode, List<BreakdownByDepartment> list
             try
             {
+                // find the Retrieval
                 Retrieval r = retrievalService.FindRetrievalById(json.RetId);
+
                 foreach (BreakdownByDepartment bd in json.List)
                 {
+                    // find the related Disbursement
                     Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == bd.DeptId).First();
                     disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, json.ItemCode, bd.Actual);
                 }
-            } catch
+            } catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             return Ok();
         }
@@ -140,9 +126,9 @@ namespace team7_ssis.Controllers
         [Route("api/retrievals/")]
         public IHttpActionResult GetRetrievals()
         {
-            var retrievals = new RetrievalService(context).FindAllRetrievals();
+            var retrievals = new RetrievalService(context).FindAllRetrievals().OrderByDescending(r => r.CreatedDateTime);
 
-            if (retrievals.Count == 0)
+            if (retrievals.Count() == 0)
                 return NotFound();
 
             return Ok(retrievals.Select(retrieval => new RetrievalMobileViewModel()

@@ -1,0 +1,165 @@
+﻿<div class="modal" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Thumbnail</th>
+                                    <th>Item Code</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>In Stock</th>
+                                    <th>Unit of Measure</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img id="thumbnail" class="thumbnail__regular" />
+                        </div>
+                        <div class="col-md-3">
+                            @if (!(User.IsInRole("Employee") || User.IsInRole("DepartmentHead")))
+                            {
+                                <div class="label">Item Number</div>
+                                <div id="itemNumber"></div>
+                                <br />
+                            }
+                            <div class="label">In Stock</div>
+                            <div id="inStock"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="label">Description</div>
+                            <div id="description"></div>
+                            <br />
+                            <div class="label">Unit of Measure</div>
+                            <div id="unitOfMeasure"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="label">Category</div>
+                            <div id="category"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modalMsg"></div>
+                <label>Qty</label>
+                <input id="qtyInput" type="number" />
+                <button id="addToReq" type="button" class="btn btn-primary">Add to Requisition</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var addItemTable;
+
+    $(document).ready(function () {
+        // render Item table
+        addItemTable = $('#addItemTable').DataTable({
+            ajax: {
+                url: "/api/manage/items",
+                dataSrc: ""
+            },
+            pageLength: 5,
+            columns: [
+                {
+                    data: "ImagePath",
+                    width: "40px",
+                    render: function (data, type, row, meta) {
+                        var html = '<img class="img-thumbnail img-responsive myImage" alt="Cinque Terre"" src="/Images/' + data + '.jpg" />';
+                        return html;
+                    }
+                },
+                {
+                    "data": "ItemCode",
+                    "autoWidth": true,
+                @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
+                {
+                    <text>
+                    visible: false
+                    </text>
+                }
+                },
+                { "data": "ItemCategoryName", "autoWidth": true },
+                { "data": "Description", "autoWidth": true },
+                { "data": "Quantity", "autoWidth": true },
+                { "data": "Uom", "autoWidth": true },
+            ],
+            select: "single"
+        });
+
+        // Display the Add Item modal
+        $('#addItemBtn').click(function () {
+            $('#myModal').modal({
+                backdrop: 'static',
+            });
+        })
+
+        // Add items to myTable
+        $('#addToReq').click(function () {
+            var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
+            var qty = parseInt($('#qtyInput').val());
+
+            // Validation for AddItem modal
+            if ((data.length > 0) && (qty > 0)) {
+                addToTable(data, myTable, qty);
+                $('#myModal').modal('hide');
+                $('#modalMsg').html('');
+            } else {
+                $('#modalMsg').html('You must select an item and a valid quantity.');
+                console.log("Error");
+            }
+        })
+
+        // Delete row
+        $(document).on('click', '#myTable i.fa.fa-times', function () {
+            console.log("clicked");
+            myTable
+                .row($(this).parents('tr'))
+                .remove()
+                .draw();
+        });
+
+        // Update things on tbody click
+        $('#addItemTable tbody').on('click', 'tr', function () {
+            var data = addItemTable.row(this).data();
+
+            $("#thumbnail").attr("src", $(this).find("img").attr("src"));
+            $("#itemNumber").html(data.ItemCode);
+            $("#description").html(data.Description);
+            $("#category").html(data.ItemCategoryName);
+            $("#inStock").html(data.Quantity);
+            $("#unitOfMeasure").html(data.Uom);
+        });
+    })
+
+    function addToTable(addItemData, table, qty) {
+        var itemExists = false;
+        table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            if (addItemData[0].ItemCode == this.data().ItemCode) {
+                var data = this.data();
+                data.Quantity += qty;
+                this.data(data);
+                this.draw();
+
+                itemExists = true;
+            }
+        });
+        var test = table.rows().data().toArray();
+        if (itemExists == false) {
+            table.row.add({ ItemCode: addItemData[0].ItemCode, Description: addItemData[0].Description, Quantity: qty }).draw();
+        }
+    }
+</script>

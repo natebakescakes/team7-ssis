@@ -67,7 +67,7 @@ namespace team7_ssis.Services
             Notification notification = InstantiateNotification(recipient);
            
             notification.NotificationType = notificationtypeRepository.FindById(2);
-            notification.Contents = String.Format("New Stationery Requisition Request: {0} for your approval", requisition.RequisitionId);
+            notification.Contents = String.Format("New Stationery Requisition Request: {0} is pending approval", requisition.RequisitionId);
             return this.Save(notification);
         }
 
@@ -76,7 +76,7 @@ namespace team7_ssis.Services
             Notification notification = InstantiateNotification(recipient);
 
             notification.NotificationType = notificationtypeRepository.FindById(3);
-            notification.Contents = String.Format("New Stock Adjustment Request: {0} for your approval", SA.StockAdjustmentId);
+            notification.Contents = String.Format("New Stock Adjustment Request: {0} is pending your approval", SA.StockAdjustmentId);
 
             return this.Save(notification);
         }
@@ -99,6 +99,35 @@ namespace team7_ssis.Services
         {
             return notificationRepository.Save(notification);
         }
+
+        public ApplicationUser GetCreatedFor(string stockadjustmentid )
+        {
+            if(notificationRepository.FindAll().Where(x => x.Contents.Contains(stockadjustmentid)).First() ==null)
+            {
+                return null;
+            }
+            else
+            {
+                Notification n = notificationRepository.FindAll().Where(x => x.Contents.Contains(stockadjustmentid)).First();
+                return n.CreatedFor;
+            }
+         
+        }
+
+        public ApplicationUser GetCreatedForRequisition(string reqId)
+        {
+            if (notificationRepository.FindAll().Where(x => x.Contents.Contains(reqId)).First() == null)
+            {
+                return null;
+            }
+            else
+            {
+                Notification n = notificationRepository.FindAll().Where(x => x.Contents.Contains(reqId)).First();
+                return n.CreatedFor;
+            }
+
+        }
+
 
     }
 }

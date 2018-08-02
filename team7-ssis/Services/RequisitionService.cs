@@ -44,7 +44,7 @@ namespace team7_ssis.Services
             var query = requisitionRepository.FindRequisitionsByStatus(statusList);
             if (query == null)
             {
-                throw new Exception("No Requisitions contain given statuses.");
+                throw new ArgumentException("No Requisitions contain given statuses.");
             }
             else
             {
@@ -97,6 +97,12 @@ namespace team7_ssis.Services
             // save the Retrieval
             retrievalService.Save(r);
 
+            // Map each requisition to each retrieval
+            foreach (Requisition req in requestList)
+            {
+                req.Retrieval = r;
+            }
+
             // create Disbursements, one for each department
             List<Disbursement> emptyDisbursements = CreateDisbursementForEachDepartment(requestList);
 
@@ -105,16 +111,41 @@ namespace team7_ssis.Services
 
             foreach (Disbursement d in filledDisbursements)
             {
-                // if disbursement details has plan quantity = 0, remove from disbursement
+                var newDisbursementDetails = new List<DisbursementDetail>();
+
+                // if disbursement details has plan quantity = 0, ignore
                 for (int i = 0; i < d.DisbursementDetails.Count(); i++)
                 {
                     if (d.DisbursementDetails[i].PlanQuantity == 0)
-                        d.DisbursementDetails.Remove(d.DisbursementDetails[i]);
+                    {
+                        // Change Requisition Detail Status to Unable to fulfill when no quantity is disbursed
+                        d.Retrieval.Requisitions.SelectMany(requisition => requisition.RequisitionDetails.Where(detail => detail.ItemCode == d.DisbursementDetails[i].ItemCode)).ToList().ForEach(detail =>
+                        {
+                            detail.Status = statusRepository.FindById(21);
+                        });
+
+                        continue;
+                    }
+
+                    // Add only DisbursementDetails that have plan quantity
+                    newDisbursementDetails.Add(d.DisbursementDetails[i]);
                 }
+
+                // Replace DisbursementDetails with filtered list
+                d.DisbursementDetails = newDisbursementDetails;
 
                 // if disbursement has no disbursement details, skip to next disbursement
                 if (d.DisbursementDetails.Count() == 0)
+                {
+                    // Change Requisition Status to Unable to fulfill when no items are disbursed
+                    d.Retrieval.Requisitions.Where(requisition => requisition.Department.DepartmentCode == d.Department.DepartmentCode).ToList().ForEach(requisition =>
+                    {
+                        requisition.Status = statusRepository.FindById(21);
+                        requisitionRepository.Save(requisition);
+                    });
                     continue;
+                }
+
 
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
@@ -127,9 +158,10 @@ namespace team7_ssis.Services
             }
 
             // update the status of the requisitions
-            foreach(Requisition req in requestList)
+            foreach (Requisition req in requestList)
             {
                 req.Status = statusRepository.FindById(7);
+                req.Retrieval = r;
                 requisitionRepository.Save(req);
             }
 
@@ -151,6 +183,7 @@ namespace team7_ssis.Services
                 d.CreatedDateTime = DateTime.Now;
                 // d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Department = dept;
+                d.Retrieval = requestList.FirstOrDefault().Retrieval;
                 disbursementList.Add(d);
             }
 
@@ -243,11 +276,11 @@ namespace team7_ssis.Services
 
             statusList.Add(approved);
             statusList.Add(reqProcessed);
-            List<Requisition> outstandingReq= FindRequisitionsByStatus(statusList);
+            List<Requisition> outstandingReq = FindRequisitionsByStatus(statusList);
 
-            foreach(Requisition req in outstandingReq)
+            foreach (Requisition req in outstandingReq)
             {
-                foreach(RequisitionDetail reqDetail in req.RequisitionDetails)
+                foreach (RequisitionDetail reqDetail in req.RequisitionDetails)
                 {
                     if (reqDetail.ItemCode == item.ItemCode)
                     {
@@ -257,7 +290,6 @@ namespace team7_ssis.Services
             }
 
             return totalQuantity;
-
         }
 
         public List<Requisition> FindRequisitionsByDepartment(Department department)
@@ -285,6 +317,9 @@ namespace team7_ssis.Services
             requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
             requisition.ApprovedDateTime = DateTime.Now;
 
+            // Update Requisition Detail Status
+            requisition.RequisitionDetails.ForEach(rd => rd.Status = new StatusService(context).FindStatusByStatusId(6));
+
             // Save
             requisitionRepository.Save(requisition);
         }
@@ -308,6 +343,9 @@ namespace team7_ssis.Services
             requisition.Status = new StatusService(context).FindStatusByStatusId(5);
             requisition.ApprovedBy = new UserService(context).FindUserByEmail(email);
             requisition.ApprovedDateTime = DateTime.Now;
+
+            // Update Requisition Detail Status
+            requisition.RequisitionDetails.ForEach(rd => rd.Status = new StatusService(context).FindStatusByStatusId(5));
 
             // Save
             requisitionRepository.Save(requisition);

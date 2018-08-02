@@ -10,6 +10,7 @@ using team7_ssis.ViewModels;
 using team7_ssis.Repositories;
 using Microsoft.AspNet.Identity;
 using team7_ssis.Services;
+using System.Text.RegularExpressions;
 
 namespace team7_ssis.Controllers
 {
@@ -69,20 +70,75 @@ namespace team7_ssis.Controllers
         public IEnumerable<StockAdjustmentViewModel> GetAllStockAdjustmentsExceptDraft()
         {
             stockAdjustmentService = new StockAdjustmentService(Context);
+            notificationService = new NotificationService(Context);
+            userService = new UserService(Context);
 
             List<StockAdjustment> list = stockAdjustmentService.FindAllStockAdjustmentExceptDraft();
             List<StockAdjustmentViewModel> sadj = new List<StockAdjustmentViewModel>();
+            //supervisor and manager process the stock adjustments which are sent to them
+            List<Notification> notifications = new List<Notification>();
+            List<string> Ids = new List<string>();
 
+            if (notificationService.FindNotificationsByUser(userService.FindUserByEmail(CurrentUserName)).Count == 0)
+            {
+
+            }
+            else
+            {
+
+                notifications = notificationService.FindNotificationsByUser(userService.FindUserByEmail(CurrentUserName));
+                foreach (Notification n in notifications)
+                {
+                    var stockAdjustmentId = Regex.Match(n.Contents, @"ADJ-\d{6}-\d{3}");
+                    Ids.Add(Convert.ToString(stockAdjustmentId));
+
+                }
+            }
 
             foreach (StockAdjustment s in list)
             {
                 StockAdjustmentViewModel savm = new StockAdjustmentViewModel();
 
                 savm.StockAdjustmentId = s.StockAdjustmentId;
-                savm.CreatedBy = s.CreatedBy == null?"" :s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
-                savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
+                savm.CreatedBy = s.CreatedBy == null ? "" : s.CreatedBy.FirstName + " " + s.CreatedBy.LastName;
+                if(s.ApprovedByManager !=null && s.ApprovedBySupervisor==null)
+                {
+                    savm.ApprovedBySupervisor = s.ApprovedByManager.FirstName + " " + s.ApprovedByManager.LastName;
+                }
+                else if(s.ApprovedByManager == null && s.ApprovedBySupervisor != null)
+                  {
+                    savm.ApprovedBySupervisor = s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
+                }
+                else if(s.ApprovedByManager==null && s.ApprovedBySupervisor==null)
+                        {     savm.ApprovedBySupervisor = ""; }
+                
+               
+               
                 savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
+
+                if (notificationService.GetCreatedFor(savm.StockAdjustmentId) != null)
+
+                {
+                    savm.ProcessBy = notificationService.GetCreatedFor(savm.StockAdjustmentId).FirstName + " " + notificationService.GetCreatedFor(savm.StockAdjustmentId).LastName;
+                }
+                else
+                {
+                    savm.ProcessBy = "";
+                }
+
+
+                if (Ids.Contains(savm.StockAdjustmentId))
+                {
+                    savm.IsSentFor = 1;
+                }
+                else
+                {
+                    savm.IsSentFor = 0;
+                }
+
+
+
                 sadj.Add(savm);
             }
 
@@ -97,6 +153,8 @@ namespace team7_ssis.Controllers
             stockAdjustmentService = new StockAdjustmentService(Context);
             userService = new UserService(Context);
             itemService = new ItemService(Context);
+            notificationService = new NotificationService(Context);
+
             StockAdjustment SA;
             try
             {
@@ -125,8 +183,34 @@ namespace team7_ssis.Controllers
 
                     });
                 }
+
+                bool flag = false;
+                foreach (StockAdjustmentDetail detail in SA.StockAdjustmentDetails)
+                {
+                    foreach (ItemPrice p in detail.Item.ItemPrices)
+                    {
+                        if (p.Price >= 250)
+                        {
+                            flag = true; break;
+                        }
+                    }
+                }
+   
+                ApplicationUser supervisor = userService.FindUserByEmail(models.First().UserName).Supervisor;
+                ApplicationUser manager = supervisor.Supervisor;
+                if (flag == true)
+                {
+                    notificationService.CreateNotification(SA, manager);
+                    
+                }
+                if (flag == false)
+                {
+                    notificationService.CreateNotification(SA, supervisor);
+                }
+
                 //save SA object into database 
                 stockAdjustmentService.updateToPendingStockAdjustment(SA);
+
             }
             catch (ArgumentException)
             {
@@ -230,7 +314,16 @@ namespace team7_ssis.Controllers
         }
 
 
-      
+        [Route("api/stockadjustment/cancel/{id}")]
+        [HttpGet]
+        public void CancelPendingStockAdjustment(string id)
+        {
+            stockAdjustmentService = new StockAdjustmentService(Context);
+
+            stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
+        }
+
+
 
         // reject with reason
         [Route("api/stockadjustment/reject")]
@@ -410,9 +503,9 @@ namespace team7_ssis.Controllers
         public IHttpActionResult GetStockAdjustmentsForSupervisor([FromBody] EmailViewModel model)
         {
             // Does not discern between supervisor and manager at the moment
-            var stockAdjustments = new StockAdjustmentService(Context).FindAllStockAdjustmentExceptDraft();
+            var stockAdjustments = new StockAdjustmentService(Context).FindAllStockAdjustmentExceptDraft().OrderByDescending(stockAdjustment => stockAdjustment.CreatedDateTime);
 
-            if (stockAdjustments.Count == 0) return NotFound();
+            if (stockAdjustments.Count() == 0) return NotFound();
 
             return Ok(stockAdjustments.Select(stockAdjustment => new StockAdjustmentRequestViewModel()
             {

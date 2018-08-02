@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
 
+  
+
     
     var shortfallTbl = $('#shortfallTable').DataTable(
         {
@@ -36,7 +38,6 @@
                 {
                     data: "AmountToReorder"
                 }
-
             ],
             autowidth: true,
             select: "multiple",

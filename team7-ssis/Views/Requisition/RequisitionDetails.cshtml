@@ -14,13 +14,29 @@
         <div class="label">Requisition</div>
         @Model.RequisitionID
     </div>
-    <div class="col-md-8">
+    @if (Model.DisbursementId != "")
+    {
+        <div class="col-md-8">
+            <div class="label">Fulfilled by Disbursement</div>
+            <a href="@Url.Action("DisbursementDetails", "Disbursement", new { did = Model.DisbursementId })">@Model.DisbursementId</a>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-8">
+        </div>
+    }
+    <div class="col-md-4">
+        <div class="label">Collection Point</div>
+        @Model.CollectionPoint
+    </div>
+    <div class="col-md-4">
         <div class="label">Department</div>
         @Model.Department
     </div>
-    <div class="col-md-12">
-        <div class="label">Collection Point</div>
-        @Model.CollectionPoint
+    <div class="col-md-4">
+        <div class="label">Status</div>
+        @Model.Status
     </div>
     <div class="col-md-4">
         <div class="label">Created By</div>
@@ -44,7 +60,7 @@
     </div>
     <div class="col-md-4">
         <div class="label">Approved Time</div>
-        @Model.UpdatedTime
+        @Model.ApprovedTime
     </div>
 </div>
 
@@ -63,13 +79,10 @@
     <div class="col-md-12">
         @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
-            <button id="backBtn" type="button" class="btn btn-secondary" onclick="window.history.go(-1)">Cancel</button>
-            <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
-            <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
-        }
-        else
-        {
-            <button type="button" class="btn btn-secondary">Back</button>
+            if (Model.Status == "Pending Approval") {
+                <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
+                <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
+            }
         }
     </div>
 </div>
@@ -83,7 +96,16 @@
                 dataSrc: ""
             },
             columns: [
-                { "data": "ItemCode", "autoWidth": true },
+                {
+                    "data": "ItemCode",
+                    "autoWidth": true,
+                    @if (User.IsInRole("Employee") || User.IsInRole("DepartmentHead"))
+                    {
+                        <text>
+                        "visible" : false
+                        </text>
+                    }
+                },
                 { "data": "Description", "autoWidth": true },
                 { "data": "Quantity", "autoWidth": true },
                 { "data": "Status", "autoWidth": true },

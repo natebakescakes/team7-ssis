@@ -43,21 +43,22 @@ namespace team7_ssis.Tests.Services
 
             PurchaseOrder PO = new PurchaseOrder()
             {
-                PurchaseOrderNo = "TEST",
+                PurchaseOrderNo = "VALLI",
                 CreatedDateTime = DateTime.Now,
                 Supplier = context.Supplier.Where(x => x.SupplierCode == "CHEP").First()
 
             };
             purchaseOrderRepository.Save(PO);
 
-            //create test DO object and save to db
-            deliveryOrderRepository.Save(new DeliveryOrder()
+           // create test DO object and save to db
+            DeliveryOrder DO = new DeliveryOrder()
             {
-                DeliveryOrderNo = "TEST",
+                DeliveryOrderNo = "DOTEST",
                 PurchaseOrder = PO,
                 CreatedDateTime = DateTime.Now,
                 Supplier = context.Supplier.Where(x => x.SupplierCode == "CHEP").First()
-            });
+            };
+            deliveryOrderRepository.Save(DO);
 
         }
 
@@ -73,10 +74,10 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        public void FindDeliveryOrderByIdValidTest()
+        public void FindDeliveryOrderByIdTest()
         {
             //Arrange
-            string expected = "TEST";
+            string expected = "DOTEST";
             //Act
             var result = deliveryOrderService.FindDeliveryOrderById(expected);
             //Assert
@@ -84,127 +85,117 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void FindDeliveryOrderByIdExceptionalTest()
+        public void FindDeliveryOrderByPurchaseOrderNoTest()
         {
             //Arrange
-            string expected = "BEST";
-            //Act
-            var result = deliveryOrderService.FindDeliveryOrderById(expected);
-           // Assert
-            Assert.AreEqual(expected, result.DeliveryOrderNo);
-        }
-
-        [TestMethod]
-        public void FindDeliveryOrderByPurchaseOrderNoValidTest()
-        {
-            //Arrange
-            string expected = "TEST";
+            string expected = "VALLI";
             //Act
             var result = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(expected);
 
             //Assert
-            foreach (DeliveryOrder d in result)
-            {
-                Assert.AreEqual(expected, d.PurchaseOrder.PurchaseOrderNo);
-            }
-
+       //     Assert.AreEqual(expected, result.PurchaseOrderNo);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void FindDeliveryOrderByPurchaseOrderNoExceptionalTest()
-        {
-            //Arrange
-            string expected = "BEST";
-           // Act
-            var result = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(expected);
-
-            //Assert
-            foreach (DeliveryOrder d in result)
-            {
-                Assert.AreEqual(expected, d.PurchaseOrder.PurchaseOrderNo);
-            }
-
-        }
-
-        [TestMethod]
-        public void FindDeliveryOrderBySupplierValidTest()
+        public void FindDeliveryOrderBySupplierTest()
         {
            // Arrange
             string expected = "CHEP";
-           // Act
-            var result = deliveryOrderService.FindDeliveryOrderBySupplier(expected);
+            // Act
+            Supplier s = context.Supplier.Where(x => x.SupplierCode == "CHEP").First();
 
             //Assert
-            foreach (DeliveryOrder d in result)
-            {
-                Assert.AreEqual(expected, d.Supplier.SupplierCode);
-            }
-
+            Assert.AreEqual(expected, s.SupplierCode);
         }
 
+        //save delivery order test
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void FindDeliveryOrderBySupplierExceptionalTest()
-        {
-          //  Arrange
-            string expected = "CHEAP";
-           // Act
-            var result = deliveryOrderService.FindDeliveryOrderBySupplier(expected);
-
-           // Assert
-            foreach (DeliveryOrder d in result)
-            {
-                Assert.AreEqual(expected, d.Supplier.SupplierCode);
-            }
-
-        }
-
-        [TestMethod]
-        [Ignore]
         public void SaveTest()
         {
-           // Arrange
-           PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
-            DeliveryOrder d1 = new DeliveryOrder
-            {
-                DeliveryOrderNo = "DDDD",
-                PurchaseOrder = po,
-                CreatedDateTime = DateTime.Now
-            };
+            // Arrange
+            PurchaseOrder po = purchaseOrderRepository.FindById("VALLI");
+            DeliveryOrder d1 = new DeliveryOrder();
+            d1.DeliveryOrderNo = "DODTEST";
+            d1.PurchaseOrder = po;
+            d1.CreatedDateTime = DateTime.Now;
 
-            DeliveryOrderDetail dod1 = new DeliveryOrderDetail
+            //Act
+
+            var result = deliveryOrderService.Save(d1);
+
+            //Assert
+
+            Assert.AreEqual("DODTEST", result.DeliveryOrderNo);
+            deliveryOrderRepository.Delete(d1);
+        }
+
+        [TestMethod]
+        public void SaveDeliveryOrderDetailsTest()
+        {
+            //Arrange
+
+            PurchaseOrder PO= purchaseOrderRepository.FindById("VALLI");
+            DeliveryOrder DO = deliveryOrderRepository.FindById("DOTEST");
+
+            DeliveryOrderDetail dod = new DeliveryOrderDetail()
             {
-                DeliveryOrderNo = "DDDD",
-                ItemCode = itemRepository.FindById("E030").ItemCode,
+                DeliveryOrderNo = "DOTEST",
+                ItemCode = itemRepository.FindById("C003").ItemCode,
                 PlanQuantity = 100,
                 ActualQuantity = 50,
                 Status = statusRepository.FindById(0)
             };
 
-            Item i = itemRepository.FindById("E030");
-
-            List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>
-            {
-                dod1
-            };
-            d1.DeliveryOrderDetails = list;
-
-           // Act
-           var result = deliveryOrderService.Save(d1);
-            var result1 = stockMovementRepository.FindById(2);
+            //Act
+            var result = deliveryOrderService.SaveDeliveryOrderDetails(dod);
 
             //Assert
-            Assert.AreEqual("DDDD", result.DeliveryOrderNo);
-            Assert.IsInstanceOfType(result, typeof(DeliveryOrder));
+            Assert.AreEqual("DOTEST", result.DeliveryOrderNo);
 
-           // clean
-            deliveryOrderRepository.Delete(d1);
-            po.Status = statusRepository.FindById(15);
-            purchaseOrderRepository.Save(po);
-            stockMovementRepository.Delete(result1);
+            deliveryOrderDetailRepository.Delete(dod);
         }
+
+        [TestMethod]
+        public void CheckSaveTest()
+        {
+            PurchaseOrder PO = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "VALLI").First();
+
+            DeliveryOrder DO= context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "DOTEST").First();
+
+            Item item = itemRepository.FindById("E030");
+
+            DeliveryOrderDetail dod = new DeliveryOrderDetail()
+            {
+                DeliveryOrder = DO,
+                DeliveryOrderNo = DO.DeliveryOrderNo,
+                Item = item,
+                ItemCode = item.ItemCode,
+                PlanQuantity = 100,
+                ActualQuantity = 50,
+                Status = statusRepository.FindById(1),
+                UpdatedDateTime = DateTime.Now
+            };
+
+            deliveryOrderService.SaveStockMovement(dod);
+            deliveryOrderService.SaveInventory(dod.Item, 50);
+
+            // Act
+            var result = deliveryOrderService.SaveDeliveryOrderDetails(dod);
+
+
+            //Assert
+            Assert.AreEqual("DOTEST", result.DeliveryOrderNo);
+
+            // clean
+            //PO.Status = statusRepository.FindById(15);
+            //purchaseOrderRepository.Save(PO);
+            Inventory inv = inventoryRepository.FindById("E030");
+            inv.Quantity = inv.Quantity - 50;
+            inventoryRepository.Save(inv);
+        }
+
+
+
 
         [TestMethod]
         public void SaveInventoryTest()
@@ -215,11 +206,14 @@ namespace team7_ssis.Tests.Services
          //   Act
             var result = deliveryOrderService.SaveInventory(i, 50);
             Inventory inv = inventoryRepository.FindById("E030");
-            inv.Quantity = 0;
             inventoryRepository.Save(inv);
 
            // Arrange
             Assert.AreEqual("E030", result.ItemCode);
+
+            //clean
+            inv.Quantity = inv.Quantity - 50;
+            inventoryRepository.Save(inv);
         }
 
         [TestMethod]
@@ -228,74 +222,76 @@ namespace team7_ssis.Tests.Services
           //  Arrange
             Item i = itemRepository.FindById("E030");
 
-            PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
+            PurchaseOrder po = purchaseOrderRepository.FindById("VALLI");
 
-            DeliveryOrder d1 = new DeliveryOrder
-            {
-                DeliveryOrderNo = "DDDD",
-                PurchaseOrder = po,
-                CreatedDateTime = DateTime.Now
-            };
+            DeliveryOrder DO = context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "DOTEST").First();
 
-            DeliveryOrderDetail dod1 = new DeliveryOrderDetail
+            DeliveryOrderDetail DOD = new DeliveryOrderDetail()
             {
-                DeliveryOrder = d1,
+                DeliveryOrder = DO,
+                DeliveryOrderNo = DO.DeliveryOrderNo,
                 Item = i,
+                ItemCode = i.ItemCode,
                 PlanQuantity = 100,
-                ActualQuantity = 50
+                ActualQuantity = 50,
+                Status = statusRepository.FindById(1),
+                UpdatedDateTime = DateTime.Now
             };
 
             List<DeliveryOrderDetail> list = new List<DeliveryOrderDetail>
             {
-                dod1
+                DOD
             };
-            d1.DeliveryOrderDetails = list;
-            new DeliveryOrderRepository(context).Save(d1);
-            new DeliveryOrderDetailRepository(context).Save(dod1);
+            DO.DeliveryOrderDetails = list;
+            new DeliveryOrderRepository(context).Save(DO);
+            new DeliveryOrderDetailRepository(context).Save(DOD);
 
 
           //  Act
-            var result = deliveryOrderService.SaveStockMovement(dod1, i, 50);
+            var result = deliveryOrderService.SaveStockMovement(DOD);
 
           //  Arrange
             Assert.AreEqual("E030", result.Item.ItemCode);
-
-         //   Clean
-            stockMovementRepository.Delete(result);
-            deliveryOrderDetailRepository.Delete(dod1);
-            deliveryOrderRepository.Delete(d1);
         }
 
-
-        [TestMethod]
-        [Ignore]
-        public void SaveDOFileToDeliveryOrderTest()
-        {
-         //   Arrange
-             string filename = @"C:\Valli\MyFirstProgram.txt";
-
-         //   Act
-           //   String result = deliveryOrderService.SaveDOFileToDeliveryOrder(filename);
-
-          //  define string expectedPath
-            Path.GetFullPath(HttpContext.Current.Server.MapPath("/DOFiles"));
-          //  Path.GetFullPath(HttpContext.Current.Server.MapPath(filelocation));
-
-           // Assert
-           // Assert.AreEqual(fileName, result);
-          //  bool fileExists = File.Exists(result);
-           // Assert.IsTrue(fileExists);
-        }
 
 
         [TestCleanup]
         public void TestClean()
         {
-            DeliveryOrder d = deliveryOrderService.FindDeliveryOrderById("TEST");
-            deliveryOrderRepository.Delete(d);
+            StockMovement sm = context.StockMovement.Where(x => x.DeliveryOrderNo == "DOTEST").FirstOrDefault();
+            if(sm!=null)
+                stockMovementRepository.Delete(sm);
 
-            PurchaseOrder p = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "TEST").First();
+            List<DeliveryOrder> doList = context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "DOTEST").ToList();
+            if (doList.Count > 0)
+            {
+                foreach (DeliveryOrder d in doList)
+                {
+                    deliveryOrderRepository.Delete(d);
+                }
+            }
+
+            PurchaseOrder p = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "VALLI").First();
             purchaseOrderRepository.Delete(p);
+
+            List<DeliveryOrderDetail> dod= context.DeliveryOrderDetail.Where(x => x.DeliveryOrderNo == "DOTEST").ToList();
+            if (dod.Count > 0)
+            {
+                foreach (DeliveryOrderDetail d in dod)
+                {
+                    deliveryOrderDetailRepository.Delete(d);
+                }
+            }
+
+           List<DeliveryOrderDetail> dod1 = context.DeliveryOrderDetail.Where(x => x.DeliveryOrderNo == "DODTEST").ToList();
+            if (dod.Count > 0)
+            {
+                foreach (DeliveryOrderDetail d in dod)
+                {
+                    deliveryOrderDetailRepository.Delete(d);
+                }
+            }
         }
     }
 }
