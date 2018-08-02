@@ -135,6 +135,9 @@ namespace team7_ssis.Controllers
                 delegation.CreatedBy = userService.FindUserByEmail(CurrentUserName); 
                 delegation.Status = statusService.FindStatusByStatusId(1);
                 delegationService.DelegateManager(delegation);
+
+                // Give role
+                userService.AddDepartmentHeadRole(delegation.Receipient.Email);
             }
             return new JsonResult { Data = new { status = status } };
            
