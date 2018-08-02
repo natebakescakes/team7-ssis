@@ -9,7 +9,7 @@
         <h2>Edit @(Model.StatusId == 3 ? "Draft" : "Requisition") #@Model.RequisitionId</h2>
     </div>
     <div class="col-md-4">
-        <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-files-o" aria-hidden="true"></i> Save as New Draft</button>
+        <button id="createNewDraft" class="btn btn-default pull-right"><i class="fa fa-files-o" aria-hidden="true"></i> Save as New Draft</button>
     </div>
 </div>
 
@@ -32,10 +32,10 @@
     <div class="col-md-12">
         <h3>Select Collection Point</h3>
         @*Bind input to List<CollectionPoint>*@
-        <select id="collectionPointSelect" class="custom-select">
+        <select class="custom-select">
             @foreach (var collectionPoint in Model.SelectCollectionPointList)
             {
-                <option value="@collectionPoint.CollectionPointId" @(Model.CollectionPointId == collectionPoint.CollectionPointId ? "selected" : "")>@collectionPoint.Name</option>
+                <option value="@collectionPoint.CollectionPointId">@collectionPoint.Name</option>
             }
         </select>
 
@@ -74,15 +74,7 @@
                 dataSrc: ""
             },
             columns: [
-                {
-                    data: "ItemCode",
-                @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
-                {
-                    <text>
-                    visible: false
-                    </text>
-                }
-                },
+                { data: "ItemCode" },
                 { data: "Description" },
                 { data: "Quantity" },
                 { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
@@ -99,10 +91,10 @@
     // Click 'Save' button
     $('#saveBtn').click(function () {
         var tableData = myTable.rows().data().toArray();
-        var cpId = $('#collectionPointSelect').val();
-        var data = { CollectionPointId: cpId, RequisitionId: "@Model.RequisitionId", ItemList: [] };
 
         if (tableData.length > 0) {
+            var data = { RequisitionId: "@Model.RequisitionId" , ItemList: [] };
+
             for (i = 0; i < tableData.length; i++) {
                 data.ItemList[i] = { ItemCode: tableData[i].ItemCode, Qty: tableData[i].Quantity }
             }
@@ -150,4 +142,11 @@
             );
         }
     })
+
+    // Click "Create New Draft" link
+    $(document).on("click", "#createNewDraft", function (e) {
+        e.preventDefault();
+        console.log("Create New Draft");
+        post("/Requisition/Draft", { rid: @Model.RequisitionId });
+    });
 </script>

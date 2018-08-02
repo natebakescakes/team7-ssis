@@ -73,6 +73,7 @@ namespace team7_ssis.Tests.Controllers
                         new DisbursementDetail
                         {
                             Item = ItemRepository.FindById(itemCode),
+                            PlanQuantity = 99,
                             ActualQuantity = 0
                         }
                     }

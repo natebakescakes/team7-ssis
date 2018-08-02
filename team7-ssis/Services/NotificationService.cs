@@ -100,5 +100,34 @@ namespace team7_ssis.Services
             return notificationRepository.Save(notification);
         }
 
+        public ApplicationUser GetCreatedFor(string stockadjustmentid )
+        {
+            if(notificationRepository.FindAll().Where(x => x.Contents.Contains(stockadjustmentid)).First() ==null)
+            {
+                return null;
+            }
+            else
+            {
+                Notification n = notificationRepository.FindAll().Where(x => x.Contents.Contains(stockadjustmentid)).First();
+                return n.CreatedFor;
+            }
+         
+        }
+
+        public ApplicationUser GetCreatedForRequisition(string reqId)
+        {
+            if (notificationRepository.FindAll().Where(x => x.Contents.Contains(reqId)).First() == null)
+            {
+                return null;
+            }
+            else
+            {
+                Notification n = notificationRepository.FindAll().Where(x => x.Contents.Contains(reqId)).First();
+                return n.CreatedFor;
+            }
+
+        }
+
+
     }
 }
