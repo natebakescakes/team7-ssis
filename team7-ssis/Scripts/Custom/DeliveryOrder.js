@@ -245,10 +245,12 @@ $(document).ready(function () {
         var QtyOrdered = $('#myOutstandingTable').DataTable().row(document.getElementById(this.id).parentElement.parentElement).data().QuantityOrdered;
        // alert(QtyOrdered);
 
-        var RemainingQty = parseInt(QtyOrdered) - parseInt(QuantityReceived);
-        // alert(RemainingQty);
-
-        oTable.cell(rowIdx, 4).data(RemainingQty).draw();
+        if (QuantityReceived <= QtyOrdered) {
+            var RemainingQty = parseInt(QtyOrdered) - parseInt(QuantityReceived);
+            oTable.cell(rowIdx, 4).data(RemainingQty).draw();
+        }
+        else
+         alert("ReceivedQuantity cannot be greater than outstanding Quantity");   
 
     });
 
