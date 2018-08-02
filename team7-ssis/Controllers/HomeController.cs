@@ -21,11 +21,14 @@ namespace team7_ssis.Controllers
 
         public ActionResult Index()
         {
+            var representativeEmail = new UserService(Context).FindUserByEmail(User.Identity.Name).Department.Representative.Email;
+            ViewBag.Representative = representativeEmail;
+
             // If not Employee role
             if (!User.IsInRole("Employee"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
             // If Department Representative
-            else if (new UserService(Context).FindUserByEmail(User.Identity.Name).Department.Representative.Email == User.Identity.Name)
+            else if (representativeEmail == User.Identity.Name)
                 return RedirectToAction("ManageRequisitions", "Requisition");
 
             return RedirectToAction("Unauthorized");
