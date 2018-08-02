@@ -285,6 +285,9 @@ namespace team7_ssis.Controllers
                         Status = statusService.FindStatusByStatusId(4)
                     });
                 }
+                r.UpdatedBy = user;
+                r.UpdatedDateTime = DateTime.Now;
+
                 requisitionService.Save(r);
             }
             catch
