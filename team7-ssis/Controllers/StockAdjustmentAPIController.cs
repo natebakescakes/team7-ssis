@@ -125,8 +125,34 @@ namespace team7_ssis.Controllers
 
                     });
                 }
+
+                bool flag = false;
+                foreach (StockAdjustmentDetail detail in SA.StockAdjustmentDetails)
+                {
+                    foreach (ItemPrice p in detail.Item.ItemPrices)
+                    {
+                        if (p.Price >= 250)
+                        {
+                            flag = true; break;
+                        }
+                    }
+                }
+   
+                ApplicationUser supervisor = userService.FindUserByEmail(models.First().UserName).Supervisor;
+                ApplicationUser manager = supervisor.Supervisor;
+                if (flag == true)
+                {
+                    notificationService.CreateNotification(SA, manager);
+                    
+                }
+                if (flag == false)
+                {
+                    notificationService.CreateNotification(SA, supervisor);
+                }
+
                 //save SA object into database 
                 stockAdjustmentService.updateToPendingStockAdjustment(SA);
+
             }
             catch (ArgumentException)
             {
