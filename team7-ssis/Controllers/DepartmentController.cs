@@ -33,10 +33,10 @@ namespace team7_ssis.Controllers
             }
             catch (NullReferenceException) { }
 
-            //context = new ApplicationDbContext();
+            context = new ApplicationDbContext();
             //departmentService = new DepartmentService(context);
             //collectionPointService = new CollectionPointService(context);
-            //userService = new UserService(context);
+            userService = new UserService(context);
             //user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             //statusService = new StatusService(context);
             //delegationService = new DelegationService(context);
@@ -112,7 +112,7 @@ namespace team7_ssis.Controllers
             statusService = new StatusService(context);
             delegationService = new DelegationService(context);
 
-            bool status = false;
+            int status = 0;
             Department dpt = departmentService.FindDepartmentByUser(userService.FindUserByEmail(CurrentUserName));
             Delegation delegation = new Delegation();
             
@@ -121,11 +121,11 @@ namespace team7_ssis.Controllers
             dpt.Representative = userService.FindUserByEmail(model.DepartmentRep);
             dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPoint));
 
-            if (departmentService.Save(dpt) != null) status = true;
+            if (departmentService.Save(dpt) != null) status = 1;
 
             delegation.Receipient = userService.FindUserByEmail(model.DelegationRecipient);
 
-            if (delegation.Receipient != null)
+            if (delegation.Receipient!= null && model.StartDate!=null && model.EndDate!=null)
             {
                 delegation.DelegationId = IdService.GetNewDelegationId(context);
                 delegation.StartDate = DateTime.Parse(model.StartDate, new CultureInfo("fr-FR", false));
@@ -135,7 +135,14 @@ namespace team7_ssis.Controllers
                 delegation.CreatedBy = userService.FindUserByEmail(CurrentUserName); 
                 delegation.Status = statusService.FindStatusByStatusId(1);
                 delegationService.DelegateManager(delegation);
+                status = 2;
             }
+
+            if(delegation.Receipient != null && model.StartDate==null && model.EndDate==null)
+            {
+                status = 3;
+            }
+           
             return new JsonResult { Data = new { status = status } };
            
         }
