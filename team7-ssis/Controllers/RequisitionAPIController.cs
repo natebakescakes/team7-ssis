@@ -275,8 +275,9 @@ namespace team7_ssis.Controllers
 
                 // Load exisiting repository
                 requisitionRepository.FindRequisitionDetails(json.RequisitionId);
+                
+                // Update the RequisitionDetails with new information
                 r.RequisitionDetails = new List<RequisitionDetail>();
-
                 foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
                 {
                     r.RequisitionDetails.Add(new RequisitionDetail
@@ -287,6 +288,17 @@ namespace team7_ssis.Controllers
                         Status = statusService.FindStatusByStatusId(4)
                     });
                 }
+
+                // update status
+                if (json.IsDraft == true)
+                {
+                    r.Status = statusService.FindStatusByStatusId(3); // remain as Draft
+                }
+                else
+                {
+                    r.Status = statusService.FindStatusByStatusId(4); // make Pending Approval
+                }
+
                 requisitionService.Save(r);
             }
             catch

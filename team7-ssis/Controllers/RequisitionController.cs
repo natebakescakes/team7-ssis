@@ -43,9 +43,13 @@ namespace team7_ssis.Controllers
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
-        // GET: /Requisition/ManageRequisitions
+        // GET/POST: /Requisition/ManageRequisitions
         public ActionResult ManageRequisitions(string msg)
         {
+            if (msg != null)
+            {
+                ViewBag.Info = msg;
+            }
             // To pass messages from another controller
             if (TempData["cancel"] != null)
             {
