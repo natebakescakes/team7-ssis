@@ -98,8 +98,8 @@
 
             ],
             createdRow: function (row, data, index) {
-                if (data['UnitPrice'] > 250) {//操作次数大于1000的变红显示
-                    $('td', row).eq(3).css('font-weight', "bold").css("color", "green");
+                if (data['UnitPrice'] > 250) {
+                    $('td', row).eq(3).css('font-weight', "bold").css("color", "red");
                 }
             },
             autowidth: true,

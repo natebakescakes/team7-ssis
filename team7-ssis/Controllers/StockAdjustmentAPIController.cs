@@ -274,7 +274,16 @@ namespace team7_ssis.Controllers
         }
 
 
-      
+        [Route("api/stockadjustment/cancel/{id}")]
+        [HttpGet]
+        public void CancelPendingStockAdjustment(string id)
+        {
+            stockAdjustmentService = new StockAdjustmentService(Context);
+
+            stockAdjustmentService.CancelDraftOrPendingStockAdjustment(id);
+        }
+
+
 
         // reject with reason
         [Route("api/stockadjustment/reject")]
