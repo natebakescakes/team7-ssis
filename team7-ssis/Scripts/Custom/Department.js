@@ -139,11 +139,11 @@
         enableInput();
     });
 
-    var cancelbtn = $('#cancel-btn').on('click', function () {
-        disableInput();
-        $('#edit-btn').show();
-        $(".button-set").hide();
-    });
+    //var cancelbtn = $('#cancel-btn').on('click', function () {
+    //    disableInput();
+    //    $('#edit-btn').show();
+    //    $(".button-set").hide();
+    //});
 
     function enableInput() {
         $('#departmentdetails')

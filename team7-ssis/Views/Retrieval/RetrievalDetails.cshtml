@@ -37,7 +37,7 @@
 
 </table>
 
-@if (Model.Status == 7)
+@if (Model.Status != 20)
 {
     <div class="row mt-3">
         <div class="col-md-12">
@@ -65,17 +65,18 @@
                 { "data": "DeptName", "autoWidth": true },
                 { "data": "Needed", "autoWidth": true },
                 // TODO: set the maximum value of the input to be the same as Needed
-                @if (Model.Status == 17 )
+                @if (Model.Status != 20 )
                 {
                 <text>
                 {
                     "data": "Actual",
                     "autoWidth": true,
                     "render": function (data, type, row, meta) {
-                        'value="' + data + '" min="0" max="' + row.Needed + '"/>';
-                                    console.log(row);
+                        var error;
+                        error = data > row.Needed ? '<i class="fa fa-exclamation-triangle ml-1 text-danger" aria-hidden="true"></i>' : '';
                         var html = '<input class="actual" type="number" id="height" name="actual"' +
-return html;
+                            'value="' + data + '" min="0" max="' + row.Needed + '"/>' + error;
+                        return html;
                     }
                 },
                 </text>
@@ -130,11 +131,11 @@ return html;
                         '</button>' +
                     '</div > ');
             },
-            error: function (msg) {
+            error: function (data) {
                 console.log("fail");
                 $('#alert').html(
                     '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                        'An unexpected error occured.' +
+                        data.responseJSON.Message +
                         '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span>' +
                         '</button>' +
