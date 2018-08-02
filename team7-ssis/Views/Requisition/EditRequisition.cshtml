@@ -9,7 +9,7 @@
         <h2>Edit @(Model.StatusId == 3 ? "Draft" : "Requisition") #@Model.RequisitionId</h2>
     </div>
     <div class="col-md-4">
-        <button id="createNewDraft" class="btn btn-default pull-right"><i class="fa fa-files-o" aria-hidden="true"></i> Save as New Draft</button>
+        <button id="saveNewDraft" class="btn btn-default pull-right"><i class="fa fa-files-o" aria-hidden="true"></i> Save as New Draft</button>
     </div>
 </div>
 
@@ -32,10 +32,10 @@
     <div class="col-md-12">
         <h3>Select Collection Point</h3>
         @*Bind input to List<CollectionPoint>*@
-        <select class="custom-select">
+        <select id="collectionPointSelect" class="custom-select">
             @foreach (var collectionPoint in Model.SelectCollectionPointList)
             {
-                <option value="@collectionPoint.CollectionPointId">@collectionPoint.Name</option>
+                <option value="@collectionPoint.CollectionPointId" @(Model.CollectionPointId == collectionPoint.CollectionPointId ? "selected" : "")>@collectionPoint.Name</option>
             }
         </select>
 
@@ -47,10 +47,10 @@
 
 <div class="row mt-3">
     <div class="col-md-8">
-        <button id="saveBtn" class="btn btn-default"><i class="fa fa-save" aria-hidden="true"></i> Save Changes</button>
+        <button id="saveChangesBtn" class="btn btn-default"><i class="fa fa-save" aria-hidden="true"></i> Save Changes</button>
         @if (Model.StatusId == 3) // Draft
         {
-            <button id="confirmSubmitBtn" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Submit for Approval</button>
+            <button id="submitApprovalBtn" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Submit for Approval</button>
         }
     </div>
     <div class="col-md-4">
@@ -74,7 +74,15 @@
                 dataSrc: ""
             },
             columns: [
-                { data: "ItemCode" },
+                {
+                    data: "ItemCode",
+                @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
+                {
+                    <text>
+                    visible: false
+                    </text>
+                }
+                },
                 { data: "Description" },
                 { data: "Quantity" },
                 { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
@@ -88,50 +96,57 @@
         post("/Requisition/Cancel", { rid: "@Model.RequisitionId" });
     })
 
-    // Click 'Save' button
-    $('#saveBtn').click(function () {
+    // Click 'Save Changes' button
+    $('#saveChangesBtn').click(function () {
         var tableData = myTable.rows().data().toArray();
+        var colPoint = $('#collectionPointSelect').val();
+        var json = { CollectionPointId: colPoint, RequisitionId: "@Model.RequisitionId", ItemList: [], IsDraft: @( Model.StatusId == 3 ? "true" : "false" ) };
+        console.log("save changes");
+        CallApi(tableData, json);
+    })
 
-        if (tableData.length > 0) {
-            var data = { RequisitionId: "@Model.RequisitionId" , ItemList: [] };
+    // Click 'Submit for Approval' button
+    $('#submitApprovalBtn').click(function () {
+        var tableData = myTable.rows().data().toArray();
+        var colPoint = $('#collectionPointSelect').val();
+        var json = { CollectionPointId: colPoint, RequisitionId: "@Model.RequisitionId", ItemList: [], IsDraft: false };
+        console.log("submit for approval");
+        CallApi(tableData, json);
+    })
 
-            for (i = 0; i < tableData.length; i++) {
-                data.ItemList[i] = { ItemCode: tableData[i].ItemCode, Qty: tableData[i].Quantity }
+    // Click "Save as New Draft" link
+    $(document).on("click", "#saveNewDraft", function (e) {
+        e.preventDefault();
+        console.log("Create New Draft");
+        post("/Requisition/Draft", { rid: "@Model.RequisitionId" });
+    });
+
+    function CallApi(data, json) {
+        if (data.length > 0) {
+            for (i = 0; i < data.length; i++) {
+                json.ItemList[i] = { ItemCode: data[i].ItemCode, Qty: data[i].Quantity }
             }
 
             $.ajax({
                 type: "POST",
                 contentType: 'application/json',
                 url: "/api/editrequisition",
-                data: JSON.stringify(data),
+                data: JSON.stringify(json),
                 dataType: "json",
                 success: function (rid) {
-                    $('#alert').html(
-                        '<div class="alert alert-success" role="alert">' +
-                        @if (Model.StatusId == 3) {
-                        <text>
-                        'Draft'
-                        </text>
-                        }
-                        else if (Model.StatusId == 4) {
-                        <text>
-                        'Requisition'
-                        </text>
-                        } + " #" + rid + ' updated.' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '</div>'
-                )},
+                    // post back to Manage Requisition
+                    console.log("success");
+                    var msg = '#' + rid + ' successfully updated.';
+                    post("/Requisition/ManageRequisitions", { msg });
+                },
                 error: function (msg) {
                     $('#alert').html(
                         '<div class="alert alert-danger" role="alert">' +
-                            'An unexpected error occured.' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                        '</div>'
-                    );
+                        'An unexpected error occured.' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>')
                 }
             });
         } else {
@@ -141,12 +156,5 @@
                 '</div>'
             );
         }
-    })
-
-    // Click "Create New Draft" link
-    $(document).on("click", "#createNewDraft", function (e) {
-        e.preventDefault();
-        console.log("Create New Draft");
-        post("/Requisition/Draft", { rid: @Model.RequisitionId });
-    });
+    }
 </script>
