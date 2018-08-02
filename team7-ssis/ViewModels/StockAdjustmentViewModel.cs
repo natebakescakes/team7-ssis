@@ -36,7 +36,8 @@ namespace team7_ssis.ViewModels
         public  string ApprovedBySupervisor { get; set; }
         public string CreatedDateTime { get; set; }
         public  string  StatusName { get; set; }
-        public  string Link { get; set; }
+        public string ProcessBy { get; set; }
+        public  int IsSentFor { get; set; }
 
         public List<ApplicationUser> supervisors { get; set; }
 
