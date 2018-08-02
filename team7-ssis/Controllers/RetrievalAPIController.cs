@@ -206,7 +206,8 @@ namespace team7_ssis.Controllers
             });
         }
 
-        [Route("api/retrieval/{id}")]
+        [HttpPost]
+        [Route("api/retrieval/individual")]
         public IHttpActionResult GetRetrieval([FromBody] ConfirmRetrievalViewModel model)
         {
             var retrieval = new RetrievalService(context).FindRetrievalById(model.RetrievalId);
@@ -226,6 +227,7 @@ namespace team7_ssis.Controllers
                         PlanQuantity = dd.PlanQuantity,
                         ActualQuantity = dd.ActualQuantity,
                         Status = dd.Status.Name,
+                        RetrievalStatus = retrieval.Status.Name,
                         Uom = dd.Item.Uom,
                     })
                 ));
