@@ -197,6 +197,11 @@ namespace team7_ssis.Controllers
         {
             ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
 
+            // update the collection point
+            Department d = departmentRepository.FindById(user.Department.DepartmentCode);
+            d.CollectionPoint = collectionPointRepository.FindById(json.CollectionPointId);
+            departmentRepository.Save(d);
+
             if (json.ItemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
