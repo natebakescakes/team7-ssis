@@ -240,7 +240,11 @@ namespace team7_ssis.Controllers
         // POST: /Requisition/Approve
         public ActionResult Approve(string rid, string email, string remarks)
         {
-            requisitionService.ApproveRequisition(rid, email, remarks);
+            var checkEmail = email;
+            if (checkEmail == "")
+                checkEmail = System.Web.HttpContext.Current.User.Identity.GetUserName();
+
+            requisitionService.ApproveRequisition(rid, checkEmail, remarks);
             TempData["approve"] = String.Format("Requisition #{0} approved.", rid);
             return RedirectToAction("ManageRequisitions", "Requisition" );
         }
@@ -248,7 +252,11 @@ namespace team7_ssis.Controllers
         // POST: /Requisition/Reject
         public ActionResult Reject(string rid, string email, string remarks)
         {
-            requisitionService.RejectRequisition(rid, email, remarks);
+            var checkEmail = email;
+            if (checkEmail == "")
+                checkEmail = System.Web.HttpContext.Current.User.Identity.GetUserName();
+
+            requisitionService.RejectRequisition(rid, checkEmail, remarks);
             TempData["reject"] = String.Format("Requisition #{0} rejected.", rid);
             return RedirectToAction("ManageRequisitions", "Requisition");
         }

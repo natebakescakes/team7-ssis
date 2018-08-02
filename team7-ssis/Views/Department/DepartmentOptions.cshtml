@@ -11,7 +11,7 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label for="CollectionPoint">Collection Point</label><br />
-            @Html.DropDownListFor(m => m.CollectionPoint, new SelectList(Model.CollectionPoints, "Value", "Text"), Model.CollectionPoint, new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.CollectionPoint, new SelectList(Model.CollectionPoints, "Value", "Text"),  new { @class = "form-control" })
         </div>
     </div>
     if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
@@ -19,35 +19,48 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="DepartmentRepresentative">Department Representative</label><br />
-                @Html.DropDownListFor(m => m.DepartmentRep, new SelectList(Model.UsersByDepartment, "Value", "Text"), Model.DepartmentRep, new { @class = "form-control" })
+                @Html.DropDownListFor(m => m.DepartmentRep, new SelectList(Model.UsersByDepartment, "Value", "Text"), new { @class = "form-control" })
             </div>
         </div>
-    <div class="col-sm-3">
-        <div class="form-group">
-            <label for="DelegationRecepient">Delegate Manager</label><br />
-            @Html.DropDownListFor(m => m.DelegationRecipient, new SelectList(Model.UsersByDepartment, "Value", "Text"), "--Select Recipient--", new { @class = "form-control" })
+    }
+    if (User.IsInRole("Employee"))
+    {
+        <div class="col-sm-3">
+            <div class="form-group">
+               
+              
+                @Html.DropDownListFor(m => m.DepartmentRep, new SelectList(Model.UsersByDepartment, "Value", "Text"), new { @class = "form-control", @hidden = "hidden" })
+            </div>
         </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
-            <label for="StartDate">Start Date</label>
-            @Html.EditorFor(m => m.StartDate, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off", id = "Startdate" } })
-            @*From: <input type="text" id="Startdate" />*@
+    }
+    if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
+    {
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="DelegationRecepient">Delegate Manager</label><br />
+                @Html.DropDownListFor(m => m.DelegationRecipient, new SelectList(Model.UsersByDepartment, "Value", "Text"), "--Select Recipient--", new { @class = "form-control" })
+            </div>
         </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
-            <label for="EndDate">End Date</label>
-            @Html.EditorFor(m => m.EndDate, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off", id = "Enddate" } })
-            @*From: <input type="text" id="Enddate" />*@
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="StartDate">Start Date</label>
+                @Html.EditorFor(m => m.StartDate, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off", id = "Startdate" } })
+                @*From: <input type="text" id="Startdate" />*@
+            </div>
         </div>
-    </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="EndDate">End Date</label>
+                @Html.EditorFor(m => m.EndDate, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off", id = "Enddate" } })
+                @*From: <input type="text" id="Enddate" />*@
+            </div>
+        </div>
     }
     <div class="row button-set ">
         <div class="col-sm-1"></div>
         <div class="col-lg-6">
             @Html.Hidden("myURL", Url.Action("Index", "Home"))
-            
+
             <button id="submit" type="submit" class="btn btn-success"> Save</button>
         </div>
     </div>
@@ -57,19 +70,19 @@
     if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
     {
 
-<div style="width:90%; margin:0 auto" class="container">
-    <table id="delgTable" class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Delegation Id</th>
-                <th>Recipient</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Disable</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+        <div style="width:90%; margin:0 auto" class="container">
+            <table id="delgTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Delegation Id</th>
+                        <th>Recipient</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Disable</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     }
 }
 
