@@ -22,6 +22,7 @@ namespace team7_ssis.Controllers
         private CollectionPointService collectionPointService;
         private DepartmentService departmentService;
         private UserManager<ApplicationUser> userManager;
+        private DisbursementService disbursementService;
 
         public RequisitionController()
         {
@@ -32,6 +33,7 @@ namespace team7_ssis.Controllers
             itemService = new ItemService(context);
             collectionPointService = new CollectionPointService(context);
             departmentService = new DepartmentService(context);
+            disbursementService = new DisbursementService(context);
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
@@ -230,6 +232,9 @@ namespace team7_ssis.Controllers
             }
             return RedirectToAction("ManageRequisitions", "Requisition");
         }
+
+        
+        
 
     }
 }
