@@ -197,7 +197,13 @@ namespace team7_ssis.Controllers
             Requisition r = new Requisition();
             r.RequisitionId = IdService.GetNewRequisitionId(context);
             r.RequisitionDetails = new List<RequisitionDetail>();
-            r.Status = statusService.FindStatusByStatusId(4);
+            if (json.IsDraft == true)
+            {
+                r.Status = statusService.FindStatusByStatusId(3);
+            } else
+            {
+                r.Status = statusService.FindStatusByStatusId(4);
+            }
             r.CreatedDateTime = DateTime.Now;
             r.Department = user.Department;
             r.CollectionPoint = user.Department.CollectionPoint;
@@ -229,6 +235,52 @@ namespace team7_ssis.Controllers
             return Ok(r.RequisitionId);
 
         }
+
+        //[Route("api/createdraftrequisition/")]
+        //[HttpPost]
+        //public IHttpActionResult CreateDraftRequisition([FromBody] string rid)
+        //{
+        //    ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+        //    // for testing
+        //    //ApplicationUser user = userRepository.FindById("446a381c-ff6c-4332-ba50-747af26d996e");
+
+        //    Requisition existingReq = requisitionRepository.FindById(rid);
+
+        //    // create the requisition
+        //    Requisition r = new Requisition();
+        //    r.RequisitionId = IdService.GetNewRequisitionId(context);
+        //    r.RequisitionDetails = new List<RequisitionDetail>();
+        //    r.Status = statusService.FindStatusByStatusId(3); // create a draft
+        //    r.CreatedDateTime = DateTime.Now;
+        //    r.Department = user.Department;
+        //    r.CollectionPoint = user.Department.CollectionPoint;
+        //    r.CreatedBy = user;
+
+        //    // create requisition details
+        //    foreach (RequisitionDetail dd in existingReq.RequisitionDetails)
+        //    {
+        //        r.RequisitionDetails.Add(new RequisitionDetail
+        //        {
+        //            ItemCode = dd.ItemCode,
+        //            Item = itemService.FindItemByItemCode(dd.ItemCode),
+        //            Quantity = dd.Quantity,
+        //            Status = statusService.FindStatusByStatusId(4)
+        //        });
+        //    }
+        //    try
+        //    {
+        //        requisitionService.Save(r);
+        //    }
+        //    catch
+        //    {
+        //        return BadRequest("An unexpected error occured.");
+        //    }
+
+        //    // Create Notification
+        //    new NotificationService(context).CreateNotification(r, user.Department.Head);
+
+        //    return Ok(r.RequisitionId);
+        //}
 
         [Route("api/editrequisition")]
         [HttpPost]
