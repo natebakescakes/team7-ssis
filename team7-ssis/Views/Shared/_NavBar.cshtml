@@ -15,7 +15,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            @if ((User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString()) || User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
+                            @if ((User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString()) || User.IsInRole("DepartmentHead") && User.IsInRole("Employee") || User.IsInRole("Admin"))
                             {
                                 @Html.ActionLink("Create Requisition", "CreateRequisition", "Requisition", null, new { @class = "dropdown-item" })
                             }
