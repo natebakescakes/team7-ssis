@@ -138,7 +138,7 @@ namespace team7_ssis.Controllers
                 status = 2;
 
                 // Role
-                userService.AddDepartmentHeadRole(delegation.Receipient.Email);
+                //userService.AddDepartmentHeadRole(delegation.Receipient.Email);
             }
 
             if(delegation.Receipient != null && model.StartDate==null && model.EndDate==null)
