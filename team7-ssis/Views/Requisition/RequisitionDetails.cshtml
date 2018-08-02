@@ -118,13 +118,13 @@
     $(document).on("click", "#approveBtn", function (e) {
         e.preventDefault();
         console.log("Approved");
-        post("/Requisition/Approve", { rid: "@Model.RequisitionID", email: "", remarks: "" });
+        post("/Requisition/Approve", { rid: "@Model.RequisitionID", email: "@User.Identity.Name", remarks: "" });
     });
 
     // Click "Reject" button
     $(document).on("click", "#rejectBtn", function (e) {
         e.preventDefault();
         console.log("Rejected");
-        post("/Requisition/Reject", { rid: "@Model.RequisitionID", email: "", remarks: "" });
+        post("/Requisition/Reject", { rid: "@Model.RequisitionID", email: "@User.Identity.Name", remarks: "" });
     });
 </script>
