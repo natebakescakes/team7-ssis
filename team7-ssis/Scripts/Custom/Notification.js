@@ -24,17 +24,17 @@ function GetDropDownData() {
             $.each(data, function () {
                 if (this.NotificationType === 'Collection Ready') {
                     $('#notification-dropdown-items').append(
-                        '<li class="list-group-item list-group-item-action small" data-value="' + this.NotificationId + '">Requsisition' + this.Contents + 'is ready for collection.</li>'
+                        '<li class="list-group-item list-group-item-action small" data-value="' + this.NotificationId + '">' + this.Contents + '</li>'
                     );
                 }
                 if (this.NotificationType === 'Requisition Approval') {
                     $('#notification-dropdown-items').append(
-                        '<li class="list-group-item list-group-item-action small" data-value="' + this.NotificationId + '">Requsisition' + this.Contents + 'is awaiting your approval.</li>'
+                        '<li class="list-group-item list-group-item-action small" data-value="' + this.NotificationId + '">' + this.Contents + '</li>'
                     );
                 }
                 if (this.NotificationType === 'Stock Adjustment Approval') {
                     $('#notification-dropdown-items').append(
-                        '<li class="list-group-item list-group-item-action small" data-value="' + this.NotificationId + '">Requsisition' + this.Contents + 'is awaiting your approval.</li>'
+                        '<li class="list-group-item list-group-item-action small" data-value="' + this.NotificationId + '">' + this.Contents + '</li>'
                     );
                 }
             });
