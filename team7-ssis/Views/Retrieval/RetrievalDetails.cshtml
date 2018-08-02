@@ -72,10 +72,9 @@
                     "data": "Actual",
                     "autoWidth": true,
                     "render": function (data, type, row, meta) {
-                        'value="' + data + '" min="0" max="' + row.Needed + '"/>';
-                                    console.log(row);
                         var html = '<input class="actual" type="number" id="height" name="actual"' +
-return html;
+                            'value="' + data + '" min="0" max="' + row.Needed + '"/>';
+                        return html;
                     }
                 },
                 </text>
