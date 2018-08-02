@@ -43,7 +43,7 @@ namespace team7_ssis.Tests.Services
 
             PurchaseOrder PO = new PurchaseOrder()
             {
-                PurchaseOrderNo = "TEST",
+                PurchaseOrderNo = "VALLI",
                 CreatedDateTime = DateTime.Now,
                 Supplier = context.Supplier.Where(x => x.SupplierCode == "CHEP").First()
 
@@ -88,7 +88,7 @@ namespace team7_ssis.Tests.Services
         public void FindDeliveryOrderByPurchaseOrderNoTest()
         {
             //Arrange
-            string expected = "TEST";
+            string expected = "VALLI";
             //Act
             var result = deliveryOrderService.FindDeliveryOrderByPurchaseOrderNo(expected);
 
@@ -113,7 +113,7 @@ namespace team7_ssis.Tests.Services
         public void SaveTest()
         {
             // Arrange
-            PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
+            PurchaseOrder po = purchaseOrderRepository.FindById("VALLI");
             DeliveryOrder d1 = new DeliveryOrder();
             d1.DeliveryOrderNo = "DODTEST";
             d1.PurchaseOrder = po;
@@ -134,7 +134,7 @@ namespace team7_ssis.Tests.Services
         {
             //Arrange
 
-            PurchaseOrder PO= purchaseOrderRepository.FindById("TEST");
+            PurchaseOrder PO= purchaseOrderRepository.FindById("VALLI");
             DeliveryOrder DO = deliveryOrderRepository.FindById("DOTEST");
 
             DeliveryOrderDetail dod = new DeliveryOrderDetail()
@@ -158,7 +158,7 @@ namespace team7_ssis.Tests.Services
         [TestMethod]
         public void CheckSaveTest()
         {
-            PurchaseOrder PO = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "TEST").First();
+            PurchaseOrder PO = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "VALLI").First();
 
             DeliveryOrder DO= context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "DOTEST").First();
 
@@ -222,7 +222,7 @@ namespace team7_ssis.Tests.Services
           //  Arrange
             Item i = itemRepository.FindById("E030");
 
-            PurchaseOrder po = purchaseOrderRepository.FindById("TEST");
+            PurchaseOrder po = purchaseOrderRepository.FindById("VALLI");
 
             DeliveryOrder DO = context.DeliveryOrder.Where(x => x.DeliveryOrderNo == "DOTEST").First();
 
@@ -272,7 +272,7 @@ namespace team7_ssis.Tests.Services
                 }
             }
 
-            PurchaseOrder p = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "TEST").First();
+            PurchaseOrder p = context.PurchaseOrder.Where(x => x.PurchaseOrderNo == "VALLI").First();
             purchaseOrderRepository.Delete(p);
 
             List<DeliveryOrderDetail> dod= context.DeliveryOrderDetail.Where(x => x.DeliveryOrderNo == "DOTEST").ToList();

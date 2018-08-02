@@ -110,12 +110,11 @@
         // Add items to myTable
         $('#addToReq').click(function () {
             var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
-            //console.log(data);
-            //TODO: write some logic that will add quantity to the requisitionDetail
             var qty = parseInt($('#qtyInput').val());
 
+            // Validation for AddItem modal
             if ((data.length > 0) && (qty > 0)) {
-                myTable.row.add({ ItemCode: data[0].ItemCode, Description: data[0].Description, Quantity: qty }).draw();
+                addToTable(data, myTable, qty);
                 $('#myModal').modal('hide');
                 $('#modalMsg').html('');
             } else {
@@ -145,4 +144,22 @@
             $("#unitOfMeasure").html(data.Uom);
         });
     })
+
+    function addToTable(addItemData, table, qty) {
+        var itemExists = false;
+        table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            if (addItemData[0].ItemCode == this.data().ItemCode) {
+                var data = this.data();
+                data.Quantity += qty;
+                this.data(data);
+                this.draw();
+
+                itemExists = true;
+            }
+        });
+        var test = table.rows().data().toArray();
+        if (itemExists == false) {
+            table.row.add({ ItemCode: addItemData[0].ItemCode, Description: addItemData[0].Description, Quantity: qty }).draw();
+        }
+    }
 </script>

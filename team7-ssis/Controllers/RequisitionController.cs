@@ -14,24 +14,32 @@ namespace team7_ssis.Controllers
 {
     public class RequisitionController : Controller
     {
-        private ApplicationDbContext context;
-        private RequisitionService requisitionService;
-        private RequisitionRepository requisitionRepository;
-        private RetrievalService retrievalService;
-        private ItemService itemService;
-        private CollectionPointService collectionPointService;
-        private DepartmentService departmentService;
-        private UserManager<ApplicationUser> userManager;
+        ApplicationDbContext context;
+        RequisitionRepository requisitionRepository;
+        UserRepository userRepository;
+
+        RequisitionService requisitionService;
+        RetrievalService retrievalService;
+        ItemService itemService;
+        CollectionPointService collectionPointService;
+        DepartmentService departmentService;
+        StatusService statusService;
+
+        UserManager<ApplicationUser> userManager;
 
         public RequisitionController()
         {
             context = new ApplicationDbContext();
-            requisitionService = new RequisitionService(context);
             requisitionRepository = new RequisitionRepository(context);
+            userRepository = new UserRepository(context);
+
+            requisitionService = new RequisitionService(context);
             retrievalService = new RetrievalService(context);
             itemService = new ItemService(context);
             collectionPointService = new CollectionPointService(context);
             departmentService = new DepartmentService(context);
+            statusService = new StatusService(context);
+
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
@@ -50,6 +58,14 @@ namespace team7_ssis.Controllers
             if (TempData["reject"] != null)
             {
                 ViewBag.Danger = TempData["reject"];
+            }
+            if (TempData["draft"] != null)
+            {
+                ViewBag.Success = TempData["draft"];
+            }
+            if (TempData["error"] != null)
+            {
+                ViewBag.Danger = TempData["error"];
             }
 
             // pass the statuses for the appropriate Role
@@ -243,6 +259,53 @@ namespace team7_ssis.Controllers
             {
                 return RedirectToAction("ManageRequisitions", "EditRequisition", new { rid });
             }
+            return RedirectToAction("ManageRequisitions", "Requisition");
+        }
+
+        // POST: /Requisition/Draft
+        public ActionResult Draft(string rid)
+        {
+            ApplicationUser user = userRepository.FindById(User.Identity.GetUserId());
+            // for testing
+            //ApplicationUser user = userRepository.FindById("446a381c-ff6c-4332-ba50-747af26d996e");
+
+            Requisition existingReq = requisitionRepository.FindById(rid);
+
+            // create the requisition
+            Requisition r = new Requisition();
+            r.RequisitionId = IdService.GetNewRequisitionId(context);
+            r.RequisitionDetails = new List<RequisitionDetail>();
+            r.Status = statusService.FindStatusByStatusId(3); // create a draft
+            r.CreatedDateTime = DateTime.Now;
+            r.Department = user.Department;
+            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CreatedBy = user;
+
+            // create requisition details
+            foreach (RequisitionDetail dd in existingReq.RequisitionDetails)
+            {
+                r.RequisitionDetails.Add(new RequisitionDetail
+                {
+                    ItemCode = dd.ItemCode,
+                    Item = itemService.FindItemByItemCode(dd.ItemCode),
+                    Quantity = dd.Quantity,
+                    Status = statusService.FindStatusByStatusId(4)
+                });
+            }
+            try
+            {
+                requisitionService.Save(r);
+
+                // Create Notification
+                new NotificationService(context).CreateNotification(r, user.Department.Head);
+            }
+            catch
+            {
+                TempData["error"] = "error";
+                return RedirectToAction("ManageRequisitions", "Requisition");
+            }
+
+            TempData["draft"] = String.Format("Requisition #{0} created.", r.RequisitionId);
             return RedirectToAction("ManageRequisitions", "Requisition");
         }
 
