@@ -200,12 +200,14 @@ namespace team7_ssis.Controllers
                 ApplicationUser manager = supervisor.Supervisor;
                 if (flag == true)
                 {
-                    notificationService.CreateNotification(SA, manager);
-                    
+                    Notification n = notificationService.CreateNotification(SA, manager);
+                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+
                 }
                 if (flag == false)
                 {
-                    notificationService.CreateNotification(SA, supervisor);
+                    Notification n = notificationService.CreateNotification(SA, supervisor);
+                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
                 }
 
                 //save SA object into database 
