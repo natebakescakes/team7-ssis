@@ -36,9 +36,9 @@ namespace team7_ssis.Controllers
                 return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
                 {
                     PurchaseOrderNo = (po.PurchaseOrderNo!=null)?po.PurchaseOrderNo:"",
-                    SupplierName = (po.Supplier.Name!=null)?po.Supplier.Name:"",
+                    SupplierName = (po.Supplier!=null)?po.Supplier.Name:"",
                     CreatedDate = (po.CreatedDateTime!=null)?po.CreatedDateTime.ToShortDateString() + " " + po.CreatedDateTime.ToShortTimeString():"",
-                    Status = (po.Status.Name!=null)?po.Status.Name:""
+                    Status = (po.Status!=null)?po.Status.Name:""
                 }).ToList();
             }
             else
@@ -55,14 +55,14 @@ namespace team7_ssis.Controllers
 
             return po.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
-                ItemCode = (pod.Item.ItemCode!=null)? pod.Item.ItemCode:"",
-                Description = (pod.Item.Description !=null)? pod.Item.Description:"",
+                ItemCode = (pod.Item!=null)? pod.Item.ItemCode:"",
+                Description = (pod.Item!=null)? pod.Item.Description:"",
                 QuantityOrdered = pod.Quantity,
                 UnitPrice = purchaseOrderService.FindUnitPriceByPurchaseOrderDetail(pod),
                 Amount = purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod),
                 ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
                 RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod),
-                Status = (pod.Status.Name!=null)?pod.Status.Name:""
+                Status = (pod.Status!=null)?pod.Status.Name:""
 
 
             }).ToList();
@@ -101,7 +101,7 @@ namespace team7_ssis.Controllers
                     PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(s);
                     PurchaseOrderViewModel purchaseOrder = new PurchaseOrderViewModel();
                     purchaseOrder.PurchaseOrderNo = (s!=null)?s:"";
-                    purchaseOrder.SupplierName = (p.Supplier.Name!=null)?p.Supplier.Name:"";
+                    purchaseOrder.SupplierName = (p.Supplier!=null)?p.Supplier.Name:"";
 
                     purchaseOrders.Add(purchaseOrder);
                 }
