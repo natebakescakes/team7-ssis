@@ -1,0 +1,55 @@
+﻿@model IEnumerable<team7_ssis.ViewModels.DisbursementFormTableViewModel>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="mb-3">Disbursement Form #@ViewBag.Disbursement.DisbursementId</h2>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="label">Representative</div>
+        @ViewBag.Disbursement.Department.Representative.FirstName @ViewBag.Disbursement.Department.Representative.LastName
+    </div>
+    <div class="col-md-4">
+        <div class="label">Department</div>
+        @ViewBag.Disbursement.Department.Name
+    </div>
+    <div class="col-md-4">
+        <div class="label">Order Time</div>
+        @ViewBag.Disbursement.CreatedDateTime
+    </div>
+    <div class="col-md-12">
+        <div class="label">Collection Point</div>
+        @ViewBag.Disbursement.Department.CollectionPoint.Name
+    </div>
+</div>
+
+<table id="myTable" class="table table-bordered table-striped table-hover" style="width: 100%">
+    <thead>
+        <tr>  
+        <th>Item Code</th>
+        <th>Description</th>
+        <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var k in Model)
+        {
+        <tr>
+            <td>@Html.DisplayFor(model => k.ItemCode)</td>
+            <td>@Html.DisplayFor(model => k.Description)</td>
+            <td>@Html.DisplayFor(model=>k.Qty)</td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+<script>
+    function firstLoad() {
+        $('#myNav').hide();
+    }
+    window.onload = firstLoad;
+</script>
+
+
