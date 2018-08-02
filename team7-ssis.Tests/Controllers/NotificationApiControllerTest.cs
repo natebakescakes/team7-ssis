@@ -85,7 +85,7 @@ namespace team7_ssis.Tests.Controllers
             };
 
             //Act
-            IHttpActionResult actionResult = controller.SendNotification("8");
+            IHttpActionResult actionResult = controller.SendNotification("64");
 
             //Assert
             Assert.IsNotNull(actionResult);
