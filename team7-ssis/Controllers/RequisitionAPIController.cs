@@ -25,6 +25,7 @@ namespace team7_ssis.Controllers
         UserRepository userRepository;
         StatusRepository statusRepository;
         CollectionPointRepository collectionPointRepository;
+        NotificationService notificationService;
 
         public RequisitionAPIController()
         {
@@ -39,6 +40,7 @@ namespace team7_ssis.Controllers
             userRepository = new UserRepository(context);
             statusRepository = new StatusRepository(context);
             collectionPointRepository = new CollectionPointRepository(context);
+            notificationService = new NotificationService(context);
 
         }
 
@@ -88,6 +90,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public IHttpActionResult GetSelectedRequisitions(List<int> statusIdList)
         {
+            // get current user
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
             List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
             List<Requisition> reqList;
 
@@ -96,17 +101,21 @@ namespace team7_ssis.Controllers
             foreach (int i in statusIdList)
             {
                 statusList.Add(statusRepository.FindById(i));
-
             }
             try
             {
+                // find Requisition By Status
                 reqList = requisitionService.FindRequisitionsByStatus(statusList);
+
+                // if user is Employee or Department Head
+                if (user.Roles.Where(x => x.RoleId == "1" || x.RoleId == "2").Count() > 0) {
+                    reqList = reqList.Where(x => x.Department == user.Department).ToList();
+                }
             }
             catch (ArgumentException)
             {
                 return Ok();
             }
-
             foreach (Requisition r in reqList)
             {
                 viewModel.Add(new ManageRequisitionsViewModel
@@ -206,7 +215,7 @@ namespace team7_ssis.Controllers
             }
             r.CreatedDateTime = DateTime.Now;
             r.Department = user.Department;
-            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CollectionPoint = collectionPointRepository.FindById(json.CollectionPointId);
             r.CreatedBy = user;
 
             // create requisition details
@@ -230,57 +239,13 @@ namespace team7_ssis.Controllers
             }
 
             // Create Notification
-            new NotificationService(context).CreateNotification(r, user.Department.Head);
+            Notification n = new NotificationService(context).CreateNotification(r, user.Department.Head);
+            var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
 
             return Ok(r.RequisitionId);
 
         }
 
-        //[Route("api/createdraftrequisition/")]
-        //[HttpPost]
-        //public IHttpActionResult CreateDraftRequisition([FromBody] string rid)
-        //{
-        //    ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
-        //    // for testing
-        //    //ApplicationUser user = userRepository.FindById("446a381c-ff6c-4332-ba50-747af26d996e");
-
-        //    Requisition existingReq = requisitionRepository.FindById(rid);
-
-        //    // create the requisition
-        //    Requisition r = new Requisition();
-        //    r.RequisitionId = IdService.GetNewRequisitionId(context);
-        //    r.RequisitionDetails = new List<RequisitionDetail>();
-        //    r.Status = statusService.FindStatusByStatusId(3); // create a draft
-        //    r.CreatedDateTime = DateTime.Now;
-        //    r.Department = user.Department;
-        //    r.CollectionPoint = user.Department.CollectionPoint;
-        //    r.CreatedBy = user;
-
-        //    // create requisition details
-        //    foreach (RequisitionDetail dd in existingReq.RequisitionDetails)
-        //    {
-        //        r.RequisitionDetails.Add(new RequisitionDetail
-        //        {
-        //            ItemCode = dd.ItemCode,
-        //            Item = itemService.FindItemByItemCode(dd.ItemCode),
-        //            Quantity = dd.Quantity,
-        //            Status = statusService.FindStatusByStatusId(4)
-        //        });
-        //    }
-        //    try
-        //    {
-        //        requisitionService.Save(r);
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest("An unexpected error occured.");
-        //    }
-
-        //    // Create Notification
-        //    new NotificationService(context).CreateNotification(r, user.Department.Head);
-
-        //    return Ok(r.RequisitionId);
-        //}
 
         [Route("api/editrequisition")]
         [HttpPost]
