@@ -97,6 +97,8 @@ namespace team7_ssis.Controllers
             stockAdjustmentService = new StockAdjustmentService(Context);
             userService = new UserService(Context);
             itemService = new ItemService(Context);
+            notificationService = new NotificationService(Context);
+
             StockAdjustment SA;
             try
             {
