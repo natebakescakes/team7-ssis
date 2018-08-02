@@ -33,10 +33,10 @@ namespace team7_ssis.Controllers
             }
             catch (NullReferenceException) { }
 
-            //context = new ApplicationDbContext();
+            context = new ApplicationDbContext();
             //departmentService = new DepartmentService(context);
             //collectionPointService = new CollectionPointService(context);
-            //userService = new UserService(context);
+            userService = new UserService(context);
             //user = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             //statusService = new StatusService(context);
             //delegationService = new DelegationService(context);
