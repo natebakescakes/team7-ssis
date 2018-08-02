@@ -335,9 +335,9 @@ namespace team7_ssis.Controllers
         [Route("api/requisition/department")]
         public IHttpActionResult GetRelatedRequisitions([FromBody] EmailViewModel model)
         {
-            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department);
+            var requisitions = requisitionService.FindRequisitionsByDepartment(new UserService(context).FindUserByEmail(model.Email).Department).OrderByDescending(r => r.CreatedDateTime);
 
-            if (requisitions.Count == 0) return NotFound();
+            if (requisitions.Count() == 0) return NotFound();
 
             return Ok(requisitions.Select(requisition => new RequisitionMobileViewModel()
             {

@@ -503,9 +503,9 @@ namespace team7_ssis.Controllers
         public IHttpActionResult GetStockAdjustmentsForSupervisor([FromBody] EmailViewModel model)
         {
             // Does not discern between supervisor and manager at the moment
-            var stockAdjustments = new StockAdjustmentService(Context).FindAllStockAdjustmentExceptDraft();
+            var stockAdjustments = new StockAdjustmentService(Context).FindAllStockAdjustmentExceptDraft().OrderByDescending(stockAdjustment => stockAdjustment.CreatedDateTime);
 
-            if (stockAdjustments.Count == 0) return NotFound();
+            if (stockAdjustments.Count() == 0) return NotFound();
 
             return Ok(stockAdjustments.Select(stockAdjustment => new StockAdjustmentRequestViewModel()
             {
