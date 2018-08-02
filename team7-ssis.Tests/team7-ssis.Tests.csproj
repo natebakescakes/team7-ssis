@@ -178,7 +178,6 @@
     <Compile Include="Controllers\DisbursementApiControllerTest.cs" />
     <Compile Include="Controllers\SupplierControllerTest.cs" />
     <Compile Include="Controllers\RetrievalApiControllerTests .cs" />
-    <Compile Include="Controllers\RetrievalControllerTests.cs" />
     <Compile Include="Controllers\SupplierAPIControllerTest.cs" />
     <Compile Include="Controllers\ItemCategoryControllerTest.cs" />
     <Compile Include="Controllers\ItemCategoryAPIControllerTest.cs" />
