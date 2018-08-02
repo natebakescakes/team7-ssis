@@ -5,7 +5,7 @@
         <h2>Create Requisition</h2>
     </div>
     <div class="col-md-4">
-        <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
+        <button id="createNewDraft" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
     </div>
 </div>
 
@@ -75,9 +75,19 @@
 
     // Click 'Confirm' button
     $('#confirmBtn').click(function () {
+        CallApi(false);
+    })
+
+    // Click 'Create New Draft' button
+    $('#createNewDraft').click(function () {
+        CallApi(true);
+    })
+
+    function CallApi(isDraft) {
         var tableData = myTable.rows().data().toArray();
         var cpId = $('#collectionPointSelect').val();
-        var data = { CollectionPointId: cpId, ItemList: [] };
+
+        var data = { CollectionPointId: cpId, ItemList: [], IsDraft: isDraft };
 
         if (tableData.length > 0) {
             for (i = 0; i < tableData.length; i++) {
@@ -109,5 +119,5 @@
                 '</div>'
             );
         }
-    })
+    }
 </script>
