@@ -133,8 +133,8 @@ $(document).ready(function(){
         
         var value = Number($(this).val());
         var url;
-        url = $("#relDelOrdersUrl").val();
-        alert(url);
+        //url = $("#relDelOrdersUrl").val();
+        //alert(url);
 
         if (value == 0) { url = $("#detailsUrl").val(); }
         else if (value == 1) { url = $("#relDelOrdersUrl").val(); }
@@ -264,6 +264,9 @@ $(document).ready(function(){
                 }
                 if (data.Status == "Awaiting Delivery") {
                     $('td', row).eq(7).addClass('awaiting-delivery');
+                }
+                if (data.Status == "Cancelled") {
+                    $('td', row).eq(7).addClass('cancel');
                 }
             }
 
