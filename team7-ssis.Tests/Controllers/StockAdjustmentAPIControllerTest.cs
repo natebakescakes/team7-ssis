@@ -334,7 +334,10 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.IsTrue(contentResult.Content.Select(s => s.StockAdjustmentId).Contains(expectedId));
-            Assert.IsTrue(contentResult.Content.Select(s => s.StockAdjustmentRequestDetails.Select(sd => sd.OriginalQuantity)).FirstOrDefault().Contains(20.ToString()));
+            Assert.IsTrue(contentResult.Content
+                .SelectMany(s => s.StockAdjustmentRequestDetails.Where(x => x.ItemCode == "E030").Select(sd => sd.OriginalQuantity))
+                .FirstOrDefault().Contains(20.ToString()));
+            
         }
 
         [TestMethod]

@@ -21,9 +21,10 @@ namespace team7_ssis.Controllers
         DisbursementService disbursementService;
         StatusService statusService;
         ItemService itemService;
-        DepartmentService departmentService;
+        DepartmentRepository departmentRepository;
         UserRepository userRepository;
         StatusRepository statusRepository;
+        CollectionPointRepository collectionPointRepository;
 
         public RequisitionAPIController()
         {
@@ -34,9 +35,10 @@ namespace team7_ssis.Controllers
             disbursementService = new DisbursementService(context);
             statusService = new StatusService(context);
             itemService = new ItemService(context);
-            departmentService = new DepartmentService(context);
+            departmentRepository = new DepartmentRepository(context);
             userRepository = new UserRepository(context);
             statusRepository = new StatusRepository(context);
+            collectionPointRepository = new CollectionPointRepository(context);
 
         }
 
@@ -122,19 +124,36 @@ namespace team7_ssis.Controllers
         {
             List<Requisition> reqList = new List<Requisition>();
             string rid;
-            foreach (string s in reqIdList)
-            {
-                reqList.Add(requisitionRepository.FindById(s));
-            }
+            List<string> errorList = new List<string>();
+
             try
             {
-                rid = requisitionService.ProcessRequisitions(reqList);
+                foreach (string s in reqIdList)
+                {
+                    Requisition req = requisitionRepository.FindById(s);
+                    if (req.Status.StatusId == 6)
+                    {
+                        reqList.Add(req);
+                    } else
+                    {
+                        errorList.Add(req.RequisitionId);
+                    }
+                }
+
+                // create retrieval only if there are Requisitions to be processed
+                if (reqList.Count > 0)
+                {
+                    rid = requisitionService.ProcessRequisitions(reqList);
+                } else
+                {
+                    throw new Exception("No Requisitions could be processed.");
+                } 
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            return Ok(rid);
+            return Ok( new { rid, count = reqList.Count } );
         }
 
         [Route("api/stationerydisbursement/{rId}")]
@@ -165,15 +184,16 @@ namespace team7_ssis.Controllers
         }
         [Route("api/createrequisition")]
         [HttpPost]
-        public IHttpActionResult CreateRequisition(List<CreateRequisitionJSONViewModel> itemList)
+        public IHttpActionResult CreateRequisition(UpdateRequisitionJSONViewModel json)
         {
             ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
 
-            if (itemList.Count < 1)
+            if (json.ItemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
             }
 
+            // create the requisition
             Requisition r = new Requisition();
             r.RequisitionId = IdService.GetNewRequisitionId(context);
             r.RequisitionDetails = new List<RequisitionDetail>();
@@ -183,7 +203,8 @@ namespace team7_ssis.Controllers
             r.CollectionPoint = user.Department.CollectionPoint;
             r.CreatedBy = user;
 
-            foreach (CreateRequisitionJSONViewModel dd in itemList)
+            // create requisition details
+            foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
             {
                 r.RequisitionDetails.Add(new RequisitionDetail
                 {
@@ -215,6 +236,11 @@ namespace team7_ssis.Controllers
         {
             ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
 
+            // update the collection point
+            Department d = departmentRepository.FindById(user.Department.DepartmentCode);
+            d.CollectionPoint = collectionPointRepository.FindById(json.CollectionPointId);
+            departmentRepository.Save(d);
+
             if (json.ItemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
@@ -229,7 +255,7 @@ namespace team7_ssis.Controllers
                 requisitionRepository.FindRequisitionDetails(json.RequisitionId);
                 r.RequisitionDetails = new List<RequisitionDetail>();
 
-                foreach (CreateRequisitionJSONViewModel dd in json.ItemList)
+                foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
                 {
                     r.RequisitionDetails.Add(new RequisitionDetail
                     {

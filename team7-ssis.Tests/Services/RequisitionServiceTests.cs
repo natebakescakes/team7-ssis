@@ -147,11 +147,13 @@ namespace team7_ssis.Tests.Services
             r1.RequisitionDetails = new List<RequisitionDetail>();
             r1.EmployeeRemarks = "From AddDisbursementDetailsFromEachDepartmentTest_AddQuantity";
             r1.CreatedDateTime = DateTime.Now;
+            r1.Status = statusService.FindStatusByStatusId(6);
 
             RequisitionDetail rd1 = new RequisitionDetail();
             rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
             rd1.ItemCode = "C001";
             rd1.Quantity = 20;
+            rd1.Status = statusService.FindStatusByStatusId(6);
 
             r1.RequisitionDetails.Add(rd1);
 
@@ -255,6 +257,15 @@ namespace team7_ssis.Tests.Services
                 RequisitionId = "APPROVETEST",
                 Status = statusService.FindStatusByStatusId(4),
                 CreatedDateTime = DateTime.Now,
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "APPROVETEST",
+                        ItemCode = "E030",
+                        Status = statusService.FindStatusByStatusId(4),
+                    }
+                }
             });
             var expected = statusService.FindStatusByStatusId(6);
 
@@ -275,6 +286,15 @@ namespace team7_ssis.Tests.Services
                 RequisitionId = "APPROVETEST",
                 Status = statusService.FindStatusByStatusId(6),
                 CreatedDateTime = DateTime.Now,
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "APPROVETEST",
+                        ItemCode = "E030",
+                        Status = statusService.FindStatusByStatusId(6),
+                    }
+                }
             });
 
             // Act
@@ -300,6 +320,15 @@ namespace team7_ssis.Tests.Services
                 RequisitionId = "APPROVETEST",
                 Status = statusService.FindStatusByStatusId(4),
                 CreatedDateTime = DateTime.Now,
+                RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "APPROVETEST",
+                        ItemCode = "E030",
+                        Status = statusService.FindStatusByStatusId(4),
+                    }
+                }
             });
             var expected = statusService.FindStatusByStatusId(5);
 

@@ -205,7 +205,15 @@ namespace team7_ssis.Services
         }
 
 
+        public PurchaseOrderDetail FindPurchaseOrderDetailbyIdItem(string id1, string id2)
+        {
+            return purchaseOrderDetailRepository.FindById(id1, id2);
+        }
 
+        public List<PurchaseOrderDetail> FindPurchaseOrderDetailByStatus(string id,params int[] statusId)
+        {
+            return purchaseOrderRepository.FindPurchaseOrderDetailByStatus(id,statusId).ToList();
+        }
 
     }
 }

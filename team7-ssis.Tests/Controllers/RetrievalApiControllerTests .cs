@@ -73,6 +73,7 @@ namespace team7_ssis.Tests.Controllers
                         new DisbursementDetail
                         {
                             Item = ItemRepository.FindById(itemCode),
+                            PlanQuantity = 99,
                             ActualQuantity = 0
                         }
                     }
@@ -497,6 +498,7 @@ namespace team7_ssis.Tests.Controllers
                 CollectionPoint = departmentRepository.FindById("ENGL").CollectionPoint,
                 Department = departmentRepository.FindById("ENGL"),
                 CreatedDateTime = DateTime.Now,
+                Status = new StatusRepository(context).FindById(7),
                 RequisitionDetails = new List<RequisitionDetail>()
                 {
                     new RequisitionDetail()
@@ -505,6 +507,7 @@ namespace team7_ssis.Tests.Controllers
                         ItemCode = "E030",
                         Item = new ItemService(context).FindItemByItemCode("E030"),
                         Quantity = 30,
+                        Status = new StatusRepository(context).FindById(7),
                     }
                 }
             });
