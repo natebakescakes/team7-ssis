@@ -11,7 +11,7 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label for="CollectionPoint">Collection Point</label><br />
-            @Html.DropDownListFor(m => m.CollectionPoint, new SelectList(Model.CollectionPoints, "Value", "Text"), Model.CollectionPoint, new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.CollectionPoint, new SelectList(Model.CollectionPoints, "Value", "Text"),  new { @class = "form-control" })
         </div>
     </div>
     if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
