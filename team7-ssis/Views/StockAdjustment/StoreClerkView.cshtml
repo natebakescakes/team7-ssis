@@ -2,12 +2,12 @@
         <table id="ClerkTable" class="table table-bordered table-striped table-hover" style="width: 100%">
             <thead>
                 <tr>
-                    <th>StockAdjustmentId</th>
-                    <th>CreatedBy</th>
-                    <th>ApprovedBySupervisor</th>
-                    <th>CreatedDateTime</th>
-                    <th>StatusName</th>
-                    <th width="120">Action</th>
+                    <th>Stock Adjustment #ID</th>
+                    <th>Created By</th>
+                    <th>Approved By</th>
+                    <th>Created Date&Time</th>
+                    <th>Status Name</th>
+                    <th width="180">Action</th>
                 </tr>
             </thead>
 
@@ -38,17 +38,18 @@
 
                             if (data.StatusName == "Draft" || data.StatusName == "Cancelled")
 
-                                return "<button class='btn btn-warning' id='editBtn' ><i class='fa fa-delete'>Edit</i></button>";
+                                return "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>";
                             else if (data.StatusName == "Pending Approval")
                             {
-                                var html = "<button class='btn btn-warning' id='viewBtn' ><i class='fa fa-delete'>View</i></button>" +
-                                    "<button class='btn btn-warning' id='cancelBtn' ><i class='fa fa-delete'>cancel</i></button>";
+                                var html = 
+                                    "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>"+" "+
+                                    "<button class='btn btn-primary' id='cancelBtn' ><i class='fa fa-view'></i>Cancel</button>";
                                 return html;
                             }
 
                             else (data.StatusName == "Approved" || data.StatusName == "Rejected")
 
-                            return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+                            return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'></i>View</button>";
 
 
                         }
@@ -146,7 +147,7 @@
 
                 var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
 
-                alert(Id);
+              //  alert(Id);
 
                 $.ajax({
                     url: '/api/stockadjustment/cancel/'+Id,
