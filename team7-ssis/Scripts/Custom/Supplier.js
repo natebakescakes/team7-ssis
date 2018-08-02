@@ -11,7 +11,7 @@
             { "data": "ContactName", "autoWidth": true },
             { "data": "PhoneNumber", "autoWidth": true },
             { "data": "FaxNumber", "autoWidth": true },
-            { "data": "Address", "autoWidth": true },
+            { "data": "Address", "autoWidth": true }
       
         ],
         select: {
@@ -68,6 +68,7 @@
                         $('#myModal').modal('hide');
                         table.ajax.reload();
                     }
+                  
                 }
             });
             event.preventDefault();
