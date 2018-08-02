@@ -171,7 +171,7 @@
         var data = myTable
             .row($(this).parents('tr'))
             .data();
-        post("/Requisition/Approve", { rid: data.Requisition, email: "", remarks: "" });
+        post("/Requisition/Approve", { rid: data.Requisition, email: "@User.Identity.Name", remarks: "" });
     });
 
     // Click "Reject" button
@@ -181,7 +181,7 @@
         var data = myTable
             .row($(this).parents('tr'))
             .data();
-        post("/Requisition/Reject", { rid: data.Requisition, email: "", remarks: ""});
+        post("/Requisition/Reject", { rid: data.Requisition, email: "@User.Identity.Name", remarks: ""});
     });
 
     // Click "Info" buttons
