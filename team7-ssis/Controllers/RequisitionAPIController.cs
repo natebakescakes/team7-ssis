@@ -88,6 +88,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public IHttpActionResult GetSelectedRequisitions(List<int> statusIdList)
         {
+            // get current user
+            ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
+
             List<ManageRequisitionsViewModel> viewModel = new List<ManageRequisitionsViewModel>();
             List<Requisition> reqList;
 
@@ -96,17 +99,21 @@ namespace team7_ssis.Controllers
             foreach (int i in statusIdList)
             {
                 statusList.Add(statusRepository.FindById(i));
-
             }
             try
             {
+                // find Requisition By Status
                 reqList = requisitionService.FindRequisitionsByStatus(statusList);
+
+                // if user is Employee or Department Head
+                if (user.Roles.Where(x => x.RoleId == "1" || x.RoleId == "2").Count() > 0) {
+                    reqList = reqList.Where(x => x.Department == user.Department).ToList();
+                }
             }
             catch (ArgumentException)
             {
                 return Ok();
             }
-
             foreach (Requisition r in reqList)
             {
                 viewModel.Add(new ManageRequisitionsViewModel
