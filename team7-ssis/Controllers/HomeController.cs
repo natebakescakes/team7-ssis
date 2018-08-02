@@ -24,9 +24,10 @@ namespace team7_ssis.Controllers
             var department = new UserService(Context).FindUserByEmail(User.Identity.Name).Department;
             var representativeEmail = department.Representative != null ? department.Representative.Email : "";
             ViewBag.Representative = representativeEmail;
+            Session["rep"] = representativeEmail;
 
             // If not Employee role
-            if (!User.IsInRole("Employee"))
+            if (User.IsInRole("DepartmentHead"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
             // If Department Representative
             else if (representativeEmail == User.Identity.Name)
