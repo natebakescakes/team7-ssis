@@ -233,6 +233,7 @@ namespace team7_ssis.Controllers
             {
                 pOrder.CreatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
                 pOrder.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
+                pOrder.DeliveryOrders = new List<DeliveryOrder>();
                 purchaseOrderService.Save(pOrder);
                 purchaseOrderIds.Add(pOrder.PurchaseOrderNo);
             }
@@ -312,6 +313,7 @@ namespace team7_ssis.Controllers
             PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(PONumber);
             List<PurchaseOrderDetailsViewModel> podViewlist = p.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
+                PurchaseOrderNo=PONumber,
                 ItemCode = pod.Item.ItemCode,
                 Description = pod.Item.Description,
                 QuantityOrdered = pod.Quantity,
@@ -322,6 +324,7 @@ namespace team7_ssis.Controllers
                 Status = pod.Status.Name
             }).ToList();
 
+            ViewBag.PurchaseOrder = p;
             return View("GetPurchaseOrderDetails",podViewlist);
 
         }

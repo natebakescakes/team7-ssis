@@ -172,6 +172,13 @@ namespace team7_ssis.Controllers
             {
                 viewModel.Representative = "";
             }
+            try
+            {
+                viewModel.CollectionPointId = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).CollectionPoint.CollectionPointId;
+            } catch
+            {
+                viewModel.CollectionPointId = -1;
+            }
 
             return View(viewModel);
         }
@@ -196,6 +203,14 @@ namespace team7_ssis.Controllers
             catch
             {
                 viewModel.Representative = "";
+            }
+            try
+            {
+                viewModel.CollectionPointId = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).CollectionPoint.CollectionPointId;
+            }
+            catch
+            {
+                viewModel.CollectionPointId = -1;
             }
 
             return View(viewModel);

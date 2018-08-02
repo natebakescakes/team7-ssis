@@ -43,7 +43,8 @@
     <div class="row button-set ">
         <div class="col-sm-1"></div>
         <div class="col-lg-6">
-            <a id="cancel-btn" class="btn btn-danger"> Cancel</a>
+            @Html.Hidden("myURL", Url.Action("Index", "Home"))
+            <button id="cancel-btn" class="btn btn-danger">Cancel</button>
             <button id="submit" type="submit" class="btn btn-success"> Save</button>
         </div>
     </div>
@@ -63,6 +64,18 @@
                   </thead>
               </table>
           </div>
+
+<script>
+    //for cancel
+    $('#cancel-btn').on('click', function () {
+        var url = $("#myURL").val();
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "GET";
+        form.action = url;
+        document.body.appendChild(form);
+        form.submit();
+    })</script>
 
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
