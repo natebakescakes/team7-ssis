@@ -7,6 +7,7 @@ using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
 using team7_ssis.ViewModels;
+using Rotativa;
 
 namespace team7_ssis.Controllers
 {
@@ -15,12 +16,14 @@ namespace team7_ssis.Controllers
         ApplicationDbContext context;
         DisbursementService disbursementService;
         DisbursementRepository disbursementRepository;
+        ItemService itemService;
 
         public DisbursementController()
         {
             context = new ApplicationDbContext();
             disbursementService = new DisbursementService(context);
             disbursementRepository = new DisbursementRepository(context);
+            itemService = new ItemService(context);
         }
 
         // GET: Disbursement/Manage
@@ -70,6 +73,33 @@ namespace team7_ssis.Controllers
             }
             TempData["did"] = did;
             return RedirectToAction("StationeryDisbursement", "Requisition", new { rid = d.Retrieval.RetrievalId });
+
+        }
+
+        [HttpPost]
+        public ActionResult PrintDisbursementPDF(string dbmNumber)
+        {
+            var a = new ActionAsPdf("DisbursmentPrint", new { dbm = dbmNumber }) { FileName = dbmNumber + ".pdf" };
+            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
+            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            a.CustomSwitches = "--load-error-handling ignore";
+            return a;
+        }
+
+        public ActionResult DisbursmentPrint(string dbm)
+        {
+            Disbursement d = disbursementService.FindDisbursementById(dbm);
+            List<DisbursementFormTableViewModel> viewModel = new List<DisbursementFormTableViewModel>();
+            viewModel = d.DisbursementDetails.Select(x => new DisbursementFormTableViewModel()
+            {
+                ItemCode = x.ItemCode,
+                Qty = x.ActualQuantity,
+                Description = itemService.FindItemByItemCode(x.ItemCode).Description
+            }).ToList();
+
+
+            ViewBag.Disbursement = d;
+            return View("DisbursmentPrintView", viewModel);
 
         }
     }
