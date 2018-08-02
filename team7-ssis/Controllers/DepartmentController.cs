@@ -66,8 +66,8 @@ namespace team7_ssis.Controllers
                      "Value",
                      "Text"
                 ),
-                CollectionPoint = collectionPoint.Name, //sets current value as default value on dropdownlist
-                DepartmentRep = departmentRep.FirstName + " " + departmentRep.LastName
+                CollectionPoint = collectionPoint.CollectionPointId.ToString(), //sets current value as default value on dropdownlist
+                DepartmentRep = departmentRep.Email
              
             });
         }
