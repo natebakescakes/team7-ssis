@@ -403,7 +403,7 @@ $(document).ready(function () {
 
         element1.value = ponum;
 
-        element1.name = "ponum";
+        element1.name = "pon";
 
         element1.type = "hidden";
 
@@ -448,7 +448,7 @@ $(document).ready(function () {
 
         var element1 = document.createElement("input");
 
-        form.method = "GET";
+        form.method = "POST";
 
         form.action = "/purchaseorder/details/"
 
@@ -472,7 +472,7 @@ $(document).ready(function () {
 
         var element1 = document.createElement("input");
 
-        form1.method = "GET";
+        form1.method = "POST";
 
         form1.action = "/purchaseorder/details/";
 
