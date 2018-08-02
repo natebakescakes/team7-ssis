@@ -30,9 +30,13 @@
         <div class="label">Collection Point</div>
         @Model.CollectionPoint
     </div>
-    <div class="col-md-8">
+    <div class="col-md-4">
         <div class="label">Department</div>
         @Model.Department
+    </div>
+    <div class="col-md-4">
+        <div class="label">Status</div>
+        @Model.Status
     </div>
     <div class="col-md-4">
         <div class="label">Created By</div>
@@ -56,7 +60,7 @@
     </div>
     <div class="col-md-4">
         <div class="label">Approved Time</div>
-        @Model.UpdatedTime
+        @Model.ApprovedTime
     </div>
 </div>
 
@@ -66,6 +70,7 @@
             <th>Item Code</th>
             <th>Description</th>
             <th>Qty</th>
+            <th>Status</th>
         </tr>
     </thead>
 </table>
@@ -103,6 +108,7 @@
                 },
                 { "data": "Description", "autoWidth": true },
                 { "data": "Quantity", "autoWidth": true },
+                { "data": "Status", "autoWidth": true },
             ],
             select: "api"
         });

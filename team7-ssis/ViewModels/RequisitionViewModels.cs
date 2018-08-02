@@ -51,6 +51,7 @@ namespace team7_ssis.ViewModels
     {
         public int CollectionPointId { get; set; }
         public string RequisitionId { get; set; }
+        public bool IsDraft { get; set; }
         public List<UpdateRequisitionTableJSONViewModel> ItemList { get; set; }
     }
     public class UpdateRequisitionTableJSONViewModel

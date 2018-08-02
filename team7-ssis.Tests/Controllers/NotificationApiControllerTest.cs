@@ -22,6 +22,8 @@ namespace team7_ssis.Tests.Controllers
         public void TestInitialize()
         {
             context = new ApplicationDbContext();
+
+
         }
 
         [TestMethod]
@@ -77,6 +79,16 @@ namespace team7_ssis.Tests.Controllers
         public void SendNotificationTest()
         {
             //Arrange
+            new NotificationRepository(context).Save(new Notification()
+            {
+                NotificationId = 777777,
+                NotificationType = new NotificationTypeRepository(context).FindById(1),
+                Contents = "TEST",
+                Status = new StatusService(context).FindStatusByStatusId(1),
+                CreatedFor = new UserService(context).FindUserByEmail("root@admin.com"),
+                CreatedDateTime = DateTime.Now,
+            });
+
             var controller = new NotificationApiController
             {
                 Request = new HttpRequestMessage(),
@@ -85,7 +97,7 @@ namespace team7_ssis.Tests.Controllers
             };
 
             //Act
-            IHttpActionResult actionResult = controller.SendNotification("8");
+            IHttpActionResult actionResult = controller.SendNotification("777777");
 
             //Assert
             Assert.IsNotNull(actionResult);
@@ -98,6 +110,9 @@ namespace team7_ssis.Tests.Controllers
 
             if (notificationRepository.ExistsById(999999))
                 notificationRepository.Delete(notificationRepository.FindById(999999));
+
+            if (notificationRepository.ExistsById(777777))
+                notificationRepository.Delete(notificationRepository.FindById(777777));
         }
     }
 }

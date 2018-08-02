@@ -114,6 +114,20 @@ namespace team7_ssis.Services
          
         }
 
+        public ApplicationUser GetCreatedForRequisition(string reqId)
+        {
+            if (notificationRepository.FindAll().Where(x => x.Contents.Contains(reqId)).First() == null)
+            {
+                return null;
+            }
+            else
+            {
+                Notification n = notificationRepository.FindAll().Where(x => x.Contents.Contains(reqId)).First();
+                return n.CreatedFor;
+            }
+
+        }
+
 
     }
 }

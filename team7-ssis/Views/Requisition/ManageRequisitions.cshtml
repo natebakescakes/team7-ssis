@@ -24,7 +24,7 @@
         }
         @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
-            <a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
+            //<a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
         }
         @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
         {
@@ -102,7 +102,7 @@
 
                         var viewDetailsHtml = '<a class="dropdown-item getInfo"><i class="fa fa-info-circle" aria-hidden="true"></i> View Details</a>';
                         var editDetailsHtml = '<a class="dropdown-item editDetails"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
-                        var createNewDraftWithHtml = '<a class="dropdown-item" href="#"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
+                        var createNewDraftWithHtml = '<a class="dropdown-item" id="createNewDraft"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
                         var cancelHtml = '<div class="dropdown-divider"></div>' +
                             '<a class="dropdown-item" id="cancel"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
 
@@ -164,8 +164,6 @@
         ]);
     })
 
-    
-
     // Click "Accept" button
     $(document).on("click", "#approveBtn", function (e) {
         e.preventDefault();
@@ -214,6 +212,16 @@
             .row($(this).parents('tr'))
             .data();
         post("/Requisition/Cancel", { rid: data.Requisition });
+    });
+
+    // Click "Create New Draft" link
+    $(document).on("click", "#createNewDraft", function (e) {
+        e.preventDefault();
+        console.log("Create New Draft");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        post("/Requisition/Draft", { rid: data.Requisition });
     });
 
     // Click "Process All Requisitions" button
