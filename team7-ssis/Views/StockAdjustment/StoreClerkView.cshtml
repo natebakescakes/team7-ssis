@@ -1,21 +1,18 @@
 ﻿
-
-
-    <div style="width:90%; margin:0 auto"  class="table table-striped table-bordered">
-        <table id="ClerkTable" class="hover">
+        <table id="ClerkTable" class="table table-bordered table-striped table-hover" style="width: 100%">
             <thead>
                 <tr>
-                    <th>StockAdjustmentId</th>
-                    <th>CreatedBy</th>
-                    <th>ApprovedBySupervisor</th>
-                    <th>CreatedDateTime</th>
-                    <th>StatusName</th>
-                    <th>Action</th>
+                    <th>Stock Adjustment #ID</th>
+                    <th>Created By</th>
+                    <th>Approved By</th>
+                    <th>Created Date&Time</th>
+                    <th>Status Name</th>
+                    <th width="180">Action</th>
                 </tr>
             </thead>
 
         </table>
-    </div>
+
     <script>
         $(document).ready(function () {
             var $table = $('#ClerkTable');
@@ -41,11 +38,18 @@
 
                             if (data.StatusName == "Draft" || data.StatusName == "Cancelled")
 
-                                return "<button class='btn btn-warning' id='editBtn' ><i class='fa fa-delete'>Edit</i></button>";
+                                return "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>";
+                            else if (data.StatusName == "Pending Approval")
+                            {
+                                var html = 
+                                    "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>"+" "+
+                                    "<button class='btn btn-primary' id='cancelBtn' ><i class='fa fa-view'></i>Cancel</button>";
+                                return html;
+                            }
 
-                            else (data.StatusName == "Approved" || data.StatusName == "Rejected" || data.StatusName == "Pending Approval")
+                            else (data.StatusName == "Approved" || data.StatusName == "Rejected")
 
-                            return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+                            return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'></i>View</button>";
 
 
                         }
@@ -133,6 +137,32 @@
 
                 var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
                 window.location.href = "/StockAdjustment/DetailsEdit/" + Id;
+
+
+            });
+
+            $('#ClerkTable tbody').on("click", "#cancelBtn", function () {
+
+                var row = $("table#ClerkTable tr").index($(this).closest("tr"));
+
+                var Id = $("table#ClerkTable").find("tr").eq(row).find("td").eq(0).text();
+
+              //  alert(Id);
+
+                $.ajax({
+                    url: '/api/stockadjustment/cancel/'+Id,
+                    //contentType: 'application/json',
+                    //data: Id,
+                    //dataType: "json",
+                    //type: "GET",
+                    //traditional: true,
+                    success: function () {
+
+                        window.location.replace("/StockAdjustment");
+                    }
+                });
+
+              
 
 
             });
