@@ -126,9 +126,9 @@ namespace team7_ssis.Controllers
         [Route("api/retrievals/")]
         public IHttpActionResult GetRetrievals()
         {
-            var retrievals = new RetrievalService(context).FindAllRetrievals();
+            var retrievals = new RetrievalService(context).FindAllRetrievals().OrderByDescending(r => r.CreatedDateTime);
 
-            if (retrievals.Count == 0)
+            if (retrievals.Count() == 0)
                 return NotFound();
 
             return Ok(retrievals.Select(retrieval => new RetrievalMobileViewModel()
