@@ -8,10 +8,11 @@
             <tr>
                 <th>StockAdjustmentId</th>
                 <th>CreatedBy</th>
-                <th>ApprovedBySupervisor</th>
+                <th>ApprovedBy</th>
                 <th>CreatedDateTime</th>
                 <th>StatusName</th>
-                <th>Process</th>
+                <th>ProcessBy</th>
+                <th>Action</th>
             </tr>
         </thead>
 
@@ -32,26 +33,17 @@
 
             "columnDefs": [
 
-                //{
-
-                //    "targets": 5,
-
-                //    "render": function (data, type, full, meta) {
-
-                //        return "<button class='btn btn-safe' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
-
-                //    }
-
-                //},
                 {
 
-                    "targets": 5,
+                    "targets": 6,
 
                     "render": function (data, type, full, meta) {
-                        if (data.StatusName == "Pending Approval")
-
+                        if (data.StatusName == "Pending Approval" && data.IsSentFor==1) {
+                            
                             return "<button class='btn btn-primary' id='processBtn' ><i class='fa fa-delete'>Process</i></button>";
+                        }
                         else (data.StatusName == "Rejected" || data.StatusName == "Approved")
+                    
                         return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
 
                     }
@@ -64,7 +56,7 @@
                 { data: "ApprovedBySupervisor" },
                 { data: "CreatedDateTime" },
                 { data: "StatusName" },
-                //{ data: null },
+                { data: "ProcessBy" },
                 { data: null }
             ],
             autowidth: true,
