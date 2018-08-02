@@ -448,7 +448,7 @@ $(document).ready(function () {
 
         var element1 = document.createElement("input");
 
-        form.method = "POST";
+        form.method = "GET";
 
         form.action = "/purchaseorder/details/"
 
