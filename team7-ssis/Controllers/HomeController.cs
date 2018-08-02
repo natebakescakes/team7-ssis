@@ -19,6 +19,7 @@ namespace team7_ssis.Controllers
 
         public ApplicationDbContext Context { get; set; }
 
+        [Authorize]
         public ActionResult Index()
         {
             var department = new UserService(Context).FindUserByEmail(User.Identity.Name).Department;
