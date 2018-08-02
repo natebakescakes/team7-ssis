@@ -90,7 +90,14 @@ namespace team7_ssis.Services
         public Disbursement UpdateActualQuantityForDisbursementDetail(string DisbursementId, string ItemCode, int quantity)
         {
             Disbursement disbursement = this.FindDisbursementById(DisbursementId);
-            disbursement.DisbursementDetails.Find(x => x.ItemCode == ItemCode).ActualQuantity = quantity;
+            DisbursementDetail dd = disbursement.DisbursementDetails.Find(x => x.ItemCode == ItemCode);
+            if (quantity > dd.PlanQuantity)
+            {
+                throw new Exception("Actual Quantity cannot be greater than Planned Quantity.");
+            } else
+            {
+                dd.ActualQuantity = quantity;
+            }
 
             return this.Save(disbursement);
         }
