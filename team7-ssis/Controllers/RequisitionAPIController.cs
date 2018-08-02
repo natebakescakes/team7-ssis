@@ -143,8 +143,7 @@ namespace team7_ssis.Controllers
                     if (req.Status.StatusId == 6)
                     {
                         reqList.Add(req);
-                    }
-                    else
+                    } else
                     {
                         errorList.Add(req.RequisitionId);
                     }
@@ -154,17 +153,16 @@ namespace team7_ssis.Controllers
                 if (reqList.Count > 0)
                 {
                     rid = requisitionService.ProcessRequisitions(reqList);
-                }
-                else
+                } else
                 {
                     throw new Exception("No Requisitions could be processed.");
-                }
+                } 
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            return Ok(new { rid, count = reqList.Count });
+            return Ok( new { rid, count = reqList.Count } );
         }
 
         [Route("api/stationerydisbursement/{rId}")]
@@ -199,6 +197,11 @@ namespace team7_ssis.Controllers
         {
             ApplicationUser user = userRepository.FindById(RequestContext.Principal.Identity.GetUserId());
 
+            // update the collection point
+            Department d = departmentRepository.FindById(user.Department.DepartmentCode);
+            d.CollectionPoint = collectionPointRepository.FindById(json.CollectionPointId);
+            departmentRepository.Save(d);
+
             if (json.ItemList.Count < 1)
             {
                 return BadRequest("An unexpected error occured.");
@@ -211,8 +214,7 @@ namespace team7_ssis.Controllers
             if (json.IsDraft == true)
             {
                 r.Status = statusService.FindStatusByStatusId(3);
-            }
-            else
+            } else
             {
                 r.Status = statusService.FindStatusByStatusId(4);
             }
@@ -273,8 +275,9 @@ namespace team7_ssis.Controllers
 
                 // Load exisiting repository
                 requisitionRepository.FindRequisitionDetails(json.RequisitionId);
+                
+                // Update the RequisitionDetails with new information
                 r.RequisitionDetails = new List<RequisitionDetail>();
-
                 foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
                 {
                     r.RequisitionDetails.Add(new RequisitionDetail
@@ -285,8 +288,16 @@ namespace team7_ssis.Controllers
                         Status = statusService.FindStatusByStatusId(4)
                     });
                 }
-                r.UpdatedBy = user;
-                r.UpdatedDateTime = DateTime.Now;
+
+                // update status
+                if (json.IsDraft == true)
+                {
+                    r.Status = statusService.FindStatusByStatusId(3); // remain as Draft
+                }
+                else
+                {
+                    r.Status = statusService.FindStatusByStatusId(4); // make Pending Approval
+                }
 
                 requisitionService.Save(r);
             }
