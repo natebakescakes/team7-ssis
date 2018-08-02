@@ -217,38 +217,11 @@
     // Click "Create New Draft" link
     $(document).on("click", "#createNewDraft", function (e) {
         e.preventDefault();
-
+        console.log("Create New Draft");
         var data = myTable
             .row($(this).parents('tr'))
             .data();
-
-        $.ajax({
-            type: "POST",
-            contentType: 'application/json',
-            url: "/api/createdraftrequisition/",
-            data: JSON.stringify(data.Requisition),
-            dataType: "json",
-            success: function (data) {
-                $('#alert').html(
-                    '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
-                    'Draft Requisition #' + data + ' created.' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                    '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '</div>'
-                );
-            },
-            error: function (data) {
-                $('#alert').html(
-                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                    'Test' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                    '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '</div>'
-                );
-            }
-        });
+        post("/Requisition/Draft", { rid: data.Requisition });
     });
 
     // Click "Process All Requisitions" button
