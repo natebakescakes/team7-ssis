@@ -5,7 +5,7 @@
         <h2>Create Requisition</h2>
     </div>
     <div class="col-md-4">
-        <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
+        <button id="createNewDraft" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
     </div>
 </div>
 
@@ -28,10 +28,10 @@
     <div class="col-md-12">
         <h3>Select Collection Point</h3>
         @*Bind input to List<CollectionPoint>*@
-        <select class="custom-select">
+        <select id="collectionPointSelect" class="custom-select">
             @foreach (var collectionPoint in Model.SelectCollectionPointList)
             {
-                <option value="@collectionPoint.CollectionPointId">@collectionPoint.Name</option>
+                <option value="@collectionPoint.CollectionPointId" @(Model.CollectionPointId == collectionPoint.CollectionPointId ? "selected" : "") >@collectionPoint.Name</option>
             }
         </select>
 
@@ -57,7 +57,7 @@
         myTable = $('#myTable').DataTable({
             columns: [
                 {
-                    title: "ItemCode",
+                    data: "ItemCode",
                 @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
                 {
                     <text>
@@ -65,8 +65,8 @@
                     </text>
                 }
                 },
-                { title: "Description" },
-                { title: "Quantity" },
+                { data: "Description" },
+                { data: "Quantity" },
                 { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
             ],
             select: "api"
@@ -75,13 +75,23 @@
 
     // Click 'Confirm' button
     $('#confirmBtn').click(function () {
+        CallApi(false);
+    })
+
+    // Click 'Create New Draft' button
+    $('#createNewDraft').click(function () {
+        CallApi(true);
+    })
+
+    function CallApi(isDraft) {
         var tableData = myTable.rows().data().toArray();
+        var cpId = $('#collectionPointSelect').val();
+
+        var data = { CollectionPointId: cpId, ItemList: [], IsDraft: isDraft };
 
         if (tableData.length > 0) {
-            var data = [];
-
             for (i = 0; i < tableData.length; i++) {
-                data[i] = { ItemCode: tableData[i][0], Qty: tableData[i][2] }
+                data.ItemList[i] = { ItemCode: tableData[i].ItemCode, Qty: tableData[i].Quantity }
             }
 
             $.ajax({
@@ -109,5 +119,5 @@
                 '</div>'
             );
         }
-    })
+    }
 </script>

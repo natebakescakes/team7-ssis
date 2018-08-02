@@ -105,18 +105,20 @@ namespace team7_ssis.Controllers
             var retrievalService = new RetrievalService(Context);
             var disbursementService = new DisbursementService(Context);
 
-            // string retId, string itemCode, List<BreakdownByDepartment> list
             try
             {
+                // find the Retrieval
                 Retrieval r = retrievalService.FindRetrievalById(json.RetId);
+
                 foreach (BreakdownByDepartment bd in json.List)
                 {
+                    // find the related Disbursement
                     Disbursement d = r.Disbursements.Where(x => x.Department.DepartmentCode == bd.DeptId).First();
                     disbursementService.UpdateActualQuantityForDisbursementDetail(d.DisbursementId, json.ItemCode, bd.Actual);
                 }
-            } catch
+            } catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             return Ok();
         }
@@ -124,9 +126,9 @@ namespace team7_ssis.Controllers
         [Route("api/retrievals/")]
         public IHttpActionResult GetRetrievals()
         {
-            var retrievals = new RetrievalService(context).FindAllRetrievals();
+            var retrievals = new RetrievalService(context).FindAllRetrievals().OrderByDescending(r => r.CreatedDateTime);
 
-            if (retrievals.Count == 0)
+            if (retrievals.Count() == 0)
                 return NotFound();
 
             return Ok(retrievals.Select(retrieval => new RetrievalMobileViewModel()
@@ -204,7 +206,8 @@ namespace team7_ssis.Controllers
             });
         }
 
-        [Route("api/retrieval/{id}")]
+        [HttpPost]
+        [Route("api/retrieval/individual")]
         public IHttpActionResult GetRetrieval([FromBody] ConfirmRetrievalViewModel model)
         {
             var retrieval = new RetrievalService(context).FindRetrievalById(model.RetrievalId);
@@ -224,6 +227,7 @@ namespace team7_ssis.Controllers
                         PlanQuantity = dd.PlanQuantity,
                         ActualQuantity = dd.ActualQuantity,
                         Status = dd.Status.Name,
+                        RetrievalStatus = retrieval.Status.Name,
                         Uom = dd.Item.Uom,
                     })
                 ));

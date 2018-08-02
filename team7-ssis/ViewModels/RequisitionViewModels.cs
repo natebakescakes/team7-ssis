@@ -39,6 +39,7 @@ namespace team7_ssis.ViewModels
     {
         public List<CollectionPoint> SelectCollectionPointList { get; set; }
         public string Representative { get; set; }
+        public int CollectionPointId { get; set; }
     }
 
     public class EditRequisitionViewModel : CreateRequisitionViewModel
@@ -46,18 +47,19 @@ namespace team7_ssis.ViewModels
         public string RequisitionId { get; set; }
         public int StatusId { get; set; }
     }
-
-    public class CreateRequisitionJSONViewModel
+    public class UpdateRequisitionJSONViewModel
+    {
+        public int CollectionPointId { get; set; }
+        public string RequisitionId { get; set; }
+        public bool IsDraft { get; set; }
+        public List<UpdateRequisitionTableJSONViewModel> ItemList { get; set; }
+    }
+    public class UpdateRequisitionTableJSONViewModel
     {
         public string ItemCode { get; set; }
         public int Qty { get; set; }
     }
 
-    public class UpdateRequisitionJSONViewModel
-    {
-        public string RequisitionId { get; set; }
-        public List<CreateRequisitionJSONViewModel> ItemList { get; set; }
-    }
 
     public class RequisitionMobileViewModel
     {
