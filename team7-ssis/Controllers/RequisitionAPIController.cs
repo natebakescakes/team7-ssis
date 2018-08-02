@@ -25,6 +25,7 @@ namespace team7_ssis.Controllers
         UserRepository userRepository;
         StatusRepository statusRepository;
         CollectionPointRepository collectionPointRepository;
+        NotificationService notificationService;
 
         public RequisitionAPIController()
         {
@@ -39,6 +40,7 @@ namespace team7_ssis.Controllers
             userRepository = new UserRepository(context);
             statusRepository = new StatusRepository(context);
             collectionPointRepository = new CollectionPointRepository(context);
+            notificationService = new NotificationService(context);
 
         }
 
@@ -237,7 +239,8 @@ namespace team7_ssis.Controllers
             }
 
             // Create Notification
-            new NotificationService(context).CreateNotification(r, user.Department.Head);
+            Notification n = new NotificationService(context).CreateNotification(r, user.Department.Head);
+            var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
 
             return Ok(r.RequisitionId);
 
