@@ -102,22 +102,27 @@ $(document).ready(function(){
     $(document).on("click", "#downloadselected", function () {
 
         var data = $('#poTable').DataTable().rows({ selected: true }).data().toArray();
+        if (data.length != 0) {
+            ponum = data[0].PurchaseOrderNo;
 
-        ponum = data[0].PurchaseOrderNo;
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "POST";
+            form.action = "/PurchaseOrder/downloadselectedpdf";
+
+            element1.value = ponum;
+            element1.name = "purchaseOrderNum";
+            element1.type = "hidden";
+            form.appendChild(element1);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+        else {
+            alert("Please select a purchase order to download!");
+        }
         
-        var form = document.createElement("form");
-        var element1 = document.createElement("input");
-        form.method = "POST";
-        form.action = "/PurchaseOrder/downloadselectedpdf";
-
-        element1.value = ponum;
-        element1.name = "purchaseOrderNum";
-        element1.type = "hidden";
-        form.appendChild(element1);
-
-        document.body.appendChild(form);
-
-        form.submit();
 
     });
 
@@ -128,6 +133,8 @@ $(document).ready(function(){
         
         var value = Number($(this).val());
         var url;
+        url = $("#relDelOrdersUrl").val();
+        alert(url);
 
         if (value == 0) { url = $("#detailsUrl").val(); }
         else if (value == 1) { url = $("#relDelOrdersUrl").val(); }
@@ -265,16 +272,7 @@ $(document).ready(function(){
 
 
     //purchase order detail awaiting table
-
-    var simple_textbox = function (data, type, row, meta) {
-        if (data) {
-            return '<input  type="text" class="qty" value="'+ data + '"/>';
-        }
-        
-        return '';
-       
-    }
-
+    
     var $podAwaitingtable = $('#poDetailAwaitingTable');
     var podAwaitingdatatbl = $podAwaitingtable.DataTable(
         {
@@ -294,8 +292,12 @@ $(document).ready(function(){
                 },
                 {
                     data: "QuantityOrdered",
-                    render: simple_textbox,
-                    defaultContent: "<i>Not available</i>"
+                    render: function (data, type, row, meta) {
+                        var html = '<input class="editPO" id="' + row.ItemCode + '"type="number" ' +
+                            'value="' + data + '"/>';
+                        return html;
+                    } 
+
                 },
                 {
                     data: "UnitPrice",
@@ -330,6 +332,43 @@ $(document).ready(function(){
             }
 
         });
+
+    $(document).on("change", ".editPO", function () {
+
+        var cell = podAwaitingdatatbl.cell(this.parentElement);
+        cell.data($(this).val()).draw();
+
+        //alert(this.id);
+        var rowIdx = document.getElementById(this.id).parentElement.parentElement;
+
+        //works in console
+        // alert($('#generatePoTable').DataTable().rows().data()[0].TotalPrice);
+        //var quantity = parseInt(cell.data());
+
+        //alert(row(generatePOTbl.this.parentElement));
+
+        var quantity = document.getElementById(this.id).value;
+        var unitPrice = $('#poDetailAwaitingTable').DataTable().row(document.getElementById(this.id).parentElement.parentElement).data().UnitPrice;
+
+
+
+        // alert("AMOUNT "+generatePOTbl.row($(this.id).closest('tr')).data().UnitPriceDecimal);
+        // var amount = parseFloat(generatePOTbl.row(this.parentElement).data().UnitPriceDecimal);
+
+        var totalAmount = parseInt(quantity) * parseFloat(unitPrice);
+        podAwaitingdatatbl.cell(rowIdx, 4).data(totalAmount).draw();
+
+
+
+
+        //.draw();
+        // document.getElementById("")
+
+
+    });
+
+
+
 
     $('#poDetailAwaitingTable tbody').on('click', '.deletebtn', function (e){
 
@@ -409,41 +448,53 @@ $(document).ready(function(){
 
     $('.savebutton').on('click', function (e) {
 
-       // alert("in save");
+        // alert("in save");
 
         var item = podAwaitingdatatbl.rows().data().toArray();
-
+        var flag = 0;
         var updateArr = new Array();
 
-        for(i = 0; i < item.length;i++)
-        {
+        for (i = 0; i < item.length; i++) {
+
+            if (item[i].QuantityOrdered <= 0)
+            {
+                flag = 1;
+                break;
+            }
+
             var o = {
-               "ItemCode": item[i].ItemCode,
-               "QuantityOrdered": item[i].QuantityOrdered,
+                "ItemCode": item[i].ItemCode,
+                "QuantityOrdered": item[i].QuantityOrdered,
                 "PurchaseOrderNo": podUrl
             }
 
             updateArr.push(o);
-            
+
         }
 
-        $.ajax({
+        if (flag == 0) {
+            $.ajax({
 
-            type: "POST",
-            url: "/purchaseOrder/update",
-            dataType: "json",
-            data: JSON.stringify(updateArr),
-            contentType: "application/json",
-            cache: true,
-            success: function (result) {
+                type: "POST",
+                url: "/purchaseOrder/update",
+                dataType: "json",
+                data: JSON.stringify(updateArr),
+                contentType: "application/json",
+                cache: true,
+                success: function (result) {
 
-                document.getElementById("amountLabel").innerHTML = "$ " + result.amount;
-                //alert("Quantity has been updated!");
-                podAwaitingdatatbl.ajax.reload();
-                
-            }
-        });
+                    document.getElementById("amountLabel").innerHTML = "$ " + result.amount;
+                    alert("Quantity has been updated!");
+                    podAwaitingdatatbl.ajax.reload();
 
+                }
+            });
+
+        }
+
+        else if (flag == 1) {
+            alert("Please enter valid quantity");
+        }
     });
 
 
@@ -453,7 +504,10 @@ $(document).ready(function(){
         // assign the cell with the value from the <input> element 
         cell.data($(this).val()).draw();
     });
-   
+
+        
+
+    
 
    
                        
