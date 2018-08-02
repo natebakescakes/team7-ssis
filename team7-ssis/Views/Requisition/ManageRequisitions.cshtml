@@ -24,7 +24,7 @@
         }
         @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
-            <a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
+            //<a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
         }
         @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
         {
@@ -33,28 +33,12 @@
     </div>
 </div>
 
-@if (Request.QueryString["create"] != null)
-{
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        Requisition #@Request.QueryString["create"] created.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
-@if (Request.QueryString["update"] != null)
-{
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        Requisition #@Request.QueryString["update"] updated.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
+<div id="alert"></div>
+
 @if (ViewBag.Danger != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        Requisition #@ViewBag.Danger cancelled.
+        @ViewBag.Danger
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -118,7 +102,7 @@
 
                         var viewDetailsHtml = '<a class="dropdown-item getInfo"><i class="fa fa-info-circle" aria-hidden="true"></i> View Details</a>';
                         var editDetailsHtml = '<a class="dropdown-item editDetails"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Details</a>';
-                        var createNewDraftWithHtml = '<a class="dropdown-item" href="#"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
+                        var createNewDraftWithHtml = '<a class="dropdown-item" id="createNewDraft"><i class="fa fa-files-o" aria-hidden="true"></i> Create New Draft With...</a>';
                         var cancelHtml = '<div class="dropdown-divider"></div>' +
                             '<a class="dropdown-item" id="cancel"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>';
 
@@ -127,9 +111,9 @@
                             'Actions' +
                             '</a>' +
                             '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">' +
-                            (row.Status == "Pending Approval" ? editDetailsHtml : viewDetailsHtml ) +
+                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? editDetailsHtml : viewDetailsHtml ) +
                             createNewDraftWithHtml +
-                            ( ( row.Status == "Pending Approval" || row.Status == "Draft" ) ? cancelHtml : "" ) +
+                            ( ( row.Status == "Pending Approval" ) ? cancelHtml : "" ) +
                             '</div >' +
                             '</div >';
                         </text>
@@ -179,8 +163,6 @@
             }
         ]);
     })
-
-    
 
     // Click "Accept" button
     $(document).on("click", "#approveBtn", function (e) {
@@ -232,6 +214,16 @@
         post("/Requisition/Cancel", { rid: data.Requisition });
     });
 
+    // Click "Create New Draft" link
+    $(document).on("click", "#createNewDraft", function (e) {
+        e.preventDefault();
+        console.log("Create New Draft");
+        var data = myTable
+            .row($(this).parents('tr'))
+            .data();
+        post("/Requisition/Draft", { rid: data.Requisition });
+    });
+
     // Click "Process All Requisitions" button
     $(document).on("click", "#processAllRequisitionButton", function (e) {
         e.preventDefault();
@@ -259,10 +251,20 @@
             url: "/api/processrequisitions",
             data: JSON.stringify(reqIdArray),
             dataType: "json",
-            success: function (rid) {
-                message = reqIdArray.length + " Requisitions processed. Retrieval Form #" + rid + " created.";
-                post("/Requisition/StationeryRetrieval?rid=" + rid, { message: message });
-                //window.location.replace("/Requisition/StationeryRetrieval?rid=" + rid + "&msg=" + encodeURIComponent(message));
+            success: function (data) {
+                var requisition = data.count == 1 ? "Requisition" : "Requisitions";
+                var message = data.count + " " + requisition + " processed. Retrieval Form #" + data.rid + " created.";
+                post("/Requisition/StationeryRetrieval?rid=" + data.rid, { message: message });
+            },
+            error: function (data) {
+                $('#alert').html(
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    data.responseJSON.Message +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '</div>'
+                );
             }
         });
     }

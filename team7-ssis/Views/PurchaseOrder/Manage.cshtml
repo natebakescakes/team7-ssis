@@ -29,8 +29,8 @@
 </head>
 <body>
     @Html.Hidden("detailsUrl", Url.Action("details", "PurchaseOrder"))
-    @Html.Hidden("relDelOrdersUrl", Url.Action("", "DeliveryOrder"))
-    @Html.Hidden("receiveGoodsUrl", Url.Action("", "DeliveryOrder"))
+    @Html.Hidden("relDelOrdersUrl", Url.Action("ReceivedGoodsPurchaseOrderView", "DeliveryOrder"))
+    @Html.Hidden("receiveGoodsUrl", Url.Action("ReceiveGoodsView", "DeliveryOrder"))
 
     <div>
 

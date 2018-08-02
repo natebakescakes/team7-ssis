@@ -5,7 +5,7 @@
         <h2>Create Requisition</h2>
     </div>
     <div class="col-md-4">
-        <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
+        <button id="createNewDraft" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
     </div>
 </div>
 
@@ -28,10 +28,10 @@
     <div class="col-md-12">
         <h3>Select Collection Point</h3>
         @*Bind input to List<CollectionPoint>*@
-        <select class="custom-select">
+        <select id="collectionPointSelect" class="custom-select">
             @foreach (var collectionPoint in Model.SelectCollectionPointList)
             {
-                <option value="@collectionPoint.CollectionPointId">@collectionPoint.Name</option>
+                <option value="@collectionPoint.CollectionPointId" @(Model.CollectionPointId == collectionPoint.CollectionPointId ? "selected" : "") >@collectionPoint.Name</option>
             }
         </select>
 
@@ -42,161 +42,56 @@
 </div>
 
 <div class="row mt-3">
-
-    @if (Model.Action == "Create")
-    {
-        <div class="col-md-12">
-            <button id="cancelBtn" class="btn btn-default">Cancel</button>
-            <button id="confirmBtn" class="btn btn-primary">Confirm</button>
-        </div>
-    }
-    @if (Model.Action == "Edit")
-    {
-        <div class="col-md-8">
-            <button id="backBtn" class="btn btn-default">Back</button>
-            <button id="confirmChangeBtn" class="btn btn-success">Confirm Changes</button>
-        </div>
-        <div class="col-md-4">
-            <button id="cancelReqBtn" class="btn btn-danger pull-right"><i class="fa fa-trash" aria-hidden="true"></i> Cancel Requisition</button>
-        </div>
-    }
-</div>
-
-<div class="modal" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Item</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <table id="addItemTable" class="table table.sm table-striped table-bordered" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Thumbnail</th>
-                                    <th>Item Code</th>
-                                    <th>Category</th>
-                                    <th>Description</th>
-                                    <th>In Stock</th>
-                                    <th>Unit of Measure</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="thumbnail__regular"></div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="label">Item Number</div>
-                            ALPA
-                            <br />
-                            <div class="label">In Stock</div>
-                            20
-                        </div>
-                        <div class="col-md-4">
-                            <div class="label">Description</div>
-                            Clip Double 2"
-                            <br />
-                            <div class="label">Unit of Measure</div>
-                            Dozen
-                        </div>
-                        <div class="col-md-3">
-                            <div class="label">Category</div>
-                            Clip
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div id="modalMsg"></div>
-                <label>Qty</label>
-                <input id="qtyInput" type="number" />
-                <button id="addToReq" type="button" class="btn btn-primary">Add to Requisition</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
+    <div class="col-md-12">
+        <button id="confirmBtn" class="btn btn-primary">Confirm</button>
     </div>
 </div>
 
+@Html.Partial("_AddItemModal")
+
 <script>
-$(document).ready(function () {
+    var myTable;
 
-    // render main table
-    var myTable = $('#myTable').DataTable({
-        columns: [
-            { title: "ItemCode" },
-            { title: "Description" },
-            { title: "Quantity" },
-            { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
-        ],
-        select: "api"
-    });
-
-    // render Item table
-    var addItemTable = $('#addItemTable').DataTable({
-        ajax: {
-            url: "/api/manage/items",
-            dataSrc: ""
-        },
-        pageLength: 5,
-        columns: [
-            { "defaultContent": '<div class="thumbnail__small"></div>' },
-            { "data": "ItemCode", "autoWidth": true },
-            { "data": "ItemCategoryName", "autoWidth": true },
-            { "data": "Description", "autoWidth": true },
-            { "data": "Quantity", "autoWidth": true },
-            { "data": "Uom", "autoWidth": true },
-        ],
-        select: "single"
-    });
-
-    // Display the Add Item modal
-    $('#addItemBtn').click(function () {
-        $('#myModal').modal({
-            backdrop: 'static',
+    $(document).ready(function () {
+        // render main table
+        myTable = $('#myTable').DataTable({
+            columns: [
+                {
+                    data: "ItemCode",
+                @if ( User.IsInRole("Employee") || User.IsInRole("DepartmentHead") )
+                {
+                    <text>
+                    visible: false
+                    </text>
+                }
+                },
+                { data: "Description" },
+                { data: "Quantity" },
+                { defaultContent: '<i class="fa fa-times pointer" aria-hidden="true"></i>' }
+            ],
+            select: "api"
         });
     })
 
-    // Add items to myTable
-    $('#addToReq').click(function () {
-        var data = $('#addItemTable').DataTable().rows({ selected: true }).data().toArray();
-        //console.log(data);
-        //TODO: write some logic that will add quantity to the requisitionDetail
-        var qty = parseInt($('#qtyInput').val());
-
-        if ((data.length > 0) && (qty > 0)) {
-            myTable.row.add([data[0].ItemCode, data[0].Description, qty]).draw();
-            $('#myModal').modal('hide');
-            $('#modalMsg').html('');
-        } else {
-            $('#modalMsg').html('You must select an item and a valid quantity.');
-            console.log("Error");
-        }
-
-    })
-
-    // Delete row
-    $('#myTable tbody').on('click', 'i.fa.fa-times', function () {
-        myTable
-            .row($(this).parents('tr'))
-            .remove()
-            .draw();
-    });
-
     // Click 'Confirm' button
     $('#confirmBtn').click(function () {
+        CallApi(false);
+    })
+
+    // Click 'Create New Draft' button
+    $('#createNewDraft').click(function () {
+        CallApi(true);
+    })
+
+    function CallApi(isDraft) {
         var tableData = myTable.rows().data().toArray();
+        var cpId = $('#collectionPointSelect').val();
+
+        var data = { CollectionPointId: cpId, ItemList: [], IsDraft: isDraft };
 
         if (tableData.length > 0) {
-            var data = [];
-
             for (i = 0; i < tableData.length; i++) {
-                data[i] = { ItemCode: tableData[i][0], Qty: tableData[i][2] }
+                data.ItemList[i] = { ItemCode: tableData[i].ItemCode, Qty: tableData[i].Quantity }
             }
 
             $.ajax({
@@ -224,6 +119,5 @@ $(document).ready(function () {
                 '</div>'
             );
         }
-    })
-})
+    }
 </script>

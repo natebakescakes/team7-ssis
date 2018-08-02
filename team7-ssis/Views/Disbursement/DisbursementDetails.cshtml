@@ -20,7 +20,7 @@
         <h2 class="mb-3">Disbursement Form #@Model.DisbursementId</h2>
     </div>
     <div class="col-md-4">
-        <i class="fa fa-print pull-right" aria-hidden="true"></i>
+        <i id="printdbm" class="fa fa-print pull-right" aria-hidden="true"></i>
     </div>
 </div>
 
@@ -63,7 +63,16 @@
                 dataSrc: ""
             },
             columns: [
-                { "data": "ItemCode", "autoWidth": true },
+                {
+                    "data": "ItemCode",
+                    "autoWidth": true,
+                    @if (User.IsInRole("Employee") || User.IsInRole("DepartmentHead"))
+                    {
+                        <text>
+                        "visible" : false
+                        </text>
+                    }
+                },
                 { "data": "Description", "autoWidth": true },
                 { "data": "Qty", "autoWidth": true },
             ],
@@ -74,6 +83,24 @@
     $(document).on('click', '#confirm', function () {
         post("/Disbursement/Collect", { did : "@Model.DisbursementId" });
     })
+
+    $(document).on("click", "#printdbm", function () {
+        
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "POST";
+        form.action = "/Disbursement/PrintDisbursementPDF";
+
+        element1.value = "@Model.DisbursementId";
+        element1.name = "dbmNumber";
+        element1.type = "hidden";
+        form.appendChild(element1);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    });
 
 </script>
 

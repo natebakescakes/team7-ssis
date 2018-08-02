@@ -46,11 +46,19 @@
     });
 
     $(".addsupplier-form").submit(function (event) {
-        if ($('.addsupplier-form').find('#SupplierCode').val() === '') {
+        var code_check = $('.addsupplier-form').find('#SupplierCode').val();
+
+        if (code_check === '') {
             alert("Supplier Code cannot be empty. Please enter a Supplier Code.");
             event.preventDefault();
         }
-        if ($('.addsupplier-form').find('#SupplierCode').val() !== '') {
+
+        if (code_check.length > 4) {
+            alert("Supplier Code cannot be more than 4 characters");
+            event.preventDefault();
+        }
+
+        if (code_check !== '' && code_check.length <=4 ) {
             $.ajax({
                 type: "POST",
                 url: '/supplier/Save',
@@ -62,6 +70,7 @@
                     }
                 }
             });
+            event.preventDefault();
         }
     });
 
@@ -114,9 +123,7 @@
         $('#supplierdetails')
             .find('select')
             .prop('disabled', false);
-        $('#supplierdetails')
-            .find('#SupplierCode')
-            .prop('disabled', true);
+      
     }
 
     function disableInput() {

@@ -14,24 +14,32 @@ namespace team7_ssis.Controllers
 {
     public class RequisitionController : Controller
     {
-        private ApplicationDbContext context;
-        private RequisitionService requisitionService;
-        private RequisitionRepository requisitionRepository;
-        private RetrievalService retrievalService;
-        private ItemService itemService;
-        private CollectionPointService collectionPointService;
-        private DepartmentService departmentService;
-        private UserManager<ApplicationUser> userManager;
+        ApplicationDbContext context;
+        RequisitionRepository requisitionRepository;
+        UserRepository userRepository;
+
+        RequisitionService requisitionService;
+        RetrievalService retrievalService;
+        ItemService itemService;
+        CollectionPointService collectionPointService;
+        DepartmentService departmentService;
+        StatusService statusService;
+
+        UserManager<ApplicationUser> userManager;
 
         public RequisitionController()
         {
             context = new ApplicationDbContext();
-            requisitionService = new RequisitionService(context);
             requisitionRepository = new RequisitionRepository(context);
+            userRepository = new UserRepository(context);
+
+            requisitionService = new RequisitionService(context);
             retrievalService = new RetrievalService(context);
             itemService = new ItemService(context);
             collectionPointService = new CollectionPointService(context);
             departmentService = new DepartmentService(context);
+            statusService = new StatusService(context);
+
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
@@ -51,10 +59,18 @@ namespace team7_ssis.Controllers
             {
                 ViewBag.Danger = TempData["reject"];
             }
+            if (TempData["draft"] != null)
+            {
+                ViewBag.Success = TempData["draft"];
+            }
+            if (TempData["error"] != null)
+            {
+                ViewBag.Danger = TempData["error"];
+            }
 
             // pass the statuses for the appropriate Role
-            HashSet<int> adminSet = new HashSet<int> { 3, 4, 5, 6, 7, 8, 9, 10 };
-            HashSet<int> empSet = new HashSet<int> { 3, 4, 5, 6, 7, 8, 9, 10 };
+            HashSet<int> adminSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            HashSet<int> empSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             HashSet<int> deptHeadSet = new HashSet<int> { 3, 4, 5, 6 };
             HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10 };
 
@@ -93,6 +109,12 @@ namespace team7_ssis.Controllers
             {
                 viewModel.Status = r.Status.Name;
                 viewModel.RequisitionID = r.RequisitionId;
+                try
+                {
+                    viewModel.DisbursementId = r.Retrieval.Disbursements.Where(x => x.Department.DepartmentCode == r.Department.DepartmentCode).First().DisbursementId;
+                } catch {
+                    viewModel.DisbursementId = "";
+                }
                 viewModel.Department = r.Department == null ? "" : r.Department.Name;
                 viewModel.CollectionPoint = r.CollectionPoint == null ? "" : r.CollectionPoint.Name;
                 viewModel.CreatedBy = r.CreatedBy == null ? "" : String.Format("{0} {1}", r.CreatedBy.FirstName, r.CreatedBy.LastName);
@@ -156,7 +178,6 @@ namespace team7_ssis.Controllers
         public ActionResult CreateRequisition()
         {
             CreateRequisitionViewModel viewModel = new CreateRequisitionViewModel();
-            viewModel.Action = "Create";
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
 
             try
@@ -166,6 +187,13 @@ namespace team7_ssis.Controllers
             catch
             {
                 viewModel.Representative = "";
+            }
+            try
+            {
+                viewModel.CollectionPointId = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).CollectionPoint.CollectionPointId;
+            } catch
+            {
+                viewModel.CollectionPointId = -1;
             }
 
             return View(viewModel);
@@ -180,9 +208,9 @@ namespace team7_ssis.Controllers
             }
 
             EditRequisitionViewModel viewModel = new EditRequisitionViewModel();
-            viewModel.Action = "Edit";
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
             viewModel.RequisitionId = rid;
+            viewModel.StatusId = requisitionRepository.FindById(rid).Status.StatusId;
 
             try
             {
@@ -191,6 +219,14 @@ namespace team7_ssis.Controllers
             catch
             {
                 viewModel.Representative = "";
+            }
+            try
+            {
+                viewModel.CollectionPointId = departmentService.FindDepartmentByUser(userManager.FindById(User.Identity.GetUserId())).CollectionPoint.CollectionPointId;
+            }
+            catch
+            {
+                viewModel.CollectionPointId = -1;
             }
 
             return View(viewModel);
@@ -223,6 +259,53 @@ namespace team7_ssis.Controllers
             {
                 return RedirectToAction("ManageRequisitions", "EditRequisition", new { rid });
             }
+            return RedirectToAction("ManageRequisitions", "Requisition");
+        }
+
+        // POST: /Requisition/Draft
+        public ActionResult Draft(string rid)
+        {
+            ApplicationUser user = userRepository.FindById(User.Identity.GetUserId());
+            // for testing
+            //ApplicationUser user = userRepository.FindById("446a381c-ff6c-4332-ba50-747af26d996e");
+
+            Requisition existingReq = requisitionRepository.FindById(rid);
+
+            // create the requisition
+            Requisition r = new Requisition();
+            r.RequisitionId = IdService.GetNewRequisitionId(context);
+            r.RequisitionDetails = new List<RequisitionDetail>();
+            r.Status = statusService.FindStatusByStatusId(3); // create a draft
+            r.CreatedDateTime = DateTime.Now;
+            r.Department = user.Department;
+            r.CollectionPoint = user.Department.CollectionPoint;
+            r.CreatedBy = user;
+
+            // create requisition details
+            foreach (RequisitionDetail dd in existingReq.RequisitionDetails)
+            {
+                r.RequisitionDetails.Add(new RequisitionDetail
+                {
+                    ItemCode = dd.ItemCode,
+                    Item = itemService.FindItemByItemCode(dd.ItemCode),
+                    Quantity = dd.Quantity,
+                    Status = statusService.FindStatusByStatusId(4)
+                });
+            }
+            try
+            {
+                requisitionService.Save(r);
+
+                // Create Notification
+                new NotificationService(context).CreateNotification(r, user.Department.Head);
+            }
+            catch
+            {
+                TempData["error"] = "error";
+                return RedirectToAction("ManageRequisitions", "Requisition");
+            }
+
+            TempData["draft"] = String.Format("Requisition #{0} created.", r.RequisitionId);
             return RedirectToAction("ManageRequisitions", "Requisition");
         }
 

@@ -30,7 +30,7 @@
             { "data": "StartDate", "autowidth": true },
             { "data": "EndDate", "autowidth": true },
             { 
-                defaultContent: "<button class='btn btn-danger' id='disable-btn' style='font-size: 12px'><i class='fa fa-edit'></i></button>"     
+                defaultContent: "<button class='btn btn-danger' id='disable-btn' style='font-size: 12px'><i class='fa fa-window-close'></i></button>"     
             }
         ],
         select: 'single'
@@ -139,11 +139,11 @@
         enableInput();
     });
 
-    var cancelbtn = $('#cancel-btn').on('click', function () {
-        disableInput();
-        $('#edit-btn').show();
-        $(".button-set").hide();
-    });
+    //var cancelbtn = $('#cancel-btn').on('click', function () {
+    //    disableInput();
+    //    $('#edit-btn').show();
+    //    $(".button-set").hide();
+    //});
 
     function enableInput() {
         $('#departmentdetails')
