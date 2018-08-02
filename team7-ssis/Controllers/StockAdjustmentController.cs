@@ -70,8 +70,16 @@ namespace team7_ssis.Controllers
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
-            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
-                + sa.ApprovedBySupervisor.LastName;
+            if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager == null)
+            {
+                sv.ApprovedBySupervisor = "";
+            }
+            else if (sa.ApprovedBySupervisor != null && sa.ApprovedByManager == null)
+            { sv.ApprovedBySupervisor = sa.ApprovedBySupervisor.FirstName + " " + sa.ApprovedBySupervisor.LastName; }
+            else if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager != null)
+            {
+                sv.ApprovedBySupervisor = sa.ApprovedByManager.FirstName + " " + sa.ApprovedByManager.LastName;
+            }
             if (sa.UpdatedDateTime != null)
             {
                 DateTime updatetime = (DateTime)sa.UpdatedDateTime;
@@ -90,8 +98,18 @@ namespace team7_ssis.Controllers
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
-            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
-                + sa.ApprovedBySupervisor.LastName;
+
+            if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager == null)
+            {
+                sv.ApprovedBySupervisor = "";
+            }
+            else if (sa.ApprovedBySupervisor != null && sa.ApprovedByManager == null)
+            { sv.ApprovedBySupervisor = sa.ApprovedBySupervisor.FirstName + " " + sa.ApprovedBySupervisor.LastName; }
+            else if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager != null)
+            {
+                sv.ApprovedBySupervisor = sa.ApprovedByManager.FirstName + " " + sa.ApprovedByManager.LastName;
+                    }
+
             if (sa.UpdatedDateTime != null)
             {
                 DateTime updatetime = (DateTime)sa.UpdatedDateTime;
@@ -113,8 +131,16 @@ namespace team7_ssis.Controllers
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
-            sv.ApprovedBySupervisor = sa.ApprovedBySupervisor == null ? "" : sa.ApprovedBySupervisor.FirstName + " "
-                + sa.ApprovedBySupervisor.LastName;
+            if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager == null)
+            {
+                sv.ApprovedBySupervisor = "";
+            }
+            else if (sa.ApprovedBySupervisor != null && sa.ApprovedByManager == null)
+            { sv.ApprovedBySupervisor = sa.ApprovedBySupervisor.FirstName + " " + sa.ApprovedBySupervisor.LastName; }
+            else if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager != null)
+            {
+                sv.ApprovedBySupervisor = sa.ApprovedByManager.FirstName + " " + sa.ApprovedByManager.LastName;
+            }
             if (sa.UpdatedDateTime != null)
             {
                 DateTime updatetime = (DateTime)sa.UpdatedDateTime;
