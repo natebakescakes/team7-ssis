@@ -9,7 +9,7 @@ $(document).ready(function () {
             url: api,
             dataSrc:''
         },
-     
+        deferRender: true,
         columns: [
             { "data": "ItemCode", "autoWidth": true },
             { "data": "ItemCategoryName", "autoWidth": true },
@@ -41,7 +41,7 @@ $(document).ready(function () {
             if ($(this).children().hasClass("btn-danger")) {
                 $(this).html("<button id='save-btn' class='btn btn-success' style='font-size: 12px'><i class='fa fa-save'></i></button>");
             }
-
+        
             if ($(this).children().hasClass("form-control")) {
                 ($(this).find("input")).prop("disabled", false);
             }

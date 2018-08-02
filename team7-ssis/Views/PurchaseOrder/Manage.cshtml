@@ -28,15 +28,21 @@
 
 </head>
 <body>
+    @Html.Hidden("detailsUrl", Url.Action("details", "PurchaseOrder"))
+    @Html.Hidden("relDelOrdersUrl", Url.Action("ReceivedGoodsPurchaseOrderView", "DeliveryOrder"))
+    @Html.Hidden("receiveGoodsUrl", Url.Action("ReceiveGoodsView", "DeliveryOrder"))
+
     <div>
+
         <div class="row mb-3">
             <div class="col-md-8">
                 <h2>Manage Purchase Order</h2>
             </div>
             <div class="col-md-4">
-              
+
             </div>
         </div>
+
 
         <div>
             @*<div>
@@ -55,12 +61,11 @@
 
 
                     <tr>
-                        <th class="first"></th>
-                        <th class="second">Purchase Order No</th>
-                        <th class="third">Supplier</th>
-                        <th class="fourth">Order Date</th>
-                        <th class="fifth">Status</th>
-                        <th class="sixth"></th>
+                        <th class="first">Purchase Order No</th>
+                        <th class="second">Supplier</th>
+                        <th class="third">Order Date</th>
+                        <th class="fourth">Status</th>
+                        <th class="fifth"></th>
                     </tr>
                 </thead>
             </table>

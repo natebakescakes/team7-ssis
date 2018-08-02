@@ -32,10 +32,12 @@ namespace team7_ssis.Controllers
 
             RetrievalDetailsViewModel viewModel = new RetrievalDetailsViewModel();
             Item i = itemService.FindItemByItemCode(itemId);
+            Retrieval r = retrievalService.FindRetrievalById(retId);
 
             viewModel.ProductID = i.ItemCode;
             viewModel.Name = i.Name;
             viewModel.Bin = i.Bin;
+            viewModel.Status = i.Status.StatusId;
 
             return View(viewModel);
         }
@@ -48,18 +50,21 @@ namespace team7_ssis.Controllers
 
         // POST: Retrieval/Confirm
         [HttpPost]
-        public ActionResult Confirm(string retId)
+        public ActionResult Confirm(string RetrievalID, List<StationeryRetrievalTableRowJSONViewModel> Data)
         {
             try
             {
-                retrievalService.ConfirmRetrieval(retId, "");
-                TempData["message"] = String.Format("Requisition #{0} confirmed.", retId);
+                //retrievalService.SaveRetrieval(json);
+                //retrievalService.ConfirmRetrieval(json.RetrievalID, "");
+                //TempData["message"] = String.Format("Requisition #{0} confirmed.", json.RetrievalID);
             }
             catch
             {
                 return new HttpStatusCodeResult(400);
             }
-            return RedirectToAction("StationeryRetrieval","Requisition", new { rid = retId });
+            //return RedirectToAction("StationeryRetrieval","Requisition", new { rid = json.RetrievalID });
+            return RedirectToAction("StationeryRetrieval", "Requisition", new { rid = RetrievalID });
+
         }
     }
 }

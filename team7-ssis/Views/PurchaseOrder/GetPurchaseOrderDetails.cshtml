@@ -1,0 +1,108 @@
+﻿
+@model  IEnumerable<team7_ssis.ViewModels.PurchaseOrderDetailsViewModel>
+
+<br />
+<h2>Purchase Order Details</h2>
+
+<div>
+    <div class="row mb-3">
+        <div class="col-md-2">
+            <div><b>Purchase Order # </b></div>
+            <div>@ViewBag.PurchaseOrder.PurchaseOrderNo</div>
+        </div>
+
+        <div class="col-md-2">
+            @*<div class="col-md-12">*@
+            <div><b>Supplier Name</b></div>
+            @ViewBag.PurchaseOrder.Supplier.Name
+        </div>
+        <div class="col-md-2">
+            <div><b>Order Date</b></div>
+            @ViewBag.PurchaseOrder.CreatedDateTime
+        </div>
+
+        <div class="col-md-2">
+            <div><b>Status</b></div>
+            @ViewBag.PurchaseOrder.Status.Name
+        </div>
+
+    </div>
+</div>
+
+<hr />
+
+<div style="width:90%; margin:0 auto" class="tablecontainer">
+
+    <table id="printPodTable" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr style="page-break-inside: avoid !important">
+                <th>
+                    Item Code
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Quantity Ordered
+                </th>
+                <th>
+                    Unit Price
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Received Quantity
+                </th>
+                <th>
+                    Remaining Quantity
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pod in Model)
+            {
+                <tr style="page-break-inside: avoid !important">
+                    <td>
+                        @Html.DisplayFor(model => pod.ItemCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => pod.Description)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => pod.QuantityOrdered)
+                    </td>
+                    <td>
+                       $  @Html.DisplayFor(model => pod.UnitPrice)
+                    </td>
+                    <td>
+                       $  @Html.DisplayFor(model => pod.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => pod.ReceivedQuantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => pod.RemainingQuantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => pod.Status)
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    function firstLoad() {
+        $('#myNav').hide();
+        $('#myFooter').hide();
+    }
+    window.onload = firstLoad;
+</script>

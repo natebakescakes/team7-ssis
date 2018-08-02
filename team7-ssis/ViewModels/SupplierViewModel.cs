@@ -18,6 +18,7 @@ namespace team7_ssis.ViewModels
         public string GSTNumber { get; set; }
         public int Status { get; set; }
 
+        public int Priority { get; set; }
         public IEnumerable<SelectListItem> Statuses { get; set; }
     }
 

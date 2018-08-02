@@ -3,28 +3,6 @@
     ViewBag.Title = "NewItem";
 }
 
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
-    <script>
-        //validation
-        jQuery.validator.setDefaults({
-            debug: true,
-            success: "valid"
-        });
-        $("#form1").validate({
-            rules: {
-                ItemCode: {
-                    required: true
-                },
-                SupplierName: {
-                    required: true
-                }
-            }
-        });
-    </script>
-}*@
-
 <h2>Add New Inventory Item</h2>
 
 
@@ -38,13 +16,13 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="ItemCode">Item Code</label><br />
-                        @Html.TextBoxFor(m => m.ItemCode, new { @id = "ItemCode", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.ItemCode, new { @id = "ItemCode", @class = "form-control" , @required = "required" })
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="ItemCode">Item Name</label><br />
-                        @Html.TextBoxFor(m => m.ItemName, new { @id = "ItemName", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.ItemName, new { @id = "ItemName", @class = "form-control", @required = "required" })
                     </div>
                 </div>
 
@@ -60,13 +38,13 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Description">Item Description</label><br />
-                        @Html.TextAreaFor(m => m.Description, new { @id = "Description", @class = "form-control" })
+                        @Html.TextAreaFor(m => m.Description, new { @id = "Description", @class = "form-control", @required = "required" })
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Fax">Unit of Measure</label><br />
-                        @Html.TextBoxFor(m => m.Uom, new { @id = "Uom", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.Uom, new { @id = "Uom", @class = "form-control", @required = "required" })
 
                     </div>
                 </div>
@@ -76,26 +54,20 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="phone">Bin No</label><br />
-                        @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="Fax">Status</label><br />
-                        @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
+                        @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control", @required = "required" })
                     </div>
                 </div>
 
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Fax">Reorder Level</label><br />
-                        @Html.TextBoxFor(m => m.ReorderLevel, new { @id = "ReorderLevel", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.ReorderLevel, new { @id = "ReorderLevel", @class = "form-control", @required = "required" })
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Fax">Reorder Quantity</label><br />
-                        @Html.TextBoxFor(m => m.ReorderQuantity, new { @id = "ReorderQuantity", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.ReorderQuantity, new { @id = "ReorderQuantity", @class = "form-control", @required = "required" })
                     </div>
                 </div>
 
@@ -106,8 +78,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="Category">Item Image</label><br />
-                        @*<img src="~/Images/pencil1.jpg" alt="Smiley face" height="100" width="100">*@
-                        <input type="file" name="ImageFile" id="ImageFile" onchange="show(this)" accept="image/*" />
+                        <input type="file" name="ImageFile" id="ImageFile" onchange="show(this)" accept="image/*" required/>
                     </div>
                     <div class="form-group">
                         <img id="user_img" height="130" width="130" src="~/Images/default.jpg" />
@@ -165,7 +136,7 @@
 
         //for image show
         function show(input) {
-            alert('Show');
+            //alert('Show');
             if (input.files && input.files[0]) {
                 var filerdr = new FileReader();
                 filerdr.onload = function (e) {
@@ -195,11 +166,11 @@
                 {
                     "data": "SupplierName", "autoWidth": true,
                     render: function (data, type, row) {
-                        var $select = $("<select id='SupplierName' name='SupplierName" + (row.Number) + "'></select>");
+                        var $select = $("<select id='SupplierName' name='SupplierName" + (row.Number) + "' required></select>");
 
                         var optionhtml1 = $("<option></option>", {
                             "text":"----Select Supplier----",
-                            "value":0
+                            "value":""
                         });
                         $select.append(optionhtml1);
 
@@ -212,6 +183,12 @@
                             $select.append($option);
 
                         });
+                        $("select").change(function (e) {
+                            $("select option").removeAttr('disabled');
+                            $("select").each(function (i, s) {
+                                $("select").not(s).find("option[value=" + $(s).val() + "]").attr('disabled', 'disabled');
+                            });
+                        });
                         return $select.prop("outerHTML");
 
                     }
@@ -219,7 +196,7 @@
         {
             "data": "SupplierUnitPrice", "autoWidth": true,
                 render: function (data, type, row) {
-                    return "<input class='form-control'  style='border:none' id='SupplierUnitPrice'" + row.Number + "' name='SupplierUnitPrice" + row.Number + "' type='number' min='0.01' step='0.01' max='2500'>";
+                    return "<input class='form-control'  style='border:none' id='SupplierUnitPrice'" + row.Number + "' name='SupplierUnitPrice" + row.Number + "' type='number' min='0.01' step='0.01' max='2500' required>";
                 }
         }
             ]

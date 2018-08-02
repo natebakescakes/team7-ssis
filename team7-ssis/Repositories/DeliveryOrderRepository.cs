@@ -39,5 +39,10 @@ namespace team7_ssis.Repositories
             return context.DeliveryOrder
                 .Where(x => x.Supplier.SupplierCode == supplierCode);
         }
+
+        public IQueryable<PurchaseOrderDetail> FindPurchaseOrderDetailbyPurchaseOrderNumber(string purchaseordernumber)
+        {
+            return context.PurchaseOrderDetail.Where(x => x.PurchaseOrderNo==purchaseordernumber);
+        }
     }
 }

@@ -201,14 +201,16 @@ namespace team7_ssis.Controllers
 
         public void SaveImage(EditItemFinalViewModel model)
         {
-            Console.WriteLine(model.ImageFile);
-            string fileName = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
-            string extension = Path.GetExtension(model.ImageFile.FileName);
-            //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-            fileName = model.ItemCode.ToString() + ".JPG";
-            model.ImagePath = "~/Images/" + fileName;
-            fileName = Path.Combine(Server.MapPath("~/Images/") + fileName);
-            model.ImageFile.SaveAs(fileName);
+            if (model.ImageFile != null)
+            {
+                Console.WriteLine(model.ImageFile);
+                string fileName = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
+                string extension = Path.GetExtension(model.ImageFile.FileName);
+                fileName = model.ItemCode.ToString() + ".JPG";
+                model.ImagePath = "~/Images/" + fileName;
+                fileName = Path.Combine(Server.MapPath("~/Images/") + fileName);
+                model.ImageFile.SaveAs(fileName);
+            }
 
         }
 
@@ -238,7 +240,7 @@ namespace team7_ssis.Controllers
                     newItem.Bin = model.Bin;
                     newItem.ReorderLevel = model.ReorderLevel;
                     newItem.ReorderQuantity = model.ReorderQuantity;
-                    newItem.Status = statusService.FindStatusByStatusId(model.Status);
+                    newItem.Status = new StatusService(context).FindStatusByStatusId(1);
                     try
                     {
                         itemService.Save(newItem, quantity);
@@ -260,9 +262,11 @@ namespace team7_ssis.Controllers
                         itemPriceService.DeleteItemPrice(i);
                     }
                     current.Description = model.Description;
+                    current.ReorderLevel = model.ReorderLevel;
+                    current.ReorderQuantity = model.ReorderQuantity;
                     current.Bin = model.Bin;
                     current.Uom = model.Uom;
-                    current.Status = statusService.FindStatusByStatusId(model.Status);
+                    current.Status = new StatusService(context).FindStatusByStatusId(1);
                     current.UpdatedBy= userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
                     current.UpdatedDateTime = DateTime.Now;
                     int quantity = current.Inventory.Quantity;
@@ -336,6 +340,12 @@ namespace team7_ssis.Controllers
                 return false;
             }
             return true;
+        }
+
+
+        public ActionResult Shortfall()
+        {
+            return View();
         }
     }
 

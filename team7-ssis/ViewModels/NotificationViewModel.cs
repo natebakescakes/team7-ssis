@@ -13,5 +13,23 @@ namespace team7_ssis.ViewModels
         public string Contents { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDateTIme { get; set; }
+     
     }
+
+    public class FirebaseObject
+    {
+       
+        public string to { get; set; }
+        public NotificationDetail notification { get; set; }
+
+    }
+
+    public class NotificationDetail
+    {
+        public string body;
+        public string title;
+
+    }
+
+
 }

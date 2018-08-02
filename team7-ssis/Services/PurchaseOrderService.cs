@@ -15,6 +15,7 @@ namespace team7_ssis.Services
         PurchaseOrderRepository purchaseOrderRepository;
         PurchaseOrderDetailRepository purchaseOrderDetailRepository;
         StatusRepository statusRepository;
+        SupplierRepository supplierRepository;
         ItemPriceRepository itemPriceRepository;
         ApplicationDbContext context;
 
@@ -24,30 +25,61 @@ namespace team7_ssis.Services
             purchaseOrderRepository = new PurchaseOrderRepository(context);
             purchaseOrderDetailRepository = new PurchaseOrderDetailRepository(context);
             statusRepository = new StatusRepository(context);
+            supplierRepository = new SupplierRepository(context);
             itemPriceRepository = new ItemPriceRepository(context);
+
         }
 
         public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
         {
-            if (purchaseOrder.Status.StatusId == 11)
+            if (purchaseOrder != null && itemCodes.Length != 0)
             {
-                foreach (string s in itemCodes)
+                if (purchaseOrder.Status.StatusId == 11)
                 {
-                    PurchaseOrderDetail detail = purchaseOrderDetailRepository.FindById(purchaseOrder.PurchaseOrderNo, s);
-                    purchaseOrderDetailRepository.Delete(detail);
+                    foreach (string s in itemCodes)
+                    {
+                        PurchaseOrderDetail detail = purchaseOrderDetailRepository.FindById(purchaseOrder.PurchaseOrderNo, s);
+                        purchaseOrderDetailRepository.Delete(detail);
+                    }
                 }
+
             }
           
         }
 
+        public void CancelItemFromPurchaseOrder(string purchaseOrderNum , string itemCode)
+        {
+            if (purchaseOrderNum !=""  && purchaseOrderNum !=null && itemCode!=null && itemCode!="" )
+            {
+                PurchaseOrderDetail pod = purchaseOrderDetailRepository.FindById(purchaseOrderNum, itemCode);
+
+                if (pod.Status.StatusId == 11)
+                {
+                    pod.Status = statusRepository.FindById(2);
+                    purchaseOrderDetailRepository.Save(pod);
+                }
+            }
+ 
+        }
+
         public List<PurchaseOrder> FindAllPurchaseOrders()
         {
-            return purchaseOrderRepository.FindAll().ToList();
+            if (purchaseOrderRepository.FindAll().ToList() != null)
+            {
+                return purchaseOrderRepository.FindAll().ToList();
+            }
+
+            return null;   
         }
 
         public PurchaseOrder FindPurchaseOrderById(string purchaseOrderNo)
         {
-            return purchaseOrderRepository.FindById(purchaseOrderNo);
+            if (purchaseOrderRepository.ExistsById(purchaseOrderNo))
+            {
+                return purchaseOrderRepository.FindById(purchaseOrderNo);
+            }
+            else
+                return null;
         }
 
         
@@ -55,7 +87,12 @@ namespace team7_ssis.Services
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(Supplier supplier)
         {
-            return purchaseOrderRepository.FindBySupplier(supplier.SupplierCode).ToList();
+            if (supplierRepository.ExistsById(supplier.SupplierCode))
+            {
+                return purchaseOrderRepository.FindBySupplier(supplier.SupplierCode).ToList();
+            }
+
+            return null;
         }
 
         public List<PurchaseOrder> FindPurchaseOrderBySupplier(string supplierCode)
@@ -72,84 +109,41 @@ namespace team7_ssis.Services
 
         public PurchaseOrder Save(PurchaseOrder purchaseOrder)
         {
-            if (purchaseOrderRepository.FindById(purchaseOrder.PurchaseOrderNo)==null)
-            {
-                purchaseOrder.Status = statusRepository.FindById(11);
                 return purchaseOrderRepository.Save(purchaseOrder);
-            }
-
-            else
-            {
-                return purchaseOrderRepository.Save(purchaseOrder);
-            }
             
         }
 
 
-        public List<PurchaseOrder> CreatePOForEachSupplier(List<Item> items)
+        public List<PurchaseOrder> CreatePOForEachSupplier(List<Supplier> suppliers)
         {
-            List<Supplier> supList = new List<Supplier>();
+            
             List<PurchaseOrder> poList = new List<PurchaseOrder>();
 
-            foreach (Item i in items)
+            foreach(Supplier supplier in suppliers)
             {
-                ItemPrice ip = i.ItemPrices.Where(x => x.PrioritySequence == 1).First();
-                int num = 1;
+                PurchaseOrder p = new PurchaseOrder();
+                p.PurchaseOrderNo = IdService.GetNewPurchaseOrderNo(context);
+                p.Supplier = supplier;
+                p.CreatedDateTime = DateTime.Now;
+                p.Status = statusRepository.FindById(11);
+                p.Status.StatusId = 11;
+                purchaseOrderRepository.Save(p);
 
-                if (!supList.Contains(ip.Supplier))
-                {
-                    supList.Add(ip.Supplier);
-
-                    PurchaseOrder p = new PurchaseOrder();
-                    p.PurchaseOrderNo = "PONO" + num;
-                    p.Supplier = ip.Supplier;
-                    p.CreatedDateTime = DateTime.Now;
-
-                    poList.Add(p);
-
-                } 
+                poList.Add(p);
             }
 
             return poList;
         }
 
 
-        public List<PurchaseOrder> AddItemsToPurchaseOrders(List<OrderItem> orderItems,List<PurchaseOrder> poList)
+   
+
+        public bool IsPurchaseOrderCreated(Item item, List<PurchaseOrder> poList)
         {
            
             foreach(PurchaseOrder po in poList)
             {
-                po.PurchaseOrderDetails=new List<PurchaseOrderDetail>();
-                foreach(OrderItem orderItem in orderItems)
-                {
-                    ItemPrice ip = orderItem.Item.ItemPrices.Where(x => x.PrioritySequence == 1).First();
-
-                    if(po.Supplier.SupplierCode == ip.Supplier.SupplierCode)
-                    {
-                        PurchaseOrderDetail pd = new PurchaseOrderDetail();
-                        pd.PurchaseOrderNo = po.PurchaseOrderNo;
-                        pd.Item = orderItem.Item;
-                        pd.Quantity = orderItem.Quantity;
-
-                        po.PurchaseOrderDetails.Add(pd);
-                        
-                    }
-                }
-            }
-
-                return poList;
-        }
-
-
-        public bool IsPurchaseOrderCreated(Item item, List<PurchaseOrder> poList)
-        {
-            //if(poList!=null && poList.Where(x => x.PurchaseOrderDetails.ForEach(y=>y.)!=null))
-            //{ 
-
-            //}
-            foreach(PurchaseOrder po in poList)
-            {
-               //bool result=purchaseOrderDetailRepository.ExistsById(po.PurchaseOrderNo, item.ItemCode);
+               
                bool result2 = po.PurchaseOrderDetails.Count(x => x.Item.ItemCode == item.ItemCode) > 0;
                     
                     if (result2)
@@ -205,8 +199,21 @@ namespace team7_ssis.Services
             return pod.Quantity - receivedQuantity;
         }
 
-        
+        public PurchaseOrderDetail SavePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail)
+        {
+            return purchaseOrderDetailRepository.Save(purchaseOrderDetail);
+        }
 
+
+        public PurchaseOrderDetail FindPurchaseOrderDetailbyIdItem(string id1, string id2)
+        {
+            return purchaseOrderDetailRepository.FindById(id1, id2);
+        }
+
+        public List<PurchaseOrderDetail> FindPurchaseOrderDetailByStatus(string id,params int[] statusId)
+        {
+            return purchaseOrderRepository.FindPurchaseOrderDetailByStatus(id,statusId).ToList();
+        }
 
     }
 }

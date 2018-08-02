@@ -17,6 +17,13 @@ namespace team7_ssis.ViewModels
         public string Uom { get; set; }
         public int Quantity { get; set; }
         public string UnitPrice { get; set; }
+
+        public decimal UnitPriceDecimal { get; set; }
+        public int AmountToReorder { get; set; }
+        public decimal TotalPrice { get; set; }
+
+        public string ImagePath { get; set; }
+       
     }
 
     public class ItemPriceViewModel

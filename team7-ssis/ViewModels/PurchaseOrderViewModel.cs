@@ -7,14 +7,16 @@ namespace team7_ssis.ViewModels
 {
     public class PurchaseOrderViewModel
     {
-        public string PNo { get; set; }
+        public string PurchaseOrderNo { get; set; }
         public string SupplierName { get; set; }
         public string CreatedDate { get; set; }
         public string Status { get; set; }
+
     }
 
     public class PurchaseOrderDetailsViewModel
     {
+        public string PurchaseOrderNo { get; set; }
         public string ItemCode { get; set; }
         public string Description { get; set; }
         public int QuantityOrdered { get; set; }
@@ -22,7 +24,12 @@ namespace team7_ssis.ViewModels
         public decimal Amount { get; set; }
         public int ReceivedQuantity { get; set; }
         public int RemainingQuantity { get; set; }
-
+        public string Status { get; set; }
+        public int SupplierPriority { get; set; }
+        public string SupplierName { get; set; }
+        public int CheckBoxStatus { get; set; }
 
     }
+
+    
 }

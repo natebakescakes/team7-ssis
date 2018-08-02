@@ -91,10 +91,11 @@ textarea {
 }
 
 .thumbnail__regular {
-    border: 1px solid black;
+    border: 1px solid #dee2e6;
     background-color: grey;
-    height: 180px;
     width: 100%;
+    height: auto;
+    margin-top: 1rem;
 }
 
 .thumbnail__small {
@@ -162,6 +163,24 @@ textarea {
     position: relative;
 }
 
+a.disabled:hover {
+    cursor: not-allowed
+}
+
+.content {
+    max-width:900px;
+}
+
+.inputText{
+    width: 100px;
+}
+}
+
 #modalMsg {
     color: red;
+}
+
+/* For Notifications Menu */
+#notification-dropdown-items {
+    width: 400px;
 }

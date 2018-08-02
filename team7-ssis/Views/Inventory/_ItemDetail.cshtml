@@ -45,15 +45,28 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label for="phone">Bin No</label><br />
-                        @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control" })
+                        <label for="phone">Reorder Level</label><br />
+                        @Html.TextBoxFor(m => m.ReorderLevel, new { @id = "ReorderLevel", @class = "form-control" })
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
+                        <label for="phone">Reorder Quantity</label><br />
+                        @Html.TextBoxFor(m => m.ReorderQuantity, new { @id = "ReorderQuantity", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="phone">Bin No</label><br />
+                        @Html.TextBoxFor(m => m.Bin, new { @id = "Bin", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
                         <label for="Fax">Unit of Measure</label><br />
                         @Html.TextBoxFor(m => m.Uom, new { @id = "Uom", @class = "form-control" })
-
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -61,12 +74,6 @@
                         <label for="Fax">In Stock</label><br />
                         <label id="instock"></label>
                         @Html.TextBoxFor(m => m.Quantity, new { @id = "Quantity", @class = "form-control", type = "hidden" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="Fax">Status</label><br />
-                        @Html.DropDownListFor(m => m.Status, new SelectList(Model.Statuses, "Value", "Text"), new { @class = "form-control" })
                     </div>
                 </div>
             </div>
