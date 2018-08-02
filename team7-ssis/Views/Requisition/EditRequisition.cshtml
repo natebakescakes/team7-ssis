@@ -155,6 +155,6 @@
     $(document).on("click", "#createNewDraft", function (e) {
         e.preventDefault();
         console.log("Create New Draft");
-        post("/Requisition/Draft", { rid: @Model.RequisitionId });
+        post("/Requisition/Draft", { rid: "@Model.RequisitionId" });
     });
 </script>
