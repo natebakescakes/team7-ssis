@@ -332,7 +332,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public void RejectStockAdjustment(List<ViewModelFromEditDetail> list)
         {
-            stockAdjustmentService = new StockAdjustmentService(Context);
+            notificationService = new NotificationService(Context);
+           stockAdjustmentService = new StockAdjustmentService(Context);
+            userService = new UserService(Context);
 
             string stockadjustment_id = list.First().StockAdjustmentID;
             foreach (ViewModelFromEditDetail v in list)
@@ -345,6 +347,9 @@ namespace team7_ssis.Controllers
 
             stockAdjustmentService.RejectStockAdjustment(stockadjustment_id);
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
+
+
+            notificationService.CreateNotification(sa, sa.CreatedBy);
             
         }
 
@@ -355,6 +360,8 @@ namespace team7_ssis.Controllers
         {
             stockAdjustmentService = new StockAdjustmentService(Context);
             userService = new UserService(Context);
+            notificationService = new NotificationService(Context);
+
             string stockadjustment_id = list.First().StockAdjustmentID;
            
         
@@ -381,6 +388,7 @@ namespace team7_ssis.Controllers
 
             stockAdjustmentService.updateStockAdjustment(sd);
             stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
+            notificationService.CreateNotification(sd, sd.CreatedBy);
 
         }
 
