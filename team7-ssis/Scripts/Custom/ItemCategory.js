@@ -44,18 +44,28 @@
     });
 
     $(".additemcategory-form").submit(function (event) {
-        $.ajax({
-            type: "POST",
-            url: '/itemcategory/Save',
-            data: $('.additemcategory-form').serialize(),
-            success: function (data) {
-                if (data.status) {
-                    $('#myModal').modal('hide');
-                    table.ajax.reload();
-                }
-            }
-        });
 
+        if ($('.additemcategory-form').find('#Name').val() === '') {
+            alert("Item Category Name cannot be empty. Please enter an Item Category Name.");
+            event.preventDefault();
+        }
+            if ($('.additemcategory-form').find('#Name').val() !== '') {
+                $.ajax({
+                    type: "POST",
+                    url: '/itemcategory/Save',
+                    data: $('.additemcategory-form').serialize(),
+                    success: function (data) {
+                        if (data.status) {
+                            $('#myModal').modal('hide');
+                            table.ajax.reload();                         
+                            
+                        }
+                        
+                    }
+                    
+                });
+     
+        }
         event.preventDefault();
     });
 
@@ -98,6 +108,7 @@
         $('#itemcategorydetails')
             .find('select')
             .prop('disabled', false);
+      
     }
 
     function disableInput() {
