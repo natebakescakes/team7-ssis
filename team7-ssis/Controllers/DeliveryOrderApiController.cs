@@ -98,7 +98,7 @@ namespace team7_ssis.Controllers
         {
             int[] MyNewArray = { 11, 12 };
 
-            List<PurchaseOrderDetail> pod1 = purchaseOrderService.FindPurchaseOrderDetailByStatus(purchaseorderNo,MyNewArray);
+            List<PurchaseOrderDetail> pod1 = purchaseOrderService.FindPurchaseOrderDetailByIdStatus(purchaseorderNo,MyNewArray);
 
             return pod1.Select(pod => new PurchaseOrderDetailsViewModel()
 

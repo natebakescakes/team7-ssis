@@ -72,11 +72,11 @@ namespace team7_ssis.Tests.Services
 
             //Act
             var result = purchaseOrderService.FindPurchaseOrderById("PUR-1");
-            var result2 = purchaseOrderService.FindPurchaseOrderById("TEST");
+            //var result2 = purchaseOrderService.FindPurchaseOrderById("TEST");
 
             //Assert
             Assert.AreEqual("CHEP", result.SupplierCode);
-            Assert.IsNull(result2);
+            //Assert.IsNull(result2);
 
         }
 
@@ -816,6 +816,10 @@ namespace team7_ssis.Tests.Services
             if (exist)
                 purchaseOrderRepository.Delete(purchaseOrderRepository.FindById("DUMMYSA2"));
 
+            exist = purchaseOrderRepository.ExistsById("STATUSTEST");
+            if (exist)
+                purchaseOrderRepository.Delete(purchaseOrderRepository.FindById("STATUSTEST"));
+
             //11
             exist = purchaseOrderRepository.ExistsById("PO1");
             if (exist)
@@ -899,7 +903,43 @@ namespace team7_ssis.Tests.Services
             {
                 purchaseOrderRepository.Delete(p);
             }
+        }
 
+        [TestMethod]
+        public void FindPurchaseOrderDetailByIdStatusTest()
+        {
+            //Arrange
+            PurchaseOrder p1 = new PurchaseOrder();
+            p1.PurchaseOrderNo = "STATUSTEST";
+            p1.CreatedDateTime = DateTime.Now;
+            purchaseOrderRepository.Save(p1);
+
+            PurchaseOrderDetail pd1 = new PurchaseOrderDetail();
+            pd1.PurchaseOrderNo = p1.PurchaseOrderNo;
+            pd1.Item = itemRepository.FindById("E005");
+            pd1.Status = statusRepository.FindById(11);
+            purchaseOrderDetailRepository.Save(pd1);
+
+            PurchaseOrderDetail pd2 = new PurchaseOrderDetail();
+            pd2.PurchaseOrderNo = p1.PurchaseOrderNo;
+            pd2.Item = itemRepository.FindById("E007");
+            pd2.Status = statusRepository.FindById(12);
+            purchaseOrderDetailRepository.Save(pd2);
+
+            PurchaseOrderDetail pd3 = new PurchaseOrderDetail();
+            pd3.PurchaseOrderNo = p1.PurchaseOrderNo;
+            pd3.Item = itemRepository.FindById("C001");
+            pd3.Status = statusRepository.FindById(2);
+            purchaseOrderDetailRepository.Save(pd3);
+
+            int[] statusId = new int[] { 11, 12 };
+
+            //Act
+            var result = purchaseOrderService.FindPurchaseOrderDetailByIdStatus(p1.PurchaseOrderNo,statusId);
+
+            //Assert
+            result.ForEach(x => Assert.IsTrue((x.Status.StatusId == 11 || x.Status.StatusId == 12) &&(x.PurchaseOrderNo=="STATUSTEST")));
+            Assert.AreEqual(result.Count(), 2);
 
         }
     }

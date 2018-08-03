@@ -43,9 +43,13 @@ namespace team7_ssis.Controllers
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
-        // GET: /Requisition/ManageRequisitions
+        // GET/POST: /Requisition/ManageRequisitions
         public ActionResult ManageRequisitions(string msg)
         {
+            if (msg != null)
+            {
+                ViewBag.Info = msg;
+            }
             // To pass messages from another controller
             if (TempData["cancel"] != null)
             {
@@ -69,10 +73,10 @@ namespace team7_ssis.Controllers
             }
 
             // pass the statuses for the appropriate Role
-            HashSet<int> adminSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            HashSet<int> empSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            HashSet<int> deptHeadSet = new HashSet<int> { 3, 4, 5, 6 };
-            HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10 };
+            HashSet<int> adminSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10, 21 };
+            HashSet<int> empSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10, 21 };
+            HashSet<int> deptHeadSet = new HashSet<int> { 3, 4, 5, 6, 21 };
+            HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10, 21 };
 
             HashSet<int> statuses = new HashSet<int>();
             foreach( string role in userManager.GetRoles(User.Identity.GetUserId()))
@@ -123,6 +127,7 @@ namespace team7_ssis.Controllers
                 viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
                 viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
                 viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
+                viewModel.Remarks = r.HeadRemarks;
             }
             catch
             {
@@ -235,7 +240,11 @@ namespace team7_ssis.Controllers
         // POST: /Requisition/Approve
         public ActionResult Approve(string rid, string email, string remarks)
         {
-            requisitionService.ApproveRequisition(rid, email, remarks);
+            var checkEmail = email;
+            if (checkEmail == "")
+                checkEmail = System.Web.HttpContext.Current.User.Identity.GetUserName();
+
+            requisitionService.ApproveRequisition(rid, checkEmail, remarks);
             TempData["approve"] = String.Format("Requisition #{0} approved.", rid);
             return RedirectToAction("ManageRequisitions", "Requisition" );
         }
@@ -243,7 +252,11 @@ namespace team7_ssis.Controllers
         // POST: /Requisition/Reject
         public ActionResult Reject(string rid, string email, string remarks)
         {
-            requisitionService.RejectRequisition(rid, email, remarks);
+            var checkEmail = email;
+            if (checkEmail == "")
+                checkEmail = System.Web.HttpContext.Current.User.Identity.GetUserName();
+
+            requisitionService.RejectRequisition(rid, checkEmail, remarks);
             TempData["reject"] = String.Format("Requisition #{0} rejected.", rid);
             return RedirectToAction("ManageRequisitions", "Requisition");
         }

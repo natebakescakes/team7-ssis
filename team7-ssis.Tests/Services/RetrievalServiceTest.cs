@@ -654,7 +654,7 @@ namespace team7_ssis.Tests.Services
             Assert.AreEqual(expectedStatus.StatusId, new RetrievalService(context).FindRetrievalById("RSERVICETEST").Status.StatusId);
             Assert.IsTrue(new RequisitionService(context).FindAllRequisitions().Select(r => r.EmployeeRemarks).Contains(expectedRemarks));
             var result = new RequisitionService(context).FindAllRequisitions().Where(r => r.EmployeeRemarks == expectedRemarks).FirstOrDefault();
-            Assert.AreEqual(40, result.RequisitionDetails.Sum(rr => rr.Quantity));
+            Assert.AreEqual(10, result.RequisitionDetails.Sum(rr => rr.Quantity));
         }
 
         [TestMethod]

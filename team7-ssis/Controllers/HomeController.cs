@@ -19,18 +19,19 @@ namespace team7_ssis.Controllers
 
         public ApplicationDbContext Context { get; set; }
 
+        [Authorize]
         public ActionResult Index()
         {
-            var representativeEmail = new UserService(Context).FindUserByEmail(User.Identity.Name).Department.Representative.Email;
+            var department = new UserService(Context).FindUserByEmail(User.Identity.Name).Department;
+            var representativeEmail = department.Representative != null ? department.Representative.Email : "";
             ViewBag.Representative = representativeEmail;
+            Session["rep"] = representativeEmail;
 
-            // If not Employee role
-            if (!User.IsInRole("Employee"))
+            // If not Employee role or  Department Representative
+            if (User.IsInRole("DepartmentHead") || representativeEmail == User.Identity.Name)
                 return RedirectToAction("ManageRequisitions", "Requisition");
-            // If Department Representative
-            else if (representativeEmail == User.Identity.Name)
+            else if(User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
-
             return RedirectToAction("Unauthorized");
         }
 

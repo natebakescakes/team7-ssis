@@ -30,7 +30,7 @@
             { "data": "StartDate", "autowidth": true },
             { "data": "EndDate", "autowidth": true },
             { 
-                defaultContent: "<button class='btn btn-danger' id='disable-btn' style='font-size: 12px'><i class='fa fa-close'></i></button>"     
+                defaultContent: "<button class='btn btn-danger' id='disable-btn' style='font-size: 12px'><i class='fa fa-window-close'></i></button>"     
             }
         ],
         select: 'single'
@@ -101,10 +101,16 @@
             url: '/department/SaveOptions',
             data: $('#departmentoptions').serialize(),
             success: function (data) {
-                if (data.status) {  
-                    alert("Department information has been successfully updated");
-                    
+                if (data.status==0) {  
+                    alert("Department information did not update!"); 
                     delegationTable.ajax.reload();
+                }
+                if ((data.status == 1) || (data.status==2)){
+                    alert("Department information has been updated!");
+                    delegationTable.ajax.reload();
+                }
+                if (data.status == 3) {
+                    alert("Please choose dates for delegating manager! ");
                 }
             }
         });
@@ -139,11 +145,11 @@
         enableInput();
     });
 
-    //var cancelbtn = $('#cancel-btn').on('click', function () {
-    //    disableInput();
-    //    $('#edit-btn').show();
-    //    $(".button-set").hide();
-    //});
+    var cancelbtn = $('#cancel-btn').on('click', function () {
+        disableInput();
+        $('#edit-btn').show();
+        $(".button-set").hide();
+    });
 
     function enableInput() {
         $('#departmentdetails')
