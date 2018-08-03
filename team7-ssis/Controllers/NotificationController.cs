@@ -34,12 +34,12 @@ namespace team7_ssis.Controllers
             switch (notification.NotificationType.NotificationTypeId) {
                 case 1:
                     // Ready for Collection
-                    // Redirect to Requisition Details
-                    var requisitionId = Regex.Match(notification.Contents, @"REQ-\d{6}-\d{3}");
-                    return RedirectToAction("RequisitionDetails", "Requisition", new { rid = requisitionId });
+                    // Redirect to Disbursement Details
+                    var disbursementId = Regex.Match(notification.Contents, @"DSB-\d{6}-\d{3}");
+                    return RedirectToAction("DisbursementDetails", "Disbursement", new { did = disbursementId });
                 case 2:
                     // Redirect to Requisition Details
-                    requisitionId = Regex.Match(notification.Contents, @"REQ-\d{6}-\d{3}");
+                    var requisitionId = Regex.Match(notification.Contents, @"REQ-\d{6}-\d{3}");
                     return RedirectToAction("RequisitionDetails", "Requisition", new { rid = requisitionId });
                 case 3:
                     // Redirect to Stock Adjustment Details

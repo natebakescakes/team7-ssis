@@ -50,7 +50,7 @@ namespace team7_ssis.Controllers
         [Route("api/disbursement")]
         public IHttpActionResult GetAllDisbursements()
         {
-            var disbursements = disbursementService.FindAllDisbursements();
+            var disbursements = disbursementService.FindAllDisbursements().OrderByDescending(d => d.CreatedDateTime);
 
             //if (disbursements.Count == 0) return NotFound();
 

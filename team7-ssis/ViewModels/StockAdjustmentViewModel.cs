@@ -36,7 +36,8 @@ namespace team7_ssis.ViewModels
         public  string ApprovedBySupervisor { get; set; }
         public string CreatedDateTime { get; set; }
         public  string  StatusName { get; set; }
-        public  string Link { get; set; }
+        public string ProcessBy { get; set; }
+        public  int IsSentFor { get; set; }
 
         public List<ApplicationUser> supervisors { get; set; }
 
@@ -78,8 +79,11 @@ namespace team7_ssis.ViewModels
 
         public string UserName { get; set; }
 
-        public int QuantityAdjusted { get; set; }
+        public string ItemName { get; set; }
 
+        public string OriginalQuantity { get; set; }
+
+        public string AfterQuantity { get; set; }
 
     }
 

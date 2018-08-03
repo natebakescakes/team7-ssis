@@ -92,7 +92,7 @@ namespace team7_ssis.Controllers
 
             var department = departmentService.FindDepartmentByUser(userService.FindUserByEmail(model.Email));
 
-            var delegations = new DelegationService(context).FindDelegationsByDepartment(userService.FindUserByEmail(model.Email));
+            var delegations = new DelegationService(context).FindDelegationsByDepartment(userService.FindUserByEmail(model.Email)).OrderByDescending(d => d.CreatedDateTime);
 
             return Ok(new DepartmentOptionsViewModel()
             {
