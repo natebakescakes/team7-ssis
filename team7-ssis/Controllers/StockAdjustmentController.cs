@@ -131,6 +131,7 @@ namespace team7_ssis.Controllers
             sv.StockAdjustmentId = sa.StockAdjustmentId;
             sv.CreatedBy = (sa.CreatedBy == null) ? "" : sa.CreatedBy.FirstName + " " + sa.CreatedBy.LastName;
             sv.CreatedDateTime = sa.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
+            sv.StatusName = sa.Status.Name;
             if (sa.ApprovedBySupervisor == null && sa.ApprovedByManager == null)
             {
                 sv.ApprovedBySupervisor = "";
