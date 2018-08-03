@@ -85,6 +85,7 @@ namespace team7_ssis.Services
             retrieval.Disbursements.SelectMany(d => d.DisbursementDetails.Where(dd => dd.ItemCode == itemCode)).ToList().ForEach(disbursementDetail =>
             {
                 disbursementDetail.Status = new StatusService(context).FindStatusByStatusId(18);
+                stockmovementService.CreateStockMovement(disbursementDetail);
             });
 
             retrievalRepository.Save(retrieval);
@@ -116,6 +117,17 @@ namespace team7_ssis.Services
             #region Update Disbursement status
             foreach (var disbursement in retrieval.Disbursements)
             {
+                // If item has not yet been retrieved, retrieve it
+                // Since web does not retrieve items before confirm retrieval
+                foreach (var detail in disbursement.DisbursementDetails)
+                {
+                    if (detail.Status.StatusId != 18)
+                    {
+                        detail.Status = new StatusService(context).FindStatusByStatusId(18);
+                        stockmovementService.CreateStockMovement(detail);
+                    }
+                }
+
                 disbursement.Status = statusRepository.FindById(8);
             }
             #endregion
