@@ -189,6 +189,7 @@ namespace team7_ssis.Tests.Services
                     new DisbursementDetail()
                     {
                         DisbursementId = "RSERVICETEST",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
                         ItemCode = "E030",
                         ActualQuantity = 1,
                         Status = new StatusService(context).FindStatusByStatusId(17),
