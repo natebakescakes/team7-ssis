@@ -27,13 +27,11 @@ namespace team7_ssis.Controllers
             ViewBag.Representative = representativeEmail;
             Session["rep"] = representativeEmail;
 
-            // If not Employee role
-            if (User.IsInRole("DepartmentHead"))
+            // If not Employee role or  Department Representative
+            if (User.IsInRole("DepartmentHead") || representativeEmail == User.Identity.Name)
                 return RedirectToAction("ManageRequisitions", "Requisition");
-            // If Department Representative
-            else if (representativeEmail == User.Identity.Name)
+            else if(User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
-
             return RedirectToAction("Unauthorized");
         }
 
