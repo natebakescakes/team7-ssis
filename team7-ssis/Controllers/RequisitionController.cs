@@ -318,7 +318,7 @@ namespace team7_ssis.Controllers
                 return RedirectToAction("ManageRequisitions", "Requisition");
             }
 
-            TempData["draft"] = String.Format("Requisition #{0} created.", r.RequisitionId);
+            TempData["draft"] = String.Format("Draft Requisition #{0} created.", r.RequisitionId);
             return RedirectToAction("ManageRequisitions", "Requisition");
         }
 
