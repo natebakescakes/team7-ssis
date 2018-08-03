@@ -10,7 +10,7 @@
         <ul class="navbar-nav mr-auto">
             @if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("DepartmentHead") || User.Identity.Name == Session["rep"].ToString() || User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
+                if (User.IsInRole("DepartmentHead") || User.Identity.Name == Session["rep"].ToString() || User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") )
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
