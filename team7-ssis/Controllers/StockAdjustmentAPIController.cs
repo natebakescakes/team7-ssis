@@ -177,8 +177,8 @@ namespace team7_ssis.Controllers
                         StockAdjustment = SA,
                         ItemCode = m.ItemCode,
                         Item = item,
-                        OriginalQuantity = item.Inventory.Quantity,
-                        AfterQuantity = item.Inventory.Quantity + m.QuantityAdjusted,
+                        OriginalQuantity = Int32.Parse(m.OriginalQuantity),
+                        AfterQuantity = Int32.Parse(m.AfterQuantity),
                         Reason = m.Reason
 
                     });
@@ -200,12 +200,14 @@ namespace team7_ssis.Controllers
                 ApplicationUser manager = supervisor.Supervisor;
                 if (flag == true)
                 {
-                    notificationService.CreateNotification(SA, manager);
-                    
+                    Notification n = notificationService.CreateNotification(SA, manager);
+                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+
                 }
                 if (flag == false)
                 {
-                    notificationService.CreateNotification(SA, supervisor);
+                    Notification n = notificationService.CreateNotification(SA, supervisor);
+                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
                 }
 
                 //save SA object into database 
