@@ -39,9 +39,12 @@ namespace team7_ssis.Services
         {
             if (department == null) return new List<ApplicationUser>();
 
+            if (department.DepartmentCode == "STOR")
+                return userRepository.FindByDepartment(department).Where(user => user.Roles.Select(r => r.RoleId).Contains("4")).ToList();
+
             return userRepository.FindSupervisorByDepartment(department).ToList();
         }
-        
+
         public ApplicationUser FindRepresentativeByDepartment(Department department)
         {
             return userRepository.FindRepByDepartment(department).FirstOrDefault();
