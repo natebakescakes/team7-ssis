@@ -149,7 +149,7 @@ namespace team7_ssis.Services
 
                 d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Retrieval = r;
-                d.Status = statusRepository.FindById(17);
+                d.Status = statusRepository.FindById(19);
                 if (HttpContext.Current != null)
                 {
                     d.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
