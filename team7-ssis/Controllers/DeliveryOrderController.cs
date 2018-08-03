@@ -58,10 +58,10 @@ namespace team7_ssis.Controllers
         }
 
         [HttpPost]
-        public ActionResult ReceiveGoodsView(string ponum)
+        public ActionResult ReceiveGoodsView(string pon)
         {
             PurchaseOrderViewModel POVM = new PurchaseOrderViewModel();
-            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(ponum);
+            PurchaseOrder purchaseOrder = purchaseOrderDetailService.FindPurchaseOrderById(pon);
 
             POVM.PurchaseOrderNo = purchaseOrder.PurchaseOrderNo;
 
