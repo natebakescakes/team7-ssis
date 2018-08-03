@@ -308,9 +308,6 @@ namespace team7_ssis.Controllers
             try
             {
                 requisitionService.Save(r);
-
-                // Create Notification
-                new NotificationService(context).CreateNotification(r, user.Department.Head);
             }
             catch
             {
