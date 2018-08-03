@@ -60,32 +60,40 @@
 
 
 <div class="row mt-3">
-    <div class="col-md-12">
-        <h3>Authorising Supervisor</h3>
+    <div class="col-md-12">     
         <form id="form1" name="form1">
-            <select id="ChosenSupervisor" name="ChosenSupervisor" class="custom-select" onChange="chose1()">
-                @foreach (var supervisor in Model.supervisors)
-                {
-                    <option value="@supervisor.UserName">@supervisor.FirstName @supervisor.LastName</option>
-                }
-            </select>
+            @if (Model.StatusName == "Draft")
+            {
+                <h3>Authorising Supervisor</h3>
+                <select id="ChosenSupervisor" name="ChosenSupervisor" class="custom-select" onChange="chose1()">
+                    @foreach (var supervisor in Model.supervisors)
+                    {
+                        <option value="@supervisor.UserName">@supervisor.FirstName @supervisor.LastName</option>
+                    }
+                </select>
 
-            <h3>Authorising Manager</h3>
-            <select id="ChosenManager" name="ChosenManager" class="custom-select" onChange="chose2()">
-                @foreach (var manager in Model.managers)
-                {
-                    <option value="@manager.UserName">@manager.FirstName @manager.LastName</option>
-                }
-            </select>
+                <h3>Authorising Manager</h3>
+                <select id="ChosenManager" name="ChosenManager" class="custom-select" onChange="chose2()">
+                    @foreach (var manager in Model.managers)
+                    {
+                        <option value="@manager.UserName">@manager.FirstName @manager.LastName</option>
+                    }
+                </select>
+            }
         </form>
     </div>
 </div>
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <button class="btn btn-default" id="cancelBtn">Back</button>
-        <button class="btn btn-primary" id="saveBtn">SaveAsDraft</button>
-        <button class="btn btn-primary" id="submitBtn">SubmitAsPending</button>
+
+            <button class="btn btn-default" id="cancelBtn">Back</button>
+            <button class="btn btn-primary" id="saveBtn">SaveChanges</button>
+        @if (Model.StatusName == "Draft")
+        {<button class="btn btn-primary" id="submitBtn">SubmitAsPending</button>}
+
+
+
     </div>
 </div>
 
@@ -174,7 +182,7 @@
             }
             // alert(data[0].Adjustment);
             $.ajax({
-                url: '/api/stockadjustment/update_to_draft',
+                url: '/api/stockadjustment/update',
                 contentType: 'application/json',
                 data: JSON.stringify(reqIdArray),
                 dataType: "json",

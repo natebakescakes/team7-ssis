@@ -223,7 +223,7 @@ namespace team7_ssis.Controllers
 
         }
 
-        //save as draft
+        //save changes,no status change
         [Route("api/stockadjustment/save")]
         [HttpPost]
         public void SaveStockAdjustmentAsDraft(List<ViewModelFromNew> list)
@@ -384,8 +384,8 @@ namespace team7_ssis.Controllers
 
         }
 
-        //update draft
-        [Route("api/stockadjustment/update_to_draft")]
+        //update stockadjustment,no status change
+        [Route("api/stockadjustment/update")]
         [HttpPost]
         public void UpdateStockAdjustmentAsDraft(List<ViewModelFromEditDetail> list)
         {
@@ -406,7 +406,7 @@ namespace team7_ssis.Controllers
             ApplicationUser currentUser = userService.FindUserByEmail(CurrentUserName);
             sa.UpdatedBy = currentUser;
             sa.UpdatedDateTime = DateTime.Now;
-            stockAdjustmentService.updateToDraftStockAdjustment(sa);
+            stockAdjustmentService.updateStockAdjustment(sa);
         }
 
         //update darft to pending 
