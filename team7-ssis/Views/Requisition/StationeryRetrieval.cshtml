@@ -218,10 +218,7 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
-            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
-                update(false);
-            }
-            
+            update(false);    
         });
 
         // Click "Confirm"
@@ -254,13 +251,13 @@
                 url: "/api/stationeryretrieval",
                 data: JSON.stringify(json),
                 success: function () {
-                    var message;
+                    var msg;
                     if (IsConfirmed) {
-                        message = "Retrieval #@Model.RetrievalID confirmed."
+                        msg = "Retrieval #@Model.RetrievalID confirmed."
                     } else {
-                        message = "Retrieval #@Model.RetrievalID saved."
+                        msg = "Retrieval #@Model.RetrievalID saved."
                     }
-                    post("/Requisition/ManageRequisitions", { message });
+                    post("/Retrieval/Manage", { msg });
                 },
                 error: function (message) {
                     // show error message

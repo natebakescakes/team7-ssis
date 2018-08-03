@@ -43,8 +43,12 @@ namespace team7_ssis.Controllers
         }
 
         // GET: Retrieval/Manage
-        public ActionResult Manage()
+        public ActionResult Manage(string msg)
         {
+            if (msg != null)
+            {
+                ViewBag.Success = msg;
+            }
             return View();
         }
     }
