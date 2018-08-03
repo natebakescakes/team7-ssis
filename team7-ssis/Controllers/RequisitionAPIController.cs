@@ -245,7 +245,7 @@ namespace team7_ssis.Controllers
 
             // Create Notification
             Notification n = new NotificationService(context).CreateNotification(r, user.Department.Head);
-            var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+            new NotificationApiController().SendNotification(n.NotificationId.ToString());
 
             return Ok(r.RequisitionId);
 

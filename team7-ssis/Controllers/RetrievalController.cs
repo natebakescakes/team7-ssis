@@ -47,24 +47,5 @@ namespace team7_ssis.Controllers
         {
             return View();
         }
-
-        // POST: Retrieval/Confirm
-        [HttpPost]
-        public ActionResult Confirm(string RetrievalID, List<StationeryRetrievalTableRowJSONViewModel> Data)
-        {
-            try
-            {
-                //retrievalService.SaveRetrieval(json);
-                //retrievalService.ConfirmRetrieval(json.RetrievalID, "");
-                //TempData["message"] = String.Format("Requisition #{0} confirmed.", json.RetrievalID);
-            }
-            catch
-            {
-                return new HttpStatusCodeResult(400);
-            }
-            //return RedirectToAction("StationeryRetrieval","Requisition", new { rid = json.RetrievalID });
-            return RedirectToAction("StationeryRetrieval", "Requisition", new { rid = RetrievalID });
-
-        }
     }
 }
