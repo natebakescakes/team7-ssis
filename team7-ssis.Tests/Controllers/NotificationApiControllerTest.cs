@@ -103,6 +103,28 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsNotNull(actionResult);
         }
 
+        [TestMethod]
+        [Ignore]
+        public void SendEmailTest()
+        {
+            //Arrange
+            var controller = new NotificationApiController
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                CurrentUserName = "root@admin.com"
+            };
+
+
+            //Act
+           
+            IHttpActionResult actionResult = controller.SendEmail("777777");
+
+            //Assert
+            Assert.IsNotNull(actionResult);
+            
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {
