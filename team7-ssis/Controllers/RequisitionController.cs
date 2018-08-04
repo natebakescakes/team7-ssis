@@ -73,10 +73,10 @@ namespace team7_ssis.Controllers
             }
 
             // pass the statuses for the appropriate Role
-            HashSet<int> adminSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            HashSet<int> empSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            HashSet<int> deptHeadSet = new HashSet<int> { 3, 4, 5, 6 };
-            HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10 };
+            HashSet<int> adminSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10, 21 };
+            HashSet<int> empSet = new HashSet<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10, 21 };
+            HashSet<int> deptHeadSet = new HashSet<int> { 3, 4, 5, 6, 21 };
+            HashSet<int> storeClerkSet = new HashSet<int> { 6, 7, 8, 9, 10, 21 };
 
             HashSet<int> statuses = new HashSet<int>();
             foreach( string role in userManager.GetRoles(User.Identity.GetUserId()))
