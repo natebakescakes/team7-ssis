@@ -39,11 +39,11 @@ namespace team7_ssis.Controllers
 
 
         [HttpPost]
-        public ActionResult Details(string poNum)
+        public ActionResult Details(string pon)
         {
-            if (poNum != null && poNum != "")
+            if (pon != null && pon != "")
             {
-                PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+                PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(pon);
                 PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
                 decimal totalAmount = 0;
 
@@ -92,8 +92,6 @@ namespace team7_ssis.Controllers
                 }
 
             }
-
-
 
             foreach (PurchaseOrderDetail pod in purchaseOrder.PurchaseOrderDetails)
             {
@@ -174,7 +172,11 @@ namespace team7_ssis.Controllers
         public ActionResult CancelPODetail(string purchaseOrderNum, string itemCode)
         {
             decimal totalAmount = 0;
-            bool isOutstanding = false;
+            int isPartial = 0;
+            int isAwaiting = 0;
+            int isDelivered = 0;
+
+            //0 is 
 
             purchaseOrderService.CancelItemFromPurchaseOrder(purchaseOrderNum, itemCode);
             PurchaseOrder purchaseOrder = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
@@ -186,21 +188,43 @@ namespace team7_ssis.Controllers
                     totalAmount = totalAmount + purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod);
                 }
 
-
-                if (pod.Status.StatusId == 12 || pod.Status.StatusId == 11)
+             
+                if (pod.Status.StatusId == 12)
                 {
-                    isOutstanding = true;
+                    isPartial = 1; //PO status is partially fulfilled
+                }
+
+                if (pod.Status.StatusId == 11)
+                {
+                    isAwaiting = 1;
+                }
+
+                if (pod.Status.StatusId == 13)
+                {
+                    isDelivered = 1;
                 }
             }
 
-            if (isOutstanding == false)
+            if (isPartial == 1 || (isDelivered == 1 && isPartial == 0 && isAwaiting == 1))
             {
-                //if the remaining purchase order details are fully delivered/cancelled, set purchaseOrder status 
-                //to delivered(completed)
+                //if atleast one POD status is partially delivered, set purchaseOrder status 
+                //to partially fulfilled
+                purchaseOrder.Status = statusService.FindStatusByStatusId(12);
+                purchaseOrderService.Save(purchaseOrder);
+            }
+
+            else if(isDelivered==1 && isPartial==0 && isAwaiting == 0)
+            {
+                //set PO status as delivered
                 purchaseOrder.Status = statusService.FindStatusByStatusId(13);
                 purchaseOrderService.Save(purchaseOrder);
             }
 
+            //else 
+            //{
+            //    purchaseOrder.Status = statusService.FindStatusByStatusId(12);
+            //    purchaseOrderService.Save(purchaseOrder);
+            //}
 
             return new JsonResult { Data = new { amount = totalAmount } };
         }
