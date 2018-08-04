@@ -40,11 +40,11 @@
                     "render": function (data, type, full, meta) {
                         if (data.StatusName == "Pending Approval" && data.IsSentFor==1) {
                             
-                            return "<button class='btn btn-primary' id='processBtn' ><i class='fa fa-delete'>Process</i></button>";
+                            return "<button class='btn btn-primary' id='processBtn'>Process</button>";
                         }
                         else (data.StatusName == "Rejected" || data.StatusName == "Approved")
                     
-                        return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+                        return "<button class='btn btn-primary' id='viewBtn'>View</button>";
 
                     }
                 }
