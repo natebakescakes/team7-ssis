@@ -355,8 +355,7 @@
                     //alert("IN SUCCESS FUNCTION OF AJAX CALL TO POST THE PO DETAILS TO CONTROLLER TO SAVE    " + result.purchaseOrders);
 
                     url = $("#successUrl").val();
-                    alert(url);
-
+                    
                     var form = document.createElement("form");
                     var element1 = document.createElement("input");
                     form.method = "POST";
@@ -438,22 +437,27 @@
     $(document).on("click", "#downloadselectedsuccess", function () {
 
         var data = $('#successPoTable').DataTable().rows({ selected: true }).data().toArray();
-     
-        ponum = data[0].PurchaseOrderNo;
 
-        var form = document.createElement("form");
-        var element1 = document.createElement("input");
-        form.method = "POST";
-        form.action = "/PurchaseOrder/downloadselectedpdf";
+        if (data.length != 0) {
+            ponum = data[0].PurchaseOrderNo;
 
-        element1.value = ponum;
-        element1.name = "purchaseOrderNum";
-        element1.type = "hidden";
-        form.appendChild(element1);
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "POST";
+            form.action = "/PurchaseOrder/downloadselectedpdf";
 
-        document.body.appendChild(form);
+            element1.value = ponum;
+            element1.name = "purchaseOrderNum";
+            element1.type = "hidden";
+            form.appendChild(element1);
 
-        form.submit();
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+        else {
+            alert("Please select a purchase order to download!");
+        }
 
 
     });
@@ -462,21 +466,27 @@
 
         var data = $('#successPoTable').DataTable().rows({ selected: true }).data().toArray();
 
-        ponum = data[0].PurchaseOrderNo;
+        if (data.length != 0) {
+            ponum = data[0].PurchaseOrderNo;
 
-        var form = document.createElement("form");
-        var element1 = document.createElement("input");
-        form.method = "POST";
-        form.action = "/PurchaseOrder/viewselectedpdf";
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            form.method = "POST";
+            form.action = "/PurchaseOrder/viewselectedpdf";
 
-        element1.value = ponum;
-        element1.name = "purchaseOrderNum";
-        element1.type = "hidden";
-        form.appendChild(element1);
+            element1.value = ponum;
+            element1.name = "purchaseOrderNum";
+            element1.type = "hidden";
+            form.appendChild(element1);
 
-        document.body.appendChild(form);
+            document.body.appendChild(form);
 
-        form.submit();
+            form.submit();
+        }
+        else {
+            alert("Please select a purchase order to view!");
+        }
+       
 
     });
 

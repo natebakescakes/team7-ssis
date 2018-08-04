@@ -79,8 +79,11 @@ namespace team7_ssis.ViewModels
 
         public string UserName { get; set; }
 
-        public int QuantityAdjusted { get; set; }
+        public string ItemName { get; set; }
 
+        public string OriginalQuantity { get; set; }
+
+        public string AfterQuantity { get; set; }
 
     }
 

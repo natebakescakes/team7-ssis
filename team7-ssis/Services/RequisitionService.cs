@@ -88,7 +88,7 @@ namespace team7_ssis.Services
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);
             r.CreatedDateTime = DateTime.Now;
-            r.Status = statusRepository.FindById(17);
+            r.Status = statusRepository.FindById(19);
             if (HttpContext.Current != null)
             {
                 r.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
@@ -251,6 +251,7 @@ namespace team7_ssis.Services
                                 newDD.ItemCode = rd.ItemCode;
                                 newDD.PlanQuantity = Math.Min(rd.Quantity, inventory[rd.ItemCode]);
                                 newDD.Bin = rd.Item.Bin;
+                                newDD.Status = statusRepository.FindById(17);
 
                                 // Deduct quantity
                                 inventory[rd.ItemCode] -= newDD.PlanQuantity;

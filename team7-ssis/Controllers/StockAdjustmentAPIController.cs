@@ -177,8 +177,8 @@ namespace team7_ssis.Controllers
                         StockAdjustment = SA,
                         ItemCode = m.ItemCode,
                         Item = item,
-                        OriginalQuantity = item.Inventory.Quantity,
-                        AfterQuantity = item.Inventory.Quantity + m.QuantityAdjusted,
+                        OriginalQuantity = Int32.Parse(m.OriginalQuantity),
+                        AfterQuantity = Int32.Parse(m.AfterQuantity),
                         Reason = m.Reason
 
                     });
@@ -200,12 +200,14 @@ namespace team7_ssis.Controllers
                 ApplicationUser manager = supervisor.Supervisor;
                 if (flag == true)
                 {
-                    notificationService.CreateNotification(SA, manager);
-                    
+                    Notification n = notificationService.CreateNotification(SA, manager);
+                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+
                 }
                 if (flag == false)
                 {
-                    notificationService.CreateNotification(SA, supervisor);
+                    Notification n = notificationService.CreateNotification(SA, supervisor);
+                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
                 }
 
                 //save SA object into database 
@@ -221,7 +223,7 @@ namespace team7_ssis.Controllers
 
         }
 
-        //save as draft
+        //save changes,no status change
         [Route("api/stockadjustment/save")]
         [HttpPost]
         public void SaveStockAdjustmentAsDraft(List<ViewModelFromNew> list)
@@ -330,7 +332,9 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public void RejectStockAdjustment(List<ViewModelFromEditDetail> list)
         {
-            stockAdjustmentService = new StockAdjustmentService(Context);
+            notificationService = new NotificationService(Context);
+           stockAdjustmentService = new StockAdjustmentService(Context);
+            userService = new UserService(Context);
 
             string stockadjustment_id = list.First().StockAdjustmentID;
             foreach (ViewModelFromEditDetail v in list)
@@ -343,6 +347,9 @@ namespace team7_ssis.Controllers
 
             stockAdjustmentService.RejectStockAdjustment(stockadjustment_id);
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
+
+
+            notificationService.CreateNotification(sa, sa.CreatedBy);
             
         }
 
@@ -353,6 +360,8 @@ namespace team7_ssis.Controllers
         {
             stockAdjustmentService = new StockAdjustmentService(Context);
             userService = new UserService(Context);
+            notificationService = new NotificationService(Context);
+
             string stockadjustment_id = list.First().StockAdjustmentID;
            
         
@@ -379,11 +388,12 @@ namespace team7_ssis.Controllers
 
             stockAdjustmentService.updateStockAdjustment(sd);
             stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
+            notificationService.CreateNotification(sd, sd.CreatedBy);
 
         }
 
-        //update draft
-        [Route("api/stockadjustment/update_to_draft")]
+        //update stockadjustment,no status change
+        [Route("api/stockadjustment/update")]
         [HttpPost]
         public void UpdateStockAdjustmentAsDraft(List<ViewModelFromEditDetail> list)
         {
@@ -404,7 +414,7 @@ namespace team7_ssis.Controllers
             ApplicationUser currentUser = userService.FindUserByEmail(CurrentUserName);
             sa.UpdatedBy = currentUser;
             sa.UpdatedDateTime = DateTime.Now;
-            stockAdjustmentService.updateToDraftStockAdjustment(sa);
+            stockAdjustmentService.updateStockAdjustment(sa);
         }
 
         //update darft to pending 

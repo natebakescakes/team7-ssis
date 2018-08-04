@@ -299,6 +299,17 @@ namespace team7_ssis.Controllers
                     r.Status = statusService.FindStatusByStatusId(4); // make Pending Approval
                 }
 
+
+                // update status
+                if (json.IsDraft == true)
+                {
+                    r.Status = statusService.FindStatusByStatusId(3); // remain as Draft
+                }
+                else
+                {
+                    r.Status = statusService.FindStatusByStatusId(4); // make Pending Approval
+                }
+
                 requisitionService.Save(r);
             }
             catch
