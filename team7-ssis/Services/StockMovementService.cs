@@ -60,7 +60,9 @@ namespace team7_ssis.Services
             sm.DisbursementDetail = detail;
             sm.DisbursementId = detail.DisbursementId;
             sm.Item = detail.Item;
-           
+            sm.OriginalQuantity = itemService.FindInventoryByItemCode(detail.ItemCode).Quantity;
+            sm.AfterQuantity = itemService.FindInventoryByItemCode(detail.ItemCode).Quantity - sm.DisbursementDetail.ActualQuantity;
+
             //Update inventory quantity
             itemService.AddQuantity(sm.Item, -sm.DisbursementDetail.ActualQuantity);
 
@@ -73,7 +75,8 @@ namespace team7_ssis.Services
             sm.DeliveryOrderDetail = detail;
             sm.DeliveryOrderNo = detail.DeliveryOrderNo;
             sm.Item = detail.Item;
-          
+            sm.OriginalQuantity = itemService.FindInventoryByItemCode(detail.ItemCode).Quantity;
+            sm.AfterQuantity = itemService.FindInventoryByItemCode(detail.ItemCode).Quantity - sm.DeliveryOrderDetail.ActualQuantity;
 
             //Update inventory quantity
             itemService.AddQuantity(sm.Item, detail.ActualQuantity);
