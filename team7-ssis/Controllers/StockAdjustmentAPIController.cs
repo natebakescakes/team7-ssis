@@ -301,15 +301,18 @@ namespace team7_ssis.Controllers
                 }
 
             }
-            string supervisor = list.First().Supervisor;
-            string manager = list.First().Manager;
+
+            Department d = userService.FindUserByEmail(CurrentUserName).Department;
+            ApplicationUser Supervisor = userService.FindSupervisorsByDepartment(d).First();
+            ApplicationUser Manager =d.Head;
+        
             if (flag == 1)
             {
-                notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
+                notificationService.CreateNotification(s, Manager);
             }
             if (flag == 0)
             {
-                notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
+                notificationService.CreateNotification(s, Supervisor);
             }
 
             return s.StockAdjustmentId;

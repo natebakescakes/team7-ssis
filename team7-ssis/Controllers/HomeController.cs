@@ -28,9 +28,11 @@ namespace team7_ssis.Controllers
             Session["rep"] = representativeEmail;
 
             // If not Employee role or  Department Representative
-            if (User.IsInRole("DepartmentHead") || representativeEmail == User.Identity.Name)
+            if (User.IsInRole("DepartmentHead") && User.IsInRole("Employee") || representativeEmail == User.Identity.Name || User.IsInRole("Admin"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
-            else if(User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
+            else if(User.IsInRole("Store Clerk") )
+                return RedirectToAction("CreateRequisition", "Requisition");
+            else if(User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
             return RedirectToAction("Unauthorized");
         }
