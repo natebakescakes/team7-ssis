@@ -418,7 +418,7 @@
         form.action = url;
 
         element1.value = purchaseOrder;
-        element1.name = "poNum";
+        element1.name = "pon";
         element1.type = "hidden";
         form.appendChild(element1);
 

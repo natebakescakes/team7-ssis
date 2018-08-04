@@ -149,7 +149,7 @@ $(document).ready(function(){
         form.action = url;
 
         element1.value = poNum;
-        element1.name = "poNum";
+        element1.name = "pon";
         element1.type = "hidden";
         form.appendChild(element1);
 
@@ -427,18 +427,22 @@ $(document).ready(function(){
         var pNum = $("#purchaseOrderNo").val();
         var url = $("#viewRelDelUrl").val();
 
+        alert(pNum);
+        alert(url);
+
         var form = document.createElement("form");
         var element1 = document.createElement("input");
         form.method = "POST";
-        form.action = "/PurchaseOrder/GeneratePost/";
+        form.id = "myform";
+        form.action = url;
 
-        element1.value = poNum;
-        element1.name = "poNum";
+        element1.value = pNum;
+        element1.name = "pon";
         element1.type = "hidden";
         form.appendChild(element1);
-
         document.body.appendChild(form);
 
+        //setTimeout(function () { form.submit(); }, 40000);
         form.submit();
 
 

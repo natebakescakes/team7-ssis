@@ -39,11 +39,11 @@ namespace team7_ssis.Controllers
 
 
         [HttpPost]
-        public ActionResult Details(string poNum)
+        public ActionResult Details(string pon)
         {
-            if (poNum != null && poNum != "")
+            if (pon != null && pon != "")
             {
-                PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(poNum);
+                PurchaseOrder po = purchaseOrderService.FindPurchaseOrderById(pon);
                 PurchaseOrderViewModel podModel = new PurchaseOrderViewModel();
                 decimal totalAmount = 0;
 

@@ -13,16 +13,17 @@
         <div class="col-md-8">
             <h2>Purchase Order Details</h2>
         </div>
+        @Html.Hidden("viewRelDelUrl", Url.Action("ReceivedGoodsPurchaseOrderView", "DeliveryOrder"))
         <div class="col-md-4">
             @Html.Hidden("purchaseOrderNo", Model.PurchaseOrderNo)
             @Html.Hidden("poStatus", Model.Status)
-            @Html.Hidden("viewRelDelUrl", Url.Action("ReceivedGoodsPurchaseOrderView", "DeliveryOrder"))
-           
+
+
 
             @if (Model.Status != "Awaiting Delivery" && Model.Status != "Cancelled")
-    {
-        <a id="viewRelatedDel" class="popup btn btn-primary pull-right" href=""><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</a>
-}
+        {
+            <button id="viewRelatedDel" class="popup btn btn-primary pull-right"><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</button>
+    }
 
         </div>
     </div>
