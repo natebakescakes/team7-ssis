@@ -104,7 +104,6 @@ namespace team7_ssis.Tests.Controllers
         }
 
         [TestMethod]
-        [Ignore]
         public void SendEmailTest()
         {
             //Arrange

@@ -105,19 +105,30 @@ namespace team7_ssis.Controllers
 
         public IHttpActionResult SendEmail(string id)
         {
+            string result = "";
+            MailMessage m = new MailMessage();
+            SmtpClient sc = new SmtpClient();
+            try
+            {
+                m.From = new MailAddress("team7stationery@gmail.com");
+                m.To.Add("e0282927@u.nus.edu");           
 
-            SmtpClient client = new SmtpClient("smtp.nus.edu.sg", 587);
-            client.Credentials = new System.Net.NetworkCredential
-            (@"NUSSTU\E0282927", "");
+                m.Subject = "This is a Test Mail";
+                m.IsBodyHtml = true;
+                m.Body = "test gmail, please message in the telegram group if you get this email.";
+                sc.Host = "smtp.gmail.com";
+                sc.Port = 587;
+                sc.Credentials = new System.Net.NetworkCredential("team7stationery@gmail.com", "passwordq1w2");
 
-            client.EnableSsl = true;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-            MailMessage mm = new MailMessage("e0282927@u.nus.edu", "weinchester@gmail.com");
-            mm.Subject = "test subject";
-            mm.Body = "test body";
-            client.Send(mm);
-            return Ok();
+                sc.EnableSsl = true;
+                sc.Send(m);
+               
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+            }
+            return Ok(result);
 
         }
 
