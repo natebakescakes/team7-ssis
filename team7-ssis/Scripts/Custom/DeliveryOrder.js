@@ -9,6 +9,7 @@ $(document).ready(function () {
             url: "/api/receivegoods/all",
             dataSrc: ""
         },
+       
         columns:
             [
                 { data: "DeliveryOrderNo" },
@@ -170,6 +171,7 @@ $(document).ready(function () {
             url: "api/outstandingpo/all",
             dataSrc: ""
         },
+        pageLength: 5,
         columns:
             [
                 { data: "PurchaseOrderNo" },
