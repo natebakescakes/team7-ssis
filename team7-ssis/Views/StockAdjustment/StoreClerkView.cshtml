@@ -36,7 +36,7 @@
 
                         "render": function (data, type, full, meta) {
 
-                            if (data.StatusName == "Draft" || data.StatusName == "Cancelled")
+                            if (data.StatusName == "Draft")
 
                                 return "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>";
                             else if (data.StatusName == "Pending Approval")
@@ -47,7 +47,7 @@
                                 return html;
                             }
 
-                            else (data.StatusName == "Approved" || data.StatusName == "Rejected")
+                            else (data.StatusName == "Approved" || data.StatusName == "Rejected" || data.StatusName == "Cancelled")
 
                             return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'></i>View</button>";
 
