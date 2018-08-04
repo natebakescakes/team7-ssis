@@ -88,7 +88,7 @@ namespace team7_ssis.Services
             Retrieval r = new Retrieval();
             r.RetrievalId = IdService.GetNewRetrievalId(context);
             r.CreatedDateTime = DateTime.Now;
-            r.Status = statusRepository.FindById(17);
+            r.Status = statusRepository.FindById(19);
             if (HttpContext.Current != null)
             {
                 r.CreatedBy = userRepository.FindById(HttpContext.Current.User.Identity.GetUserId());
@@ -161,7 +161,6 @@ namespace team7_ssis.Services
             foreach (Requisition req in requestList)
             {
                 req.Status = statusRepository.FindById(7);
-                req.Retrieval = r;
                 requisitionRepository.Save(req);
             }
 
@@ -224,7 +223,7 @@ namespace team7_ssis.Services
                     {
                         foreach (RequisitionDetail rd in rq.RequisitionDetails)
                         {
-                            var query = d.DisbursementDetails.Where(x => x.ItemCode == rd.ItemCode);
+                            var query = d.DisbursementDetails.Where(x => x.Item == rd.Item);
 
                             // Use quantity in inventory map if available, else get current inventory level in context
                             int currentQuantity;
@@ -249,8 +248,10 @@ namespace team7_ssis.Services
                             {
                                 DisbursementDetail newDD = new DisbursementDetail();
                                 newDD.Item = rd.Item;
+                                newDD.ItemCode = rd.ItemCode;
                                 newDD.PlanQuantity = Math.Min(rd.Quantity, inventory[rd.ItemCode]);
                                 newDD.Bin = rd.Item.Bin;
+                                newDD.Status = statusRepository.FindById(17);
 
                                 // Deduct quantity
                                 inventory[rd.ItemCode] -= newDD.PlanQuantity;

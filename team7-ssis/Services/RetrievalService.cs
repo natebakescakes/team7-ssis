@@ -85,6 +85,7 @@ namespace team7_ssis.Services
             retrieval.Disbursements.SelectMany(d => d.DisbursementDetails.Where(dd => dd.ItemCode == itemCode)).ToList().ForEach(disbursementDetail =>
             {
                 disbursementDetail.Status = new StatusService(context).FindStatusByStatusId(18);
+                stockmovementService.CreateStockMovement(disbursementDetail);
             });
 
             retrievalRepository.Save(retrieval);
@@ -107,63 +108,87 @@ namespace team7_ssis.Services
             if (retrieval.Status.StatusId == 20)
                 throw new ArgumentException("Retrieval already confirmed");
 
-            // Update Retrieval status
+            #region Update Retrieval status
             retrieval.Status = new StatusService(context).FindStatusByStatusId(20);
             retrieval.UpdatedBy = new UserService(context).FindUserByEmail(email);
             retrieval.UpdatedDateTime = DateTime.Now;
+            #endregion
 
-            // Create outstanding requisitions
+            #region Update Disbursement status
             foreach (var disbursement in retrieval.Disbursements)
             {
-                disbursement.Status = statusRepository.FindById(8);
+                // If item has not yet been retrieved, retrieve it
+                // Since web does not retrieve items before confirm retrieval
+                foreach (var detail in disbursement.DisbursementDetails)
+                {
+                    if (detail.Status.StatusId != 18)
+                    {
+                        detail.Status = new StatusService(context).FindStatusByStatusId(18);
+                        stockmovementService.CreateStockMovement(detail);
+                    }
+                }
 
-                bool outstandingRequisition = true;
+                disbursement.Status = statusRepository.FindById(8);
+            }
+            #endregion
+
+            #region Create Outstanding Requisitions
+            // For every group of requisitions in the retrieval with the same department
+            foreach (var requisition in retrieval.Requisitions.GroupBy(r => r.Department))
+            {
+                // If retrieval has no disbursement for department,
+                // Change status to Unable to Fulfill (21)
+                if (retrieval.Disbursements.Where(d => d.Department == requisition.Key).Count() == 0)
+                    requisition.ToList().ForEach(r => r.Status = statusRepository.FindById(21));
+                // If disbursement related to requisitions have no actual quantity disbursed,
+                // Change status to Unable to Fulfill (21)
+                else if (retrieval.Disbursements.Where(d => d.Department == requisition.Key).FirstOrDefault().DisbursementDetails.All(dd => dd.ActualQuantity == 0))
+                    requisition.ToList().ForEach(r => r.Status = statusRepository.FindById(21));
 
                 var newRequisitionDetails = new List<RequisitionDetail>();
-                disbursement.DisbursementDetails.ForEach(disbursementDetail =>
+                // For every group of requisition details in the combined requisition with the same Item Code
+                foreach (var detail in requisition.SelectMany(r => r.RequisitionDetails).GroupBy(detail => detail.Item))
                 {
-                    // Get total requisited quantity
-                    var totalRequisitionQuantity = disbursement.Retrieval.Requisitions
-                        .Sum(r => r.RequisitionDetails
-                            .Where(rr => rr.ItemCode == disbursementDetail.ItemCode)
-                            .Sum(rr => rr.Quantity));
+                    // Sum of actual quantity disbursement in disbursement details with the same item code 
+                    // as requisition details with in disbursement with the same departmentcode
+                    // If not found, quantity disbursed is 0
+                    var totalDisbursedQuantity = retrieval.Disbursements
+                        .Where(disbursement => disbursement.Department == requisition.Key)
+                        .FirstOrDefault() == null ? 0 : retrieval.Disbursements
+                            .Where(disbursement => disbursement.Department == requisition.Key)
+                            .FirstOrDefault()
+                            .DisbursementDetails
+                            .Where(dd => dd.Item == detail.Key)
+                            .Sum(dd => dd.ActualQuantity);
 
-                    // Get actual quantity disbursed
-                    var totalDisbursedQuantity = disbursementDetail.ActualQuantity;
+                    // If total quantity disbursed is 0, change requisition detail status to unfulfilled (21)
+                    if (totalDisbursedQuantity == 0)
+                        detail.ToList().ForEach(d =>
+                        {
+                            d.Status = statusRepository.FindById(21);
+                        });
 
-                    if (totalDisbursedQuantity == totalRequisitionQuantity)
-                    {
-                        outstandingRequisition = false;
-                        return;
-                    }
+                    // If remaining quantity is 0, skip creating outstanding requisition detail
+                    if (detail.Sum(d => d.Quantity) - totalDisbursedQuantity == 0)
+                        continue;
 
-                    var newRequisitionDetail = new RequisitionDetail()
+                    newRequisitionDetails.Add(new RequisitionDetail()
                     {
                         RequisitionId = IdService.GetNewAutoGenerateRequisitionId(context),
-                        Item = disbursementDetail.Item,
-                        ItemCode = disbursementDetail.ItemCode,
-                        Quantity = totalRequisitionQuantity - totalDisbursedQuantity,
+                        Item = detail.Key,
+                        ItemCode = detail.Key.ItemCode,
+                        Quantity = detail.Sum(d => d.Quantity) - totalDisbursedQuantity,
                         Status = new StatusService(context).FindStatusByStatusId(3),
-                    };
-
-                    newRequisitionDetails.Add(newRequisitionDetail);
-
-                    // Change requisition detail status if no actual quantity disbursed
-                    if (totalDisbursedQuantity == 0)
-                    {
-                        retrieval.Requisitions.SelectMany(requisition => requisition.RequisitionDetails.Where(detail => detail.ItemCode == disbursementDetail.ItemCode)).ToList().ForEach(detail =>
-                        {
-                            detail.Status = statusRepository.FindById(21);
-                        });
-                    }
-                });
+                    });
+                }
 
                 // Create new outstanding requisition
+                // Collection point is based on one of the requisition in this retrieval for this department at random
                 var newRequisition = new Requisition()
                 {
                     RequisitionId = IdService.GetNewAutoGenerateRequisitionId(context),
-                    Department = disbursement.Department,
-                    CollectionPoint = disbursement.Department.CollectionPoint,
+                    Department = requisition.Key,
+                    CollectionPoint = requisition.OrderBy(r => r.CreatedDateTime).FirstOrDefault().CollectionPoint,
                     CreatedBy = new UserService(context).FindUserByEmail("root@admin.com"),
                     CreatedDateTime = DateTime.Now,
                     Status = new StatusService(context).FindStatusByStatusId(3),
@@ -171,11 +196,13 @@ namespace team7_ssis.Services
                     RequisitionDetails = newRequisitionDetails,
                 };
 
-                if (outstandingRequisition)
+                // If there are any requisition details saved to new outstanding requisition
+                if (newRequisitionDetails.Count() > 0)
                     new RequisitionRepository(context).Save(newRequisition);
             }
+            #endregion
 
-            // Update all requisition statuses that are not Unable to Fulfilled
+            #region Update all requisition statuses that are not Unable to Fulfilled
             foreach (var requisition in retrieval.Requisitions)
             {
                 if (requisition.Status.StatusId != 21)
@@ -187,10 +214,11 @@ namespace team7_ssis.Services
                         detail.Status = statusRepository.FindById(8);
                 }
             }
+            #endregion
 
             retrievalRepository.Save(retrieval);
 
-            // Create Notification
+            #region Create Notification
             foreach (var disbursement in retrieval.Disbursements)
             {
                 foreach (var requisition in disbursement.Retrieval.Requisitions)
@@ -198,6 +226,7 @@ namespace team7_ssis.Services
                     new NotificationService(context).CreateNotification(disbursement, requisition.CreatedBy);
                 }
             }
+            #endregion
         }
 
         public void UpdateActualQuantity(string retrievalId, string email, string itemCode, List<BreakdownByDepartment> retrievalDetails)

@@ -8,12 +8,13 @@
     ViewBag.Title = "RequisitionDetails";
 }
 
-<h2 class="mb-3">Requisition Details</h2>
-<div class="row mb-3">
+<h2 class="mb-3">Requisition Details # @Model.RequisitionID</h2>
+<div class="row">
     <div class="col-md-4">
         <div class="label">Requisition</div>
         @Model.RequisitionID
     </div>
+
     @if (Model.DisbursementId != "")
     {
         <div class="col-md-8">
@@ -21,11 +22,21 @@
             <a href="@Url.Action("DisbursementDetails", "Disbursement", new { did = Model.DisbursementId })">@Model.DisbursementId</a>
         </div>
     }
-    else
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="label">Status</div>
+        @Model.Status
+    </div>
+    @if (Model.Status != "Pending Approval" || Model.Status != "Draft")
     {
         <div class="col-md-8">
+            <div class="label">Remarks</div>
+            @Model.Remarks
         </div>
     }
+</div>
+<div class="row">
     <div class="col-md-4">
         <div class="label">Collection Point</div>
         @Model.CollectionPoint
@@ -34,6 +45,8 @@
         <div class="label">Department</div>
         @Model.Department
     </div>
+</div>
+<div class="row">
     <div class="col-md-4">
         <div class="label">Status</div>
         @Model.Status
@@ -43,20 +56,24 @@
         @Model.CreatedBy
     </div>
     <div class="col-md-4">
+        <div class="label">Created Time</div>
+        @Model.CreatedTime
+    </div>
+    </div>
+<div class="row">
+    <div class="col-md-4">
         <div class="label">Updated By</div>
         @Model.UpdatedBy
     </div>
     <div class="col-md-4">
-        <div class="label">Approved By</div>
-        @Model.ApprovedBy
-    </div>
-    <div class="col-md-4">
-        <div class="label">Created Time</div>
-        @Model.CreatedTime
-    </div>
-    <div class="col-md-4">
         <div class="label">Updated Time</div>
         @Model.UpdatedTime
+    </div>
+    </div>
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="label">Approved By</div>
+        @Model.ApprovedBy
     </div>
     <div class="col-md-4">
         <div class="label">Approved Time</div>
@@ -79,7 +96,10 @@
     <div class="col-md-12">
         @if (User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
         {
-            if (Model.Status == "Pending Approval") {
+            if (Model.Status == "Pending Approval")
+            {
+                <div class="label">Remarks</div>
+                <textarea id="remarksTextArea" class="form-control mb-2" style="min-width:400px;height:100px;"></textarea>
                 <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
                 <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
             }
@@ -118,13 +138,21 @@
     $(document).on("click", "#approveBtn", function (e) {
         e.preventDefault();
         console.log("Approved");
-        post("/Requisition/Approve", { rid: "@Model.RequisitionID", email: "", remarks: "" });
+        post("/Requisition/Approve", {
+            rid: "@Model.RequisitionID",
+            email: "",
+            remarks: $('#remarksTextArea').val()
+        });
     });
 
     // Click "Reject" button
     $(document).on("click", "#rejectBtn", function (e) {
         e.preventDefault();
         console.log("Rejected");
-        post("/Requisition/Reject", { rid: "@Model.RequisitionID", email: "", remarks: "" });
+        post("/Requisition/Reject", {
+            rid: "@Model.RequisitionID",
+            email: "",
+            remarks: $('#remarksTextArea').val()
+        });
     });
 </script>

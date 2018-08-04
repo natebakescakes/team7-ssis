@@ -20,6 +20,7 @@ namespace team7_ssis.ViewModels
         public string ApprovedBy { get; set; }
         public string ApprovedTime { get; set; }
         public string Status { get; set; }
+        public string Remarks { get; set; }
     }
     public class RequisitionDetailVTableiewModel
     {
