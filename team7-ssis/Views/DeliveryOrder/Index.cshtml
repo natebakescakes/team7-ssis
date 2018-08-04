@@ -21,9 +21,15 @@
             <h2>Receive Goods</h2>
         </div>
     </div>
+   
     <div style="width:90%; margin:0 auto" class="tablecontainer">
 
-        <h3> Select the Purchase Order for which your are receiving goods</h3>
+        <h4> Select the Purchase Order for which your are receiving goods</h4>
+        <div class="modal-footer">
+
+            <button id="confirm" type="button" class="btn btn-primary" style="background-color:royalblue;">Create Delivery Order for the Selected</button>
+
+        </div>
         <table id="myTable" class="table table-striped table-bordered" style="width: 100%">
             <thead>
                 <tr>
@@ -31,16 +37,12 @@
                     <th>Supplier Name</th>
                     <th>Order Date</th>
                     <th>Status</th>
-                    <th></th>
+                    <th>Details</th>
                 </tr>
             </thead>
         </table>
     </div>
-    <div class="modal-footer">
 
-        <button id="confirm" type="button" class="btn btn-primary">Confirm</button>
-
-    </div>
 </body>
 </html>
 
