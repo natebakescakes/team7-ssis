@@ -23,5 +23,9 @@
             </thead>
         </table>
     </div>
+    @using (Html.BeginForm("Index", "DeliveryOrder"))
+    {
+        <input type="submit" value="Back To Receive Goods" class="btn btn-default" style="background-color:royalblue;"/>
+    }
 </body>
 </html>
