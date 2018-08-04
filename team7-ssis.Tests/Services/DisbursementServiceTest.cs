@@ -65,8 +65,8 @@ namespace team7_ssis.Tests.Services
             {
                 Disbursement = disbursement,
                 Item = context.Item.First(),
-                PlanQuantity = 2,
-                ActualQuantity = 2
+                PlanQuantity = 20,
+                ActualQuantity = 20
 
             };
             disbursementdetailRepository.Save(detail);
@@ -267,7 +267,7 @@ namespace team7_ssis.Tests.Services
                 Requisition = requisition,
 
                 Item = item,
-                Quantity = 1
+                Quantity = 5
             };
             requisitiondetailRepository.Save(rd1);
 
@@ -276,7 +276,7 @@ namespace team7_ssis.Tests.Services
             {
                 Requisition = requisition,
                 Item = itemRepository.FindById("C003"),
-                Quantity = 2
+                Quantity = 99
             };
 
             requisitiondetailRepository.Save(rd2);
@@ -286,9 +286,9 @@ namespace team7_ssis.Tests.Services
             var result = disbursementService.UpdateRequisitionStatus(disbursement);
 
             //Assert
-            //disbursement detail disburses 2, so rd1 should be statusID(10), 
-            Assert.AreEqual(result.First().RequisitionDetails.First().Status.StatusId, 10);
-            Assert.AreEqual(result.First().Status.StatusId, 9);
+            //disbursement detail disburses 20, so rd1 should be statusID(10), 
+            Assert.AreEqual(10, result.First().RequisitionDetails.First().Status.StatusId);
+            Assert.AreEqual(10, result.First().Status.StatusId);
 
 
         }
@@ -329,7 +329,7 @@ namespace team7_ssis.Tests.Services
             {
                 Requisition = requisition2,
                 Item = item,
-                Quantity = 5
+                Quantity = 500
 
             };
 
