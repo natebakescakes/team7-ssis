@@ -219,6 +219,11 @@ namespace team7_ssis.Services
             retrievalRepository.Save(retrieval);
 
             #region Create Notification
+            foreach (var requisition in retrieval.Requisitions.GroupBy(r => r.Department))
+            {
+                if (retrieval.Disbursements.Where(d => d.Department.DepartmentCode == requisition.Key.DepartmentCode).Count() == 0)
+                    new NotificationService(context).CreateUnableToFulFillNotification(retrieval, requisition.Key.Representative);
+            }
             foreach (var disbursement in retrieval.Disbursements)
             {
                 foreach (var requisition in disbursement.Retrieval.Requisitions)
