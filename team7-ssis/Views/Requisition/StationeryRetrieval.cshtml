@@ -218,10 +218,7 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
-            if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
-                update(false);
-            }
-            
+            update(false);    
         });
 
         // Click "Confirm"
@@ -253,21 +250,14 @@
                 contentType: 'application/json',
                 url: "/api/stationeryretrieval",
                 data: JSON.stringify(json),
-                success: function (message) {
+                success: function () {
+                    var msg;
                     if (IsConfirmed) {
-                        var message = "Retrieval #@Model.RetrievalID confirmed."
-                        post("/Requisition/StationeryRetrieval?rid=@Model.RetrievalID", { message: message });
+                        msg = "Retrieval #@Model.RetrievalID confirmed."
                     } else {
-                        // create info DOM object
-                        console.log(message);
-                        $('#alert').html(
-                            '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
-                            'Disbursement information updated.' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                            '</div>');
+                        msg = "Retrieval #@Model.RetrievalID saved."
                     }
+                    post("/Retrieval/Manage", { msg });
                 },
                 error: function (message) {
                     // show error message

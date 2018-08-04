@@ -101,8 +101,10 @@
                 data: JSON.stringify(data),
                 dataType: "json",
                 success: function (rid) {
-                    // redirect to ManageRetrieval with a msg
-                    window.location.replace("/Requisition/ManageRequisitions?create=" + encodeURIComponent(rid));
+                    // post back to Manage Requisition
+                    console.log("success");
+                    var msg = '#' + rid + ' successfully created.';
+                    post("/Requisition/ManageRequisitions", { msg });
                 },
                 error: function (msg) {
                     $('#alert').html(
