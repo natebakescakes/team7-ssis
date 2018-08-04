@@ -16,7 +16,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
+                { defaultContent: '<button id="infobtn" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' }  }
             ],
 
         createdRow: function (row, data, dataIndex) {
