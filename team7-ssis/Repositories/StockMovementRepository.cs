@@ -17,7 +17,7 @@ namespace team7_ssis.Repositories
 
         public IQueryable<StockMovement> FindByItemCode(string itemCode)
         {
-            return context.StockMovement.Where(x => x.Item.ItemCode == itemCode);
+            return context.StockMovement.Where(x => x.Item.ItemCode == itemCode).OrderBy(x => x.CreatedDateTime);
         }
 
         public IQueryable<StockMovement> FindByDisbursementId(string id)
