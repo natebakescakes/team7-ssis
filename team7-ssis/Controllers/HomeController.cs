@@ -31,7 +31,7 @@ namespace team7_ssis.Controllers
             if (User.IsInRole("DepartmentHead") && User.IsInRole("Employee") || representativeEmail == User.Identity.Name || User.IsInRole("Admin"))
                 return RedirectToAction("ManageRequisitions", "Requisition");
             else if(User.IsInRole("Store Clerk") )
-                return RedirectToAction("CreateRequisition", "Requisition");
+                return RedirectToAction("ManageRequisitions", "Requisition");
             else if(User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
                 return RedirectToAction("", "StockAdjustment");
             return RedirectToAction("Unauthorized");

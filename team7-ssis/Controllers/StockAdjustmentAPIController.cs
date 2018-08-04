@@ -258,6 +258,43 @@ namespace team7_ssis.Controllers
 
         }
 
+        //Create Draft
+        [Route("api/stockadjustment/saveasdraft")]
+        [HttpPost]
+        public void CreateDraftStockAdjustment(List<ViewModelFromNew> list)
+        {
+            userService = new UserService(Context);
+            stockAdjustmentService = new StockAdjustmentService(Context);
+            itemService = new ItemService(Context);
+            notificationService = new NotificationService(Context);
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            StockAdjustment s = new StockAdjustment();
+            s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(Context);
+            s.CreatedBy = userService.FindUserByEmail(CurrentUserName);
+            s.CreatedDateTime = DateTime.Now;
+
+            foreach (ViewModelFromNew v in list)
+            {
+                StockAdjustmentDetail sd = new StockAdjustmentDetail();
+                string itemcode = v.Itemcode;
+                Item item = itemService.FindItemByItemCode(itemcode);
+                sd.ItemCode = itemcode;
+                sd.Reason = (v.Reason == null) ? "" : v.Reason;
+                sd.StockAdjustmentId = s.StockAdjustmentId;
+                sd.OriginalQuantity = item.Inventory.Quantity;
+                sd.AfterQuantity = v.Adjustment + sd.OriginalQuantity;
+                detaillist.Add(sd);
+                //  stockAdjustmentDetailRepository.Save(sd);
+            }
+            s.StockAdjustmentDetails = detaillist;
+            stockAdjustmentService.CreateDraftStockAdjustment(s);
+
+        }
+
+
+
+
 
         //create pending 
         [Route("api/stockadjustment/confirm")]
@@ -432,7 +469,6 @@ namespace team7_ssis.Controllers
             foreach (ViewModelFromEditDetail v in list)
             {
                 StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
-                int d = v.Adjustment;
                 sd.AfterQuantity = sd.OriginalQuantity + v.Adjustment;
                 sd.Reason = v.Reason;
                 stockAdjustmentService.updateStockAdjustmentDetail(sd);
@@ -456,15 +492,17 @@ namespace team7_ssis.Controllers
                 }
 
             }
-            string supervisor = list.First().Supervisor;
-            string manager = list.First().Manager;
+            Department d = userService.FindUserByEmail(CurrentUserName).Department;
+            ApplicationUser Supervisor = userService.FindSupervisorsByDepartment(d).First();
+            ApplicationUser Manager = d.Head;
+
             if (flag == 1)
             {
-                notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
+                notificationService.CreateNotification(sa, Manager);
             }
             if (flag == 0)
             {
-                notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
+                notificationService.CreateNotification(sa, Supervisor);
             }
             return stockadjustmentid;
         }

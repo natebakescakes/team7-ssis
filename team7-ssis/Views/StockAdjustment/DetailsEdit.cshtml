@@ -57,40 +57,13 @@
 </table>
 
 
-
-
-<div class="row mt-3">
-    <div class="col-md-12">     
-        <form id="form1" name="form1">
-            @if (Model.StatusName == "Draft")
-            {
-                <h3>Authorising Supervisor</h3>
-                <select id="ChosenSupervisor" name="ChosenSupervisor" class="custom-select" onChange="chose1()">
-                    @foreach (var supervisor in Model.supervisors)
-                    {
-                        <option value="@supervisor.UserName">@supervisor.FirstName @supervisor.LastName</option>
-                    }
-                </select>
-
-                <h3>Authorising Manager</h3>
-                <select id="ChosenManager" name="ChosenManager" class="custom-select" onChange="chose2()">
-                    @foreach (var manager in Model.managers)
-                    {
-                        <option value="@manager.UserName">@manager.FirstName @manager.LastName</option>
-                    }
-                </select>
-            }
-        </form>
-    </div>
-</div>
-
 <div class="row mt-3">
     <div class="col-md-12">
 
             <button class="btn btn-default" id="cancelBtn">Back</button>
-            <button class="btn btn-primary" id="saveBtn">SaveChanges</button>
+            <button class="btn btn-primary" id="saveBtn">Save Changes</button>
         @if (Model.StatusName == "Draft")
-        {<button class="btn btn-primary" id="submitBtn">SubmitAsPending</button>}
+        {<button class="btn btn-primary" id="submitBtn">Submit As Pending</button>}
 
 
 
@@ -196,15 +169,15 @@
         });
 
         $('#submitBtn').click(function () {
-            var myselect1 = document.getElementById("ChosenSupervisor");
-            var index1 = myselect1.selectedIndex;
-            var supervisor = myselect1.options[index1].value;
-          // alert(supervisor);
+          //  var myselect1 = document.getElementById("ChosenSupervisor");
+          //  var index1 = myselect1.selectedIndex;
+          //  var supervisor = myselect1.options[index1].value;
+          //// alert(supervisor);
 
-            var myselect2 = document.getElementById("ChosenManager");
-            var index2 = myselect2.selectedIndex;
-            var manager = myselect2.options[index2].value;
-           // alert(manager);
+          //  var myselect2 = document.getElementById("ChosenManager");
+          //  var index2 = myselect2.selectedIndex;
+          //  var manager = myselect2.options[index2].value;
+          // // alert(manager);
 
             var data = oTable.data();
             var flag = 1;
@@ -225,8 +198,6 @@
                         Reason: data[i].Reason,
                         Adjustment: data[i].Adjustment,
                         Unitprice: data[i].UnitPrice,
-                        Supervisor: supervisor,
-                        Manager: manager
                     };
                     reqIdArray[i] = obj;
                 }

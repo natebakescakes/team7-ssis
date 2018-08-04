@@ -10,9 +10,7 @@
         <div class="col-md-8">
             <h2>Make Stock Adjustment</h2>
         </div>
-        <div class="col-md-4">
-            <button id="saveAsBtn" class="btn btn-default pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save as Draft</button>
-        </div>
+
     </div>
     <button id="addItemBtn" class="btn btn-default mb-3"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</button>
 
@@ -76,6 +74,7 @@
     <div class="row mt-3">
         <div class="col-md-12">
             <button class="btn btn-default" id="cancelBtn">Cancel</button>
+             <button id="saveAsBtn" class="btn btn-default"> Save as Draft</button>
             <button class="btn btn-primary" id="confirmBtn">Submit As Pending</button>
         </div>
     </div>
@@ -241,15 +240,15 @@
 
             $('#saveAsBtn').click(function () {
 
-                var myselect1 = document.getElementById("ChosenSupervisor");
-                var index1 = myselect1.selectedIndex;
-                var supervisor = myselect1.options[index1].value;
-                // alert(supervisor);
+                //var myselect1 = document.getElementById("ChosenSupervisor");
+                //var index1 = myselect1.selectedIndex;
+                //var supervisor = myselect1.options[index1].value;
+                //// alert(supervisor);
 
-                var myselect2 = document.getElementById("ChosenManager");
-                var index2 = myselect2.selectedIndex;
-                var manager = myselect2.options[index2].value;
-                // alert(manager);
+                //var myselect2 = document.getElementById("ChosenManager");
+                //var index2 = myselect2.selectedIndex;
+                //var manager = myselect2.options[index2].value;
+                //// alert(manager);
 
                 var data = $('#myTable').dataTable().fnGetData();
                 var flag = 1;
@@ -287,15 +286,13 @@
                                 Itemcode: data[i][0],
                                 Unitprice: data[i][2],
                                 Reason: data[i][3],
-                                Adjustment: data[i][4],
-                                Supervisor: supervisor,
-                                Manager: manager
+                                Adjustment: data[i][4]
                             };
                             reqIdArray[i] = obj;
                         }
 
                         $.ajax({
-                            url: '/api/stockadjustment/save',
+                            url: '/api/stockadjustment/saveasdraft',
                             contentType: 'application/json',
                             data: JSON.stringify(reqIdArray),
                             dataType: "json",
