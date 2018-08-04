@@ -19,6 +19,8 @@
 
             var datatb1 = $table.DataTable({
 
+                "order": [[3, "desc"]],
+
                 ajax: {
                     url: "/api/stockadjustment/all",
                     dataSrc: ""
@@ -27,7 +29,7 @@
                     search: "_INPUT_",
                     searchPlaceholder: "Search...",
                 },
-
+                
                 "columnDefs": [
 
                     {
