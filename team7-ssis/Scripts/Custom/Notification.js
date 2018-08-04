@@ -16,7 +16,7 @@ function GetDropDownData() {
                     .append(
                         $(
                             '<span class="badge badge-pill badge-light">' +
-                            data.length +
+                            data.filter(x => x.Status === 'Unread').length +
                             '</span>',
                         ),
                 );

@@ -24,14 +24,15 @@
     window.onload = firstLoad;
 
     var itemCode = '@(ViewBag.VB)';
-        var oTable = $('#myTable').DataTable({
+    var oTable = $('#myTable').DataTable({
+            "deferRender": true,
             sAjaxSource: "/api/manage/stockhistory/" + itemCode,
             sAjaxDataProp: "",
             'order': [[1, 'asc']],
             "columns": [
                 { "data": "theDate", "autoWidth": true },
                 { "data": "host", "autoWidth": true },
-                { "data": "qty", "autoWidth": true },
+                { "data": "qtyString", "autoWidth": true },
                 { "data": "balance", "autoWidth": true }
             ]
         });
@@ -60,6 +61,7 @@
         //alert(test.length);
 
         var pTable = $('#suppTable').DataTable({
+            "deferRender": true,
             "searching": false,
             "paging": false,
             "info": false,

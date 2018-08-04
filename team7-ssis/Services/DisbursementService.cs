@@ -135,16 +135,18 @@ namespace team7_ssis.Services
                             d.ActualQuantity -= r.Quantity;
                             count++;
                         }
-                    }
 
-                    if (count > 0)
-                    {
-                        requisition.Status = statusService.FindStatusByStatusId(9);
-                    }
-                    if (count == requisition.RequisitionDetails.Count)
-                    {
                         requisition.Status = statusService.FindStatusByStatusId(10);
                     }
+
+                    //if (count > 0)
+                    //{
+                    //    requisition.Status = statusService.FindStatusByStatusId(9);
+                    //}
+                    //if (count == requisition.RequisitionDetails.Count)
+                    //{
+                        
+                    //}
 
 
                     updated.Add(requisition);

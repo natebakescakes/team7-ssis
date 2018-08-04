@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web.Http;
 using team7_ssis.Models;
@@ -100,6 +101,24 @@ namespace team7_ssis.Controllers
             }
 
             return Ok(result);
+        }
+
+        public IHttpActionResult SendEmail(string id)
+        {
+
+            SmtpClient client = new SmtpClient("smtp.nus.edu.sg", 587);
+            client.Credentials = new System.Net.NetworkCredential
+            (@"NUSSTU\E0282927", "");
+
+            client.EnableSsl = true;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+            MailMessage mm = new MailMessage("e0282927@u.nus.edu", "weinchester@gmail.com");
+            mm.Subject = "test subject";
+            mm.Body = "test body";
+            client.Send(mm);
+            return Ok();
+
         }
 
     }
