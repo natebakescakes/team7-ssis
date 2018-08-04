@@ -245,10 +245,12 @@ $(document).ready(function () {
         var QtyOrdered = $('#myOutstandingTable').DataTable().row(document.getElementById(this.id).parentElement.parentElement).data().QuantityOrdered;
        // alert(QtyOrdered);
 
-        var RemainingQty = parseInt(QtyOrdered) - parseInt(QuantityReceived);
-        // alert(RemainingQty);
-
-        oTable.cell(rowIdx, 4).data(RemainingQty).draw();
+        if (QuantityReceived <= QtyOrdered) {
+            var RemainingQty = parseInt(QtyOrdered) - parseInt(QuantityReceived);
+            oTable.cell(rowIdx, 4).data(RemainingQty).draw();
+        }
+        else
+         alert("ReceivedQuantity cannot be greater than outstanding Quantity");   
 
     });
 
@@ -403,7 +405,7 @@ $(document).ready(function () {
 
         element1.value = ponum;
 
-        element1.name = "ponum";
+        element1.name = "pon";
 
         element1.type = "hidden";
 
@@ -472,7 +474,7 @@ $(document).ready(function () {
 
         var element1 = document.createElement("input");
 
-        form1.method = "GET";
+        form1.method = "POST";
 
         form1.action = "/purchaseorder/details/";
 

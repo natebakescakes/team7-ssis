@@ -168,7 +168,6 @@ namespace team7_ssis.Tests.Services
         }
 
         [TestMethod]
-        [Ignore]
         public void GetNewPurchaseOrderNo_ExistingId_Valid()
         {
             // Arrange
