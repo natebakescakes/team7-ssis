@@ -245,7 +245,7 @@ namespace team7_ssis.Controllers
 
             // Create Notification
             Notification n = new NotificationService(context).CreateNotification(r, user.Department.Head);
-            var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+            new NotificationApiController().SendNotification(n.NotificationId.ToString());
 
             return Ok(r.RequisitionId);
 
@@ -288,8 +288,16 @@ namespace team7_ssis.Controllers
                         Status = statusService.FindStatusByStatusId(4)
                     });
                 }
-                r.UpdatedBy = user;
-                r.UpdatedDateTime = DateTime.Now;
+
+                // update status
+                if (json.IsDraft == true)
+                {
+                    r.Status = statusService.FindStatusByStatusId(3); // remain as Draft
+                }
+                else
+                {
+                    r.Status = statusService.FindStatusByStatusId(4); // make Pending Approval
+                }
 
 
                 // update status
