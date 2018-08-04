@@ -23,7 +23,7 @@
 
     <div class="row mb-3">
         <div class="col-md-12">
-            <h2>Deliver Order #DEL @Model.DeliveryOrderNo</h2>
+            <h2>Deliver Order #@Model.DeliveryOrderNo</h2>
         </div>
 
     </div>
@@ -53,14 +53,11 @@
         </table>
     </div>
 
-    <br /><br />
+    <br />
+    <hr />
+    <br />  
+
     @Html.Partial("_DOConfirmationViewTable")
 
-    <div class="row mt-3">
-        <div class="col-md-12">
-            @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
-            {<button class="btn btn-primary">Back</button>}
-        </div>
-    </div>
 </body>
     </html>
