@@ -38,14 +38,15 @@ namespace team7_ssis.Controllers
         {
            List<StockMovement> list = stkMovementService.FindStockMovementByItemCode(itemCode);
            List<StockHistoryViewModel> items = new List<StockHistoryViewModel>();
-
             foreach (StockMovement i in list)
             {
+                    
                 items.Add(new StockHistoryViewModel
                 {
                     theDate = i.CreatedDateTime,
                     host = (i.DeliveryOrderDetailItemCode != null ? i.DeliveryOrderDetail.DeliveryOrder.Supplier.Name : i.DisbursementDetailItemCode != null ? i.DisbursementDetail.Disbursement.Department.Name : i.StockAdjustmentDetail.StockAdjustmentId),
-                    qty = i.AfterQuantity - i.OriginalQuantity,
+                    qty = (i.OriginalQuantity < i.AfterQuantity ? (i.AfterQuantity - i.OriginalQuantity) : (i.OriginalQuantity - i.AfterQuantity)),
+                    qtyString= (i.OriginalQuantity == i.AfterQuantity ?"0":(i.OriginalQuantity < i.AfterQuantity ? "+"+ (i.AfterQuantity - i.OriginalQuantity) :"-"+ (i.OriginalQuantity - i.AfterQuantity))),
                     balance = i.AfterQuantity
                 });
             }

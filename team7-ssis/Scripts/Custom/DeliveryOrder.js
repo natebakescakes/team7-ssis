@@ -16,7 +16,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
+                { defaultContent: '<button id="infobtn" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' }
             ],
 
         createdRow: function (row, data, dataIndex) {
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="ibtn" />' }
+                { defaultContent: '<button id="ibtn" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' } 
             ],
 
         createdRow: function (row, data, dataIndex) {
@@ -176,7 +176,7 @@ $(document).ready(function () {
                 { data: "SupplierName" },
                 { data: "CreatedDate" },
                 { data: "Status" },
-                { defaultContent: '<input type="button" value="i" id="infobtn" />' }
+                { defaultContent: '<button id="infobtn" class="btn btn-default mb-3"><i class="fa fa-info-circle" aria-hidden="true"></i></button>' }
             ],
         select: "single",
 
@@ -235,6 +235,7 @@ $(document).ready(function () {
    
     // change the value of the cell in the datatable with an input field
     $(document).on("change", ".qty", function () {
+
         var cell = oTable.cell(this.parentElement);
         cell.data($(this).val()).draw();
    
@@ -341,6 +342,7 @@ $(document).ready(function () {
    
     //for DOConfirmationPage-outstanding items
     var dTable = $('#myDOTable').DataTable({
+        "paging": false,
         ajax: {
             url: "/api/deliveryorderdetails/"+ don,
             dataSrc: ""
@@ -389,31 +391,33 @@ $(document).ready(function () {
 
         var ponum = mydata[0].PurchaseOrderNo;
 
-        if (mydata.length ==0) {
-            alert('Please select one purchase order!');
+
+        if (mydata.length != 0) {
+
+            var form = document.createElement("form");
+
+            var element1 = document.createElement("input");
+
+            form.method = "POST";
+
+            form.action = "/deliveryorder/receivegoodsview";
+
+            element1.value = ponum;
+
+            element1.name = "pon";
+
+            element1.type = "hidden";
+
+            form.appendChild(element1);
+
+            document.body.appendChild(form);
+
+            form.submit();
         }
 
-
-
-        var form = document.createElement("form");
-
-        var element1 = document.createElement("input");
-
-        form.method = "POST";
-
-        form.action = "/deliveryorder/receivegoodsview";
-
-        element1.value = ponum;
-
-        element1.name = "pon";
-
-        element1.type = "hidden";
-
-        form.appendChild(element1);
-
-        document.body.appendChild(form);
-
-        form.submit();
+        else {
+            alert('Please select one purchase order!');
+        }
 
     });
 
