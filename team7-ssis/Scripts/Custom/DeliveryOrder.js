@@ -338,6 +338,11 @@ $(document).ready(function () {
                 alert("Delivery Order information has been successfully saved");
                 window.location.href = "/DeliveryOrder";
             }
+
+                //error: function () {
+                //    $('#info').html('<p>An error has occurred</p>');
+                //    oTable.ajax.reload();
+                //}
         });
     });
 
