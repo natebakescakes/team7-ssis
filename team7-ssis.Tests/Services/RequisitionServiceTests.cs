@@ -71,6 +71,9 @@ namespace team7_ssis.Tests.Services
                 requisitionRepository.Delete(requisitionRepository.FindById("RANIAH1"));
             if (requisitionRepository.ExistsById("RANIAH2"))
                 requisitionRepository.Delete(requisitionRepository.FindById("RANIAH2"));
+            if (itemRepository.ExistsById("IT1"))
+                itemRepository.Delete(itemRepository.FindById("IT1"));
+
 
         }
 
@@ -459,7 +462,7 @@ namespace team7_ssis.Tests.Services
 
 
         [TestMethod]
-        [Ignore]
+        
         public void FindUnfulfilledQuantityRequestedTest()
         {
             //arrange
@@ -475,12 +478,21 @@ namespace team7_ssis.Tests.Services
             r1.CreatedBy = null;
             r1.CreatedDateTime = DateTime.Now;
 
+            Item i = new Item();
+            i.ItemCode = "IT1";
+            i.ReorderLevel = 100;
+            i.ReorderQuantity = 500;
+            i.CreatedDateTime = DateTime.Now;
+            itemRepository.Save(i);
+
             RequisitionDetail rd1 = new RequisitionDetail();
-            rd1.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd1.Item = context.Item.Where(x => x.ItemCode == "IT1").ToList().First();
             rd1.Quantity = 10;
+
 
             r1.RequisitionDetails.Add(rd1);
             requisitionRepository.Save(r1);
+            
 
             Requisition r2 = new Requisition();
             r2.RequisitionId = "RANIAH2";
@@ -495,14 +507,14 @@ namespace team7_ssis.Tests.Services
             r2.CreatedDateTime = DateTime.Now;
 
             RequisitionDetail rd2 = new RequisitionDetail();
-            rd2.Item = context.Item.Where(x => x.ItemCode == "C001").ToList().First();
+            rd2.Item = context.Item.Where(x => x.ItemCode == "IT1").ToList().First();
             rd2.Quantity = 15;
 
             r2.RequisitionDetails.Add(rd2);
             requisitionRepository.Save(r2);
 
             //Act
-            var result = requisitionService.FindUnfulfilledQuantityRequested(itemRepository.FindById("C001"));
+            var result = requisitionService.FindUnfulfilledQuantityRequested(itemRepository.FindById("IT1"));
 
             //Assert
             Assert.AreEqual(result, 25);

@@ -71,7 +71,7 @@
                 data: "Description"
             },
             {
-                title: "Quantity",
+                title: "Quantity To Reorder",
                 data: "Quantity",
                 render: function (data, type, row, meta) {
                     //alert(row.ItemCode);
@@ -327,16 +327,17 @@
             for (var i = 0; i < datatableData.length; i++) {
 
                var id = "#supplier" + datatableData[i].ItemCode; // (i + 1).toString();
-               alert(id);
-               alert(datatableData[i].ItemCode);
-
+                //var supname = $(id).children("option").filter(":selected").text();
+                //var suppriority = $(id).children("option").filter(":selected").val();
+                var supname = generatePOTbl.cell(i, 4).node().children[0].selectedOptions[0].text;
+                var suppriority = generatePOTbl.cell(i, 4).node().children[0].selectedOptions[0].value;
                 var o = {
                     "ItemCode": datatableData[i].ItemCode,
                     "Description": datatableData[i].Description,
                     "QuantityOrdered": datatableData[i].Quantity,
                     "UnitPrice": datatableData[i].UnitPriceDecimal,
-                    "SupplierName": $(id).children("option").filter(":selected").text(),
-                    "SupplierPriority": $(id).children("option").filter(":selected").val(),
+                    "SupplierName": supname,
+                    "SupplierPriority": suppriority,
                     "Amount": datatableData[i].TotalPrice
                 };
                 //alert(JSON.stringify(o));
