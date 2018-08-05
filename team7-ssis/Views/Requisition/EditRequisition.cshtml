@@ -30,8 +30,7 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <h3>Select Collection Point</h3>
-        @*Bind input to List<CollectionPoint>*@
+        <div class="label">Select Collection Point</div>
         <select id="collectionPointSelect" class="custom-select">
             @foreach (var collectionPoint in Model.SelectCollectionPointList)
             {
@@ -39,9 +38,12 @@
             }
         </select>
 
-        <p>Once requisition in processed, you will receive an email on the pickup date. This will be the following Monday if the requisition was created by Wednesday.</p>
-        <h3>Representative</h3>
+        <p><small>Once requisition in processed, you will receive an email on the pickup date. This will be the following Monday if the requisition was created by Wednesday.</small></p>
+        <div class="label">Representative</div>
         @Model.Representative
+
+        <div class="label">Remarks</div>
+        <textarea id="remarksTextArea" class="form-control mb-2" style="min-width:400px;height:100px;"></textarea>
     </div>
 </div>
 
@@ -89,6 +91,9 @@
             ],
             select: "api"
         });
+
+        // set textarea value
+        $('#remarksTextArea').val("@Model.RequesterRemarks");
     })
 
     // Click "Cancel Requisition"
@@ -99,9 +104,13 @@
     // Click 'Save Changes' button
     $('#saveChangesBtn').click(function () {
         var tableData = myTable.rows().data().toArray();
-        var colPoint = $('#collectionPointSelect').val();
-        var json = { CollectionPointId: colPoint, RequisitionId: "@Model.RequisitionId", ItemList: [], IsDraft: @( Model.StatusId == 3 ? "true" : "false" ) };
-        console.log("save changes");
+        var json = {
+            CollectionPointId: $('#collectionPointSelect').val(),
+            RequisitionId: "@Model.RequisitionId",
+            ItemList: [],
+            IsDraft: @( Model.StatusId == 3 ? "true" : "false" ),
+            Remarks: $('#remarksTextArea').val()
+        };
         CallApi(tableData, json);
     })
 
@@ -109,7 +118,13 @@
     $('#submitApprovalBtn').click(function () {
         var tableData = myTable.rows().data().toArray();
         var colPoint = $('#collectionPointSelect').val();
-        var json = { CollectionPointId: colPoint, RequisitionId: "@Model.RequisitionId", ItemList: [], IsDraft: false };
+        var json = {
+            CollectionPointId: colPoint,
+            RequisitionId: "@Model.RequisitionId",
+            ItemList: [],
+            IsDraft: false,
+            Remarks: $('#remarksTextArea').val()
+        };
         console.log("submit for approval");
         CallApi(tableData, json);
     })

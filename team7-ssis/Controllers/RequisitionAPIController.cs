@@ -79,7 +79,9 @@ namespace team7_ssis.Controllers
                 viewModel.Add(new ManageRequisitionsViewModel
                 {
                     Requisition = r.RequisitionId,
-                    Status = r.Status.Name
+                    Status = r.Status.Name,
+                    CreatedDateTime = r.CreatedDateTime != null ? r.CreatedDateTime.ToShortDateString() + " " + r.CreatedDateTime.ToShortTimeString() : "",
+                    ApprovedDateTime = r.ApprovedDateTime != null ? r.ApprovedDateTime.Value.ToShortDateString() + " " + r.ApprovedDateTime.Value.ToShortTimeString() : "",
                 });
             }
 
@@ -121,7 +123,9 @@ namespace team7_ssis.Controllers
                 viewModel.Add(new ManageRequisitionsViewModel
                 {
                     Requisition = r.RequisitionId,
-                    Status = r.Status.Name
+                    Status = r.Status.Name,
+                    CreatedDateTime = r.CreatedDateTime != null ? r.CreatedDateTime.ToShortDateString() + " " + r.CreatedDateTime.ToShortTimeString() : "",
+                    ApprovedDateTime = r.ApprovedDateTime != null ? r.ApprovedDateTime.Value.ToShortDateString() + " " + r.ApprovedDateTime.Value.ToShortTimeString() : "",
                 });
             }
             return Ok(viewModel);
@@ -211,6 +215,8 @@ namespace team7_ssis.Controllers
             Requisition r = new Requisition();
             r.RequisitionId = IdService.GetNewRequisitionId(context);
             r.RequisitionDetails = new List<RequisitionDetail>();
+            r.EmployeeRemarks = json.Remarks;
+
             if (json.IsDraft == true)
             {
                 r.Status = statusService.FindStatusByStatusId(3);
@@ -278,6 +284,7 @@ namespace team7_ssis.Controllers
                 requisitionRepository.FindRequisitionDetails(json.RequisitionId);
                 
                 // Update the RequisitionDetails with new information
+                r.EmployeeRemarks = json.Remarks;
                 r.RequisitionDetails = new List<RequisitionDetail>();
                 foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
                 {
