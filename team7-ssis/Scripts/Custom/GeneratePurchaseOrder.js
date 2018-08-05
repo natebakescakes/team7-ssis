@@ -288,9 +288,10 @@
         
         {
             for (i = 0; i < datatableData.length; i++) {
-                if (isNaN(datatableData[i].Quantity) || (datatableData[i].Quantity == null) || (datatableData[i].Quantity == 0)) {
+                if (isNaN(datatableData[i].Quantity) || (datatableData[i].Quantity == null) || (datatableData[i].Quantity <= 0))
+                {
                     flag = 0;
-                    alert("Quantity cannot be 0");
+                    alert("Quantity cannot be 0 or negative!");
                     break;
                 }
             }
@@ -325,9 +326,9 @@
 
             for (var i = 0; i < datatableData.length; i++) {
 
-                var id = "#supplier" + datatableData[i].ItemCode; // (i + 1).toString();
-               // alert(id);
-                //alert(datatableData[i].ItemCode);
+               var id = "#supplier" + datatableData[i].ItemCode; // (i + 1).toString();
+               alert(id);
+               alert(datatableData[i].ItemCode);
 
                 var o = {
                     "ItemCode": datatableData[i].ItemCode,
@@ -418,7 +419,7 @@
         form.action = url;
 
         element1.value = purchaseOrder;
-        element1.name = "poNum";
+        element1.name = "pon";
         element1.type = "hidden";
         form.appendChild(element1);
 
