@@ -325,19 +325,10 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult DownloadSelectedPDF(string purchaseOrderNum)
         {
-            var a = new ActionAsPdf("PODPrintView", new { PONumber = purchaseOrderNum })  { FileName = purchaseOrderNum + ".pdf" };
-            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
-            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
-            a.CustomSwitches = "--load-error-handling ignore";
-            return a;
-        }
-
-        public ActionResult PODPrintView(string PONumber)
-        {
-            PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(PONumber);
+            PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
             List<PurchaseOrderDetailsViewModel> podViewlist = p.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
             {
-                PurchaseOrderNo=PONumber,
+                PurchaseOrderNo = purchaseOrderNum,
                 ItemCode = pod.Item.ItemCode,
                 Description = pod.Item.Description,
                 QuantityOrdered = pod.Quantity,
@@ -349,14 +340,34 @@ namespace team7_ssis.Controllers
             }).ToList();
 
             ViewBag.PurchaseOrder = p;
-            return View("GetPurchaseOrderDetails",podViewlist);
 
+            var a = new ViewAsPdf("GetPurchaseOrderDetails", podViewlist)  { FileName = purchaseOrderNum + ".pdf" };
+            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
+            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            a.CustomSwitches = "--load-error-handling ignore";
+            return a;
         }
 
+      
 
         public ActionResult ViewSelectedPDF(string purchaseOrderNum)
         {
-            var a = new ActionAsPdf("PODPrintView", new { PONumber = purchaseOrderNum });
+            PurchaseOrder p = purchaseOrderService.FindPurchaseOrderById(purchaseOrderNum);
+            List<PurchaseOrderDetailsViewModel> podViewlist = p.PurchaseOrderDetails.Select(pod => new PurchaseOrderDetailsViewModel()
+            {
+                PurchaseOrderNo = purchaseOrderNum,
+                ItemCode = pod.Item.ItemCode,
+                Description = pod.Item.Description,
+                QuantityOrdered = pod.Quantity,
+                UnitPrice = purchaseOrderService.FindUnitPriceByPurchaseOrderDetail(pod),
+                Amount = purchaseOrderService.FindTotalAmountByPurchaseOrderDetail(pod),
+                ReceivedQuantity = purchaseOrderService.FindReceivedQuantityByPurchaseOrderDetail(pod),
+                RemainingQuantity = purchaseOrderService.FindRemainingQuantity(pod),
+                Status = pod.Status.Name
+            }).ToList();
+
+            ViewBag.PurchaseOrder = p;
+            var a = new ViewAsPdf("GetPurchaseOrderDetails", podViewlist);
             a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
             a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
             a.CustomSwitches = "--load-error-handling ignore";
