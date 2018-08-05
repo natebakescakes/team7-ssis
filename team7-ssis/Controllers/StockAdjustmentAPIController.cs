@@ -202,12 +202,14 @@ namespace team7_ssis.Controllers
                 {
                     Notification n = notificationService.CreateNotification(SA, manager);
                     var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                    var j = new NotificationApiController().SendEmail(n.NotificationId.ToString());
 
                 }
                 if (flag == false)
                 {
                     Notification n = notificationService.CreateNotification(SA, supervisor);
                     var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                    var j = new NotificationApiController().SendEmail(n.NotificationId.ToString());
                 }
 
                 //save SA object into database 
@@ -306,12 +308,16 @@ namespace team7_ssis.Controllers
             if (flag == 1)
             {
                Notification n = notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
+                //send email and android notifications
                 var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                var j = new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
             if (flag == 0)
             {
                Notification n = notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
+                //send email and android notifications
                 var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                var j = new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
 
             return s.StockAdjustmentId;
@@ -350,9 +356,12 @@ namespace team7_ssis.Controllers
             stockAdjustmentService.RejectStockAdjustment(stockadjustment_id);
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
 
+            //create email and android notifications for rejected Stock Adjustment
+            Notification rejection = notificationService.CreateNotification(sa, sa.CreatedBy);
+            var i = new NotificationApiController().SendNotification(rejection.NotificationId.ToString());
+            var j = new NotificationApiController().SendEmail(rejection.NotificationId.ToString());
 
-            notificationService.CreateNotification(sa, sa.CreatedBy);
-            
+
         }
 
         //approve with reason
@@ -390,7 +399,12 @@ namespace team7_ssis.Controllers
 
             stockAdjustmentService.updateStockAdjustment(sd);
             stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
-            notificationService.CreateNotification(sd, sd.CreatedBy);
+
+            //create email and android notifications for rejected Stock Adjustment 
+           Notification approved =  notificationService.CreateNotification(sd, sd.CreatedBy);
+           var i = new NotificationApiController().SendNotification(approved.NotificationId.ToString());
+           var j = new NotificationApiController().SendEmail(approved.NotificationId.ToString());
+
 
         }
 
@@ -462,10 +476,13 @@ namespace team7_ssis.Controllers
                 Notification n = notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
                 
                 var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                var j = new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
             if (flag == 0)
             {
                 Notification n = notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
+                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                var j = new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
             return stockadjustmentid;
         }
