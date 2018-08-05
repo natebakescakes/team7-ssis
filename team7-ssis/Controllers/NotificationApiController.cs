@@ -113,7 +113,7 @@ namespace team7_ssis.Controllers
             Notification n = notificationService.FindNotificationById(int.Parse(id));
 
             string result = "";
-            string header = "<h2>TEAM 7 STATIONARY STORE</h2>";
+            string header = "<h2>TEAM 7 STATIONERY STORE</h2>";
             string link = "Please use this url to to check the status : http://localhost:50831/";
             string disclaimer = "<i>This is a computer-generated email. Please do not reply to this email. For enquiries, please contact your system administrator.</i>";
 
@@ -122,9 +122,9 @@ namespace team7_ssis.Controllers
             try
             {
                 m.From = new MailAddress("team7stationery@gmail.com");
-                // m.To.Add(n.CreatedFor.Email);
-                m.To.Add("e0282927@u.nus.edu");
-               // m.To.Add("e0284048@u.nus.edu"); //for UAT we will hardcode the email to streamline the notifications
+                m.To.Add(n.CreatedFor.Email);
+                //m.To.Add("e0282927@u.nus.edu");
+                m.To.Add("e0284048@u.nus.edu"); //for UAT we will hardcode the email to streamline the notifications
 
                 m.Subject =String.Format("Team7 Stationery Store [{0}]",n.NotificationType.Name);
                 m.IsBodyHtml = true;
