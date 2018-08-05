@@ -28,11 +28,11 @@
         <div class="label">Status</div>
         @Model.Status
     </div>
-    @if (Model.Status != "Pending Approval" || Model.Status != "Draft")
+    @if (Model.Status == "Pending Approval" || Model.Status == "Draft")
     {
         <div class="col-md-8">
-            <div class="label">Remarks</div>
-            @Model.Remarks
+            <div class="label">Requester's Remarks</div>
+            @Model.RequesterRemarks
         </div>
     }
 </div>
@@ -94,7 +94,7 @@
         {
             if (Model.Status == "Pending Approval")
             {
-                <div class="label">Remarks</div>
+                <div class="label">Approver's Remarks</div>
                 <textarea id="remarksTextArea" class="form-control mb-2" style="min-width:400px;height:100px;"></textarea>
                 <button id="rejectBtn" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
                 <button id="approveBtn" type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>

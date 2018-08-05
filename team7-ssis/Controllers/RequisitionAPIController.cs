@@ -211,6 +211,8 @@ namespace team7_ssis.Controllers
             Requisition r = new Requisition();
             r.RequisitionId = IdService.GetNewRequisitionId(context);
             r.RequisitionDetails = new List<RequisitionDetail>();
+            r.EmployeeRemarks = json.Remarks;
+
             if (json.IsDraft == true)
             {
                 r.Status = statusService.FindStatusByStatusId(3);
@@ -245,7 +247,8 @@ namespace team7_ssis.Controllers
 
             // Create Notification
             Notification n = new NotificationService(context).CreateNotification(r, user.Department.Head);
-            new NotificationApiController().SendNotification(n.NotificationId.ToString());
+            new NotificationApiController() { context = context }.SendNotification(n.NotificationId.ToString());
+            new NotificationApiController() { context = context }.SendEmail(n.NotificationId.ToString());
 
             return Ok(r.RequisitionId);
 
@@ -277,6 +280,7 @@ namespace team7_ssis.Controllers
                 requisitionRepository.FindRequisitionDetails(json.RequisitionId);
                 
                 // Update the RequisitionDetails with new information
+                r.EmployeeRemarks = json.Remarks;
                 r.RequisitionDetails = new List<RequisitionDetail>();
                 foreach (UpdateRequisitionTableJSONViewModel dd in json.ItemList)
                 {

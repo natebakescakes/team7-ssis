@@ -40,11 +40,11 @@
                     "render": function (data, type, full, meta) {
                         if (data.StatusName == "Pending Approval" && data.IsSentFor==1) {
                             
-                            return "<button class='btn btn-primary' id='processBtn' ><i class='fa fa-delete'>Process</i></button>";
+                            return "<button class='btn btn-primary' id='processBtn'>Process</button>";
                         }
                         else (data.StatusName == "Rejected" || data.StatusName == "Approved")
                     
-                        return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'>View</i></button>";
+                        return "<button class='btn btn-primary' id='viewBtn'>View</button>";
 
                     }
                 }
@@ -77,7 +77,30 @@
                 if (data.StatusName === "Cancelled") {
                     $('td', row).eq(4).addClass('cancel');
                 }
-            }
+            },
+            initComplete: function () { // After DataTable initialized
+
+                this.api().columns([4]).every(function () {
+                    var column = this;
+                    var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
+                        .prependTo($('.dataTables_filter'))
+                    var download = $('<a class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
+                    var select = $('#sel1').on('change', function () {
+
+                        var val = $(this).val() + '';
+
+
+                        column.search(val != '' ? '^' + val.split(',').join('$|^') + '$' : '', true, false).draw();
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                    $('.selectpicker').selectpicker();
+                }); // this.api function
+
+
+            } //initComplete function
 
         });
 
