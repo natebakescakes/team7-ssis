@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using team7_ssis.Controllers;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.Services;
@@ -247,6 +248,11 @@ namespace team7_ssis.Tests.Services
 
             //update item inventory
             stockAdjustment.StockAdjustmentDetails.ForEach(detail => stockMovementService.CreateStockMovement(detail));
+
+            // Send notification
+            Notification approved = new NotificationService(context).CreateApproveStockAdjustmentNotification(stockAdjustment, stockAdjustment.CreatedBy);
+            new NotificationApiController() { context = context }.SendNotification(approved.NotificationId.ToString());
+            new NotificationApiController() { context = context }.SendEmail(approved.NotificationId.ToString());
         }
 
         /// <summary>
@@ -274,6 +280,11 @@ namespace team7_ssis.Tests.Services
                 stockAdjustment.ApprovedBySupervisor = userService.FindUserByEmail(email);
 
             stockAdjustmentRepository.Save(stockAdjustment);
+
+            // Send notification
+            Notification approved = new NotificationService(context).CreateRejectStockAdjustmentNotification(stockAdjustment, stockAdjustment.CreatedBy);
+            new NotificationApiController() { context = context }.SendNotification(approved.NotificationId.ToString());
+            new NotificationApiController() { context = context }.SendEmail(approved.NotificationId.ToString());
         }
     }
 }
