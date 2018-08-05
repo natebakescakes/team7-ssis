@@ -49,6 +49,7 @@ namespace team7_ssis.Controllers
                 viewModel.Department = d.Department.Name;
                 viewModel.OrderTime = String.Format("{0} {1}", d.CreatedDateTime.ToShortDateString(), d.CreatedDateTime.ToShortTimeString());
                 viewModel.CollectionPoint = d.Department.CollectionPoint.Name;
+                viewModel.Remarks = d.Remarks;
                 viewModel.Status = d.Status.StatusId;
             } catch
             {

@@ -2,6 +2,13 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Manage Inventory</title>
+    <style>
+        btn-primary {
+            font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
 </head>
 <body>
     @Html.Hidden("myURL", Url.Action("Details", "Inventory"))
@@ -36,6 +43,7 @@
     </div>
 
     <script>
+        
 
         $(document).ready(function () {
             $('.tablecontainer #myform').on('click', '#deletebtn', function (e) {
@@ -72,7 +80,7 @@
                         'selectRow': true
                     }
                 }],
-
+                "deferRender": true,
                 'order': [[1, 'asc']],
                 "columns": [
                     { "defaultContent": "<input type='checkbox' id='mycheck' value=''>"},
@@ -84,34 +92,16 @@
                     { "data": "Uom", "autoWidth": true },
                     { "data": "Quantity", "autoWidth": true },
                     {
-                        "defaultContent": "<input type='button' class='btn btn-primary' id='viewbtn' style='font-size: 12px' value='View Item Details'/>"
+                        "defaultContent":"<a id='viewbtn' href='#' class='btn btn-primary' role='button'><i class='fa fa-info-circle' aria-hidden='true'></i></ a>"
                     }
                 ]
 
             });
-            //view button
-            var rowedit = $('#itemTable tbody').on('click', '#viewbtn', function (e) {
+            $('#itemTable tbody').on('click', '#viewbtn',function () {
                 var rowdata = oTable.row($(this).parents('tr')).data().ItemCode;
-                //alert(rowdata);
-                gotoViewItemDetail(rowdata);
+                $('#viewbtn').attr('href', '/inventory/details?itemCode=' + rowdata);
+
             });
-
-        function gotoViewItemDetail(rs) {
-            var url = $("#myURL").val();
-            var form = document.createElement("form");
-            var element1 = document.createElement("input");
-            form.method = "GET";
-            form.action = url;
-            element1.value = rs;
-            element1.name = "itemCode";
-            element1.type = "hidden";
-            form.appendChild(element1);
-
-            document.body.appendChild(form);
-
-            form.submit();
-            //alert('gotoViewItemDetail'+rs);
-        }
 
             //js for add new btn
         $('.tablecontainer #myform').on('click', '#addnewbtn', function (e) {

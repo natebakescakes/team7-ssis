@@ -183,6 +183,7 @@ namespace team7_ssis.Services
                 // d.DisbursementId = IdService.GetNewDisbursementId(context);
                 d.Department = dept;
                 d.Retrieval = requestList.FirstOrDefault().Retrieval;
+                d.CollectedBy = dept.Representative;
                 disbursementList.Add(d);
             }
 

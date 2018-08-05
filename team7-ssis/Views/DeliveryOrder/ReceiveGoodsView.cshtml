@@ -15,89 +15,94 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Receive Goods</title>
-</head>
 
 <body>
-    <div class="col-md-8">
-
-        <h1>Receive Goods</h1>
-        @Html.Hidden("poNo", Model.PurchaseOrderNo)
-
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <h2>Receive Goods</h2>
+        </div>
     </div>
-    <h3>Submit delivery order forms & invoices and update inventory</h3>
-    <div class="col-md-12">
-        @if (Model.Status != "Awaiting Delivery" && Model.Status != "Delivered")
+    @Html.Hidden("poNo", Model.PurchaseOrderNo)
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
 
-    {
+        <h4>Submit delivery order forms & invoices and update inventory</h4>
+        <div class="col-md-12">
+            @if (Model.Status != "Awaiting Delivery" && Model.Status != "Delivered")
 
-        <a id="VRDObtn" class="popup btn btn-primary pull-right"><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</a>
+            {
 
-}
-    </div>
+                <a id="VRDObtn" class="popup btn btn-primary pull-right"><i class="fa fa-search" aria-hidden="true"></i>  View Related Delivery Orders</a>
 
-
-    <table class="table table-striped table-bordered" style="width: 100%">
-        <thead>
+            }
+        </div>
+        <table class="table table-striped table-bordered" style="width: 100%">
+            <thead>
+                <tr>
+                    <td>Purchase Order #</td>
+                    <td> Supplier Name</td>
+                    <td>Order Date</td>
+                </tr>
+            </thead>
             <tr>
-                <td>Purchase Order #</td>
-                <td> Supplier Name</td>
-                <td>Order Date</td>
+                <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
+                <td>@Html.DisplayFor(model => model.SupplierName)</td>
+                <td>@Html.DisplayFor(model => model.CreatedDate)</td>
             </tr>
-        </thead>
-        <tr>
-            <td>@Html.DisplayFor(model => model.PurchaseOrderNo)</td>
-            <td>@Html.DisplayFor(model => model.SupplierName)</td>
-            <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-        </tr>
-    </table>
+        </table>
 
-    <button id="Viewbtn" class="btn btn-default mb-3">View</button>
+        <button id="Viewbtn" class="btn btn-default mb-3" style="background-color:royalblue;">View Purchase Order Details</button>
+    </div>
 
-    <br /><br />
+    <br />
+    <hr />
+    <br />
+
     @Html.Partial("_OutstandingItemsTable")
 
-    <h3>Submit forms to Bursar</h3>
+    <br />
+    <h4><b>Submit forms to Bursar</b></h4>
     Forms will be routed to Bursar's department for payment to vendor
+    <div class="label">
+        <table>
+            <tr>
+                <td>Upload Delivery Order</td>
+                <td>
+                    <input type="file" name="DeliveryOrderFileName" id="DeliveryOrderFileName" />
+                </td>
+            </tr>
+            <tr>
+                <td>Upload Invoice</td>
+                <td>
+                    <input type="file" name="InvoiceFileName" id="InvoiceFileName" />
+                </td>
+            </tr>
+        </table>
+    </div>
 
-    <table>
-        <tr>
-            <td>Upload Delivery Order</td>
-            <td>
-                <input type="file" name="DeliveryOrderFileName" id="DeliveryOrderFileName" />
-            </td>
-        </tr>
-        <tr>
-            <td>Upload Invoice</td>
-            <td>
-                <input type="file" name="InvoiceFileName" id="InvoiceFileName" />
-            </td>
-        </tr>
-    </table>
+    <br />
+    <br />
 
     <div class="row mt-3">
         <div class="col-md-12">
             <table>
                 <tr>
                     <td>
-                        <div class="modal-footer">
-                            <button id="submitbtn" type="button" class="btn btn-default pull-right">Submit</button>
+                        <div>
+                            <button id="submitbtn" type="button" class="btn btn-default pull-right" style="background-color:royalblue;">Submit Delivery Order</button>
                         </div>
                     </td>
                     <td>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                @using (Html.BeginForm("Index", "DeliveryOrder", FormMethod.Post, new { Id = "Form1" }))
-                                {<button class="btn btn-primary">Back</button>}
-                            </div>
-                        </div>
+                        @using (Html.BeginForm("Index", "DeliveryOrder"))
+                        {
+                            <input type="submit" value="Back To Receive Goods" class="btn btn-default" style="background-color:royalblue;" />
+                        }
                     </td>
                 </tr>
             </table>
         </div>
     </div>
+
+
 
 </body>
 </html>

@@ -72,6 +72,7 @@ namespace team7_ssis.Tests.Controllers
 
 
         [TestMethod]
+        [Ignore]
         public void New_Test()
         {
             // Arrange
@@ -130,6 +131,7 @@ namespace team7_ssis.Tests.Controllers
 
 
         [TestMethod]
+        [Ignore]
         public void DetailsEdit_Test()
         {
             // Arrange
