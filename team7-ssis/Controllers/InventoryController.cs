@@ -228,7 +228,7 @@ namespace team7_ssis.Controllers
                 if (itemService.FindItemByItemCode(model.ItemCode) == null)
                 {
                     //for inventory
-                    int quantity = 10;
+                    int quantity = 0;
                     //new item
                     newItem.ItemCode = model.ItemCode;
                     newItem.CreatedDateTime = DateTime.Now;

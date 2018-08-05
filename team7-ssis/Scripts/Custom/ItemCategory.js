@@ -4,6 +4,7 @@
 
         sAjaxSource: "/api/itemcategory/all",
         sAjaxDataProp: "",  
+        
         columns: [
             { "data": "ItemCategoryId", "autoWidth": true },
             { "data": "Name", "autoWidth": true },
@@ -13,7 +14,9 @@
         ],
         select: {
             style: 'single'
+        
         }
+        
 
     });
 

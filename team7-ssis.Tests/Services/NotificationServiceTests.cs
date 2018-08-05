@@ -30,13 +30,29 @@ namespace team7_ssis.Tests.Services
             saRepository = new StockAdjustmentRepository(context);
             requisitionRepository = new RequisitionRepository(context);
 
+            var retrieval = new RetrievalRepository(context).Save(new Retrieval()
+            {
+                RetrievalId = "NOTIFICATIONTEST",
+                CreatedDateTime = DateTime.Now,
+            });
+
             //save new disbursement object into db
             Disbursement disbursement = new Disbursement();
             if (disbursementRepository.FindById("TEST") == null)
             {
+                disbursement.Department = new DepartmentRepository(context).FindById("ENGL");
                 disbursement.DisbursementId = "TEST";
                 disbursement.CreatedDateTime = DateTime.Now;
-
+                disbursement.Retrieval = retrieval;
+                disbursement.DisbursementDetails = new List<DisbursementDetail>()
+                {
+                    new DisbursementDetail()
+                    {
+                        DisbursementId = "TEST",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        ActualQuantity = 20,
+                    }
+                };
             }
             else disbursement = disbursementRepository.FindById("TEST");
             disbursementRepository.Save(disbursement);
@@ -45,8 +61,19 @@ namespace team7_ssis.Tests.Services
             Requisition requisition = new Requisition();
             if (requisitionRepository.FindById("TEST") == null)
             {
+                requisition.Department = new DepartmentRepository(context).FindById("ENGL");
                 requisition.RequisitionId = "TEST";
                 requisition.CreatedDateTime = DateTime.Now;
+                requisition.Retrieval = retrieval;
+                requisition.RequisitionDetails = new List<RequisitionDetail>()
+                {
+                    new RequisitionDetail()
+                    {
+                        RequisitionId = "TEST",
+                        Item = new ItemService(context).FindItemByItemCode("E030"),
+                        Status = new StatusService(context).FindStatusByStatusId(8),
+                    }
+                };
             }
             else requisition = requisitionRepository.FindById("TEST");
             requisitionRepository.Save(requisition);
@@ -278,6 +305,10 @@ namespace team7_ssis.Tests.Services
             {
                 saRepository.Delete(SA);
             }
+
+            var retrievalRepository = new RetrievalRepository(context);
+            if (retrievalRepository.ExistsById("NOTIFICATIONTEST"))
+                retrievalRepository.Delete(retrievalRepository.FindById("NOTIFICATIONTEST"));
 
         }
     }

@@ -305,11 +305,13 @@ namespace team7_ssis.Controllers
             string manager = list.First().Manager;
             if (flag == 1)
             {
-                notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
+               Notification n = notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
+                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
             }
             if (flag == 0)
             {
-                notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
+               Notification n = notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
+                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
             }
 
             return s.StockAdjustmentId;
@@ -457,11 +459,13 @@ namespace team7_ssis.Controllers
             string manager = list.First().Manager;
             if (flag == 1)
             {
-                notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
+                Notification n = notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
+                
+                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
             }
             if (flag == 0)
             {
-                notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
+                Notification n = notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
             }
             return stockadjustmentid;
         }
