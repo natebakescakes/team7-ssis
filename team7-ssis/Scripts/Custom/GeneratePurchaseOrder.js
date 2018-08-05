@@ -71,7 +71,7 @@
                 data: "Description"
             },
             {
-                title: "Quantity",
+                title: "Quantity To Reorder",
                 data: "Quantity",
                 render: function (data, type, row, meta) {
                     //alert(row.ItemCode);

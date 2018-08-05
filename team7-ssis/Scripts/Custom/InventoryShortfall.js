@@ -27,6 +27,10 @@
                     defaultContent: "<i>Not available</i>"
                 },
                 {
+                    data: "UnfulfilledQuantity",
+                    defaultContent: "<i>Not available</i>"
+                },
+                {
                     data: "ReorderLevel"
                 },
                 {

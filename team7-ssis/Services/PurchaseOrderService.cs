@@ -17,6 +17,8 @@ namespace team7_ssis.Services
         StatusRepository statusRepository;
         SupplierRepository supplierRepository;
         ItemPriceRepository itemPriceRepository;
+        ItemService itemService;
+        RequisitionService requisitionService;
         ApplicationDbContext context;
 
         public PurchaseOrderService(ApplicationDbContext context)
@@ -27,6 +29,8 @@ namespace team7_ssis.Services
             statusRepository = new StatusRepository(context);
             supplierRepository = new SupplierRepository(context);
             itemPriceRepository = new ItemPriceRepository(context);
+            requisitionService = new RequisitionService(context);
+            itemService = new ItemService(context);
 
         }
 
@@ -135,26 +139,80 @@ namespace team7_ssis.Services
             return poList;
         }
 
-
-   
-
-        public bool IsPurchaseOrderCreated(Item item, List<PurchaseOrder> poList)
+        public List<Item> FindInventoryShortfallItems()
         {
-           
-            foreach(PurchaseOrder po in poList)
+            List<Item> items = itemService.FindAllItems();
+            List<Item> itemsToDelete = new List<Item>();
+            foreach (Item i in items)
             {
-               
-               bool result2 = po.PurchaseOrderDetails.Count(x => x.Item.ItemCode == item.ItemCode) > 0;
-                    
-                    if (result2)
+                if (IsPurchaseOrderCreated(i))
                 {
-                    return true;
+                    itemsToDelete.Add(i);
                 }
             }
 
-            return false;
+            foreach (Item item in itemsToDelete)
+            {
+            //    foreach (Item i in items)
+            //    {
+            //        if (i.ItemCode == item.ItemCode)
+            //        {
+                        items.Remove(item);
+            //            break;
+            //        }
+            //    }
+            }
+
+
+            //items.RemoveAll(IsPurchaseOrderCreated);
+
+            return items;
         }
 
+
+
+
+        public bool IsPurchaseOrderCreated(Item item)
+        {
+            bool isPurchaseOrderCreated = false;
+            int[] statusId = { 11, 12 };
+            int remainingPOQuantity = 0;
+            int amountToReorder = 0;
+
+            List<PurchaseOrder> awaitingPO = FindPurchaseOrderByStatus(statusId);
+
+            foreach (PurchaseOrder po in awaitingPO)
+            {
+                foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
+                {
+                    if (pod.ItemCode == item.ItemCode)
+                    {
+                        if (pod.Status.StatusId == 11 || pod.Status.StatusId == 12)
+                        {
+                            remainingPOQuantity = remainingPOQuantity + FindRemainingQuantity(pod);
+                        }
+                    }
+
+                }
+            }
+
+            if(item.Inventory.Quantity - requisitionService.FindUnfulfilledQuantityRequested(item) < item.ReorderLevel)
+            {
+                amountToReorder = Math.Max(requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity, item.ReorderLevel - item.Inventory.Quantity + requisitionService.FindUnfulfilledQuantityRequested(item));
+            }
+            else
+            {
+                amountToReorder = 0;
+            }
+
+            if (remainingPOQuantity >= amountToReorder)
+            {
+                isPurchaseOrderCreated = true;
+            }
+
+            return isPurchaseOrderCreated;
+
+        }
 
         public decimal FindUnitPriceByPurchaseOrderDetail(PurchaseOrderDetail pod)
         {
