@@ -59,6 +59,16 @@ namespace team7_ssis.Controllers
                 savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
                 savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
+                if (s.ApprovedByManager != null && s.ApprovedBySupervisor == null)
+                {
+                    savm.ApprovedBySupervisor = s.ApprovedByManager.FirstName + " " + s.ApprovedByManager.LastName;
+                }
+                else if (s.ApprovedByManager == null && s.ApprovedBySupervisor != null)
+                {
+                    savm.ApprovedBySupervisor = s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
+                }
+                else if (s.ApprovedByManager == null && s.ApprovedBySupervisor == null)
+                { savm.ApprovedBySupervisor = ""; }
                 sadj.Add(savm);
             }
             return sadj;
@@ -354,7 +364,7 @@ namespace team7_ssis.Controllers
             }
             if (flag == 0)
             {
-               Notification n = notificationService.CreateNotification(s, userService.Supervisor);
+               Notification n = notificationService.CreateNotification(s, Supervisor);
                 //send email and android notifications
                 new NotificationApiController().SendNotification(n.NotificationId.ToString());
                 new NotificationApiController().SendEmail(n.NotificationId.ToString());
@@ -514,7 +524,7 @@ namespace team7_ssis.Controllers
 
             if (flag == 1)
             {
-                Notification n = notificationService.CreateNotification(sa, userService.Manager);
+                Notification n = notificationService.CreateNotification(sa, Manager);
                 
                 new NotificationApiController().SendNotification(n.NotificationId.ToString());
                 new NotificationApiController().SendEmail(n.NotificationId.ToString());
