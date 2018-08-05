@@ -49,15 +49,16 @@
                         <a class="nav-link dropdown-toggle" href="3" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Inventory</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
                             @Html.ActionLink("View Inventory Shortfall", "Shortfall", "Inventory", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Inventory", "Index", "Inventory", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Item Categories", "Index", "ItemCategory", null, new { @class = "dropdown-item" })
-
+                            <div class="dropdown-divider"></div>
                             @if (User.IsInRole("Store Clerk") || User.IsInRole("Admin"))
                             {
                                 @Html.ActionLink("Make Stock Adjustment", "New", "StockAdjustment", null, new { @class = "dropdown-item" })
 
                             }
                             @Html.ActionLink("Manage Stock Adjustments", "Index", "StockAdjustment", null, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
+                            @Html.ActionLink("Manage Inventory", "Index", "Inventory", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Item Categories", "Index", "ItemCategory", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                 }
@@ -67,10 +68,11 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Purchase Orders</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown02">
+                            @Html.ActionLink("Generate Purchase Orders", "Generate", "PurchaseOrder", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Manage Purchase Orders", "Index", "PurchaseOrder", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Generate Purchase Order Form", "Generate", "PurchaseOrder", null, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
                             @Html.ActionLink("Receive Goods", "Index", "DeliveryOrder", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage DeliveryOrders", "ReceiveGoods", "DeliveryOrder", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Delivery Orders", "ReceiveGoods", "DeliveryOrder", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
                 }
