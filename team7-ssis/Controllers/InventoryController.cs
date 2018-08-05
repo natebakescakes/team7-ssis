@@ -108,9 +108,15 @@ namespace team7_ssis.Controllers
         }
 
         
-        public ActionResult PrintView()
+        //public ActionResult PrintView()
+        //{
+        //    //ViewBag.myFlag = flag;
+            
+        //    return View(ip);
+        //}
+
+        public ActionResult PrintAllPrices()
         {
-            //ViewBag.myFlag = flag;
             List<Item> iList = itemService.FindAllActiveItems();
             List<ItemPricesListViewModel> ip = new List<ItemPricesListViewModel>();
             ItemPricesListViewModel myModel = new ItemPricesListViewModel();
@@ -128,12 +134,7 @@ namespace team7_ssis.Controllers
                     Price3 = itemPriceService.FindOneByItemAndSequence(i, 3).Price
                 });
             }
-            return View(ip);
-        }
-
-        public ActionResult PrintAllPrices()
-        {
-            var a = new ActionAsPdf("PrintView") { FileName = "ItemPrices.pdf" };
+            var a = new ViewAsPdf("PrintView",ip) { FileName = "ItemPrices.pdf" };
             a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
             a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
             a.CustomSwitches = "--load-error-handling ignore";
