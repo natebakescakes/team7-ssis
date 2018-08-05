@@ -23,31 +23,29 @@
 <div class="row mb-3 step__container">
     <div class="step__arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
     <div class="col-md-6">
-        <div class="card step__selected">
+        <a class="btn btn-primary btn-block">
             <div class="card-body">
                 <div class="step__icon">
-                    <i class="fa fa-archive" aria-hidden="true"></i>
+                    <i class="fa fa-lg fa-archive text-primary" aria-hidden="true"></i>
                 </div>
-                <div class="step__label">
-                    <h5>Stationery Retrieval</h5>
-                    Collect items below from store.
+                <div class="step__label text-white">
+                    <h5 class="mb-0 ">Stationery Retrieval</h5>
+                    <small>Collect items below from store.</small>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     @if (@Model.StatusId == 20)
     {
         <div class="col-md-6">
-            <a href="/Requisition/StationeryDisbursement?rid=@Model.RetrievalID">
-                <div class="card step__unselected">
-                    <div class="card-body">
-                        <div class="step__icon">
-                            <i class="fa fa-truck" aria-hidden="true"></i>
-                        </div>
-                        <div class="step__label">
-                            <h5>Stationery Disbursement</h5>
-                            Deliver items according to Disbursement Forms.
-                        </div>
+            <a href="/Requisition/StationeryDisbursement?rid=@Model.RetrievalID" class="btn btn-secondary btn-block">
+                <div class="card-body">
+                    <div class="step__icon">
+                        <i class="fa fa-lg fa-truck text-secondary" aria-hidden="true"></i>
+                    </div>
+                    <div class="step__label text-white">
+                        <h5 class="mb-0">Stationery Disbursement</h5>
+                        <small>Deliver items according to Disbursement Forms.</small>
                     </div>
                 </div>
             </a>
@@ -56,17 +54,17 @@
     else
     {
         <div class="col-md-6">
-            <div class="card step__fade step__unselected">
+            <a class="btn btn-secondary btn-block disabled">
                 <div class="card-body">
                     <div class="step__icon">
-                        <i class="fa fa-truck" aria-hidden="true"></i>
+                        <i class="fa fa-lg fa-truck text-secondary" aria-hidden="true"></i>
                     </div>
-                    <div class="step__label">
-                        <h5>Stationery Disbursement</h5>
-                        Deliver items according to Disbursement Forms.
+                    <div class="step__label text-white">
+                        <h5 class="mb-0">Stationery Disbursement</h5>
+                        <small>Deliver items according to Disbursement Forms.</small>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     }
 </div>
@@ -218,7 +216,7 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
-            update(false);    
+            update(false);
         });
 
         // Click "Confirm"
@@ -274,7 +272,7 @@
         }
     });
 
-    
-    
+
+
 
 </script>
