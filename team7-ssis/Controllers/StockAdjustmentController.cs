@@ -39,25 +39,9 @@ namespace team7_ssis.Controllers
         public ActionResult New()
         {
 
-            userService = new UserService(context);
-            StockAdjustmentViewModel viewmodel = new StockAdjustmentViewModel();
          
-            Department d = userService.FindUserByEmail(CurrentUserName).Department;
-
-            List<ApplicationUser> supervisors=new List<ApplicationUser>();
-
-            List<ApplicationUser> managers =new List<ApplicationUser>();
-
-            if (d != null)
-            {
-                supervisors = userService.FindSupervisorsByDepartment(d);
-                managers = new List<ApplicationUser>() { d.Head };
-            }
-
-            viewmodel.supervisors = supervisors;
-            viewmodel.managers = managers;
             
-            return View(viewmodel);
+            return View();
         }      
 
 

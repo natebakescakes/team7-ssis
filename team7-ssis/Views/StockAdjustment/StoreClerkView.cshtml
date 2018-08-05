@@ -19,6 +19,8 @@
 
             var datatb1 = $table.DataTable({
 
+                "order": [[3, "desc"]],
+
                 ajax: {
                     url: "/api/stockadjustment/all",
                     dataSrc: ""
@@ -27,7 +29,7 @@
                     search: "_INPUT_",
                     searchPlaceholder: "Search...",
                 },
-
+                
                 "columnDefs": [
 
                     {
@@ -38,18 +40,18 @@
 
                             if (data.StatusName == "Draft")
 
-                                return "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>";
+                                return "<button class='btn btn-primary' id='editBtn'>Edit</button>";
                             else if (data.StatusName == "Pending Approval")
                             {
                                 var html = 
-                                    "<button class='btn btn-primary' id='editBtn' ><i class='fa fa-view'></i>Edit</button>"+" "+
-                                    "<button class='btn btn-primary' id='cancelBtn' ><i class='fa fa-view'></i>Cancel</button>";
+                                    "<button class='btn btn-primary' id='editBtn'>Edit</button>"+" "+
+                                    "<button class='btn btn-primary' id='cancelBtn'>Cancel</button>";
                                 return html;
                             }
 
                             else (data.StatusName == "Approved" || data.StatusName == "Rejected" || data.StatusName == "Cancelled")
 
-                            return "<button class='btn btn-primary' id='viewBtn' ><i class='fa fa-view'></i>View</button>";
+                            return "<button class='btn btn-primary' id='viewBtn'>View</button>";
 
 
                         }
