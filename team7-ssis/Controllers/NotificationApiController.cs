@@ -46,7 +46,7 @@ namespace team7_ssis.Controllers
 
             if (notifications.Count == 0) return NotFound();
 
-            return Ok(notifications.Select(notification => new NotificationViewModel()
+            return Ok(notifications.OrderByDescending(n => n.CreatedDateTime).Select(notification => new NotificationViewModel()
             {
                 NotificationId = notification.NotificationId,
                 NotificationType = notification.NotificationType.Name,

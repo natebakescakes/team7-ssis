@@ -12,6 +12,7 @@ namespace team7_ssis.ViewModels
         public string Department { get; set; }
         public string OrderTime { get; set; }
         public string CollectionPoint { get; set; }
+        public string Remarks { get; set; }
         public int Status { get; set; }
     }
 
