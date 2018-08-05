@@ -127,7 +127,8 @@ namespace team7_ssis.Controllers
                 viewModel.UpdatedTime = r.UpdatedDateTime == null ? "" : String.Format("{0} {1}", r.UpdatedDateTime.Value.ToShortDateString(), r.UpdatedDateTime.Value.ToShortTimeString());
                 viewModel.ApprovedBy = r.ApprovedBy == null ? "" : String.Format("{0} {1}", r.ApprovedBy.FirstName, r.ApprovedBy.LastName);
                 viewModel.ApprovedTime = r.ApprovedDateTime == null ? "" : String.Format("{0} {1}", r.ApprovedDateTime.Value.ToShortDateString(), r.ApprovedDateTime.Value.ToShortTimeString());
-                viewModel.Remarks = r.HeadRemarks;
+                viewModel.ApproverRemarks = r.HeadRemarks;
+                viewModel.RequesterRemarks = r.EmployeeRemarks;
             }
             catch
             {
@@ -216,6 +217,7 @@ namespace team7_ssis.Controllers
             viewModel.SelectCollectionPointList = collectionPointService.FindAllCollectionPoints();
             viewModel.RequisitionId = rid;
             viewModel.StatusId = requisitionRepository.FindById(rid).Status.StatusId;
+            viewModel.RequesterRemarks = requisitionRepository.FindById(rid).EmployeeRemarks;
 
             try
             {

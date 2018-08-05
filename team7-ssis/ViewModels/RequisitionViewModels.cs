@@ -20,7 +20,8 @@ namespace team7_ssis.ViewModels
         public string ApprovedBy { get; set; }
         public string ApprovedTime { get; set; }
         public string Status { get; set; }
-        public string Remarks { get; set; }
+        public string ApproverRemarks { get; set; }
+        public string RequesterRemarks { get; set; }
     }
     public class RequisitionDetailVTableiewModel
     {
@@ -35,12 +36,15 @@ namespace team7_ssis.ViewModels
     {
         public string Requisition { get; set; }
         public string Status { get; set; }
+        public string CreatedDateTime { get; set; }
+        public string ApprovedDateTime { get; set; }
     }
     public class CreateRequisitionViewModel
     {
         public List<CollectionPoint> SelectCollectionPointList { get; set; }
         public string Representative { get; set; }
         public int CollectionPointId { get; set; }
+        public string RequesterRemarks { get; set; }
     }
 
     public class EditRequisitionViewModel : CreateRequisitionViewModel
@@ -54,6 +58,7 @@ namespace team7_ssis.ViewModels
         public string RequisitionId { get; set; }
         public bool IsDraft { get; set; }
         public List<UpdateRequisitionTableJSONViewModel> ItemList { get; set; }
+        public string Remarks { get; set; }
     }
     public class UpdateRequisitionTableJSONViewModel
     {

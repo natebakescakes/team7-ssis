@@ -1,8 +1,9 @@
 ﻿@model List<int>
 
 @section Scripts {
-    <script src="~/Scripts/Custom/RedirectPost.js"></script>
     <script src="~/Scripts/Custom/AcceptRejectButtons.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 }
 
 @{
@@ -77,6 +78,8 @@
         <tr>
             <th>Requisition</th>
             <th>Status</th>
+            <th>Created Date/Time</th>
+            <th>Approved Date/Time</th>
             <th></th>
         </tr>
     </thead>
@@ -86,6 +89,8 @@
 <script>
     var myTable;
     $(document).ready(function () {
+        $.fn.dataTable.moment('M/D/YYYY h:mm A');
+
         myTable = $('#myTable').DataTable({
             ajax: {
                 url: "/api/requisitions",
@@ -97,10 +102,12 @@
                 dataType: "json",
                 dataSrc: ""
             },
-            order: [[0, 'desc']],
+            order: [[2, 'desc'], [0, 'desc']],
             columns: [
                 { "data": "Requisition", "autoWidth": true },
                 { "data": "Status", "autoWidth": true },
+                { "data": "CreatedDateTime", "autoWidth": true },
+                { "data": "ApprovedDateTime", "autoWidth": true },
                 {
                     "render": function (data, type, row, meta) {
 

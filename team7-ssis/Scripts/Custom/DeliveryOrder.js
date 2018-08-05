@@ -9,6 +9,7 @@ $(document).ready(function () {
             url: "/api/receivegoods/all",
             dataSrc: ""
         },
+       
         columns:
             [
                 { data: "DeliveryOrderNo" },
@@ -170,6 +171,7 @@ $(document).ready(function () {
             url: "api/outstandingpo/all",
             dataSrc: ""
         },
+        pageLength: 5,
         columns:
             [
                 { data: "PurchaseOrderNo" },
@@ -336,6 +338,11 @@ $(document).ready(function () {
                 alert("Delivery Order information has been successfully saved");
                 window.location.href = "/DeliveryOrder";
             }
+
+                //error: function () {
+                //    $('#info').html('<p>An error has occurred</p>');
+                //    oTable.ajax.reload();
+                //}
         });
     });
 
@@ -358,7 +365,7 @@ $(document).ready(function () {
     });
 
 
-    // clicks i button from view delivery orders
+    // clicks i button from view delivery orders to get delivery order details
     $('#myPOTable tbody').on('click', '#infobtn', function (e) {
       
         var dno = pTable.row($(this).parents('tr')).data().DeliveryOrderNo;
@@ -460,7 +467,7 @@ $(document).ready(function () {
 
         element1.value = pno;
 
-        element1.name = "poNum";
+        element1.name = "pon";
 
         element1.type = "hidden";
 
@@ -484,7 +491,7 @@ $(document).ready(function () {
 
         element1.value = pon;
 
-        element1.name = "poNum";
+        element1.name = "pon";
 
         element1.type = "hidden";
 

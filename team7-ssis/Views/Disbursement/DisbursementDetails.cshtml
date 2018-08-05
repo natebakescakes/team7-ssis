@@ -20,7 +20,7 @@
         <h2 class="mb-3">Disbursement Form #@Model.DisbursementId</h2>
     </div>
     <div class="col-md-4">
-        <a href="#"><i id="printdbm" class="fa fa-print pull-right" style="font-size:48px; color:green;" aria-hidden="true"></i></a>
+        <button id="printdbm" class="btn btn-default pull-right"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
     </div>
 </div>
 
@@ -37,9 +37,13 @@
         <div class="label">Order Time</div>
         @Model.OrderTime
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
         <div class="label">Collection Point</div>
         @Model.CollectionPoint
+    </div>
+    <div class="col-md-8">
+        <div class="label">Remarks</div>
+        @Model.Remarks
     </div>
 </div>
 
@@ -108,7 +112,10 @@
     <div class="col-md-12">
         @if (Model.Status == 8)
         {
-            <button id="confirm" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Confirm Delivery</button>
+            if (User.IsInRole("Store Clerk") || User.IsInRole("Admin"))
+            {
+                <button id="confirm" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Confirm Delivery</button>
+            }
         }
     </div>
 </div>
