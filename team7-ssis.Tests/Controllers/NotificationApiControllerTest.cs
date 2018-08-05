@@ -103,6 +103,37 @@ namespace team7_ssis.Tests.Controllers
             Assert.IsNotNull(actionResult);
         }
 
+        [TestMethod]
+        public void SendEmailTest()
+        {
+            //Arrange
+            new NotificationRepository(context).Save(new Notification()
+            {
+                NotificationId = 777777,
+                NotificationType = new NotificationTypeRepository(context).FindById(1),
+                Contents = "TEST",
+                Status = new StatusService(context).FindStatusByStatusId(1),
+                CreatedFor = new UserService(context).FindUserByEmail("root@admin.com"),
+                CreatedDateTime = DateTime.Now,
+            });
+
+            var controller = new NotificationApiController
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration(),
+                CurrentUserName = "root@admin.com"
+            };
+
+
+            //Act
+           
+            IHttpActionResult actionResult = controller.SendEmail("777777");
+
+            //Assert
+            Assert.IsNotNull(actionResult);
+            
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {

@@ -6,10 +6,12 @@
 
 <div style="width:90%; margin:0 auto" class="tablecontainer">
     <form id="myform" method="post">
-        
+
         <p>
-            @Html.ActionLink("Print", "PrintAllPrices")
+            <a href="#"><i id="printdbm" class="fa fa-print pull-left" style="font-size:28px; color:dodgerblue;" aria-hidden="true"></i></a>
         </p>
+
+        <br/><br/>
 
         <table id="priceTable" class="table table-bordered table-striped table-hover">
             <thead>
@@ -81,4 +83,19 @@
         </table>
     </form>
 </div>
+
+<script>
+    $(document).on("click", "#printdbm", function () {
+
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        form.method = "GET";
+        form.action = "/Inventory/PrintAllPrices";
+        element1.type = "hidden";
+        form.appendChild(element1);
+        document.body.appendChild(form);
+        form.submit();
+
+    });
+</script>
 

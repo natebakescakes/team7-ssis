@@ -151,6 +151,7 @@
         var test = mine.SupplierName;
         //alert(test.length);
         var pTable = $('#suppTable').DataTable({
+            "deferRender": true,
             "searching": false,
             "paging": true,
             "info": false,

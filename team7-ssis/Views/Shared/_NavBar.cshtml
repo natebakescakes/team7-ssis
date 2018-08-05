@@ -36,7 +36,7 @@
                             @if (User.IsInRole("Store Clerk") || User.IsInRole("Admin"))
                             {
                                 @Html.ActionLink("Make Stock Adjustment", "New", "StockAdjustment", null, new { @class = "dropdown-item" })
-                                @Html.ActionLink("View Inventory Shortfall", "Index", "Home", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("View Inventory Shortfall", "Shortfall", "Inventory", null, new { @class = "dropdown-item" })
                                 @Html.ActionLink("Receive Goods", "Index", "DeliveryOrder", null, new { @class = "dropdown-item" })
                             }
                             @if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))

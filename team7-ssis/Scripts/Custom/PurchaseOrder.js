@@ -59,7 +59,8 @@ $(document).ready(function(){
                 ],
                 autowidth: true,
                 select: "single",
-
+                ordering: false,
+               
                 createdRow: function (row, data, dataIndex) {
                     if (data.Status == "Delivered") {
                         $('td', row).eq(3).addClass('delivered');
@@ -70,6 +71,9 @@ $(document).ready(function(){
                     if (data.Status == "Awaiting Delivery") {
                         $('td', row).eq(3).addClass('awaiting-delivery');
                     }
+                    if (data.Status == "Cancelled") {
+                        $('td', row).eq(3).addClass('cancel');
+                    }
                 },
 
                 initComplete: function (){ // After DataTable initialized
@@ -78,7 +82,7 @@ $(document).ready(function(){
                         var column = this;
                         var select = $('<select multiple id="sel1" title="All Statuses" data-width="auto" data-style="btn-sm" class=" selectpicker  " ></select>')
                             .prependTo($('.dataTables_filter')) 
-                        var download = $('<a id="downloadselected" class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download Selected</a>').prependTo($('#poTable_length'))
+                        var download = $('<a id="downloadselected" class=" btn  btn-primary pull-left mr-3 btn-sm btn" href="#"><i class="fa fa-download" ></i>  Download PDF of Selected</a>').prependTo($('#poTable_length'))
                         var select = $('#sel1').on('change', function () {
                            
                             var val = $(this).val() + '';
@@ -149,7 +153,7 @@ $(document).ready(function(){
         form.action = url;
 
         element1.value = poNum;
-        element1.name = "poNum";
+        element1.name = "pon";
         element1.type = "hidden";
         form.appendChild(element1);
 
@@ -427,18 +431,22 @@ $(document).ready(function(){
         var pNum = $("#purchaseOrderNo").val();
         var url = $("#viewRelDelUrl").val();
 
+        alert(pNum);
+        alert(url);
+
         var form = document.createElement("form");
         var element1 = document.createElement("input");
         form.method = "POST";
-        form.action = "/PurchaseOrder/GeneratePost/";
+        form.id = "myform";
+        form.action = url;
 
-        element1.value = poNum;
-        element1.name = "poNum";
+        element1.value = pNum;
+        element1.name = "pon";
         element1.type = "hidden";
         form.appendChild(element1);
-
         document.body.appendChild(form);
 
+        //setTimeout(function () { form.submit(); }, 40000);
         form.submit();
 
 
