@@ -33,7 +33,7 @@ namespace team7_ssis.Controllers
         {
             if (purchaseOrderService.FindAllPurchaseOrders().Count != 0)
             {
-                return purchaseOrderService.FindAllPurchaseOrders().Select(po => new PurchaseOrderViewModel()
+                return purchaseOrderService.FindAllPurchaseOrders().OrderByDescending(x => x.CreatedDateTime).Select(po => new PurchaseOrderViewModel()
                 {
                     PurchaseOrderNo = (po.PurchaseOrderNo!=null)?po.PurchaseOrderNo:"",
                     SupplierName = (po.Supplier!=null)?po.Supplier.Name:"",
