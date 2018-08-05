@@ -130,8 +130,10 @@ namespace team7_ssis.Services
             sm.DeliveryOrderNo = deliveryOrderDetail.DeliveryOrderNo;
             sm.DeliveryOrderDetailItemCode = deliveryOrderDetail.ItemCode;
             sm.Item = deliveryOrderDetail.Item;
-            sm.OriginalQuantity = inventoryRepository.FindById(deliveryOrderDetail.ItemCode).Quantity;
-            sm.AfterQuantity = sm.OriginalQuantity + deliveryOrderDetail.ActualQuantity;
+            //sm.OriginalQuantity = inventoryRepository.FindById(deliveryOrderDetail.ItemCode).Quantity;
+            //sm.AfterQuantity = sm.OriginalQuantity + deliveryOrderDetail.ActualQuantity;
+            sm.AfterQuantity = inventoryRepository.FindById(deliveryOrderDetail.ItemCode).Quantity;
+            sm.OriginalQuantity = sm.AfterQuantity - deliveryOrderDetail.ActualQuantity;
             sm.CreatedDateTime = DateTime.Now;
             sm.StockMovementId = IdService.GetNewStockMovementId(context);
             return stockMovementRepository.Save(sm);
