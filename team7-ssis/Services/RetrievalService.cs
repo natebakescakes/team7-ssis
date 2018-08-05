@@ -127,7 +127,6 @@ namespace team7_ssis.Services
                         stockmovementService.CreateStockMovement(detail);
                     }
                 }
-
                 disbursement.Status = statusRepository.FindById(8);
             }
             #endregion
@@ -212,6 +211,20 @@ namespace team7_ssis.Services
                 {
                     if (detail.Status.StatusId != 21)
                         detail.Status = statusRepository.FindById(8);
+                }
+            }
+            #endregion
+
+            #region Update disbursement Remarks
+            foreach (var disbursement in retrieval.Disbursements)
+            {
+                if (new RequisitionRepository(context).FindAll()
+                .Where(r => r.RequisitionId.StartsWith("SRQ")
+                    && r.EmployeeRemarks.Contains(disbursement.Retrieval.RetrievalId)
+                    && r.Department.DepartmentCode == disbursement.Department.DepartmentCode)
+                .Count() == 1)
+                {
+                    disbursement.Remarks = $"Please note that this disbursement is a partial fulfillment. We will try to fulfill the rest of your order in the next order cycle. We thank you for your patience and understanding.";
                 }
             }
             #endregion
