@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using team7_ssis.Controllers;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.ViewModels;
@@ -239,9 +240,10 @@ namespace team7_ssis.Services
             }
             foreach (var disbursement in retrieval.Disbursements)
             {
-                foreach (var requisition in disbursement.Retrieval.Requisitions)
+                foreach (var requisition in disbursement.Retrieval.Requisitions.GroupBy(r => r.CreatedBy))
                 {
-                    new NotificationService(context).CreateNotification(disbursement, requisition.CreatedBy);
+                    var notification = new NotificationService(context).CreateNotification(disbursement, requisition.Key);
+                    new NotificationApiController() { context = context }.SendEmail(notification.NotificationId.ToString());
                 }
             }
             #endregion

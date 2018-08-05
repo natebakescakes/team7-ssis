@@ -126,7 +126,9 @@ namespace team7_ssis.Controllers
                 // Send notifications to all Store Clerks
                 foreach (var user in new UserService(context).FindUsersByDepartment(departmentService.FindDepartmentByDepartmentCode("STOR")).Where(r => r.Roles.Select(ur => ur.RoleId).Contains("3")))
                 {
-                    new NotificationService(context).CreateChangeCollectionPointNotification(dpt, user);
+                    var notification = new NotificationService(context).CreateChangeCollectionPointNotification(dpt, user);
+                    new NotificationApiController() { context = context }.SendNotification(notification.NotificationId.ToString());
+                    new NotificationApiController() { context = context }.SendEmail(notification.NotificationId.ToString());
                 }
                 status = 1;
             }
