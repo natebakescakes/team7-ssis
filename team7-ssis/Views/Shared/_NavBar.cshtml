@@ -10,69 +10,102 @@
         <ul class="navbar-nav mr-auto">
             @if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("DepartmentHead") || User.Identity.Name == Session["rep"].ToString() || User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") )
+                //Part1:Requistion
+                if (!(User.IsInRole("Employee") && User.Identity.Name != Session["rep"].ToString()))
                 {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            @if ((User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString()) || User.IsInRole("DepartmentHead") && User.IsInRole("Employee"))
-                            {
-                                @Html.ActionLink("Create Requisition", "CreateRequisition", "Requisition", null, new { @class = "dropdown-item" })
-                            }
-                            @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
 
-                        </div>
-                    </li>
+                    if ((User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString()) || User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Requisitions</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                @Html.ActionLink("Create Requisition", "CreateRequisition", "Requisition", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("Manage Requisitions", "ManageRequisitions", "Requisition", null, new { @class = "dropdown-item" })
+                            </div>
+                        </li>
+                    }
+                    if (User.IsInRole("DepartmentHead") || User.IsInRole("Store Clerk"))
+                    {
+                        <li class="nav-item"> @Html.ActionLink("Requisition", "ManageRequisitions", "Requisition", null, new { @class = "nav-link" })</li>
+                    }
+
                 }
-                if ((User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString()) || User.IsInRole("DepartmentHead") || User.IsInRole("Admin"))
+                //Part2:Retrieval
+
+                if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
                 {
-                    <li class="nav-item">@Html.ActionLink("Department Options", "DepartmentOptions", "Department", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Retrieval", "Manage", "Retrieval", null, new { @class = "nav-link" })</li>
                 }
+                //Part3:Disbursement
+                if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">@Html.ActionLink("Disbursement", "Manage", "Disbursement", null, new { @class = "nav-link" })</li>
+                }
+
+                //Part4:Inventory
                 if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="3" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Inventory</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            @Html.ActionLink("View Inventory Shortfall", "Shortfall", "Inventory", null, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
                             @if (User.IsInRole("Store Clerk") || User.IsInRole("Admin"))
                             {
                                 @Html.ActionLink("Make Stock Adjustment", "New", "StockAdjustment", null, new { @class = "dropdown-item" })
-                                @Html.ActionLink("View Inventory Shortfall", "Index", "Home", null, new { @class = "dropdown-item" })
-                                @Html.ActionLink("Receive Goods", "Index", "DeliveryOrder", null, new { @class = "dropdown-item" })
+
                             }
-                            @if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager"))
-                            {
-                                @Html.ActionLink("View Inventory Shortfall", "Index", "Home", null, new { @class = "dropdown-item" })
-                                @Html.ActionLink("Receive Goods", "Index", "DeliveryOrder", null, new { @class = "dropdown-item" })
-                            }
-                            <hr />
+                            @Html.ActionLink("Manage Stock Adjustments", "Index", "StockAdjustment", null, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
                             @Html.ActionLink("Manage Inventory", "Index", "Inventory", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Manage Item Categories", "Index", "ItemCategory", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage Stock Adjustments", "Index", "StockAdjustment", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
-                    <li class="nav-item">@Html.ActionLink("Suppliers", "Index", "Supplier", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Department", null, new { @class = "nav-link" })</li>
+                }
+                //Part5:Purchase Orders
+                if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+                {
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Forms</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Purchase Orders</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown02">
-                            @Html.ActionLink("View Stationery Retrieval Forms", "Manage", "Retrieval", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("View Disbursement Forms", "Manage", "Disbursement", null, new { @class = "dropdown-item" })
-                            <hr />
+                            @Html.ActionLink("Generate Purchase Orders", "Generate", "PurchaseOrder", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Manage Purchase Orders", "Index", "PurchaseOrder", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Generate Purchase Order Form", "Generate", "PurchaseOrder", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Manage DeliveryOrders", "ReceiveGoods", "DeliveryOrder", null, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
+                            @Html.ActionLink("Receive Goods", "Index", "DeliveryOrder", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Manage Delivery Orders", "ReceiveGoods", "DeliveryOrder", null, new { @class = "dropdown-item" })
                         </div>
                     </li>
-                    if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+                }
+                //Part6:Suppliers
+
+                if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">@Html.ActionLink("Suppliers", "Index", "Supplier", null, new { @class = "nav-link" })</li>
+                }
+
+                //Part7:Departments
+                if ((User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString()) || User.IsInRole("DepartmentHead") || User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+                {
+
+                    if (User.IsInRole("DepartmentHead") || User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
                     {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Reports</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown03">
-                                @Html.ActionLink("Department Usage Statistics", "DepartmentUsage", "Report", null, new { @class = "dropdown-item" })
-                                @Html.ActionLink("Store Operation Statistics", "StoreOperations", "Report", null, new { @class = "dropdown-item" })
-                            </div>
-                        </li>
+                        <li class="nav-item">@Html.ActionLink("Departments", "Index", "Department", null, new { @class = "nav-link" })</li>}
+                    if (User.IsInRole("Employee") && User.Identity.Name == Session["rep"].ToString())
+                    {
+                        <li class="nav-item">@Html.ActionLink("Department Options", "DepartmentOptions", "Department", null, new { @class = "nav-link" })</li>
                     }
+
+                }
+                //Part8:Reports
+                if (User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Reports</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown03">
+                            @Html.ActionLink("Department Usage Statistics", "DepartmentUsage", "Report", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Store Operation Statistics", "StoreOperations", "Report", null, new { @class = "dropdown-item" })
+                        </div>
+                    </li>
                 }
             }
         </ul>

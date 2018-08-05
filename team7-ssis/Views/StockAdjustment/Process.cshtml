@@ -65,8 +65,8 @@
 <div class="row mt-3">
     <div class="col-md-12">
         <button class="btn btn-default" id="backBtn">Back</button>
-        <button class="btn btn-warning" id="rejectBtn">Reject</button>
-        <button class="btn btn-primary" id="approveBtn">Approve</button>
+        <button class="btn btn-danger" id="rejectBtn">Reject</button>
+        <button class="btn btn-success" id="approveBtn">Approve</button>
     </div>
 </div>
 
@@ -92,11 +92,6 @@
                 },
                 {
                     "data": "Reason",
-                     "render": function (data, type, row, meta) {
-                        var html = '<input class="actual_1" type="textbox" ' +
-                            'value="' + data + '"/>';
-                        return html;
-                    }
                     
                 },
                 {
