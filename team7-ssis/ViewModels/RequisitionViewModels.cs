@@ -36,6 +36,8 @@ namespace team7_ssis.ViewModels
     {
         public string Requisition { get; set; }
         public string Status { get; set; }
+        public string CreatedDateTime { get; set; }
+        public string ApprovedDateTime { get; set; }
     }
     public class CreateRequisitionViewModel
     {

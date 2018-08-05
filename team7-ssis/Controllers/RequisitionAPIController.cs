@@ -79,7 +79,9 @@ namespace team7_ssis.Controllers
                 viewModel.Add(new ManageRequisitionsViewModel
                 {
                     Requisition = r.RequisitionId,
-                    Status = r.Status.Name
+                    Status = r.Status.Name,
+                    CreatedDateTime = r.CreatedDateTime != null ? r.CreatedDateTime.ToShortDateString() + " " + r.CreatedDateTime.ToShortTimeString() : "",
+                    ApprovedDateTime = r.ApprovedDateTime != null ? r.ApprovedDateTime.Value.ToShortDateString() + " " + r.ApprovedDateTime.Value.ToShortTimeString() : "",
                 });
             }
 
@@ -121,7 +123,9 @@ namespace team7_ssis.Controllers
                 viewModel.Add(new ManageRequisitionsViewModel
                 {
                     Requisition = r.RequisitionId,
-                    Status = r.Status.Name
+                    Status = r.Status.Name,
+                    CreatedDateTime = r.CreatedDateTime != null ? r.CreatedDateTime.ToShortDateString() + " " + r.CreatedDateTime.ToShortTimeString() : "",
+                    ApprovedDateTime = r.ApprovedDateTime != null ? r.ApprovedDateTime.Value.ToShortDateString() + " " + r.ApprovedDateTime.Value.ToShortTimeString() : "",
                 });
             }
             return Ok(viewModel);
