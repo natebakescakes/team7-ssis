@@ -103,19 +103,32 @@ namespace team7_ssis.Controllers
             return Ok(result);
         }
 
+        [Route("send/email/{id}")]
+        [HttpGet]
         public IHttpActionResult SendEmail(string id)
         {
+            //get Notification object from db
+            NotificationService notificationService = new NotificationService(context);
+            UserService userService = new UserService(context);
+            Notification n = notificationService.FindNotificationById(int.Parse(id));
+
             string result = "";
+            string header = "<h2>TEAM 7 STATIONARY STORE</h2>";
+            string link = "Please use this url to to check the status : http://localhost:50831/";
+            string disclaimer = "<i>This is a computer-generated email. Please do not reply to this email. For enquiries, please contact your system administrator.</i>";
+
             MailMessage m = new MailMessage();
             SmtpClient sc = new SmtpClient();
             try
             {
                 m.From = new MailAddress("team7stationery@gmail.com");
-                m.To.Add("e0282927@u.nus.edu");           
+                // m.To.Add(n.CreatedFor.Email);
+                m.To.Add("e0282927@u.nus.edu");
+               // m.To.Add("e0284048@u.nus.edu"); //for UAT we will hardcode the email to streamline the notifications
 
-                m.Subject = "This is a Test Mail";
+                m.Subject =String.Format("Team7 Stationery Store [{0}]",n.NotificationType.Name);
                 m.IsBodyHtml = true;
-                m.Body = "test gmail, please message in the telegram group if you get this email.";
+                m.Body = String.Format("{0}<br />{1}<br /><br />{2}<br /><br />{3}", header,n.Contents,link, disclaimer);
                 sc.Host = "smtp.gmail.com";
                 sc.Port = 587;
                 sc.Credentials = new System.Net.NetworkCredential("team7stationery@gmail.com", "passwordq1w2");
