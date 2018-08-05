@@ -20,6 +20,7 @@ namespace team7_ssis.ViewModels
 
         public decimal UnitPriceDecimal { get; set; }
         public int AmountToReorder { get; set; }
+        public int UnfulfilledQuantity { get; set; }
         public decimal TotalPrice { get; set; }
 
         public string ImagePath { get; set; }

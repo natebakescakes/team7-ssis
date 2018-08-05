@@ -33,6 +33,11 @@ $(document).ready(function () {
                 $('td', row).eq(4).addClass('awaiting-delivery');
 
             }
+            if (data.Status == "Delivered") {
+
+                $('td', row).eq(4).addClass('delivered');
+
+            }
         },
 
         initComplete: function () { // After DataTable initialized
