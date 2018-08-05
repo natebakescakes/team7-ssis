@@ -37,12 +37,12 @@ namespace team7_ssis.Tests.Controllers
 
             StockAdjustmentDetail s1 = new StockAdjustmentDetail();
             s1.StockAdjustmentId = "he01";
-            s1.ItemCode = "C001";
+            s1.ItemCode = "C002";
             s1.OriginalQuantity = 10;
             s1.AfterQuantity = 20;
             StockAdjustmentDetail s2 = new StockAdjustmentDetail();
             s2.StockAdjustmentId = "he01";
-            s2.ItemCode = "C002";
+            s2.ItemCode = "C003";
             s2.OriginalQuantity = 20;
             s2.AfterQuantity = 30;
             List<StockAdjustmentDetail> list = new List<StockAdjustmentDetail>();
@@ -82,12 +82,10 @@ namespace team7_ssis.Tests.Controllers
             };
             // Act
             ViewResult result = controller.New() as ViewResult;
-            StockAdjustmentViewModel viewmodel = (StockAdjustmentViewModel) result.Model;
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(viewmodel.supervisors.Contains(userRepository.FindByEmail("StoreSupervisor@email.com")));
-            Assert.IsTrue(viewmodel.managers.Contains(userRepository.FindByEmail("StoreManager@email.com")));
+
 
         }
 
@@ -147,8 +145,6 @@ namespace team7_ssis.Tests.Controllers
             //Assert
 
             Assert.IsNotNull(result);
-            Assert.IsTrue(viewmodel.supervisors.Contains(userRepository.FindByEmail("StoreSupervisor@email.com")));
-            Assert.IsTrue(viewmodel.managers.Contains(userRepository.FindByEmail("StoreManager@email.com")));
 
         }
 
