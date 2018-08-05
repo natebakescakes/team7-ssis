@@ -59,6 +59,16 @@ namespace team7_ssis.Controllers
                 savm.ApprovedBySupervisor = s.ApprovedBySupervisor == null ? "" : s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
                 savm.CreatedDateTime = s.CreatedDateTime.ToString("yyyy-MM-dd HH: mm:ss");
                 savm.StatusName = s.Status.Name;
+                if (s.ApprovedByManager != null && s.ApprovedBySupervisor == null)
+                {
+                    savm.ApprovedBySupervisor = s.ApprovedByManager.FirstName + " " + s.ApprovedByManager.LastName;
+                }
+                else if (s.ApprovedByManager == null && s.ApprovedBySupervisor != null)
+                {
+                    savm.ApprovedBySupervisor = s.ApprovedBySupervisor.FirstName + " " + s.ApprovedBySupervisor.LastName;
+                }
+                else if (s.ApprovedByManager == null && s.ApprovedBySupervisor == null)
+                { savm.ApprovedBySupervisor = ""; }
                 sadj.Add(savm);
             }
             return sadj;
@@ -201,13 +211,15 @@ namespace team7_ssis.Controllers
                 if (flag == true)
                 {
                     Notification n = notificationService.CreateNotification(SA, manager);
-                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                    new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                    new NotificationApiController().SendEmail(n.NotificationId.ToString());
 
                 }
                 if (flag == false)
                 {
                     Notification n = notificationService.CreateNotification(SA, supervisor);
-                    var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                   new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                   new NotificationApiController().SendEmail(n.NotificationId.ToString());
                 }
 
                 //save SA object into database 
@@ -258,6 +270,43 @@ namespace team7_ssis.Controllers
 
         }
 
+        //Create Draft
+        [Route("api/stockadjustment/saveasdraft")]
+        [HttpPost]
+        public void CreateDraftStockAdjustment(List<ViewModelFromNew> list)
+        {
+            userService = new UserService(Context);
+            stockAdjustmentService = new StockAdjustmentService(Context);
+            itemService = new ItemService(Context);
+            notificationService = new NotificationService(Context);
+
+            List<StockAdjustmentDetail> detaillist = new List<StockAdjustmentDetail>();
+            StockAdjustment s = new StockAdjustment();
+            s.StockAdjustmentId = IdService.GetNewStockAdjustmentId(Context);
+            s.CreatedBy = userService.FindUserByEmail(CurrentUserName);
+            s.CreatedDateTime = DateTime.Now;
+
+            foreach (ViewModelFromNew v in list)
+            {
+                StockAdjustmentDetail sd = new StockAdjustmentDetail();
+                string itemcode = v.Itemcode;
+                Item item = itemService.FindItemByItemCode(itemcode);
+                sd.ItemCode = itemcode;
+                sd.Reason = (v.Reason == null) ? "" : v.Reason;
+                sd.StockAdjustmentId = s.StockAdjustmentId;
+                sd.OriginalQuantity = item.Inventory.Quantity;
+                sd.AfterQuantity = v.Adjustment + sd.OriginalQuantity;
+                detaillist.Add(sd);
+                //  stockAdjustmentDetailRepository.Save(sd);
+            }
+            s.StockAdjustmentDetails = detaillist;
+            stockAdjustmentService.CreateDraftStockAdjustment(s);
+
+        }
+
+
+
+
 
         //create pending 
         [Route("api/stockadjustment/confirm")]
@@ -301,17 +350,24 @@ namespace team7_ssis.Controllers
                 }
 
             }
-            string supervisor = list.First().Supervisor;
-            string manager = list.First().Manager;
+
+            Department d = userService.FindUserByEmail(CurrentUserName).Department;
+            ApplicationUser Supervisor = userService.FindSupervisorsByDepartment(d).First();
+            ApplicationUser Manager =d.Head;
+        
             if (flag == 1)
             {
-               Notification n = notificationService.CreateNotification(s, userService.FindUserByEmail(manager));
-                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+               Notification n = notificationService.CreateNotification(s, Manager);
+                //send email and android notifications
+                new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
             if (flag == 0)
             {
-               Notification n = notificationService.CreateNotification(s, userService.FindUserByEmail(supervisor));
-                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+               Notification n = notificationService.CreateNotification(s, Supervisor);
+                //send email and android notifications
+                new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
 
             return s.StockAdjustmentId;
@@ -350,9 +406,12 @@ namespace team7_ssis.Controllers
             stockAdjustmentService.RejectStockAdjustment(stockadjustment_id);
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
 
+            //create email and android notifications for rejected Stock Adjustment
+            Notification rejection = notificationService.CreateRejectStockAdjustmentNotification(sa, sa.CreatedBy);
+            new NotificationApiController().SendNotification(rejection.NotificationId.ToString());
+            new NotificationApiController().SendEmail(rejection.NotificationId.ToString());
 
-            notificationService.CreateNotification(sa, sa.CreatedBy);
-            
+
         }
 
         //approve with reason
@@ -390,7 +449,12 @@ namespace team7_ssis.Controllers
 
             stockAdjustmentService.updateStockAdjustment(sd);
             stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
-            notificationService.CreateNotification(sd, sd.CreatedBy);
+
+            //create email and android notifications for rejected Stock Adjustment 
+           Notification approved =  notificationService.CreateApproveStockAdjustmentNotification(sd, sd.CreatedBy);
+           new NotificationApiController().SendNotification(approved.NotificationId.ToString());
+           new NotificationApiController().SendEmail(approved.NotificationId.ToString());
+
 
         }
 
@@ -431,7 +495,6 @@ namespace team7_ssis.Controllers
             foreach (ViewModelFromEditDetail v in list)
             {
                 StockAdjustmentDetail sd = stockAdjustmentService.findStockAdjustmentDetailById(v.StockAdjustmentID, v.Itemcode);
-                int d = v.Adjustment;
                 sd.AfterQuantity = sd.OriginalQuantity + v.Adjustment;
                 sd.Reason = v.Reason;
                 stockAdjustmentService.updateStockAdjustmentDetail(sd);
@@ -455,17 +518,22 @@ namespace team7_ssis.Controllers
                 }
 
             }
-            string supervisor = list.First().Supervisor;
-            string manager = list.First().Manager;
+            Department d = userService.FindUserByEmail(CurrentUserName).Department;
+            ApplicationUser Supervisor = userService.FindSupervisorsByDepartment(d).First();
+            ApplicationUser Manager = d.Head;
+
             if (flag == 1)
             {
-                Notification n = notificationService.CreateNotification(sa, userService.FindUserByEmail(manager));
+                Notification n = notificationService.CreateNotification(sa, Manager);
                 
-                var i = new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
             if (flag == 0)
             {
-                Notification n = notificationService.CreateNotification(sa, userService.FindUserByEmail(supervisor));
+                Notification n = notificationService.CreateNotification(sa, Supervisor);
+                new NotificationApiController().SendNotification(n.NotificationId.ToString());
+                new NotificationApiController().SendEmail(n.NotificationId.ToString());
             }
             return stockadjustmentid;
         }

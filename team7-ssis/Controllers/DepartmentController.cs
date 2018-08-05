@@ -68,10 +68,10 @@ namespace team7_ssis.Controllers
                 ),
                 CollectionPoint = collectionPoint.CollectionPointId.ToString(), //sets current value as default value on dropdownlist
                 DepartmentRep = departmentRep.Email
-             
+
             });
         }
-    
+
         public ActionResult Index()
         {
             statusService = new StatusService(context);
@@ -83,7 +83,7 @@ namespace team7_ssis.Controllers
             list.Add(statusService.FindStatusByStatusId(1));
             List<ApplicationUser> allUsersList = userService.FindAllUsers();
             List<CollectionPoint> collectionPointList = collectionPointService.FindAllCollectionPoints();
-            
+
             return View(new DepartmentViewModel
             {
                 Statuses = new SelectList(
@@ -92,7 +92,7 @@ namespace team7_ssis.Controllers
                     "Text"
                 ),
                 AllUsers = new SelectList(
-                     allUsersList.Select(x => new { value = x.Email, text = x.FirstName+ " " +x.LastName}),
+                     allUsersList.Select(x => new { value = x.Email, text = x.FirstName + " " + x.LastName }),
                      "Value",
                      "Text"
                 ),
@@ -115,24 +115,34 @@ namespace team7_ssis.Controllers
             int status = 0;
             Department dpt = departmentService.FindDepartmentByUser(userService.FindUserByEmail(CurrentUserName));
             Delegation delegation = new Delegation();
-            
+
             dpt.UpdatedDateTime = DateTime.Now;
             dpt.UpdatedBy = userService.FindUserByEmail(System.Web.HttpContext.Current.User.Identity.GetUserName());
             dpt.Representative = userService.FindUserByEmail(model.DepartmentRep);
             dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPoint));
 
-            if (departmentService.Save(dpt) != null) status = 1;
+            if (departmentService.Save(dpt) != null)
+            {
+                // Send notifications to all Store Clerks
+                foreach (var user in new UserService(context).FindUsersByDepartment(departmentService.FindDepartmentByDepartmentCode("STOR")).Where(r => r.Roles.Select(ur => ur.RoleId).Contains("3")))
+                {
+                    var notification = new NotificationService(context).CreateChangeCollectionPointNotification(dpt, user);
+                    new NotificationApiController() { context = context }.SendNotification(notification.NotificationId.ToString());
+                    new NotificationApiController() { context = context }.SendEmail(notification.NotificationId.ToString());
+                }
+                status = 1;
+            }
 
             delegation.Receipient = userService.FindUserByEmail(model.DelegationRecipient);
 
-            if (delegation.Receipient!= null && model.StartDate!=null && model.EndDate!=null)
+            if (delegation.Receipient != null && model.StartDate != null && model.EndDate != null)
             {
                 delegation.DelegationId = IdService.GetNewDelegationId(context);
                 delegation.StartDate = DateTime.Parse(model.StartDate, new CultureInfo("fr-FR", false));
                 delegation.EndDate = DateTime.Parse(model.EndDate, new CultureInfo("fr-FR", false));
                 delegation.CreatedDateTime = DateTime.Now;
                 //delegation.CreatedBy = user;
-                delegation.CreatedBy = userService.FindUserByEmail(CurrentUserName); 
+                delegation.CreatedBy = userService.FindUserByEmail(CurrentUserName);
                 delegation.Status = statusService.FindStatusByStatusId(1);
                 delegationService.DelegateManager(delegation);
                 status = 2;
@@ -141,13 +151,13 @@ namespace team7_ssis.Controllers
                 //userService.AddDepartmentHeadRole(delegation.Receipient.Email);
             }
 
-            if(delegation.Receipient != null && model.StartDate==null && model.EndDate==null)
+            if (delegation.Receipient != null && model.StartDate == null && model.EndDate == null)
             {
                 status = 3;
             }
-           
+
             return new JsonResult { Data = new { status = status } };
-           
+
         }
         [HttpPost]
         public ActionResult SaveStatus(DepartmentViewModel model)
@@ -197,19 +207,19 @@ namespace team7_ssis.Controllers
                 dpt.UpdatedBy = userService.FindUserByEmail(CurrentUserName);
 
             }
-            
+
             dpt.Name = model.DepartmentName;
             dpt.Head = userService.FindUserByEmail(model.EmailHead);
-            
+
             dpt.CollectionPoint = collectionPointService.FindCollectionPointById(Convert.ToInt32(model.CollectionPointId));
             dpt.ContactName = model.ContactName;
             dpt.PhoneNumber = model.PhoneNumber;
             dpt.FaxNumber = model.FaxNumber;
             dpt.Status = statusService.FindStatusByStatusId(model.Status);
-            
+
             //save info to database
             if (departmentService.Save(dpt) != null) status = true;
-            
+
             return new JsonResult { Data = new { status = status } };
         }
     }

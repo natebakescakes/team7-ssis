@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using team7_ssis.Controllers;
 using team7_ssis.Models;
 using team7_ssis.Repositories;
 using team7_ssis.ViewModels;
@@ -127,7 +128,6 @@ namespace team7_ssis.Services
                         stockmovementService.CreateStockMovement(detail);
                     }
                 }
-
                 disbursement.Status = statusRepository.FindById(8);
             }
             #endregion
@@ -216,14 +216,34 @@ namespace team7_ssis.Services
             }
             #endregion
 
+            #region Update disbursement Remarks
+            foreach (var disbursement in retrieval.Disbursements)
+            {
+                if (new RequisitionRepository(context).FindAll()
+                .Where(r => r.RequisitionId.StartsWith("SRQ")
+                    && r.EmployeeRemarks.Contains(disbursement.Retrieval.RetrievalId)
+                    && r.Department.DepartmentCode == disbursement.Department.DepartmentCode)
+                .Count() == 1)
+                {
+                    disbursement.Remarks = $"Please note that this disbursement is a partial fulfillment. We will try to fulfill the rest of your order in the next order cycle. We thank you for your patience and understanding.";
+                }
+            }
+            #endregion
+
             retrievalRepository.Save(retrieval);
 
             #region Create Notification
+            foreach (var requisition in retrieval.Requisitions.GroupBy(r => r.Department))
+            {
+                if (retrieval.Disbursements.Where(d => d.Department.DepartmentCode == requisition.Key.DepartmentCode).Count() == 0)
+                    new NotificationService(context).CreateUnableToFulFillNotification(retrieval, requisition.Key.Representative);
+            }
             foreach (var disbursement in retrieval.Disbursements)
             {
-                foreach (var requisition in disbursement.Retrieval.Requisitions)
+                foreach (var requisition in disbursement.Retrieval.Requisitions.GroupBy(r => r.CreatedBy))
                 {
-                    new NotificationService(context).CreateNotification(disbursement, requisition.CreatedBy);
+                    var notification = new NotificationService(context).CreateNotification(disbursement, requisition.Key);
+                    new NotificationApiController() { context = context }.SendEmail(notification.NotificationId.ToString());
                 }
             }
             #endregion

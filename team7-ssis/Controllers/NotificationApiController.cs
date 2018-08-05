@@ -46,7 +46,7 @@ namespace team7_ssis.Controllers
 
             if (notifications.Count == 0) return NotFound();
 
-            return Ok(notifications.Select(notification => new NotificationViewModel()
+            return Ok(notifications.OrderByDescending(n => n.CreatedDateTime).Select(notification => new NotificationViewModel()
             {
                 NotificationId = notification.NotificationId,
                 NotificationType = notification.NotificationType.Name,
@@ -103,21 +103,45 @@ namespace team7_ssis.Controllers
             return Ok(result);
         }
 
+        [Route("send/email/{id}")]
+        [HttpGet]
         public IHttpActionResult SendEmail(string id)
         {
+            //get Notification object from db
+            NotificationService notificationService = new NotificationService(context);
+            UserService userService = new UserService(context);
+            Notification n = notificationService.FindNotificationById(int.Parse(id));
 
-            SmtpClient client = new SmtpClient("smtp.nus.edu.sg", 587);
-            client.Credentials = new System.Net.NetworkCredential
-            (@"NUSSTU\E0282927", "");
+            string result = "";
+            string header = "<h2>TEAM 7 STATIONERY STORE</h2>";
+            string link = "Please use this url to to check the status : http://localhost:50831/";
+            string disclaimer = "<i>This is a computer-generated email. Please do not reply to this email. For enquiries, please contact your system administrator.</i>";
 
-            client.EnableSsl = true;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            MailMessage m = new MailMessage();
+            SmtpClient sc = new SmtpClient();
+            try
+            {
+                m.From = new MailAddress("team7stationery@gmail.com");
+                m.To.Add(n.CreatedFor.Email);
+                //m.To.Add("e0282927@u.nus.edu");
+                m.To.Add("e0284048@u.nus.edu"); //for UAT we will hardcode the email to streamline the notifications
 
-            MailMessage mm = new MailMessage("e0282927@u.nus.edu", "weinchester@gmail.com");
-            mm.Subject = "test subject";
-            mm.Body = "test body";
-            client.Send(mm);
-            return Ok();
+                m.Subject =String.Format("Team7 Stationery Store [{0}]",n.NotificationType.Name);
+                m.IsBodyHtml = true;
+                m.Body = String.Format("{0}<br />{1}<br /><br />{2}<br /><br />{3}", header,n.Contents,link, disclaimer);
+                sc.Host = "smtp.gmail.com";
+                sc.Port = 587;
+                sc.Credentials = new System.Net.NetworkCredential("team7stationery@gmail.com", "passwordq1w2");
+
+                sc.EnableSsl = true;
+                sc.Send(m);
+               
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+            }
+            return Ok(result);
 
         }
 

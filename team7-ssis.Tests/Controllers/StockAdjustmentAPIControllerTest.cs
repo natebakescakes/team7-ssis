@@ -24,6 +24,7 @@ namespace team7_ssis.Tests.Controllers
         StatusRepository statusRepository;
         ItemRepository itemRepository;
         StockMovementRepository smRepository;
+        UserService userService;
 
 
         [TestInitialize]
@@ -36,7 +37,7 @@ namespace team7_ssis.Tests.Controllers
             statusRepository = new StatusRepository(context);
             itemRepository = new ItemRepository(context);
             smRepository = new StockMovementRepository(context);
-
+            userService = new UserService(context);
         }
 
         [TestMethod]
@@ -87,6 +88,7 @@ namespace team7_ssis.Tests.Controllers
 
             StockAdjustment sa1 = new StockAdjustment();
             sa1.StockAdjustmentId = "he01";
+            sa1.Remarks = "THIS IS A TEST";
             sa1.CreatedDateTime = DateTime.Now;
             sa1.Status = statusRepository.FindById(3);
 
@@ -126,6 +128,7 @@ namespace team7_ssis.Tests.Controllers
 
             StockAdjustment sa1 = new StockAdjustment();
             sa1.StockAdjustmentId = "he02";
+            sa1.Remarks = "THIS IS A TEST";
             sa1.CreatedDateTime = DateTime.Now;
             sa1.Status = statusRepository.FindById(3);
 
@@ -169,6 +172,9 @@ namespace team7_ssis.Tests.Controllers
             //Act
             controller.SaveStockAdjustmentAsDraft(list);
             StockAdjustment sa = context.StockAdjustment.OrderByDescending(x => x.StockAdjustmentId).First();
+            sa.Remarks = "THIS IS A TEST";
+            saService.updateStockAdjustment(sa);
+
             StockAdjustmentDetail sad = context.StockAdjustmentDetail.OrderByDescending(x => x.StockAdjustmentId).First();
 
             //Assert
@@ -181,7 +187,11 @@ namespace team7_ssis.Tests.Controllers
         [TestMethod]
         public void CreatePendingStockAdjustmentAsDraft_Test()
         {
-
+            StockAdjustmentAPIController controller = new StockAdjustmentAPIController()
+            {
+                CurrentUserName = "StoreClerk1@email.com",
+                Context = this.context
+            };
             //Arrange
             List<ViewModelFromNew> list = new List<ViewModelFromNew>();
             ViewModelFromNew v1 = new ViewModelFromNew();
@@ -189,13 +199,15 @@ namespace team7_ssis.Tests.Controllers
             v1.Itemcode = "C001";
             v1.Reason = "Test1";
             v1.Unitprice = "1.0";
-            v1.Supervisor = "StoreSupervisor@email.com";
             list.Add(v1);
-            var controller = new StockAdjustmentAPIController();
+          
 
             //Act
             controller.CreatePendingStockAdjustment(list);
             StockAdjustment sa = context.StockAdjustment.OrderByDescending(x => x.StockAdjustmentId).First();
+            sa.Remarks = "THIS IS A TEST";
+            saService.updateStockAdjustment(sa);
+
             StockAdjustmentDetail sad = context.StockAdjustmentDetail.OrderByDescending(x => x.StockAdjustmentId).First();
 
             //Assert
@@ -210,6 +222,8 @@ namespace team7_ssis.Tests.Controllers
         {
             StockAdjustment sa = new StockAdjustment();
             sa.StockAdjustmentId = "test1";
+            sa.Remarks = "THIS IS A TEST";
+            sa.CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com");
             sa.CreatedDateTime = DateTime.Now;
             sa.Status = statusRepository.FindById(4);
 
@@ -252,6 +266,8 @@ namespace team7_ssis.Tests.Controllers
 
             StockAdjustment sa = new StockAdjustment();
             sa.StockAdjustmentId = "test1";
+            sa.Remarks = "THIS IS A TEST";
+            sa.CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com");
             sa.CreatedDateTime = DateTime.Now;
             sa.Status = statusRepository.FindById(4);
 
@@ -379,6 +395,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(6),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -421,6 +438,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(4),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -489,6 +507,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(6),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -531,6 +550,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(4),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -567,6 +587,8 @@ namespace team7_ssis.Tests.Controllers
         {
             StockAdjustment sa = new StockAdjustment();
             sa.StockAdjustmentId = "test1";
+            sa.Remarks = "THIS IS A TEST";
+            sa.CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com");
             sa.CreatedDateTime = DateTime.Now;
             sa.Status = statusRepository.FindById(3);
 
@@ -611,6 +633,8 @@ namespace team7_ssis.Tests.Controllers
         {
             StockAdjustment sa = new StockAdjustment();
             sa.StockAdjustmentId = "test1";
+            sa.Remarks = "THIS IS A TEST";
+            sa.CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com");
             sa.CreatedDateTime = DateTime.Now;
             sa.Status = statusRepository.FindById(4);
 
@@ -631,8 +655,6 @@ namespace team7_ssis.Tests.Controllers
             v1.Reason = "test2";
             v1.Itemcode = "C001";
             v1.Adjustment = 10;
-            v1.Supervisor ="StoreSuperviosr@email.com";
-            v1.Manager = "StoreManager@email.com";
             v1.Unitprice = "1.0";
             list.Add(v1);
 
@@ -655,7 +677,9 @@ namespace team7_ssis.Tests.Controllers
         {
             StockAdjustment sa = new StockAdjustment();
             sa.StockAdjustmentId = "test1";
+            sa.CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com");
             sa.CreatedDateTime = DateTime.Now;
+            sa.Remarks = "THIS IS A TEST";
             sa.Status = statusRepository.FindById(4);
 
             StockAdjustmentDetail sad = new StockAdjustmentDetail();

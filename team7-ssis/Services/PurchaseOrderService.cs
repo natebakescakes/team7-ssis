@@ -34,7 +34,7 @@ namespace team7_ssis.Services
 
         }
 
-        public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder,params string[] itemCodes)
+        public void DeleteItemFromPurchaseOrder(PurchaseOrder purchaseOrder, params string[] itemCodes)
         {
             if (purchaseOrder != null && itemCodes.Length != 0)
             {
@@ -48,7 +48,12 @@ namespace team7_ssis.Services
                 }
 
             }
-          
+
+        }
+
+        public void DeletePurchaseOrderDetailsFromPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail)
+        {
+                        purchaseOrderDetailRepository.Delete(purchaseOrderDetail);
         }
 
         public void CancelItemFromPurchaseOrder(string purchaseOrderNum , string itemCode)
