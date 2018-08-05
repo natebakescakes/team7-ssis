@@ -286,13 +286,26 @@ $(document).ready(function () {
   
     $('#submitbtn').click(function () {
 
+
         var mydata = oTable.rows().data().toArray();
 
         var DOFN = document.getElementById("DeliveryOrderFileName").value;
        
         var IFN = document.getElementById("InvoiceFileName").value;
-  
+        
         var details = new Array();
+        var j=0;
+
+        for (var i = 0; i < mydata.length; i++) {
+            if (mydata[i].ReceivedQuantity == 0) {
+                j++;
+            }
+        }
+
+        if (j == mydata.length) {
+            alert("Received quantity cannot be zero");
+            oTable.ajax.reload();
+        }
  
         for (var i = 0; i < mydata.length; i++) {
 
@@ -338,11 +351,11 @@ $(document).ready(function () {
                 alert("Delivery Order information has been successfully saved");
                 window.location.href = "/DeliveryOrder";
             }
-
-                //error: function () {
-                //    $('#info').html('<p>An error has occurred</p>');
-                //    oTable.ajax.reload();
-                //}
+            //},
+            //error: function (xhr) {
+            //        console.log(xhr.responseText);
+            //        oTable.ajax.reload();
+            //    }
         });
     });
 
