@@ -114,20 +114,9 @@ namespace team7_ssis.Tests.Controllers
                 CurrentUserName = "root@admin.com"
             };
 
-            //Arrange
-            new NotificationRepository(context).Save(new Notification()
-            {
-                NotificationId = 777777,
-                NotificationType = new NotificationTypeRepository(context).FindById(1),
-                Contents = "TEST",
-                Status = new StatusService(context).FindStatusByStatusId(1),
-                CreatedFor = new UserService(context).FindUserByEmail("root@admin.com"),
-                CreatedDateTime = DateTime.Now,
-            });
-
 
             //Act
-
+           
             IHttpActionResult actionResult = controller.SendEmail("777777");
 
             //Assert
