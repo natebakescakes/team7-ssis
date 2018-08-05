@@ -69,14 +69,13 @@ namespace team7_ssis.Services
 
                 PurchaseOrderDetail purchaseOrderDetail = purchaseOrderService.FindPurchaseOrderDetailbyIdItem(deliveryOrder.PurchaseOrder.PurchaseOrderNo, dod.ItemCode);
 
-                if (dod.ActualQuantity >= dod.PlanQuantity)
+                if (dod.ActualQuantity == dod.PlanQuantity)
 
                     purchaseOrderDetail.Status = statusRepository.FindById(13);
 
-                else
+                else if(purchaseOrderDetail.Quantity!=dod.ActualQuantity)
 
                     purchaseOrderDetail.Status = statusRepository.FindById(12);
-
 
                 purchaseOrderDetailsRepository.Save(purchaseOrderDetail);
 
