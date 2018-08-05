@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using team7_ssis.Models;
 using team7_ssis.Services;
+using team7_ssis.Tests.Services;
 
 namespace team7_ssis.Controllers
 {
@@ -45,6 +46,10 @@ namespace team7_ssis.Controllers
                 case 3:
                     // Redirect to Stock Adjustment Details
                     var stockAdjustmentId = Regex.Match(notification.Contents, @"ADJ-\d{6}-\d{3}");
+                    var status = new StockAdjustmentService(Context).FindStockAdjustmentById(stockAdjustmentId.ToString()).Status;
+
+                    if (status.StatusId == 5 || status.StatusId == 6)
+                        return RedirectToAction("DetailsNoEdit", "StockAdjustment", new { id = stockAdjustmentId.Value });
                     return RedirectToAction("Process", "StockAdjustment", new { Id = stockAdjustmentId.Value });
                 case 6:
                     // Redirect to Manage Departments
