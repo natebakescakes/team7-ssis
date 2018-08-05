@@ -101,6 +101,18 @@ namespace team7_ssis.Controllers
 
         }
 
+        [Route("api/manage/quantity/{itemCode}")]
+        [HttpGet]
+        public MessageViewModel FindItemQuantity(string itemCode)
+        {
+            Item item = itemService.FindItemByItemCode(itemCode);
+
+            return new MessageViewModel()
+            {
+                Message = item.Inventory.Quantity.ToString()
+            };
+        }
+
         [Route("api/manage/supplierInfo/{itemCode}")]
         [HttpGet]
         public List<ItemDetailsSupplierInfoViewModel> FindSupplierInfo(string itemCode)
