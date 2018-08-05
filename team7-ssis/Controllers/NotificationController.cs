@@ -44,6 +44,8 @@ namespace team7_ssis.Controllers
                     var requisitionId = Regex.Match(notification.Contents, @"REQ-\d{6}-\d{3}");
                     return RedirectToAction("RequisitionDetails", "Requisition", new { rid = requisitionId });
                 case 3:
+                case 4:
+                case 5:
                     // Redirect to Stock Adjustment Details
                     var stockAdjustmentId = Regex.Match(notification.Contents, @"ADJ-\d{6}-\d{3}");
                     var status = new StockAdjustmentService(Context).FindStockAdjustmentById(stockAdjustmentId.ToString()).Status;
