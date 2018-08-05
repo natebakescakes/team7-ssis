@@ -31,13 +31,16 @@
         <select id="collectionPointSelect" class="custom-select">
             @foreach (var collectionPoint in Model.SelectCollectionPointList)
             {
-                <option value="@collectionPoint.CollectionPointId" @(Model.CollectionPointId == collectionPoint.CollectionPointId ? "selected" : "") >@collectionPoint.Name</option>
+                <option value="@collectionPoint.CollectionPointId" @(Model.CollectionPointId == collectionPoint.CollectionPointId ? "selected" : "")>@collectionPoint.Name</option>
             }
         </select>
 
         <p><small>Once requisition in processed, you will receive an email on the pickup date. This will be the following Monday if the requisition was created by Wednesday.</small></p>
         <div class="label">Representative</div>
         @Model.Representative
+
+        <div class="label">Remarks</div>
+        <textarea id="remarksTextArea" class="form-control mb-2" style="min-width:400px;height:100px;"></textarea>
     </div>
 </div>
 
@@ -87,7 +90,12 @@
         var tableData = myTable.rows().data().toArray();
         var cpId = $('#collectionPointSelect').val();
 
-        var data = { CollectionPointId: cpId, ItemList: [], IsDraft: isDraft };
+        var data = {
+            CollectionPointId: cpId,
+            ItemList: [],
+            IsDraft: isDraft,
+            Remarks: $('#remarksTextArea').val()
+        };
 
         if (tableData.length > 0) {
             for (i = 0; i < tableData.length; i++) {
