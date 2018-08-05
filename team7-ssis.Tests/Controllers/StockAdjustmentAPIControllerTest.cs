@@ -393,6 +393,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(6),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -435,6 +436,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(4),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -503,6 +505,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(6),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -545,6 +548,7 @@ namespace team7_ssis.Tests.Controllers
             var stockAdjustment = new StockAdjustmentRepository(context).Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJCONTROLTEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(4),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
