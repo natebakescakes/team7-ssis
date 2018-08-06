@@ -193,9 +193,9 @@ namespace team7_ssis.Controllers
 
                 }
 
-                deliveryOrderService.CheckSave(deliveryOrder);
+                deliveryOrderService.CheckSave(deliveryOrder); 
             }
-                return new JsonResult { Data = new { status = "Saved" } };
+            return new JsonResult { Data = new { status = "Saved" } };
         }
 
         [HttpPost]
