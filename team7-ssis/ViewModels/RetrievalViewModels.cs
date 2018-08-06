@@ -21,6 +21,7 @@ namespace team7_ssis.ViewModels
         public string Bin { get; set; }
         public string Description { get; set; }
         public int QtyOrdered { get; set; }
+        public int QtyCollected { get; set; }
     }
     public class StationeryRetrievalJSONViewModel
     {

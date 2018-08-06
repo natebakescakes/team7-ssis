@@ -74,6 +74,7 @@ namespace team7_ssis.Controllers
                     Uom = i.Uom,
                     Quantity = i.Inventory.Quantity,
                     UnitPrice = itemPriceService.GetDefaultPrice(i, 1),
+                    
                     ImagePath = (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("/Images/" + i.ItemCode.ToString() + ".JPG"))) ? i.ItemCode : "default"
                 });
             }
@@ -98,6 +99,18 @@ namespace team7_ssis.Controllers
                 Status = item.Status.StatusId
             };
 
+        }
+
+        [Route("api/manage/quantity/{itemCode}")]
+        [HttpGet]
+        public MessageViewModel FindItemQuantity(string itemCode)
+        {
+            Item item = itemService.FindItemByItemCode(itemCode);
+
+            return new MessageViewModel()
+            {
+                Message = item.Inventory.Quantity.ToString()
+            };
         }
 
         [Route("api/manage/supplierInfo/{itemCode}")]
@@ -196,7 +209,8 @@ namespace team7_ssis.Controllers
         [HttpGet]
         public List<ItemViewModel> Shortfall()
         {
-            return itemService.FindItemQuantityLessThanReorderLevel().Select(item => new ItemViewModel()
+            //FindInventoryShortfallItems
+            return purchaseOrderService.FindInventoryShortfallItems().Select(item => new ItemViewModel()
             {
                 ItemCode = item.ItemCode,
                 Description = item.Description,
@@ -204,8 +218,9 @@ namespace team7_ssis.Controllers
                 ReorderLevel = item.ReorderLevel,
                 ReorderQuantity = item.ReorderQuantity,
                 Uom = item.Uom,
-                AmountToReorder = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
-                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity
+                UnfulfilledQuantity = requisitionService.FindUnfulfilledQuantityRequested(item),
+                AmountToReorder = (item.Inventory.Quantity - requisitionService.FindUnfulfilledQuantityRequested(item) < item.ReorderLevel) ?
+                                Math.Max(requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity, item.ReorderLevel-item.Inventory.Quantity+ requisitionService.FindUnfulfilledQuantityRequested(item)) : 0
             
             }).ToList();
 
@@ -214,7 +229,7 @@ namespace team7_ssis.Controllers
         [Route("api/inventory/items")]
         [HttpPost]
         public List<ItemViewModel> GeneratePO([FromBody]string itemNums)
-        {
+        { 
             List<ItemViewModel> itemView = new List<ItemViewModel>();
             if (itemNums == null) {
 
@@ -236,12 +251,13 @@ namespace team7_ssis.Controllers
                 {
                     ItemCode = item.ItemCode,
                     Description = item.Description,
-                    Quantity = (requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
-                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity,
                     UnitPriceDecimal=itemPriceService.FindOneByItemAndSequence(item,1).Price,
                     ItemCategoryName=item.ItemCode,
-                    TotalPrice = ((requisitionService.FindUnfulfilledQuantityRequested(item) > item.ReorderQuantity) ?
-                                requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity : item.ReorderQuantity)*
+                    Quantity = (item.Inventory.Quantity - requisitionService.FindUnfulfilledQuantityRequested(item) < item.ReorderLevel) ?
+                                Math.Max(requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity, item.ReorderLevel - item.Inventory.Quantity + requisitionService.FindUnfulfilledQuantityRequested(item)) : 0,
+
+                    TotalPrice = ((item.Inventory.Quantity - requisitionService.FindUnfulfilledQuantityRequested(item) < item.ReorderLevel) ?
+                                Math.Max(requisitionService.FindUnfulfilledQuantityRequested(item) + item.ReorderQuantity, item.ReorderLevel - item.Inventory.Quantity + requisitionService.FindUnfulfilledQuantityRequested(item)) : 0) *
                                 itemPriceService.FindOneByItemAndSequence(item, 1).Price
                 }).ToList();
             }

@@ -92,16 +92,23 @@
                     { "data": "Uom", "autoWidth": true },
                     { "data": "Quantity", "autoWidth": true },
                     {
-                        "defaultContent":"<a id='viewbtn' href='#' class='btn btn-primary' role='button'><i class='fa fa-info-circle' aria-hidden='true'></i></ a>"
+                        "defaultContent": '<button type="button" class="btn btn-secondary getInfo"><i class="fa fa-info-circle" aria-hidden="true"></i></button>'
                     }
                 ]
 
             });
-            $('#itemTable tbody').on('click', '#viewbtn',function () {
-                var rowdata = oTable.row($(this).parents('tr')).data().ItemCode;
-                $('#viewbtn').attr('href', '/inventory/details?itemCode=' + rowdata);
 
+            // Click "Info" buttons
+            $(document).on("click", ".getInfo", function (e) {
+                e.preventDefault();
+                console.log("Get Info");
+                var data = oTable
+                    .row($(this).parents('tr'))
+                    .data();
+                //alert(data.ItemCode)
+                window.location.href = "/inventory/details?itemCode=" + data.ItemCode;
             });
+
 
             //js for add new btn
         $('.tablecontainer #myform').on('click', '#addnewbtn', function (e) {

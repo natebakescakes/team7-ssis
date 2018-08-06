@@ -13,6 +13,7 @@ namespace team7_ssis.Services
         ItemRepository itemRepository;
         StatusRepository statusRepository;
         InventoryRepository inventoryRepository;
+        //PurchaseOrderService purchaseOrderService;
 
         public ItemService(ApplicationDbContext context)
         {
@@ -20,6 +21,7 @@ namespace team7_ssis.Services
             itemRepository = new ItemRepository(context);
             statusRepository = new StatusRepository(context);
             inventoryRepository = new InventoryRepository(context);
+           // purchaseOrderService = new PurchaseOrderService(context);
         }
 
         public Item FindItemByItemCode(string itemCode)
@@ -118,5 +120,9 @@ namespace team7_ssis.Services
                 return -1;
             }
         }
+
+
+       
+
     }
 }

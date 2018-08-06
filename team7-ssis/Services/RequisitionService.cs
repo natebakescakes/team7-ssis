@@ -268,7 +268,7 @@ namespace team7_ssis.Services
             return disbursementList;
         }
 
-        public int FindUnfulfilledQuantityRequested(Item item)
+        public  int FindUnfulfilledQuantityRequested(Item item)
         {
             int totalQuantity = 0;
 

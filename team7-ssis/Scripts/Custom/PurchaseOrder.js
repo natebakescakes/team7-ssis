@@ -431,8 +431,8 @@ $(document).ready(function(){
         var pNum = $("#purchaseOrderNo").val();
         var url = $("#viewRelDelUrl").val();
 
-        alert(pNum);
-        alert(url);
+       // alert(pNum);
+       // alert(url);
 
         var form = document.createElement("form");
         var element1 = document.createElement("input");
