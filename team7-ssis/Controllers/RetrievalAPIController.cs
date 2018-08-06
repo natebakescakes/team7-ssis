@@ -46,8 +46,8 @@ namespace team7_ssis.Controllers
                                     (y.Sum(dd => dd.ActualQuantity) == 0 ? "Awaiting Picking" : "Partially Picked"),
                 ProductID = y.Key.ItemCode,
                 Bin = y.Key.Bin,
-                QtyOrdered = y.Sum(dd => dd.PlanQuantity),
-                QtyCollected = y.Sum(dd => dd.ActualQuantity),
+                QtyToRetrieve = y.Sum(dd => dd.PlanQuantity),
+                QtyRetrieved = y.Sum(dd => dd.ActualQuantity),
                 Description = Context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description,
             }).ToList();
 

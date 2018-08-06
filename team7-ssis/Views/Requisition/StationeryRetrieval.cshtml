@@ -105,8 +105,8 @@
             <th>Product ID</th>
             <th>Bin</th>
             <th>Description</th>
-            <th>Qty Ordered</th>
-            <th>Qty Collected</th>
+            <th>Qty To Retrieve</th>
+            <th>Qty Retrieved</th>
             @if (@Model.StatusId != 20)
             {
                 <th>Edit</th>
@@ -176,8 +176,8 @@
                 { "data": "ProductID", "autoWidth": true },
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
-                { "data": "QtyOrdered", "autoWidth": true },
-                { "data": "QtyCollected", "autoWidth": true },
+                { "data": "QtyToRetrieve", "autoWidth": true },
+                { "data": "QtyRetrieved", "autoWidth": true },
                 @if (Model.StatusId != 20)
                 {
                     <text>
