@@ -80,6 +80,10 @@ $(document).ready(function () {
     //Receive goods- View DeliveryOrders - purchaseordernumber
 
     var rgTable = $('#myRGTable').DataTable({
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search..." 
+        },
         ajax: {
             url: "/api/receivegoods/" + pon,
             dataSrc: ""
@@ -237,7 +241,8 @@ $(document).ready(function () {
                     }
                 }
             ],
-        select: "single"
+        select: "single",
+        dom:"tp"
     });
    
     // change the value of the cell in the datatable with an input field
