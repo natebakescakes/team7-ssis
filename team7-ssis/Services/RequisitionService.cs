@@ -207,15 +207,14 @@ namespace team7_ssis.Services
 
         private List<Disbursement> AddDisbursementDetailsForEachDisbursement(List<Disbursement> disbursementList, List<Requisition> requestList)
         {
+            // Initialize inventory map
+            Dictionary<string, int> inventory = new Dictionary<string, int>();
 
             // create Disbursement Details, one for each item by department
             foreach (Disbursement d in disbursementList)
             {
                 // prepare to populate DisbursementDetails
                 d.DisbursementDetails = new List<DisbursementDetail>();
-
-                // Initialize inventory map
-                Dictionary<string, int> inventory = new Dictionary<string, int>();
 
                 // populate them based on CreatedDate first
                 foreach (Requisition rq in requestList.OrderBy(r => r.CreatedDateTime))
@@ -268,7 +267,7 @@ namespace team7_ssis.Services
             return disbursementList;
         }
 
-        public  int FindUnfulfilledQuantityRequested(Item item)
+        public int FindUnfulfilledQuantityRequested(Item item)
         {
             int totalQuantity = 0;
 
