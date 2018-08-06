@@ -83,7 +83,7 @@ namespace team7_ssis.Tests.Controllers
             // ARRANGE
 
             // ACT
-            ActionResult result = requisitionController.StationeryDisbursement("TEST");
+            ActionResult result = requisitionController.StationeryDisbursement("TEST", "Test");
 
             // ASSERT
             Assert.IsInstanceOfType(result, typeof(ViewResult));
