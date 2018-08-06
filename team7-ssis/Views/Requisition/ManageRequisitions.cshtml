@@ -89,7 +89,7 @@
 <script>
     var myTable;
     $(document).ready(function () {
-        $.fn.dataTable.moment('M/D/YYYY h:mm A');
+        $.fn.dataTable.moment('D/M/YYYY h:mm A');
 
         myTable = $('#myTable').DataTable({
             ajax: {
@@ -102,7 +102,7 @@
                 dataType: "json",
                 dataSrc: ""
             },
-            order: [[2, 'desc'], [0, 'desc']],
+            order: [[2, 'desc']],
             columns: [
                 { "data": "Requisition", "autoWidth": true },
                 { "data": "Status", "autoWidth": true },

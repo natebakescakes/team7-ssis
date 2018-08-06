@@ -80,16 +80,7 @@ namespace team7_ssis.Controllers
         [HttpPost]
         public ActionResult PrintDisbursementPDF(string dbmNumber)
         {
-            var a = new ActionAsPdf("DisbursmentPrint", new { dbm = dbmNumber }) { FileName = dbmNumber + ".pdf" };
-            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
-            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
-            a.CustomSwitches = "--load-error-handling ignore";
-            return a;
-        }
-
-        public ActionResult DisbursmentPrint(string dbm)
-        {
-            Disbursement d = disbursementService.FindDisbursementById(dbm);
+            Disbursement d = disbursementService.FindDisbursementById(dbmNumber);
             List<DisbursementFormTableViewModel> viewModel = new List<DisbursementFormTableViewModel>();
             viewModel = d.DisbursementDetails.Select(x => new DisbursementFormTableViewModel()
             {
@@ -100,8 +91,18 @@ namespace team7_ssis.Controllers
 
 
             ViewBag.Disbursement = d;
-            return View("DisbursmentPrintView", viewModel);
-
+            var a = new ViewAsPdf("DisbursmentPrintView", viewModel) { FileName = dbmNumber + ".pdf" };
+            a.Cookies = Request.Cookies.AllKeys.ToDictionary(k => k, k => Request.Cookies[k].Value);
+            a.FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            a.CustomSwitches = "--load-error-handling ignore";
+            return a;
         }
+
+        //public ActionResult DisbursmentPrint(string dbm)
+        //{
+           
+        //    return View("DisbursmentPrintView", viewModel);
+
+        //}
     }
 }
