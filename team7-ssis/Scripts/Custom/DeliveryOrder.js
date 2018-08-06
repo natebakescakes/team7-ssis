@@ -80,6 +80,10 @@ $(document).ready(function () {
     //Receive goods- View DeliveryOrders - purchaseordernumber
 
     var rgTable = $('#myRGTable').DataTable({
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search..." 
+        },
         ajax: {
             url: "/api/receivegoods/" + pon,
             dataSrc: ""
