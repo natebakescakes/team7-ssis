@@ -306,7 +306,14 @@ $(document).ready(function () {
         if (j == mydata.length){
             f = 1;
         }
- 
+
+        for (var i = 0; i < mydata.length; i++) {
+            if (mydata[i].ReceivedQuantity < 0) {
+                f = 1;
+            }
+        }
+
+        if (f == 0) {
         for (var i = 0; i < mydata.length; i++) {
 
             var o = {
@@ -329,9 +336,8 @@ $(document).ready(function () {
             };
 
             details.push(o);
-        }
+            }
 
-        if (f == 0) {
             $.ajax({
 
                 type: "POST",
@@ -512,6 +518,12 @@ $(document).ready(function () {
         document.body.appendChild(form1);
 
         form1.submit();
+
+    });
+
+    $('#ViewDObtn').click(function () {
+
+        window.location.href = "/DeliveryOrder/ReceiveGoods";
 
     });
 });
