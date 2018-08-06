@@ -106,6 +106,7 @@
             <th>Bin</th>
             <th>Description</th>
             <th>Qty Ordered</th>
+            <th>Qty Collected</th>
             @if (@Model.StatusId != 20)
             {
                 <th>Edit</th>
@@ -176,6 +177,7 @@
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
                 { "data": "QtyOrdered", "autoWidth": true },
+                { "data": "QtyCollected", "autoWidth": true },
                 @if (Model.StatusId != 20)
                 {
                     <text>

@@ -47,7 +47,8 @@ namespace team7_ssis.Controllers
                 ProductID = y.Key.ItemCode,
                 Bin = y.Key.Bin,
                 QtyOrdered = y.Sum(dd => dd.PlanQuantity),
-                Description = Context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description
+                QtyCollected = y.Sum(dd => dd.ActualQuantity),
+                Description = Context.Item.Where(x => x.ItemCode == y.Key.ItemCode).First().Description,
             }).ToList();
 
             return viewModel;
