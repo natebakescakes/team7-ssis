@@ -143,6 +143,24 @@ namespace team7_ssis.Services
 
             return this.Save(notification);
         }
+
+        public Notification CreateApproveStockAdjustmentNotification(StockAdjustment stockAdjustment, ApplicationUser recipient)
+        {
+            Notification notification = InstantiateNotification(recipient);
+            notification.NotificationType = notificationTypeRepository.FindById(4);
+            notification.Contents = $"Your stock adjustment request: {stockAdjustment.StockAdjustmentId} has been approved";
+
+            return this.Save(notification);
+        }
+
+        public Notification CreateRejectStockAdjustmentNotification(StockAdjustment stockAdjustment, ApplicationUser recipient)
+        {
+            Notification notification = InstantiateNotification(recipient);
+            notification.NotificationType = notificationTypeRepository.FindById(5);
+            notification.Contents = $"Your stock adjustment request: {stockAdjustment.StockAdjustmentId} has been rejected";
+
+            return this.Save(notification);
+        }
        
         public List<Notification> FindNotificationsByUser(ApplicationUser user)
         {

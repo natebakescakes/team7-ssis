@@ -263,61 +263,61 @@ namespace team7_ssis.Tests.Services
 
       
 
-        [TestMethod]
-        public void IsPurchaseOrderCreatedTest()
-        {
-            //Arrange
-            List<PurchaseOrder> poList = new List<PurchaseOrder>();
+        //[TestMethod]
+        //public void IsPurchaseOrderCreatedTest()
+        //{
+        //    //Arrange
+        //    List<PurchaseOrder> poList = new List<PurchaseOrder>();
 
-            PurchaseOrder p1 = new PurchaseOrder();
-            p1.PurchaseOrderNo = "P11";
-            p1.Supplier = supplierRepository.FindById("CHEP");
+        //    PurchaseOrder p1 = new PurchaseOrder();
+        //    p1.PurchaseOrderNo = "P11";
+        //    p1.Supplier = supplierRepository.FindById("CHEP");
 
-            PurchaseOrder p2 = new PurchaseOrder();
-            p2.PurchaseOrderNo = "P21";
-            p2.Supplier = supplierRepository.FindById("BANE");
+        //    PurchaseOrder p2 = new PurchaseOrder();
+        //    p2.PurchaseOrderNo = "P21";
+        //    p2.Supplier = supplierRepository.FindById("BANE");
 
-            PurchaseOrderDetail pd1 = new PurchaseOrderDetail();
-            pd1.PurchaseOrderNo = "P11";
-            pd1.Item = itemRepository.FindById("E005");
-            pd1.Quantity = 50;
-            pd1.Status = statusRepository.FindById(11);
+        //    PurchaseOrderDetail pd1 = new PurchaseOrderDetail();
+        //    pd1.PurchaseOrderNo = "P11";
+        //    pd1.Item = itemRepository.FindById("E005");
+        //    pd1.Quantity = 50;
+        //    pd1.Status = statusRepository.FindById(11);
 
-            PurchaseOrderDetail pd2 = new PurchaseOrderDetail();
-            pd2.PurchaseOrderNo = "P21";
-            pd2.Item = itemRepository.FindById("E007");
-            pd2.Quantity = 100;
-            pd2.Status = statusRepository.FindById(11);
+        //    PurchaseOrderDetail pd2 = new PurchaseOrderDetail();
+        //    pd2.PurchaseOrderNo = "P21";
+        //    pd2.Item = itemRepository.FindById("E007");
+        //    pd2.Quantity = 100;
+        //    pd2.Status = statusRepository.FindById(11);
 
-            PurchaseOrderDetail pd3 = new PurchaseOrderDetail();
-            pd3.PurchaseOrderNo = "P11";
-            pd3.Item = itemRepository.FindById("C001");
-            pd3.Quantity = 100;
-            pd3.Status = statusRepository.FindById(11);
+        //    PurchaseOrderDetail pd3 = new PurchaseOrderDetail();
+        //    pd3.PurchaseOrderNo = "P11";
+        //    pd3.Item = itemRepository.FindById("C001");
+        //    pd3.Quantity = 100;
+        //    pd3.Status = statusRepository.FindById(11);
 
-            p1.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
-            p2.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
+        //    p1.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
+        //    p2.PurchaseOrderDetails = new List<PurchaseOrderDetail>();
 
-            p1.PurchaseOrderDetails.Add(pd1);
-            p2.PurchaseOrderDetails.Add(pd2);
-            p1.PurchaseOrderDetails.Add(pd3);
+        //    p1.PurchaseOrderDetails.Add(pd1);
+        //    p2.PurchaseOrderDetails.Add(pd2);
+        //    p1.PurchaseOrderDetails.Add(pd3);
 
-            poList.Add(p1);
-            poList.Add(p2);
+        //    poList.Add(p1);
+        //    poList.Add(p2);
 
 
 
-            Item i = itemRepository.FindById("C001");
-            Item i2 = itemRepository.FindById("C004");
+        //    Item i = itemRepository.FindById("C001");
+        //    Item i2 = itemRepository.FindById("C004");
 
-            //Act
-            var result = purchaseOrderService.IsPurchaseOrderCreated(i, poList);
-            var result2 = purchaseOrderService.IsPurchaseOrderCreated(i2, poList);
+        //    //Act
+        //    var result = purchaseOrderService.IsPurchaseOrderCreated(i, poList);
+        //    var result2 = purchaseOrderService.IsPurchaseOrderCreated(i2, poList);
 
-            //Assert
-            Assert.IsTrue(result);
-            Assert.IsFalse(result2);
-        }
+        //    //Assert
+        //    Assert.IsTrue(result);
+        //    Assert.IsFalse(result2);
+        //}
 
 
 

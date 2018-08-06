@@ -20,7 +20,7 @@ namespace team7_ssis.Services
         ItemRepository itemRepository;
         StockMovementRepository stockMovementRepository;
         PurchaseOrderService purchaseOrderService;
- 
+
 
         public DeliveryOrderService(ApplicationDbContext context)
         {
@@ -30,7 +30,7 @@ namespace team7_ssis.Services
             this.inventoryRepository = new InventoryRepository(context);
             this.purchaseOrderRepository = new PurchaseOrderRepository(context);
             this.stockMovementRepository = new StockMovementRepository(context);
-            this.purchaseOrderDetailsRepository= new PurchaseOrderDetailRepository(context) ;
+            this.purchaseOrderDetailsRepository = new PurchaseOrderDetailRepository(context);
             this.itemRepository = new ItemRepository(context);
             this.deliveryOrderDetailRepository = new DeliveryOrderDetailRepository(context);
             this.purchaseOrderService = new PurchaseOrderService(context);
@@ -46,7 +46,7 @@ namespace team7_ssis.Services
             return deliveryOrderRepository.FindById(deliveryOrderNo);
         }
 
-        
+
         public List<DeliveryOrder> FindDeliveryOrderByPurchaseOrderNo(string purchaseOrderNo)
         {
             return deliveryOrderRepository.FindDeliveryOrderByPurchaseOrderNo(purchaseOrderNo).ToList();
@@ -69,14 +69,13 @@ namespace team7_ssis.Services
 
                 PurchaseOrderDetail purchaseOrderDetail = purchaseOrderService.FindPurchaseOrderDetailbyIdItem(deliveryOrder.PurchaseOrder.PurchaseOrderNo, dod.ItemCode);
 
-                if (dod.ActualQuantity >= dod.PlanQuantity)
+                if (dod.ActualQuantity == dod.PlanQuantity)
 
                     purchaseOrderDetail.Status = statusRepository.FindById(13);
 
-                else
+                else if (purchaseOrderDetail.Quantity != dod.ActualQuantity)
 
                     purchaseOrderDetail.Status = statusRepository.FindById(12);
-
 
                 purchaseOrderDetailsRepository.Save(purchaseOrderDetail);
 
@@ -86,12 +85,12 @@ namespace team7_ssis.Services
 
                 SaveStockMovement(dod);
             }
-            
+
             deliveryOrderRepository.Save(deliveryOrder);
 
 
             PurchaseOrder po = deliveryOrder.PurchaseOrder;
-            int flag=0;
+            int flag = 0;
 
             foreach (PurchaseOrderDetail pod in po.PurchaseOrderDetails)
             {
@@ -109,7 +108,7 @@ namespace team7_ssis.Services
             }
 
 
-            if (flag!=1)
+            if (flag != 1)
             {
                 po.Status = statusRepository.FindById(13);
                 purchaseOrderRepository.Save(po);
@@ -120,7 +119,7 @@ namespace team7_ssis.Services
         public Inventory SaveInventory(Item item, int receivedQuantity)
         {
             Inventory iv = inventoryRepository.FindById(item.ItemCode);
-            iv.Quantity = iv.Quantity+receivedQuantity;
+            iv.Quantity = iv.Quantity + receivedQuantity;
             return inventoryRepository.Save(iv);
         }
 

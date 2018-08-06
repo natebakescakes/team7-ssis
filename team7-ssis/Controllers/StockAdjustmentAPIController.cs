@@ -407,7 +407,7 @@ namespace team7_ssis.Controllers
             StockAdjustment sa = stockAdjustmentService.FindStockAdjustmentById(stockadjustment_id);
 
             //create email and android notifications for rejected Stock Adjustment
-            Notification rejection = notificationService.CreateNotification(sa, sa.CreatedBy);
+            Notification rejection = notificationService.CreateRejectStockAdjustmentNotification(sa, sa.CreatedBy);
             new NotificationApiController().SendNotification(rejection.NotificationId.ToString());
             new NotificationApiController().SendEmail(rejection.NotificationId.ToString());
 
@@ -451,7 +451,7 @@ namespace team7_ssis.Controllers
             stockAdjustmentService.ApproveStockAdjustment(stockadjustment_id);
 
             //create email and android notifications for rejected Stock Adjustment 
-           Notification approved =  notificationService.CreateNotification(sd, sd.CreatedBy);
+           Notification approved =  notificationService.CreateApproveStockAdjustmentNotification(sd, sd.CreatedBy);
            new NotificationApiController().SendNotification(approved.NotificationId.ToString());
            new NotificationApiController().SendEmail(approved.NotificationId.ToString());
 

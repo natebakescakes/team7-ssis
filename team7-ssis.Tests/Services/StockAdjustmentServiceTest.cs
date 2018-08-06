@@ -20,7 +20,7 @@ namespace team7_ssis.Tests.Services
         InventoryRepository inventoryRepository;
         ItemService itemService;
         StockMovementRepository stockMovementRepository;
-        
+
 
         [TestInitialize]
         public void TestInitialize()
@@ -42,7 +42,7 @@ namespace team7_ssis.Tests.Services
             itemRepository.Save(item);
             itemService.SaveInventory(item, 40);
 
-          
+
         }
 
         //create new StockAdjustment with status: draft
@@ -273,26 +273,26 @@ namespace team7_ssis.Tests.Services
             service.CreatePendingStockAdjustment(expect);
 
 
-            StockMovement sm = new StockMovement(); 
+            StockMovement sm = new StockMovement();
 
             try
             {
                 //Act
                 var result = service.ApproveStockAdjustment(id);
-                sm = context.StockMovement.Where(x => x.Item.ItemCode == "he06").First(); 
+                sm = context.StockMovement.Where(x => x.Item.ItemCode == "he06").First();
 
                 //Assert
                 int latest_id = stockMovementRepository.Count();
                 sm = stockMovementRepository.FindById(latest_id);
-              
 
-               Assert.IsTrue(expect.Status.StatusId == 6);
+
+                Assert.IsTrue(expect.Status.StatusId == 6);
                 Assert.IsTrue(item.Inventory.Quantity == 20);
                 Assert.IsTrue(sm.AfterQuantity == 20);
-               stockMovementRepository.Delete(sm);
-               stockAdjustmentRepository.Delete(expect);
+                stockMovementRepository.Delete(sm);
+                stockAdjustmentRepository.Delete(expect);
                 itemRepository.Delete(item);
-           
+
 
             }
             catch (Exception e)
@@ -312,6 +312,7 @@ namespace team7_ssis.Tests.Services
             int i = rd.Next();
             string id = "he08";
             expect.StockAdjustmentId = id;
+            expect.CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com");
             expect.CreatedDateTime = DateTime.Now;
             service.CreatePendingStockAdjustment(expect);
             //test exception
@@ -405,9 +406,10 @@ namespace team7_ssis.Tests.Services
             var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(4),
-                StockAdjustmentDetails = new List<StockAdjustmentDetail> ()
+                StockAdjustmentDetails = new List<StockAdjustmentDetail>()
                 {
                     new StockAdjustmentDetail()
                     {
@@ -447,6 +449,7 @@ namespace team7_ssis.Tests.Services
             var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(6),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -476,6 +479,7 @@ namespace team7_ssis.Tests.Services
             var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(4),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -518,6 +522,7 @@ namespace team7_ssis.Tests.Services
             var stockAdjustment = stockAdjustmentRepository.Save(new StockAdjustment()
             {
                 StockAdjustmentId = "ADJAPPROVETEST",
+                CreatedBy = new UserService(context).FindUserByEmail("StoreClerk1@email.com"),
                 CreatedDateTime = DateTime.Now,
                 Status = new StatusService(context).FindStatusByStatusId(6),
                 StockAdjustmentDetails = new List<StockAdjustmentDetail>()
@@ -543,14 +548,14 @@ namespace team7_ssis.Tests.Services
             string[] ids = new string[]
             { "he01","he02","he03","he04","he05","he07","he08","he09" };
 
-            foreach(string id in ids)
+            foreach (string id in ids)
             {
                 StockAdjustment sa = stockAdjustmentRepository.FindById(id);
                 if (sa != null)
                     stockAdjustmentRepository.Delete(sa);
             }
-           
-            if(itemRepository.FindById("he06") != null)              
+
+            if (itemRepository.FindById("he06") != null)
             {
                 itemRepository.Delete(itemRepository.FindById("he06"));
             }
@@ -561,7 +566,7 @@ namespace team7_ssis.Tests.Services
             }
 
             if (stockAdjustmentRepository.ExistsById("ADJAPPROVETEST"))
-                stockAdjustmentRepository.Delete(stockAdjustmentRepository.FindById("ADJAPPROVETEST"));               
+                stockAdjustmentRepository.Delete(stockAdjustmentRepository.FindById("ADJAPPROVETEST"));
         }
     }
 }
