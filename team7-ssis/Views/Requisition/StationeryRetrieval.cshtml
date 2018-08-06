@@ -218,12 +218,30 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
+            var $this = $(this);
+            var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+            if ($(this).html() !== loadingText) {
+                $this.data('original-text', $(this).html());
+                $this.html(loadingText);
+            }
+            setTimeout(function () {
+                $this.html($this.data('original-text'));
+            }, 2000);
             update(false);
         });
 
         // Click "Confirm"
         $(document).on('click', '#confirmRetrievalBtn', function () {
             if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
+                var $this = $(this);
+                var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+                if ($(this).html() !== loadingText) {
+                    $this.data('original-text', $(this).html());
+                    $this.html(loadingText);
+                }
+                setTimeout(function () {
+                    $this.html($this.data('original-text'));
+                }, 2000);
                 update(true);
             }
         });

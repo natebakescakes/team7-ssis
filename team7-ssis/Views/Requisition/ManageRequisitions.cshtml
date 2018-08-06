@@ -27,6 +27,7 @@
         {
             //<a id="approveOustandingRequisitionBtn" class="popup btn btn-success pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Approve All Outstanding Requisitions</a>
         }
+        
         @if (User.IsInRole("Store Clerk") || User.IsInRole("Store Supervisor") || User.IsInRole("Store Manager") || User.IsInRole("Admin"))
         {
             <a id="processAllRequisitionButton" class="popup btn btn-primary pull-right" href="#"><i class="fa fa-check" aria-hidden="true"></i> Process All Requisitions</a>
@@ -243,6 +244,15 @@
     // Click "Process All Requisitions" button
     $(document).on("click", "#processAllRequisitionButton", function (e) {
         e.preventDefault();
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+        if ($(this).html() !== loadingText) {
+            $this.data('original-text', $(this).html());
+            $this.html(loadingText);
+        }
+        setTimeout(function () {
+            $this.html($this.data('original-text'));
+        }, 2000);
         var data = $('#myTable').DataTable().rows().data().toArray();
         process(data);
     });
@@ -250,6 +260,15 @@
     // Click "Process Selected Requisitions" button
     $(document).on("click", "#processSelectedButton", function (e) {
         e.preventDefault();
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+        if ($(this).html() !== loadingText) {
+            $this.data('original-text', $(this).html());
+            $this.html(loadingText);
+        }
+        setTimeout(function () {
+            $this.html($this.data('original-text'));
+        }, 2000);
         var data = $('#myTable').DataTable().rows({ selected: true }).data().toArray();
         process(data);
     });
