@@ -237,7 +237,8 @@ $(document).ready(function () {
                     }
                 }
             ],
-        select: "single"
+        select: "single",
+        dom:"tp"
     });
    
     // change the value of the cell in the datatable with an input field
