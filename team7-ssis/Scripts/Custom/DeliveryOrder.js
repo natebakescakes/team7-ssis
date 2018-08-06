@@ -296,14 +296,34 @@ $(document).ready(function () {
   
     $('#submitbtn').click(function () {
 
+
         var mydata = oTable.rows().data().toArray();
 
         var DOFN = document.getElementById("DeliveryOrderFileName").value;
        
         var IFN = document.getElementById("InvoiceFileName").value;
-  
+        
         var details = new Array();
- 
+        var j = 0;
+        var f = 0;
+
+        for (var i = 0; i < mydata.length; i++) {
+            if (mydata[i].ReceivedQuantity == 0) {
+                j++;
+            }
+        }
+
+        if (j == mydata.length){
+            f = 1;
+        }
+
+        for (var i = 0; i < mydata.length; i++) {
+            if (mydata[i].ReceivedQuantity < 0) {
+                f = 1;
+            }
+        }
+
+        if (f == 0) {
         for (var i = 0; i < mydata.length; i++) {
 
             var o = {
@@ -326,34 +346,32 @@ $(document).ready(function () {
             };
 
             details.push(o);
-        }
-
-
-        $.ajax({
-
-            type: "POST",
-
-            url: "/DeliveryOrder/Save",
-
-            dataType: "json",
-
-            data: JSON.stringify(details),
-
-            contentType: "application/json",
-
-            cache: true,
-
-            success: function (data) {
-
-                alert("Delivery Order information has been successfully saved");
-                window.location.href = "/DeliveryOrder";
             }
 
-                //error: function () {
-                //    $('#info').html('<p>An error has occurred</p>');
-                //    oTable.ajax.reload();
-                //}
-        });
+            $.ajax({
+
+                type: "POST",
+
+                url: "/DeliveryOrder/Save",
+
+                dataType: "json",
+
+                data: JSON.stringify(details),
+
+                contentType: "application/json",
+
+                cache: true,
+
+                success: function (data) {
+
+                    alert("Delivery Order information has been successfully saved");
+                    window.location.href = "/DeliveryOrder";
+                }
+            });
+        }
+               else if (f == 1) {
+                alert("Please enter valid quantity");
+            }
     });
 
    
@@ -510,6 +528,12 @@ $(document).ready(function () {
         document.body.appendChild(form1);
 
         form1.submit();
+
+    });
+
+    $('#ViewDObtn').click(function () {
+
+        window.location.href = "/DeliveryOrder/ReceiveGoods";
 
     });
 });
