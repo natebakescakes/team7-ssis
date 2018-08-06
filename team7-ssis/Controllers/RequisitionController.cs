@@ -167,7 +167,7 @@ namespace team7_ssis.Controllers
             return View(viewModel);
         }
         // GET: /Requisiton/StationeryDisbursement
-        public ActionResult StationeryDisbursement(string rid)
+        public ActionResult StationeryDisbursement(string rid, string msg)
         {
             if (rid == null)
             {
@@ -177,6 +177,11 @@ namespace team7_ssis.Controllers
             {
                 ViewBag.DisbursementId = TempData["did"];
             }
+            if (msg != null)
+            {
+                ViewBag.Info = msg;
+            }
+
             return View();
         }
 
