@@ -20,8 +20,8 @@ namespace team7_ssis.ViewModels
         public string ProductID { get; set; }
         public string Bin { get; set; }
         public string Description { get; set; }
-        public int QtyOrdered { get; set; }
-        public int QtyCollected { get; set; }
+        public int QtyToRetrieve { get; set; }
+        public int QtyRetrieved { get; set; }
     }
     public class StationeryRetrievalJSONViewModel
     {

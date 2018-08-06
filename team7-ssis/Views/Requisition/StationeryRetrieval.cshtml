@@ -105,8 +105,8 @@
             <th>Product ID</th>
             <th>Bin</th>
             <th>Description</th>
-            <th>Qty Ordered</th>
-            <th>Qty Collected</th>
+            <th>Qty To Retrieve</th>
+            <th>Qty Retrieved</th>
             @if (@Model.StatusId != 20)
             {
                 <th>Edit</th>
@@ -176,8 +176,8 @@
                 { "data": "ProductID", "autoWidth": true },
                 { "data": "Bin", "autoWidth": true },
                 { "data": "Description", "autoWidth": true },
-                { "data": "QtyOrdered", "autoWidth": true },
-                { "data": "QtyCollected", "autoWidth": true },
+                { "data": "QtyToRetrieve", "autoWidth": true },
+                { "data": "QtyRetrieved", "autoWidth": true },
                 @if (Model.StatusId != 20)
                 {
                     <text>
@@ -218,12 +218,30 @@
 
         // Click "Save"
         $(document).on('click', '#saveRetrievalBtn', function () {
+            var $this = $(this);
+            var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+            if ($(this).html() !== loadingText) {
+                $this.data('original-text', $(this).html());
+                $this.html(loadingText);
+            }
+            setTimeout(function () {
+                $this.html($this.data('original-text'));
+            }, 2000);
             update(false);
         });
 
         // Click "Confirm"
         $(document).on('click', '#confirmRetrievalBtn', function () {
             if (confirm("Are you sure you want to confirm Retrieval? This cannot be undone.")) {
+                var $this = $(this);
+                var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+                if ($(this).html() !== loadingText) {
+                    $this.data('original-text', $(this).html());
+                    $this.html(loadingText);
+                }
+                setTimeout(function () {
+                    $this.html($this.data('original-text'));
+                }, 2000);
                 update(true);
             }
         });
@@ -254,10 +272,12 @@
                     var msg;
                     if (IsConfirmed) {
                         msg = "Retrieval #@Model.RetrievalID confirmed."
+                        post("/Requisition/StationeryDisbursement?rid=@Model.RetrievalID", { msg });
                     } else {
                         msg = "Retrieval #@Model.RetrievalID saved."
+                        post("/Retrieval/Manage", { msg });
                     }
-                    post("/Requisition/StationeryDisbursement?rid=@Model.RetrievalID", { msg });
+                    
                 },
                 error: function (message) {
                     // show error message
