@@ -294,7 +294,8 @@ $(document).ready(function () {
         var IFN = document.getElementById("InvoiceFileName").value;
         
         var details = new Array();
-        var j=0;
+        var j = 0;
+        var f = 0;
 
         for (var i = 0; i < mydata.length; i++) {
             if (mydata[i].ReceivedQuantity == 0) {
@@ -302,9 +303,8 @@ $(document).ready(function () {
             }
         }
 
-        if (j == mydata.length) {
-            alert("Received quantity cannot be zero");
-            oTable.ajax.reload();
+        if (j == mydata.length){
+            f = 1;
         }
  
         for (var i = 0; i < mydata.length; i++) {
@@ -331,32 +331,31 @@ $(document).ready(function () {
             details.push(o);
         }
 
+        if (f == 0) {
+            $.ajax({
 
-        $.ajax({
+                type: "POST",
 
-            type: "POST",
+                url: "/DeliveryOrder/Save",
 
-            url: "/DeliveryOrder/Save",
+                dataType: "json",
 
-            dataType: "json",
+                data: JSON.stringify(details),
 
-            data: JSON.stringify(details),
+                contentType: "application/json",
 
-            contentType: "application/json",
+                cache: true,
 
-            cache: true,
+                success: function (data) {
 
-            success: function (data) {
-
-                alert("Delivery Order information has been successfully saved");
-                window.location.href = "/DeliveryOrder";
+                    alert("Delivery Order information has been successfully saved");
+                    window.location.href = "/DeliveryOrder";
+                }
+            });
+        }
+               else if (f == 1) {
+                alert("Please enter valid quantity");
             }
-            //},
-            //error: function (xhr) {
-            //        console.log(xhr.responseText);
-            //        oTable.ajax.reload();
-            //    }
-        });
     });
 
    
