@@ -254,10 +254,12 @@
                     var msg;
                     if (IsConfirmed) {
                         msg = "Retrieval #@Model.RetrievalID confirmed."
+                        post("/Requisition/StationeryDisbursement?rid=@Model.RetrievalID", { msg });
                     } else {
                         msg = "Retrieval #@Model.RetrievalID saved."
+                        post("/Retrieval/Manage", { msg });
                     }
-                    post("/Requisition/StationeryDisbursement?rid=@Model.RetrievalID", { msg });
+                    
                 },
                 error: function (message) {
                     // show error message
